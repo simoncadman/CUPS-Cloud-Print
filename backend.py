@@ -51,6 +51,9 @@ logfile.write("Printing file " + printFile + "\n")
 pdfFile = printFile+".pdf"
 
 subprocess.call(["ps2pdf", printFile, pdfFile])
+submitjobpath = sys.path[0] + "/submitjob.py"
+logfile.write("Running " +  submitjobpath  + "\n")
+subprocess.call([submitjobpath, pdfFile, uri])
 logfile.write("Converted to PDF as "+ pdfFile + "\n")
 os.unlink( printFile )
 logfile.write("Deleted "+ printFile + "\n")

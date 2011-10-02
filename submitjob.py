@@ -1,6 +1,6 @@
 #! /usr/bin/python
 
-import mimetools, base64, time, httplib, logging, urllib, urllib2, string, mimetypes
+import mimetools, base64, time, httplib, logging, urllib, urllib2, string, mimetypes, sys
 
 email = "test@test.com"
 password = "test"
@@ -417,7 +417,8 @@ def GetUrl(url, tokens, data=None, cookies=False, anonymous=False):
       retry_count += 1
       if retry_count == 5:
         return err_msg
-    
 
-printerid = getPrinter("Print%20to%20Google%20Docs")
-print SubmitJob(printerid, 'pdf', '/tmp/testpdf.pdf')
+printername = sys.argv[2].replace('cloudprint://','')
+
+printerid = getPrinter(printername)
+print SubmitJob(printerid, 'pdf', sys.argv[1])
