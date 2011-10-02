@@ -421,4 +421,4 @@ def GetUrl(url, tokens, data=None, cookies=False, anonymous=False):
 printername = sys.argv[2].replace('cloudprint://','')
 
 printerid = getPrinter(printername)
-print SubmitJob(printerid, 'pdf', sys.argv[1])
+SubmitJob(printerid, 'pdf', sys.argv[1])
