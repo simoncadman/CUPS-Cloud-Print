@@ -1,5 +1,5 @@
 #! /usr/bin/python
-import sys, os
+import sys, os, subprocess
 progname = sys.argv[0]
 progname = 'cloudprint'
 
@@ -47,4 +47,11 @@ if uri == None:
 
 logfile = open('/var/log/cups/cloudprint_log', 'a')
 logfile.write("Printing file " + printFile + "\n")
+
+pdfFile = printFile+".pdf"
+
+subprocess.call(["ps2pdf", printFile, pdfFile])
+logfile.write("Converted to PDF as "+ pdfFile + "\n")
+os.unlink( printFile )
+logfile.write("Deleted "+ printFile + "\n")
 logfile.close()
