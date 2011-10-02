@@ -1,9 +1,19 @@
 #! /usr/bin/python
 
 import mimetools, base64, time, httplib, logging, urllib, urllib2, string, mimetypes, sys
+from config import Config
+try:
+  configuration = Config()
+except IOError:
+  print "Unable to load configuration from", Config.configfile,", create one from cloudprint.conf.example"
+  sys.exit(1)
+except Exception as error:
+  print "Unknown error when reading configuration file"
+  print error
+  sys.exit(1)
 
-email = "test@test.com"
-password = "test"
+email = configuration.get("Google", "Username")
+password = configuration.get("Google", "Password")
 
 CRLF = '\r\n'
 BOUNDARY = mimetools.choose_boundary()
