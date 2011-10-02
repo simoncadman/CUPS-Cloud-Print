@@ -1,0 +1,17 @@
+INSTALLATION
+============
+
+Clone the git repo:
+
+git clone git://github.com/simoncadman/CUPS-Cloud-Print.git
+
+cd CUPS-Cloud-Print/
+make install
+
+Copy cloudprint.conf.example as /etc/cloudprint.conf , and populate with your own Google details
+
+Add a new printer ( via http://127.0.0.1:631 or usual interface ) as a 'Google Cloud Print' network printer.
+Supply the connection name as a simple URI pointing to the printer you want to setup, for example:
+cloudprint://Print%20to%20Google%20Docs for the Google Docs printer ( you can find your printers from http://www.google.com/cloudprint ).
+
+Print a test page, to confirm it is working.
