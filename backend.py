@@ -51,7 +51,10 @@ logfile.write("Printing file " + printFile + "\n")
 pdfFile = printFile+".pdf"
 
 subprocess.call(["ps2pdf", printFile, pdfFile])
-submitjobpath = "/usr/local/lib/cloudprint-cups/" + "submitjob.py"
+submitjobpath = "/usr/lib/cloudprint-cups/" + "submitjob.py"
+if not os.path.exists( submitjobpath  ):
+	submitjobpath = "/usr/local/lib/cloudprint-cups/" + "submitjob.py"
+	
 logfile.write("Running " +  submitjobpath  + "\n")
 logfile.write("Converted to PDF as "+ pdfFile + "\n")
 logfile.write("Sending "+ pdfFile + " to cloud\n")
