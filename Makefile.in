@@ -1,0 +1,21 @@
+prefix = @prefix@
+
+all: cloudprint.ppd
+
+cloudprint.ppd:
+	ppdc cloudprint.drv  -d .
+	
+clean:
+	rm cloudprint.ppd
+
+test:
+	echo "${prefix}"
+	
+install:
+	cp backend.py ${prefix}/usr/libexec/cups/backend/cloudprint
+	mkdir -p ${prefix}/usr/local/lib/cloudprint-cups/
+	cp submitjob.py ${prefix}/usr/local/lib/cloudprint-cups/
+	cp config.py ${prefix}/usr/local/lib/cloudprint-cups/
+	cp cloudprint.ppd ${prefix}/usr/share/cups/model/CloudPrint.ppd
+	chown root:root ${prefix}/usr/libexec/cups/backend/cloudprint
+	chmod 700 ${prefix}/usr/libexec/cups/backend/cloudprint
