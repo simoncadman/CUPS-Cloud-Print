@@ -2,11 +2,19 @@
 # Process this file with autoconf to produce a configure script.
 
 AC_PREREQ([2.68])
-AC_INIT([FULL-PACKAGE-NAME], [VERSION], [BUG-REPORT-ADDRESS])
+AC_INIT([cupscloudprint], [20110909], [src@niftiestsoftware.com])
+AC_PROG_INSTALL
+AC_PATH_PROG(ppdcpath,ppdc,[missing])
+if test "${ppdcpath}" = "missing"; then
+	AC_MSG_ERROR([cannot find ppdc])
+fi
 
-# Checks for programs.
+AC_PATH_PROG(cupsconfpath,cups-config,[missing])
+if test "${cupsconfpath}" = "missing"; then
+	AC_MSG_ERROR([cannot find cups-config])
+fi
 
-# Checks for libraries.
+AC_SUBST(cupsserverpath, [`cups-config --serverbin`])
 
 # Checks for header files.
 
@@ -14,5 +22,5 @@ AC_INIT([FULL-PACKAGE-NAME], [VERSION], [BUG-REPORT-ADDRESS])
 
 # Checks for library functions.
 
-AC_CONFIG_FILES([Makefile])
+AC_CONFIG_FILES()
 AC_OUTPUT(Makefile)

@@ -1,16 +1,17 @@
 prefix = @prefix@
 srcdir = @srcdir@
-INSTALL = install
-cupsbackend = /usr/libexec/cups/backend/
+INSTALL = @INSTALL@
+cupsbackend = @cupsserverpath@/backend/
 cupsmodel = /usr/share/cups/model/
+ppcdpath = @ppdcpath@
 
 all: cloudprint.ppd
 
 cloudprint.ppd:
-	ppdc cloudprint.drv  -d .
+	${ppdcpath} cloudprint.drv  -d .
 	
 clean:
-	rm cloudprint.ppd
+	unlink cloudprint.ppd
 
 install:
 	${INSTALL} -D -g root -o root -m 700  ${srcdir}/backend.py ${cupsbackend}cloudprint
