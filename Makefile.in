@@ -1,8 +1,8 @@
 prefix = @prefix@
 srcdir = @srcdir@
 INSTALL = @INSTALL@
-cupsbackend = $(subst /usr,@prefix@,@cupsserverpath@)/backend/
-cupsmodel = $(subst /usr,@prefix@,@cupsdatapath@)/model/
+cupsbackend = $(subst /usr,${prefix},@cupsserverpath@)/backend/
+cupsmodel = $(subst /usr,${prefix},@cupsdatapath@)/model/
 ppdcpath = @ppdcpath@
 
 all: cloudprint.ppd
