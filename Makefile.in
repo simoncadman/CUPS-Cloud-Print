@@ -1,4 +1,6 @@
 prefix = @prefix@
+srcdir = @srcdir@
+INSTALL = install
 
 all: cloudprint.ppd
 
@@ -8,14 +10,8 @@ cloudprint.ppd:
 clean:
 	rm cloudprint.ppd
 
-test:
-	echo "${prefix}"
-	
 install:
-	cp backend.py ${prefix}/usr/libexec/cups/backend/cloudprint
-	mkdir -p ${prefix}/usr/local/lib/cloudprint-cups/
-	cp submitjob.py ${prefix}/usr/local/lib/cloudprint-cups/
-	cp config.py ${prefix}/usr/local/lib/cloudprint-cups/
-	cp cloudprint.ppd ${prefix}/usr/share/cups/model/CloudPrint.ppd
-	chown root:root ${prefix}/usr/libexec/cups/backend/cloudprint
-	chmod 700 ${prefix}/usr/libexec/cups/backend/cloudprint
+	${INSTALL} -D -g root -o root -m 700  ${srcdir}/backend.py /usr/libexec/cups/backend/cloudprint
+	${INSTALL} -D ${srcdir}/submitjob.py ${prefix}/lib/cloudprint-cups/submitjob.py
+	${INSTALL} ${srcdir}/config.py ${prefix}/lib/cloudprint-cups/config.py
+	${INSTALL} -D ${srcdir}/cloudprint.ppd ${prefix}/share/cups/model/CloudPrint.ppd
