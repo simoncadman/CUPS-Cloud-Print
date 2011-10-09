@@ -6,7 +6,10 @@ Clone the git repo:
 git clone git://github.com/simoncadman/CUPS-Cloud-Print.git
 
 cd CUPS-Cloud-Print/
+./configure
 make install
+
+You may need to copy the created CloudPrint.ppd and cups/backend/cloudprint files to your actual machine root.
 
 Copy cloudprint.conf.example as /etc/cloudprint.conf , and populate with your own Google details
 
