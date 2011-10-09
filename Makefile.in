@@ -2,8 +2,8 @@ prefix = @prefix@
 srcdir = @srcdir@
 INSTALL = @INSTALL@
 cupsbackend = @cupsserverpath@/backend/
-cupsmodel = /usr/share/cups/model/
-ppcdpath = @ppdcpath@
+cupsmodel = @cupsdatapath@/model/
+ppdcpath = @ppdcpath@
 
 all: cloudprint.ppd
 
@@ -13,7 +13,7 @@ cloudprint.ppd:
 clean:
 	unlink cloudprint.ppd
 
-install:
+install: all
 	${INSTALL} -D -g root -o root -m 700  ${srcdir}/backend.py ${cupsbackend}cloudprint
 	${INSTALL} -D ${srcdir}/submitjob.py ${prefix}/lib/cloudprint-cups/submitjob.py
 	${INSTALL} ${srcdir}/config.py ${prefix}/lib/cloudprint-cups/config.py

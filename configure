@@ -566,6 +566,7 @@ PACKAGE_URL=''
 
 ac_subst_vars='LTLIBOBJS
 LIBOBJS
+cupsdatapath
 cupsserverpath
 cupsconfpath
 ppdcpath
@@ -1865,6 +1866,8 @@ if test "${cupsconfpath}" = "missing"; then
 fi
 
 cupsserverpath=`cups-config --serverbin`
+
+cupsdatapath=`cups-config --datadir`
 
 
 # Checks for header files.

@@ -15,6 +15,7 @@ if test "${cupsconfpath}" = "missing"; then
 fi
 
 AC_SUBST(cupsserverpath, [`cups-config --serverbin`])
+AC_SUBST(cupsdatapath, [`cups-config --datadir`])
 
 # Checks for header files.
 
