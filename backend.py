@@ -37,6 +37,8 @@ else:
 tempFile = None
 if printFile == None:
   tmpDir = os.getenv('TMPDIR')
+  if not tmpDir:
+        tmpDir = "/tmp"
   tempFile = tmpDir + '/' + jobID + '-' + userName + '-cupsjob-' + str(os.getpid())
   
   OUT = open (tempFile, 'w')
