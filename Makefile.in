@@ -11,7 +11,7 @@ cloudprint.ppd:
 	${ppdcpath} cloudprint.drv  -d .
 	
 clean:
-	unlink cloudprint.ppd
+	rm -f cloudprint.ppd
 
 install: all
 	${INSTALL} -D ${srcdir}/submitjob.py ${prefix}/lib/cloudprint-cups/submitjob.py
