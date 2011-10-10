@@ -18,3 +18,6 @@ install: all
 	${INSTALL} ${srcdir}/config.py ${prefix}/lib/cloudprint-cups/config.py
 	${INSTALL} -D -g root -o root -m 700  ${srcdir}/backend.py ${cupsbackend}cloudprint
 	${INSTALL} -D ${srcdir}/cloudprint.ppd ${cupsmodel}CloudPrint.ppd
+	touch /var/log/cups/cloudprint_log
+	chown root:lp /var/log/cups/cloudprint_log
+	chmod 660 /var/log/cups/cloudprint_log
