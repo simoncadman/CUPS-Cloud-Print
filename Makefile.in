@@ -17,7 +17,7 @@ install: all
 	mkdir -p ${prefix}/lib/cloudprint-cups/
 	${INSTALL} ${srcdir}/submitjob.py ${prefix}/lib/cloudprint-cups/submitjob.py
 	${INSTALL} ${srcdir}/config.py ${prefix}/lib/cloudprint-cups/config.py
-	${INSTALL} -g root -o root -m 700  ${srcdir}/backend.py ${cupsbackend}cloudprint
+	${INSTALL} -g `groups root | cut -d' ' -f1` -o root -m 700  ${srcdir}/backend.py ${cupsbackend}cloudprint
 	${INSTALL} ${srcdir}/cloudprint.ppd ${cupsmodel}CloudPrint.ppd
 	mkdir -p $(DESTDIR)/var/log/cups/
 	touch $(DESTDIR)/var/log/cups/cloudprint_log
