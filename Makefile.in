@@ -14,10 +14,11 @@ clean:
 	rm -f cloudprint.ppd
 
 install: all
-	${INSTALL} -D ${srcdir}/submitjob.py ${prefix}/lib/cloudprint-cups/submitjob.py
+	mkdir -p ${prefix}/lib/cloudprint-cups/
+	${INSTALL} ${srcdir}/submitjob.py ${prefix}/lib/cloudprint-cups/submitjob.py
 	${INSTALL} ${srcdir}/config.py ${prefix}/lib/cloudprint-cups/config.py
-	${INSTALL} -D -g root -o root -m 700  ${srcdir}/backend.py ${cupsbackend}cloudprint
-	${INSTALL} -D ${srcdir}/cloudprint.ppd ${cupsmodel}CloudPrint.ppd
+	${INSTALL} -g root -o root -m 700  ${srcdir}/backend.py ${cupsbackend}cloudprint
+	${INSTALL} ${srcdir}/cloudprint.ppd ${cupsmodel}CloudPrint.ppd
 	mkdir -p $(DESTDIR)/var/log/cups/
 	touch $(DESTDIR)/var/log/cups/cloudprint_log
 	chown root:lp $(DESTDIR)/var/log/cups/cloudprint_log
