@@ -66,9 +66,30 @@ if uri == None:
 logfile = open('/var/log/cups/cloudprint_log', 'a')
 logfile.write("Printing file " + printFile + "\n")
 
-pdfFile = printFile+".pdf"
+def which(program):
+    import os
+    def is_exe(fpath):
+        return os.path.exists(fpath) and os.access(fpath, os.X_OK)
 
-subprocess.call(["ps2pdf", printFile, pdfFile])
+    fpath, fname = os.path.split(program)
+    if fpath:
+        if is_exe(program):
+            return program
+    else:
+        for path in os.environ["PATH"].split(os.pathsep):
+            exe_file = os.path.join(path, program)
+            if is_exe(exe_file):
+                return exe_file
+
+    return None
+
+
+pdfFile = printFile+".pdf"
+ps2PdfName = "ps2pdf"
+if which(ps2PdfName) == None:
+  ps2PdfName = "pstopdf"
+
+subprocess.call([ps2PdfName, printFile, pdfFile])
 submitjobpath = "/usr/lib/cloudprint-cups/" + "submitjob.py"
 if not os.path.exists( submitjobpath  ):
 	submitjobpath = "/usr/local/lib/cloudprint-cups/" + "submitjob.py"
