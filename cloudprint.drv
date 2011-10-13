@@ -13,8 +13,10 @@ Manufacturer "Google"
 ModelName "Cloud Print"
 Version 1.0
 
+ColorDevice True
+
 // PostScript printer attributes
-Attribute DefaultColorSpace "" CMYK
+Attribute DefaultColorSpace "" RGB
 Attribute LandscapeOrientation "" Minus90
 Attribute LanguageLevel "" "3"
 Attribute Product "" "(Google Cloud Print)"
