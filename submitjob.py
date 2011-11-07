@@ -15,7 +15,7 @@
 #    You should have received a copy of the GNU General Public License    
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-import mimetools, base64, time, httplib, logging, urllib, urllib2, string, mimetypes, sys
+import mimetools, base64, time, httplib, logging, urllib, urllib2, string, mimetypes, sys, os
 from config import Config
 try:
   configuration = Config()
@@ -338,6 +338,10 @@ def SubmitJob(printerid, jobtype, jobsrc):
     boolean: True = submitted, False = errors.
   """
   if jobtype == 'pdf':
+    
+    if not os.path.exists(jobsrc):
+      print "ERROR: PDF doesnt exist"
+      return False
     b64file = Base64Encode(jobsrc)
     fdata = ReadFile(b64file)
     hsid = True
