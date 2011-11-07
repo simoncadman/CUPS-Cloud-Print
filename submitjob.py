@@ -454,3 +454,4 @@ if SubmitJob(printerid, 'pdf', sys.argv[1]):
   sys.exit(0)
 else:
   print "ERROR: Failed to submit job to cloud print"
+  sys.exit(1)
