@@ -447,10 +447,10 @@ printername = sys.argv[2].replace('cloudprint://','')
 
 printerid = getPrinter(printername)
 if printerid == None:
-  print "Printer not found"
+  print "ERROR: Printer '" + printername + "' not found"
   sys.exit(1)
 if SubmitJob(printerid, 'pdf', sys.argv[1]):
-  print "Successfully printed"
+  print "INFO: Successfully printed"
   sys.exit(0)
 else:
-  print "Failed to submit job"
+  print "ERROR: Failed to submit job to cloud print"
