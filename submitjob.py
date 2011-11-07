@@ -446,4 +446,11 @@ def GetUrl(url, tokens, data=None, cookies=False, anonymous=False):
 printername = sys.argv[2].replace('cloudprint://','')
 
 printerid = getPrinter(printername)
-SubmitJob(printerid, 'pdf', sys.argv[1])
+if printerid == None:
+  print "Printer not found"
+  sys.exit(1)
+if SubmitJob(printerid, 'pdf', sys.argv[1]):
+  print "Successfully printed"
+  sys.exit(0)
+else:
+  print "Failed to submit job"
