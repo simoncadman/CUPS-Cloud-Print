@@ -235,7 +235,7 @@ def EncodeMultiPart(fields, files, file_type='application/xml'):
     return CRLF.join(lines)
     
     
-def SubmitJob(printerid, jobtype, jobsrc):
+def SubmitJob(printerid, jobtype, jobsrc, jobname):
   """Submit a job to printerid with content of dataUrl.
 
   Args:
@@ -258,11 +258,7 @@ def SubmitJob(printerid, jobtype, jobsrc):
   else:
     fdata = None
 
-  # Make the title unique for each job, since the printer by default will name
-  # the print job file the same as the title.
-
-  datehour = time.strftime('%b%d%H%M', time.localtime())
-  title = '%s%s' % (datehour, jobsrc)
+  title = jobname
   content = {'pdf': fdata,
              'jpeg': jobsrc,
              'png': jobsrc,
@@ -363,9 +359,9 @@ if printerid == None:
   sys.exit(1)
 
 name = sys.argv[1]
-if 3 in sys.argv:
+if len(sys.argv) > 3:
   name = sys.argv[3]
-  
+
 if SubmitJob(printerid, 'pdf', sys.argv[1], name):
   print "INFO: Successfully printed"
   sys.exit(0)
