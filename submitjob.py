@@ -49,25 +49,6 @@ CLIENT_NAME = 'CUPS Cloud Print'
 
 logger = logging
 
-def ConvertJson(json_str):    
-  """Convert json string to a python object.
-
-  Args:
-    json_str: string, json response.
-  Returns:
-    dictionary of deserialized json string.
-  """
-  j = {}
-  try:
-    j = json.loads(json_str)
-    j['json'] = True
-  except ValueError, e:
-    # This means the format from json_str is probably bad.
-    logger.error('Error parsing json string %s\n%s', json_str, e)
-    j['json'] = False
-    j['error'] = e
-
-  return j
 
 def GetKeyValue(line, sep=':'):
     """Return value from a key value pair string.
@@ -189,85 +170,6 @@ def Base64Encode(pathname):
   else:
     return None
 
-
-
-def GetCookie(cookie_key, cookie_string):
-    """Extract the cookie value from a set-cookie string.
-
-    Args:
-      cookie_key: string, cookie identifier.
-      cookie_string: string, from a set-cookie command.
-    Returns:
-      string, value of cookie.
-    """
-    logger.debug('Getting cookie from %s', cookie_string)
-    id_string = cookie_key + '='
-    cookie_crumbs = cookie_string.split(';')
-    for c in cookie_crumbs:
-      if id_string in c:
-        cookie = c.split(id_string)
-        return cookie[1]
-    return None
-
-def GaiaLogin(email, password):
-    """Login to gaia using HTTP post to the gaia login page.
-
-    Args:
-      email: string,
-      password: string
-    Returns:
-      dictionary of authentication tokens.
-    """
-    tokens = {}
-    cookie_keys = ['SID', 'LSID', 'HSID', 'SSID']
-    email = email.replace('+', '%2B')
-    # Needs to be some random string.
-    galx_cookie = base64.b64encode('%s%s' % (email, time.time()))
-
-    # Simulate submitting a gaia login form.
-    form = ('ltmpl=login&fpui=1&rm=hide&hl=en-US&alwf=true'
-            '&continue=https%%3A%%2F%%2F%s%%2F%s'
-            '&followup=https%%3A%%2F%%2F%s%%2F%s'
-            '&service=%s&Email=%s&Passwd=%s&GALX=%s' % (FOLLOWUP_HOST,
-            FOLLOWUP_URI, FOLLOWUP_HOST, FOLLOWUP_URI, SERVICE, email,
-            password, galx_cookie))
-    login = httplib.HTTPS(GAIA_HOST, 443)
-    login.putrequest('POST', LOGIN_URI)
-    login.putheader('Host', GAIA_HOST)
-    login.putheader('content-type', 'application/x-www-form-urlencoded')
-    login.putheader('content-length', str(len(form)))
-    login.putheader('Cookie', 'GALX=%s' % galx_cookie)
-    logger.debug('Sent POST content: %s', form)
-    login.endheaders()
-    logger.info('HTTP POST to https://%s%s', GAIA_HOST, LOGIN_URI)
-    login.send(form)
-
-    (errcode, errmsg, headers) = login.getreply()
-    login_output = login.getfile()
-    login_output.close()
-    login.close()
-    logger.info('Login complete.')
-
-    if errcode != 302:
-      logger.error('Gaia HTTP post returned %d, expected 302', errcode)
-      logger.error('Message: %s', errmsg)
-
-    for line in str(headers).split('\r\n'):
-      if not line: continue
-      (name, content) = line.split(':', 1)
-      if name.lower() == 'set-cookie':
-        for k in cookie_keys:
-          if content.strip().startswith(k):
-            tokens[k] = GetCookie(k, content)
-    if not tokens:
-      logger.error('No cookies received, check post parameters.')
-      return None
-    else:
-      logger.debug('Received the following authorization tokens.')
-      for t in tokens:
-        logger.debug(t)
-      return tokens
-
 def GetAuthTokens(email, password):
     """Assign login credentials from GAIA accounts service.
 
@@ -277,8 +179,7 @@ def GetAuthTokens(email, password):
     Returns:
       dictionary containing Auth token.
     """
-    # First get GAIA login credentials using our GaiaLogin method.
-    tokens = GaiaLogin(email, password)
+    tokens = {}
 
     # We still need to get the Auth token.    
     params = {'accountType': 'GOOGLE',
@@ -288,14 +189,22 @@ def GetAuthTokens(email, password):
               'source': CLIENT_NAME}
     stream = urllib.urlopen(LOGIN_URL, urllib.urlencode(params))
 
+    success = False
     for line in stream:
       if line.strip().startswith('Auth='):
         tokens['Auth'] = line.strip().replace('Auth=', '')
+        success = True
+    
+    if not success:
+      return None
     
     return tokens
 
 
 tokens = GetAuthTokens(email, password)
+if tokens == None:
+  print "ERROR: Invalid username/password"
+  sys.exit(1)
 
 
 def EncodeMultiPart(fields, files, file_type='application/xml'):
