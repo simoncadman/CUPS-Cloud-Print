@@ -20,11 +20,10 @@ from config import Config
 try:
   configuration = Config()
 except IOError:
-  print "Unable to load configuration from", Config.configfile,", create one from cloudprint.conf.example"
+  print "ERROR: Unable to load configuration from", Config.configfile,", create one from cloudprint.conf.example"
   sys.exit(1)
 except Exception as error:
-  print "Unknown error when reading configuration file"
-  print error
+  print "ERROR: Unknown error when reading configuration file - ", error
   sys.exit(1)
 
 email = configuration.get("Google", "Username")
