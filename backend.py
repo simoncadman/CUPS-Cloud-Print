@@ -102,7 +102,7 @@ logfile.write("Converted to PDF as "+ pdfFile + "\n")
 sys.stderr.write( "INFO: Sending document to Cloud Print\n")
 logfile.write("Sending "+ pdfFile + " to cloud\n")
 result = 0
-p = subprocess.Popen([submitjobpath, pdfFile, uri], stdout=subprocess.PIPE)
+p = subprocess.Popen([submitjobpath, pdfFile, uri, jobTitle], stdout=subprocess.PIPE)
 output = p.communicate()[0]
 result = p.returncode
 sys.stderr.write(output)
