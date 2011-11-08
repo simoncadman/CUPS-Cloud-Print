@@ -273,7 +273,6 @@ def SubmitJob(printerid, jobtype, jobsrc, jobname):
              ('contentType', content_type[jobtype])]
   files = [('capabilities', 'capabilities', '{"capabilities":[]}')]
   if jobtype in ['pdf', 'jpeg', 'png']:
-    files.append(('content', jobsrc, fdata))
     edata = EncodeMultiPart(headers, files, file_type=content_type[jobtype])
   else:
     edata = EncodeMultiPart(headers, files)
