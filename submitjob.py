@@ -361,7 +361,12 @@ printerid = getPrinter(printername)
 if printerid == None:
   print "ERROR: Printer '" + printername + "' not found"
   sys.exit(1)
-if SubmitJob(printerid, 'pdf', sys.argv[1]):
+
+name = sys.argv[1]
+if 3 in sys.argv:
+  name = sys.argv[3]
+  
+if SubmitJob(printerid, 'pdf', sys.argv[1], name):
   print "INFO: Successfully printed"
   sys.exit(0)
 else:
