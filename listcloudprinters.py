@@ -110,7 +110,6 @@ if tokens == None:
 
     
 def getPrinters(proxy=None):
-    printer_id = None
     response = GetUrl('%s/search?q=' % (CLOUDPRINT_URL), tokens)
     responseobj = json.loads(response)
     if 'printers' in responseobj and len(responseobj['printers']) > 0:

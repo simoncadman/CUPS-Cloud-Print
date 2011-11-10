@@ -48,34 +48,6 @@ CLIENT_NAME = 'CUPS Cloud Print'
 
 logger = logging
 
-
-def GetKeyValue(line, sep=':'):
-    """Return value from a key value pair string.
-
-    Args:
-      line: string containing key value pair.
-      sep: separator of key and value.
-    Returns:
-      string: value from key value string.
-    """
-    s = line.split(sep)
-    return StripPunc(s[1])
-
-def StripPunc(s):
-  """Strip puncuation from string, except for - sign.
-
-  Args:
-    s: string.
-  Returns:
-    string with puncuation removed.
-  """
-  for c in string.punctuation:
-    if c == '-' or c == '_':  # Could be negative number, so don't remove '-'.
-      continue
-    else:
-      s = s.replace(c, '')
-  return s.strip()
-
 def Validate(response):
   """Determine if JSON response indicated success."""
   if response.find('"success": true') > 0:
@@ -252,6 +224,7 @@ def SubmitJob(printerid, jobtype, jobsrc, jobname):
       return False
     b64file = Base64Encode(jobsrc)
     fdata = ReadFile(b64file)
+    os.unlink(b64file)
     hsid = True
   elif jobtype in ['png', 'jpeg']:
     fdata = ReadFile(jobsrc)
@@ -287,26 +260,17 @@ def SubmitJob(printerid, jobtype, jobsrc, jobname):
   return status
   
   
-def getPrinter(printer, proxy=None):
+def GetPrinter(printer, proxy=None):
     printer_id = None
     response = GetUrl('%s/search?q=%s' % (CLOUDPRINT_URL, printer), tokens)
     printer = urllib.unquote(printer)
-    sections = response.split('"printers": [')
-    lines = sections[1].split(',')
-    for line in lines:
-      if '"id"' in line:
-        printer_id = GetKeyValue(line)
-      elif '"name"' in line:
-        printer_name = GetKeyValue(line)
-        if printer_name == printer:
-          logger.debug('Printer %s is registered', printer)
-          if printer_id:
-            return printer_id
-          else:
-            logger.error('Malformed api response.')
-            return None
-
-    return None
+    responseobj = json.loads(response)
+    if 'printers' in responseobj and len(responseobj['printers']) > 0:
+      for printerdetail in responseobj['printers']:
+	if printer == printerdetail['name']:
+	  return printerdetail['id']
+    else:
+      return None
 
 def GetUrl(url, tokens, data=None, cookies=False, anonymous=False):
   """Get URL, with GET or POST depending data, adds Authorization header.
@@ -352,7 +316,7 @@ def GetUrl(url, tokens, data=None, cookies=False, anonymous=False):
 
 printername = sys.argv[2].replace('cloudprint://','')
 
-printerid = getPrinter(printername)
+printerid = GetPrinter(printername)
 if printerid == None:
   print "ERROR: Printer '" + printername + "' not found"
   sys.exit(1)
