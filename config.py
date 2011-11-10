@@ -30,6 +30,9 @@ class Config():
   def get ( self, section, key ):
     return self.config.get(section, key)
 
+  def set ( self, section, key, value ):
+    return self.config.set(section, key, value)
+    
   def save (self ):
     with open(self.configfile, 'wb') as configdetail:
       self.config.write(configdetail)
