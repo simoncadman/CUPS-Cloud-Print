@@ -39,7 +39,6 @@ GAIA_HOST = 'www.google.com'
 LOGIN_URI = '/accounts/ServiceLoginAuth'
 LOGIN_URL = 'https://www.google.com/accounts/ClientLogin'
 SERVICE = 'cloudprint'
-OAUTH = 'This_should_contain_oauth_string_for_your_username'
 
 # The following are used for general backend access.
 CLOUDPRINT_URL = 'http://www.google.com/cloudprint'
@@ -48,28 +47,6 @@ CLIENT_NAME = 'CUPS Cloud Print'
 
 logger = logging
 
-def Validate(response):
-  """Determine if JSON response indicated success."""
-  if response.find('"success": true') > 0:
-    return True
-  else:
-    return False
-
-def GetMessage(response):
-  """Extract the API message from a Cloud Print API json response.
-
-  Args:
-    response: json response from API request.
-  Returns:
-    string: message content in json response.
-  """
-  lines = response.split('\n')
-  for line in lines:
-    if '"message":' in line:
-      msg = line.split(':')
-      return msg[1]
-
-  return None
 
 def ReadFile(pathname):
   """Read contents of a file and return content.
@@ -252,13 +229,17 @@ def SubmitJob(printerid, jobtype, jobsrc, jobname):
 
   response = GetUrl('%s/submit' % CLOUDPRINT_URL, tokens, data=edata,
                     cookies=False)
-  status = Validate(response)
-  if not status:
-    error_msg = GetMessage(response)
+  try:
+    responseobj = json.loads(response)
+    if responseobj['success'] == True:
+      return True
+    else:
+      logger.error('Print job %s failed with %s', jobtype, responseobj['message'])
+      return False
+      
+  except Exception as error_msg:
     logger.error('Print job %s failed with %s', jobtype, error_msg)
-
-  return status
-  
+    return False
   
 def GetPrinter(printer, proxy=None):
     printer_id = None

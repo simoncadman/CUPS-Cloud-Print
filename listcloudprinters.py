@@ -16,28 +16,7 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import mimetools, base64, time, httplib, logging, urllib, urllib2, string, mimetypes, sys, os, json
-
-
-
-import ConfigParser, os, pickle
-
-class Config():
-  
-  configfile = "/etc/cloudprint.conf"
-  
-  def __init__( self ):
-    self.config = ConfigParser.ConfigParser()
-    self.config.readfp( open(self.configfile) )
-    # verify we have needed params
-    self.config.get("Google", "Username")
-    self.config.get("Google", "Password")
-    
-  def get ( self, section, key ):
-    return self.config.get(section, key)
-
-  def save (self ):
-    with open(self.configfile, 'wb') as configdetail:
-      self.config.write(configdetail)
+from config import Config
 
 try:
   configuration = Config()
@@ -61,7 +40,6 @@ GAIA_HOST = 'www.google.com'
 LOGIN_URI = '/accounts/ServiceLoginAuth'
 LOGIN_URL = 'https://www.google.com/accounts/ClientLogin'
 SERVICE = 'cloudprint'
-OAUTH = 'This_should_contain_oauth_string_for_your_username'
 
 # The following are used for general backend access.
 CLOUDPRINT_URL = 'http://www.google.com/cloudprint'
