@@ -15,7 +15,7 @@
 #    You should have received a copy of the GNU General Public License    
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-import mimetools, base64, time, httplib, logging, urllib, urllib2, string, mimetypes, sys, os
+import mimetools, base64, time, httplib, logging, urllib, urllib2, string, mimetypes, sys, os, json
 from config import Config
 try:
   configuration = Config()

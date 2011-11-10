@@ -16,7 +16,29 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import mimetools, base64, time, httplib, logging, urllib, urllib2, string, mimetypes, sys, os, json
-from config import Config
+
+
+
+import ConfigParser, os, pickle
+
+class Config():
+  
+  configfile = "/etc/cloudprint.conf"
+  
+  def __init__( self ):
+    self.config = ConfigParser.ConfigParser()
+    self.config.readfp( open(self.configfile) )
+    # verify we have needed params
+    self.config.get("Google", "Username")
+    self.config.get("Google", "Password")
+    
+  def get ( self, section, key ):
+    return self.config.get(section, key)
+
+  def save (self ):
+    with open(self.configfile, 'wb') as configdetail:
+      self.config.write(configdetail)
+
 try:
   configuration = Config()
 except IOError:
@@ -141,7 +163,7 @@ def GetUrl(url, tokens, data=None, cookies=False, anonymous=False):
 def printerNameToUri( printer ) :
   printer = urllib.quote(printer)
   return 'cloudprint://' + printer
-        
+
 printers = getPrinters()
 if printers == None:
   print "No Printers Found"
