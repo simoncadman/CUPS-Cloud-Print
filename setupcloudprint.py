@@ -114,7 +114,6 @@ def printerNameToUri( printer ) :
   return 'cloudprint://' + printer
 
 def AddPrinter( printername, uri ) :
-  print "Setting up",printername,uri
   # fix printer name
   printername = printername.replace(' ','_')
   result = None
@@ -132,6 +131,7 @@ def AddPrinter( printername, uri ) :
     return None
   
 tokens = None
+addedCount = 0
 success = False
 while success == False:
   if useConfigDetails:
@@ -155,7 +155,7 @@ while success == False:
     
 connection = cups.Connection()
 cupsprinters = connection.getPrinters()
-  
+
 printers = getPrinters()
 if printers == None:
   print "No Printers Found"
@@ -169,3 +169,9 @@ for printer in printers:
       found = True
   if found == False:
     AddPrinter(printer['name'], uri)
+    addedCount+=1
+    
+if addedCount > 0:
+  print "Added",addedCount,"new printers to CUPS"
+else:
+  print "No new printers to add"
