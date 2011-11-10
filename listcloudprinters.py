@@ -17,6 +17,7 @@
 
 import mimetools, base64, time, httplib, logging, urllib, urllib2, string, mimetypes, sys, os, json
 from config import Config
+from auth import Auth
 
 try:
   configuration = Config()
@@ -38,50 +39,15 @@ FOLLOWUP_HOST = 'www.google.com/cloudprint'
 FOLLOWUP_URI = 'select%2Fgaiaauth'
 GAIA_HOST = 'www.google.com'
 LOGIN_URI = '/accounts/ServiceLoginAuth'
-LOGIN_URL = 'https://www.google.com/accounts/ClientLogin'
-SERVICE = 'cloudprint'
 
 # The following are used for general backend access.
 CLOUDPRINT_URL = 'http://www.google.com/cloudprint'
-# CLIENT_NAME should be some string identifier for the client you are writing.
-CLIENT_NAME = 'CUPS Cloud Print'
 
 logger = logging
 
 
 
-def GetAuthTokens(email, password):
-    """Assign login credentials from GAIA accounts service.
-
-    Args:
-      email: Email address of the Google account to use.
-      password: Cleartext password of the email account.
-    Returns:
-      dictionary containing Auth token.
-    """
-    tokens = {}
-
-    # We still need to get the Auth token.    
-    params = {'accountType': 'GOOGLE',
-              'Email': email,
-              'Passwd': password,
-              'service': SERVICE,
-              'source': CLIENT_NAME}
-    stream = urllib.urlopen(LOGIN_URL, urllib.urlencode(params))
-
-    success = False
-    for line in stream:
-      if line.strip().startswith('Auth='):
-        tokens['Auth'] = line.strip().replace('Auth=', '')
-        success = True
-    
-    if not success:
-      return None
-    
-    return tokens
-
-
-tokens = GetAuthTokens(email, password)
+tokens = Auth.GetAuthTokens(email, password)
 if tokens == None:
   print "ERROR: Invalid username/password"
   sys.exit(1)

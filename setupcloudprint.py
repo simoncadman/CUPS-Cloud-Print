@@ -2,6 +2,7 @@
 
 import sys, getpass, mimetools, urllib, urllib2, json, cups
 from config import Config
+from auth import Auth
 
 CRLF = '\r\n'
 BOUNDARY = mimetools.choose_boundary()
@@ -11,13 +12,9 @@ FOLLOWUP_HOST = 'www.google.com/cloudprint'
 FOLLOWUP_URI = 'select%2Fgaiaauth'
 GAIA_HOST = 'www.google.com'
 LOGIN_URI = '/accounts/ServiceLoginAuth'
-LOGIN_URL = 'https://www.google.com/accounts/ClientLogin'
-SERVICE = 'cloudprint'
 
 # The following are used for general backend access.
 CLOUDPRINT_URL = 'http://www.google.com/cloudprint'
-# CLIENT_NAME should be some string identifier for the client you are writing.
-CLIENT_NAME = 'CUPS Cloud Print'
 
 useConfigDetails = True
 
@@ -26,38 +23,6 @@ try:
 except Exception as error:
   useConfigDetails = False
   
-
-# test username and password
-
-def GetAuthTokens(email, password):
-    """Assign login credentials from GAIA accounts service.
-
-    Args:
-      email: Email address of the Google account to use.
-      password: Cleartext password of the email account.
-    Returns:
-      dictionary containing Auth token.
-    """
-    tokens = {}
-
-    # We still need to get the Auth token.    
-    params = {'accountType': 'GOOGLE',
-              'Email': email,
-              'Passwd': password,
-              'service': SERVICE,
-              'source': CLIENT_NAME}
-    stream = urllib.urlopen(LOGIN_URL, urllib.urlencode(params))
-
-    success = False
-    for line in stream:
-      if line.strip().startswith('Auth='):
-        tokens['Auth'] = line.strip().replace('Auth=', '')
-        success = True
-    
-    if not success:
-      return None
-    
-    return tokens
 
 def getPrinters(proxy=None):
     response = GetUrl('%s/search?q=' % (CLOUDPRINT_URL), tokens)
@@ -143,7 +108,7 @@ while success == False:
     username = raw_input("Username: ")
     password = getpass.getpass()
   
-  tokens = GetAuthTokens(username, password)
+  tokens = Auth.GetAuthTokens(username, password)
   if tokens == None:
     print "Invalid username/password"
     success = False
