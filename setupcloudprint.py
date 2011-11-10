@@ -160,10 +160,13 @@ printers = getPrinters()
 if printers == None:
   print "No Printers Found"
   sys.exit(1)
+  
+printeruris = []
 
 for printer in printers:
   uri = printerNameToUri(printer['name'])
   found = False
+  printeruris.append(uri)
   for cupsprinter in cupsprinters:
     if cupsprinters[cupsprinter]['device-uri'] == uri:
       found = True
@@ -175,3 +178,26 @@ if addedCount > 0:
   print "Added",addedCount,"new printers to CUPS"
 else:
   print "No new printers to add"
+  
+# check for printers to prune
+prunePrinters = []
+cupsprinters = connection.getPrinters()
+
+protocolstring = 'cloudprint://'
+
+for cupsprinter in cupsprinters:
+  if cupsprinters[cupsprinter]['device-uri'].startswith( protocolstring ):
+    if cupsprinters[cupsprinter]['device-uri'] not in printeruris:
+      prunePrinters.append(cupsprinter)
+
+if len( prunePrinters ) > 0 :
+  print "Found",len( prunePrinters ),"printers with no longer exist on cloud print:"
+  for printer in prunePrinters:
+    print printer
+  answer = raw_input("Remove? ")
+  if answer.startswith("Y") or answer.startswith("y"):
+    for printer in prunePrinters:
+      connection.deletePrinter(printer)
+      print "Deleted",printer
+  else:
+    print "Not removing old printers"
