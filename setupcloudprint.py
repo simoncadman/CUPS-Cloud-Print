@@ -36,6 +36,12 @@ while success == False:
     configuration.save()
     success = True
     
+  
+answer = raw_input("Add all Google Cloud Print printers to local CUPS install? ")
+if not ( answer.startswith("Y") or answer.startswith("y") ):
+  print "Not adding printers automatically"
+  sys.exit(0)
+    
 connection = cups.Connection()
 cupsprinters = connection.getPrinters()
 
