@@ -20,6 +20,7 @@ class Printer():
   CLOUDPRINT_URL = 'http://www.google.com/cloudprint'
   BOUNDARY = mimetools.choose_boundary()
   CRLF = '\r\n'
+  PROTOCOL = 'cloudprint://'
 
   @staticmethod
   def GetPrinters(tokens, proxy=None):
@@ -33,7 +34,7 @@ class Printer():
   @staticmethod
   def printerNameToUri( printer ) :
     printer = urllib.quote(printer)
-    return 'cloudprint://' + printer
+    return Printer.PROTOCOL + printer
 
   @staticmethod
   def AddPrinter( printername, uri, connection ) :

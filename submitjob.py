@@ -37,7 +37,7 @@ if tokens == None:
   print "ERROR: Invalid username/password"
   sys.exit(1)
 
-printername = sys.argv[2].replace('cloudprint://','')
+printername = sys.argv[2].replace(Printer.PROTOCOL,'')
 
 printerid = Printer.GetPrinter(printername, tokens)
 if printerid == None:

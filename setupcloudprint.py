@@ -65,10 +65,8 @@ else:
 prunePrinters = []
 cupsprinters = connection.getPrinters()
 
-protocolstring = 'cloudprint://'
-
 for cupsprinter in cupsprinters:
-  if cupsprinters[cupsprinter]['device-uri'].startswith( protocolstring ):
+  if cupsprinters[cupsprinter]['device-uri'].startswith( Printer.PROTOCOL ):
     if cupsprinters[cupsprinter]['device-uri'] not in printeruris:
       prunePrinters.append(cupsprinter)
 
