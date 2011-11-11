@@ -34,7 +34,7 @@ password = configuration.get("Google", "Password")
 
 tokens = Auth.GetAuthTokens(email, password)
 if tokens == None:
-  print "ERROR: Invalid username/password"
+  print "ERROR: Invalid username/password, run", sys.path[0] + "/setupcloudprint.py within a terminal"
   sys.exit(1)
 
 printers = Printer.GetPrinters(tokens)
