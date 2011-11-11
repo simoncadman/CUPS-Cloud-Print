@@ -19,20 +19,29 @@ import ConfigParser, os, pickle
 class Config():
   
   configfile = "/etc/cloudprint.conf"
+  loadError = False
   
-  def __init__( self ):
+  def __init__( self, ignoreLoadError=False ):
     self.config = ConfigParser.ConfigParser()
-    self.config.readfp( open(self.configfile) )
-    # verify we have needed params
-    self.config.get("Google", "Username")
-    self.config.get("Google", "Password")
+    try:
+      self.config.readfp( open(self.configfile) )
+      # verify we have needed params
+      self.config.get("Google", "Username")
+      self.config.get("Google", "Password")
+    except Exception as error:
+      self.loadError = True
+      if not ignoreLoadError:
+	raise error
     
   def get ( self, section, key ):
     return self.config.get(section, key)
 
   def set ( self, section, key, value ):
+    if not self.config.has_section(section):
+      self.config.add_section(section)
     return self.config.set(section, key, value)
     
   def save (self ):
-    with open(self.configfile, 'wb') as configdetail:
+    with open(self.configfile, 'w') as configdetail:
       self.config.write(configdetail)
+      configdetail.close()

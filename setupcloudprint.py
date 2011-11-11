@@ -7,9 +7,8 @@ from printer import Printer
 
 useConfigDetails = True
 
-try:
-  configuration = Config()
-except Exception as error:
+configuration = Config(True)
+if configuration.loadError:
   useConfigDetails = False
   
 tokens = None
@@ -32,6 +31,8 @@ while success == False:
     useConfigDetails = False
   else:
     print "Successfully connected"
+    configuration.set('Google', 'username', username)
+    configuration.set('Google', 'password', password)
     configuration.save()
     success = True
     

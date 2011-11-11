@@ -23,7 +23,7 @@ from printer import Printer
 try:
   configuration = Config()
 except IOError:
-  print "ERROR: Unable to load configuration from", Config.configfile,", create one from cloudprint.conf.example"
+  print "ERROR: Unable to load configuration file, run", sys.path[0] + "/setupcloudprint.py within a terminal"
   sys.exit(1)
 except Exception as error:
   print "ERROR: Unknown error when reading configuration file - ", error
