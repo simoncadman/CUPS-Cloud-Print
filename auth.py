@@ -14,7 +14,7 @@
 #    You should have received a copy of the GNU General Public License    
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-import urllib
+import urllib, urllib2, mimetools
 
 class Auth():
   SERVICE = 'cloudprint'
@@ -51,3 +51,46 @@ class Auth():
 	return None
       
       return tokens
+    
+  @staticmethod
+  def GetUrl(url, tokens, data=None, cookies=False, anonymous=False, boundary=None):
+    """Get URL, with GET or POST depending data, adds Authorization header.
+
+    Args:
+      url: Url to access.
+      tokens: dictionary of authentication tokens for specific user.
+      data: If a POST request, data to be sent with the request.
+      cookies: boolean, True = send authentication tokens in cookie headers.
+      anonymous: boolean, True = do not send login credentials.
+    Returns:
+      String: response to the HTTP request.
+    """
+    if boundary == None:
+      boundary = mimetools.choose_boundary()
+    
+    request = urllib2.Request(url)
+    request.add_header('X-CloudPrint-Proxy', 'api-prober')
+    if not anonymous:
+      if cookies:
+	request.add_header('Cookie', 'SID=%s; HSID=%s; SSID=%s' % (
+	    tokens['SID'], tokens['HSID'], tokens['SSID']))
+      else:  # Don't add Auth headers when using Cookie header with auth tokens.   
+	request.add_header('Authorization', 'GoogleLogin auth=%s' % tokens['Auth'])
+    if data:
+      request.add_data(data)
+      request.add_header('Content-Length', str(len(data)))
+      request.add_header('Content-Type', 'multipart/form-data;boundary=%s' % boundary)
+    
+    # In case the gateway is not responding, we'll retry.
+    retry_count = 0
+    while retry_count < 5:
+      try:
+	result = urllib2.urlopen(request).read()
+	return result
+      except urllib2.HTTPError, e:
+	# We see this error if the site goes down. We need to pause and retry.
+	err_msg = 'Error accessing %s\n%s' % (url, e)
+	time.sleep(60)
+	retry_count += 1
+	if retry_count == 5:
+	  return err_msg
