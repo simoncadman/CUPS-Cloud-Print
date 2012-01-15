@@ -1,4 +1,4 @@
-#! /usr/bin/python
+#! /usr/bin/python2
 #    CUPS Cloudprint - Print via Google Cloud Print
 #    Copyright (C) 2011 Simon Cadman
 #
