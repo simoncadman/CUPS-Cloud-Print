@@ -15,9 +15,13 @@
 #    You should have received a copy of the GNU General Public License
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-import sys, os, subprocess
+import sys, os, subprocess, mimetypes
 progname = sys.argv[0]
 progname = 'cloudprint'
+
+def fileIsPDF ( filename ) :
+    type = mimetypes.guess_type(filename)
+    return type[0] == "application/pdf"
 
 if len(sys.argv) == 1:
   print "network " + progname + " \"Unknown\" \"Google Cloud Print\""
@@ -83,21 +87,24 @@ def which(program):
 
     return None
 
-
 pdfFile = printFile+".pdf"
 ps2PdfName = "ps2pdf"
 if which(ps2PdfName) == None:
   ps2PdfName = "pstopdf"
 
-sys.stderr.write( "INFO: Converting print job to PDF\n")
+if not fileIsPDF( printFile  ):
+	sys.stderr.write( "INFO: Converting print job to PDF\n")
 
-subprocess.call([ps2PdfName, printFile, pdfFile])
-submitjobpath = "/usr/lib/cloudprint-cups/" + "submitjob.py"
-if not os.path.exists( submitjobpath  ):
-	submitjobpath = "/usr/local/lib/cloudprint-cups/" + "submitjob.py"
+	subprocess.call([ps2PdfName, printFile, pdfFile])
+	submitjobpath = "/usr/lib/cloudprint-cups/" + "submitjob.py"
+	if not os.path.exists( submitjobpath  ):
+		submitjobpath = "/usr/local/lib/cloudprint-cups/" + "submitjob.py"
 	
-logfile.write("Running " +  submitjobpath  + "\n")
-logfile.write("Converted to PDF as "+ pdfFile + "\n")
+	logfile.write("Running " +  submitjobpath  + "\n")
+	logfile.write("Converted to PDF as "+ pdfFile + "\n")
+else:
+	logfile.write("Using " + printFile  + " as is already PDF\n")
+	pdfFile = printFile
 
 sys.stderr.write( "INFO: Sending document to Cloud Print\n")
 logfile.write("Sending "+ pdfFile + " to cloud\n")
