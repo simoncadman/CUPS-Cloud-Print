@@ -154,7 +154,7 @@ class Printer():
 	lines.append('--' + Printer.BOUNDARY)
 	lines.append('Content-Disposition: form-data; name="%s"' % key)
 	lines.append('')  # blank line
-	lines.append(value)
+	lines.append(str(value))
       for (key, filename, value) in files:
 	lines.append('--' + Printer.BOUNDARY)
 	lines.append(
@@ -162,7 +162,7 @@ class Printer():
 	    % (key, filename))
 	lines.append('Content-Type: %s' % file_type)
 	lines.append('')  # blank line
-	lines.append(value)
+	lines.append(str(value))
       lines.append('--' + Printer.BOUNDARY + '--')
       lines.append('')  # blank line
       return Printer.CRLF.join(lines)
