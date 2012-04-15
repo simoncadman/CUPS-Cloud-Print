@@ -1,14 +1,15 @@
+INTRODUCTION
+============
+Google Cloud Print driver for CUPS, allows printing to printers hosted on Google Cloud Print. 
+
 INSTALLATION
 ============
 
-RPM/DEB/Ebuild INSTALL ( Recommended )
+PACKAGE INSTALL ( Recommended )
 ================================
 
-Download and install the package for your distro from https://github.com/simoncadman/CUPS-Cloud-Print/downloads .
-
-Refer to your own specific distribution instructions for how to install the package.
-
-Follow configuration below.
+The recommended way to install CUPS Cloud Print is using your package manager, please see http://ccp.niftiestsoftware.com/ for installation 
+instructions.
 
 SOURCE INSTALL
 ==============
