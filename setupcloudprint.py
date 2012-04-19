@@ -41,7 +41,11 @@ answer = raw_input("Add all Google Cloud Print printers to local CUPS install? "
 if not ( answer.startswith("Y") or answer.startswith("y") ):
   print "Not adding printers automatically"
   sys.exit(0)
-    
+
+prefix = raw_input("Use a prefix for names of created printers ( e.g. GCP- )? ")
+if prefix == "":
+  print "Not using prefix"
+
 connection = cups.Connection()
 cupsprinters = connection.getPrinters()
 
@@ -60,7 +64,7 @@ for printer in printers:
     if cupsprinters[cupsprinter]['device-uri'] == uri:
       found = True
   if found == False:
-    Printer.AddPrinter(printer['name'], uri, connection)
+    Printer.AddPrinter(prefix + printer['name'], uri, connection)
     addedCount+=1
     
 if addedCount > 0:
