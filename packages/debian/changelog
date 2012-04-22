@@ -1,4 +1,4 @@
-cupscloudprint (20120422-1) oneiric precise; urgency=low
+cupscloudprint (20120422-1) precise; urgency=low
 
   * Added prefix support to setup script
 
