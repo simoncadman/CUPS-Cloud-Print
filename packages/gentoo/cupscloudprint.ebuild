@@ -10,9 +10,10 @@ EGIT_REPO_URI="git://github.com/simoncadman/CUPS-Cloud-Print.git"
 EGIT_COMMIT="49b8eb4be075873c9f61ed5a0aece904c977882b"
 LICENSE="GPL-3"
 SLOT="0"
-KEYWORDS="~x86 ~amd64"
+KEYWORDS="~alpha ~amd64 ~arm ~ia64 ~ppc ~ppc64 ~s390 ~sh ~sparc ~x86"
 IUSE=""
-DEPEND=">=dev-lang/python-2.6
+RDEPEND="!net-print/cups-cloudprint
+>=dev-lang/python-2.6
 net-print/cups
 app-text/ghostscript-gpl
 dev-python/pycups"
