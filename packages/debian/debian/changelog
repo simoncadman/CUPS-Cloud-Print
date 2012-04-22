@@ -1,0 +1,29 @@
+cupscloudprint (20120225-5) precise; urgency=low
+
+  * Added 12.04 support
+
+ -- simon cadman <src@niftiestsoftware.com>  Sun, 15 Apr 2012 14:25:05 +0000
+
+cupscloudprint (20120225-4) oneiric; urgency=low
+
+  * Yet more build dependancies
+
+ -- simon cadman <src@niftiestsoftware.com>  Wed, 14 Mar 2012 22:16:31 +0000
+
+cupscloudprint (20120225-3) oneiric; urgency=low
+
+  * More build dependancies
+
+ -- simon cadman <src@niftiestsoftware.com>  Wed, 14 Mar 2012 21:58:03 +0000
+
+cupscloudprint (20120225-2) oneiric; urgency=low
+
+  * Fixed build dependancies
+
+ -- simon cadman <src@niftiestsoftware.com>  Wed, 14 Mar 2012 19:00:15 +0000
+
+cupscloudprint (20120225-1) oneiric; urgency=low
+
+  * Debian package release
+
+ -- simon cadman <src@niftiestsoftware.com>  Wed, 14 Mar 2012 14:26:15 +0000
