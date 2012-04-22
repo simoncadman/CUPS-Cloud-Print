@@ -1,11 +1,11 @@
 Name:           cupscloudprint
-Version:        20120225
+Version:        20120422
 Release:        1
 Summary:        Google Cloud Print driver for CUPS, allows printing to printers hosted on Google Cloud Print
 
 License:        GPLv3+
 URL:            http://ccp.niftiestsoftware.com
-Source0:        http://ccp.niftiestsoftware.com/cupscloudprint-20120225.tar.bz2
+Source0:        http://ccp.niftiestsoftware.com/cupscloudprint-20120422.tar.bz2
 
 BuildRequires:  cups-devel
 Requires:       cups,ghostscript,python-cups
