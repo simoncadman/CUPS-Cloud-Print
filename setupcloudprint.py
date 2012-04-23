@@ -1,4 +1,4 @@
-#! /usr/bin/env python2
+#! /usr/bin/env python2.7
 
 import sys, getpass, cups
 from config import Config

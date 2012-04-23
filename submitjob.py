@@ -1,4 +1,4 @@
-#! /usr/bin/env python2
+#! /usr/bin/env python2.7
 #    CUPS Cloudprint - Print via Google Cloud Print                          
 #    Copyright (C) 2011 Simon Cadman
 #
