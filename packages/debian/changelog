@@ -1,3 +1,9 @@
+cupscloudprint (20120423-1) precise; urgency=low
+
+  * Added prefix support to setup script
+
+ -- simon cadman <src@niftiestsoftware.com>  Mon, 23 Apr 2012 21:52:48 +0000
+
 cupscloudprint (20120422-1) precise; urgency=low
 
   * Added prefix support to setup script
