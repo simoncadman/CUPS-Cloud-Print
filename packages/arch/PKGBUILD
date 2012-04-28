@@ -1,0 +1,31 @@
+# Maintainer: Simon Cadman <src@niftiestsoftware.com>
+pkgname=cupscloudprint
+pkgver=20120428
+pkgrel=1
+pkgdesc="Print via Google Cloud print using CUPS"
+arch=any
+url="http://ccp.niftiestsoftware.com"
+license=('GPL3')
+depends=('cups' 'pycups' 'python2')
+makedepends=('cupsddk' 'git')
+changelog=ChangeLog
+source=()
+md5sums=()
+_gitroot="git://github.com/simoncadman/CUPS-Cloud-Print.git"
+_gitversion=""
+
+
+build() {
+  git clone $_gitroot "$srcdir/$pkgname-$pkgver"  --depth 1
+  cd "$srcdir/$pkgname-$pkgver"
+  git checkout $_gitversion
+  ./configure --prefix=/usr
+  make
+}
+
+package() {
+  cd "$srcdir/$pkgname-$pkgver"
+  make DESTDIR="$pkgdir/" install
+}
+
+# vim:set ts=2 sw=2 et:
