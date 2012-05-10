@@ -1,6 +1,6 @@
 #! /usr/bin/env python2.7
 
-import sys, getpass, cups
+import sys, os, grp, getpass, cups
 from config import Config
 from auth import Auth
 from printer import Printer
@@ -34,6 +34,9 @@ while success == False:
     configuration.set('Google', 'username', username)
     configuration.set('Google', 'password', password)
     configuration.save()
+    os.chmod('/etc/cloudprint.conf', 0640)
+    lpid = grp.getgrnam('lp').gr_gid
+    os.chown('/etc/cloudprint.conf', 0, lpid)
     success = True
     
   
