@@ -1,3 +1,9 @@
+cupscloudprint (20120513-1) precise; urgency=low
+
+  * Fixed: cloudprint.conf details exposed to users
+  * Fixed: backend script fails if cannot write to logfile
+  * Fixed: Logrotate recreates /var/log/cups/cloudprint_log file with wrong permissions
+
 cupscloudprint (20120423-1) precise; urgency=low
 
   * Added prefix support to setup script
