@@ -67,7 +67,12 @@ if uri == None:
   sys.stdout.write("URI must be \"cloudprint:/<cloud printer name>\"!\n")
   sys.exit(255)
 
-logfile = open('/var/log/cups/cloudprint_log', 'a')
+try:
+	logfile = open('/var/log/cups/cloudprint_log', 'a')
+except:
+	logfile = sys.stdout
+	logfile.write("Unable to write to log file /var/log/cups/cloudprint_log")
+
 logfile.write("Printing file " + printFile + "\n")
 
 def which(program):
