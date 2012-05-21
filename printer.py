@@ -49,9 +49,9 @@ class Printer():
     except Exception as error:
       result = error
     if result == None:
-      print "Added",printername
+      print("Added",printername)
     else:
-      print "Error adding:",printername,result
+      print("Error adding:",printername,result)
       return None
       
   @staticmethod
@@ -81,12 +81,12 @@ class Printer():
       try:
 	s = f.read()
       except IOError, e:
-	print 'ERROR: Error reading %s\n%s', pathname, e
+	print('ERROR: Error reading %s\n%s', pathname, e)
       finally:
 	f.close()
 	return s
     except IOError, e:
-      print 'ERROR: Error opening %s\n%s', pathname, e
+      print('ERROR: Error opening %s\n%s', pathname, e)
       return None
 
   @staticmethod
@@ -181,7 +181,7 @@ class Printer():
     if jobtype == 'pdf':
       
       if not os.path.exists(jobsrc):
-	print "ERROR: PDF doesnt exist"
+	print("ERROR: PDF doesnt exist")
 	return False
       b64file = Printer.Base64Encode(jobsrc)
       fdata = Printer.ReadFile(b64file)
@@ -218,9 +218,9 @@ class Printer():
       if responseobj['success'] == True:
 	return True
       else:
-	print 'ERROR: Print job %s failed with %s', jobtype, responseobj['message']
+	print('ERROR: Print job %s failed with %s', jobtype, responseobj['message'])
 	return False
 	
     except Exception as error_msg:
-      print 'ERROR: Print job %s failed with %s', jobtype, error_msg
+      print('ERROR: Print job %s failed with %s', jobtype, error_msg)
       return False

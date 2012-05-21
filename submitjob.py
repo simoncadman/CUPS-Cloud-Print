@@ -23,10 +23,10 @@ from printer import Printer
 try:
   configuration = Config()
 except IOError:
-  print "ERROR: Unable to load configuration file, run", sys.path[0] + "/setupcloudprint.py within a terminal"
+  print("ERROR: Unable to load configuration file, run", sys.path[0] + "/setupcloudprint.py within a terminal")
   sys.exit(1)
 except Exception as error:
-  print "ERROR: Unknown error when reading configuration file - ", error
+  print("ERROR: Unknown error when reading configuration file - ", error)
   sys.exit(1)
 
 email = configuration.get("Google", "Username")
@@ -34,14 +34,14 @@ password = configuration.get("Google", "Password")
 
 tokens = Auth.GetAuthTokens(email, password)
 if tokens == None:
-  print "ERROR: Invalid username/password, run", sys.path[0] + "/setupcloudprint.py within a terminal"
+  print("ERROR: Invalid username/password, run", sys.path[0] + "/setupcloudprint.py within a terminal")
   sys.exit(1)
 
 printername = sys.argv[2].replace(Printer.PROTOCOL,'')
 
 printerid = Printer.GetPrinter(printername, tokens)
 if printerid == None:
-  print "ERROR: Printer '" + printername + "' not found"
+  print("ERROR: Printer '" + printername + "' not found")
   sys.exit(1)
 
 name = sys.argv[1]
@@ -49,8 +49,8 @@ if len(sys.argv) > 3:
   name = sys.argv[3]
 
 if Printer.SubmitJob(printerid, 'pdf', sys.argv[1], name, tokens):
-  print "INFO: Successfully printed"
+  print("INFO: Successfully printed")
   sys.exit(0)
 else:
-  print "ERROR: Failed to submit job to cloud print"
+  print("ERROR: Failed to submit job to cloud print")
   sys.exit(1)

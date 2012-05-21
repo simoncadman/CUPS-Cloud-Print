@@ -31,7 +31,7 @@ class Config():
     except Exception as error:
       self.loadError = True
       if not ignoreLoadError:
-	raise error
+         raise error
     
   def get ( self, section, key ):
     return self.config.get(section, key)

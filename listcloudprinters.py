@@ -23,10 +23,10 @@ from printer import Printer
 try:
   configuration = Config()
 except IOError:
-  print "ERROR: Unable to load configuration file, run", sys.path[0] + "/setupcloudprint.py within a terminal"
+  print("ERROR: Unable to load configuration file, run", sys.path[0] + "/setupcloudprint.py within a terminal")
   sys.exit(1)
 except Exception as error:
-  print "ERROR: Unknown error when reading configuration file - ", error
+  print("ERROR: Unknown error when reading configuration file - ", error)
   sys.exit(1)
 
 email = configuration.get("Google", "Username")
@@ -34,13 +34,13 @@ password = configuration.get("Google", "Password")
 
 tokens = Auth.GetAuthTokens(email, password)
 if tokens == None:
-  print "ERROR: Invalid username/password, run", sys.path[0] + "/setupcloudprint.py within a terminal"
+  print("ERROR: Invalid username/password, run", sys.path[0] + "/setupcloudprint.py within a terminal")
   sys.exit(1)
 
 printers = Printer.GetPrinters(tokens)
 if printers == None:
-  print "No Printers Found"
+  print("No Printers Found")
   sys.exit(1)
 
 for printer in printers:
-  print printer['name'] + ' - ' + Printer.printerNameToUri(printer['name'])
+  print(printer['name'] + ' - ' + Printer.printerNameToUri(printer['name']))

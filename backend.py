@@ -24,7 +24,7 @@ def fileIsPDF ( filename ) :
     return type[0] == "application/pdf"
 
 if len(sys.argv) == 1:
-  print "network " + progname + " \"Unknown\" \"Google Cloud Print\""
+  print("network " + progname + " \"Unknown\" \"Google Cloud Print\"")
   sys.exit(0)
   
 if len(sys.argv) < 6 or len(sys.argv) > 7:
@@ -48,7 +48,7 @@ if printFile == None:
   OUT = open (tempFile, 'w')
   
   if OUT == False:
-     print "ERROR: Cannot write " + tempFile
+     print("ERROR: Cannot write " + tempFile)
      sys.exit(1)
 
   for line in sys.stdin:

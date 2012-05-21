@@ -16,21 +16,21 @@ addedCount = 0
 success = False
 while success == False:
   if useConfigDetails:
-    print "Using authentication details from configuration"
+    print("Using authentication details from configuration")
     username = configuration.get('Google', 'username')
     password = configuration.get('Google', 'password')
   else:
-    print "Please enter your Google Credentials, or CTRL+C to exit: "
+    print("Please enter your Google Credentials, or CTRL+C to exit: ")
     username = raw_input("Username: ")
     password = getpass.getpass()
   
   tokens = Auth.GetAuthTokens(username, password)
   if tokens == None:
-    print "Invalid username/password"
+    print("Invalid username/password")
     success = False
     useConfigDetails = False
   else:
-    print "Successfully connected"
+    print("Successfully connected")
     configuration.set('Google', 'username', username)
     configuration.set('Google', 'password', password)
     configuration.save()
@@ -42,19 +42,19 @@ while success == False:
   
 answer = raw_input("Add all Google Cloud Print printers to local CUPS install? ")
 if not ( answer.startswith("Y") or answer.startswith("y") ):
-  print "Not adding printers automatically"
+  print("Not adding printers automatically")
   sys.exit(0)
 
 prefix = raw_input("Use a prefix for names of created printers ( e.g. GCP- )? ")
 if prefix == "":
-  print "Not using prefix"
+  print("Not using prefix")
 
 connection = cups.Connection()
 cupsprinters = connection.getPrinters()
 
 printers = Printer.GetPrinters(tokens)
 if printers == None:
-  print "No Printers Found"
+  print("No Printers Found")
   sys.exit(1)
   
 printeruris = []
@@ -71,9 +71,9 @@ for printer in printers:
     addedCount+=1
     
 if addedCount > 0:
-  print "Added",addedCount,"new printers to CUPS"
+  print("Added",addedCount,"new printers to CUPS")
 else:
-  print "No new printers to add"
+  print("No new printers to add")
   
 # check for printers to prune
 prunePrinters = []
@@ -85,13 +85,13 @@ for cupsprinter in cupsprinters:
       prunePrinters.append(cupsprinter)
 
 if len( prunePrinters ) > 0 :
-  print "Found",len( prunePrinters ),"printers with no longer exist on cloud print:"
+  print("Found",len( prunePrinters ),"printers with no longer exist on cloud print:")
   for printer in prunePrinters:
-    print printer
+    print(printer)
   answer = raw_input("Remove? ")
   if answer.startswith("Y") or answer.startswith("y"):
     for printer in prunePrinters:
       connection.deletePrinter(printer)
-      print "Deleted",printer
+      print("Deleted",printer)
   else:
-    print "Not removing old printers"
+    print("Not removing old printers")
