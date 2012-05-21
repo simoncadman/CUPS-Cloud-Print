@@ -34,7 +34,7 @@ while success == False:
     configuration.set('Google', 'username', username)
     configuration.set('Google', 'password', password)
     configuration.save()
-    os.chmod('/etc/cloudprint.conf', 0640)
+    os.chmod('/etc/cloudprint.conf', 0o640)
     lpid = grp.getgrnam('lp').gr_gid
     os.chown('/etc/cloudprint.conf', 0, lpid)
     success = True
