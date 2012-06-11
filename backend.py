@@ -97,14 +97,13 @@ ps2PdfName = "ps2pdf"
 if which(ps2PdfName) == None:
   ps2PdfName = "pstopdf"
 
+submitjobpath = "/usr/lib/cloudprint-cups/" + "submitjob.py"
+if not os.path.exists( submitjobpath  ):
+        submitjobpath = "/usr/local/lib/cloudprint-cups/" + "submitjob.py"
+
 if not fileIsPDF( printFile  ):
 	sys.stderr.write( "INFO: Converting print job to PDF\n")
-
 	subprocess.call([ps2PdfName, printFile, pdfFile])
-	submitjobpath = "/usr/lib/cloudprint-cups/" + "submitjob.py"
-	if not os.path.exists( submitjobpath  ):
-		submitjobpath = "/usr/local/lib/cloudprint-cups/" + "submitjob.py"
-	
 	logfile.write("Running " +  submitjobpath  + "\n")
 	logfile.write("Converted to PDF as "+ pdfFile + "\n")
 else:
@@ -120,10 +119,12 @@ result = p.returncode
 sys.stderr.write(output)
 logfile.write(output)
 logfile.write(pdfFile + " sent to cloud print, deleting\n")
-os.unlink( printFile )
+if os.path.exists( printFile ):
+	os.unlink( printFile )
 sys.stderr.write("INFO: Cleaning up temporary files\n")
 logfile.write("Deleted "+ printFile + "\n")
-os.unlink( pdfFile )
+if os.path.exists( pdfFile ):
+	os.unlink( pdfFile )
 logfile.write("Deleted "+ pdfFile + "\n")
 logfile.close()
 sys.stderr.write("INFO: Printing Successful\n")
