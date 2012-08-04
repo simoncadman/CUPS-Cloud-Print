@@ -24,7 +24,30 @@ def fileIsPDF ( filename ) :
   return type[0] == "application/pdf"
 
 if len(sys.argv) == 1:
-  print("network " + progname + " \"Unknown\" \"Google Cloud Print\"")
+  print("network cloudprint \"Unknown\" \"Google Cloud Print\"")
+  
+  try:
+    
+    libpath = "/usr/lib/cloudprint-cups/"
+    if not os.path.exists( libpath  ):
+	libpath = "/usr/local/lib/cloudprint-cups"
+    sys.path.insert(0, libpath)
+    from config import Config
+    configuration = Config()
+    from auth import Auth
+    from printer import Printer
+    email = configuration.get("Google", "Username")
+    password = configuration.get("Google", "Password")
+
+    token = Auth.GetAuthTokens(email, password)
+    if token != None:
+      printers = Printer.GetPrinters(token)
+      if printers != None:
+	for printer in printers:
+	  print("network " + Printer.printerNameToUri(printer['name']) + " " + "\"" + printer['name'] + "\" \"Google Cloud Print\"" )
+  except  Exception as error:
+    print error
+    pass
   sys.exit(0)
   
 if len(sys.argv) < 6 or len(sys.argv) > 7:
