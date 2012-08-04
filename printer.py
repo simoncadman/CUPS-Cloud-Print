@@ -173,6 +173,10 @@ class Printer():
       lines.append('--' + Printer.BOUNDARY + '--')
       lines.append('')  # blank line
       return Printer.CRLF.join(lines)
+  
+  @staticmethod
+  def getCapabilities (printerid) :
+    return { "capabilities" : [{ "name" : "ns1:Colors", "type" : "Feature", "options" : [{ "name":"Color" }] }] }
       
   @staticmethod
   def SubmitJob(printerid, jobtype, jobsrc, jobname, tokens):
@@ -213,7 +217,7 @@ class Printer():
 		('title', title),
 		('content', content[jobtype]),
 		('contentType', content_type[jobtype]),
-		('capabilities', '{"capabilities":[{"name":"ns1:Colors","type":"Feature","options":[{"name":"Color"}]}]}') 
+		('capabilities', json.dumps( Printer.getCapabilities(printerid) ) ) 
 	      ]
     files = []
     if jobtype in ['pdf', 'jpeg', 'png']:
