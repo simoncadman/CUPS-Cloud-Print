@@ -22,6 +22,7 @@ Attribute LanguageLevel "" "3"
 Attribute Product "" "(Google Cloud Print)"
 Attribute PSVersion "" "(1) 0"
 Attribute TTRasterizer "" Type42
+Attribute 1284DeviceID "" "MFG:Google;MDL:Cloud Print;DES:GoogleCloudPrint;"
 
 // Supported page sizes
 *MediaSize Letter

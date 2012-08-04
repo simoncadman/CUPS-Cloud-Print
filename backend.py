@@ -44,7 +44,7 @@ if len(sys.argv) == 1:
       printers = Printer.GetPrinters(token)
       if printers != None:
 	for printer in printers:
-	  print("network " + Printer.printerNameToUri(printer['name']) + " " + "\"" + printer['name'] + "\" \"Google Cloud Print\"" )
+	  print("network " + Printer.printerNameToUri(printer['name']) + " " + "\"" + printer['name'] + "\" \"Google Cloud Print\"" + " \"MFG:Google;MDL:Cloud Print;DES:GoogleCloudPrint;\"" )
   except Exception as error:
     pass
   sys.exit(0)
