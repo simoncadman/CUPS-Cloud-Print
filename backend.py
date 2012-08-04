@@ -45,8 +45,7 @@ if len(sys.argv) == 1:
       if printers != None:
 	for printer in printers:
 	  print("network " + Printer.printerNameToUri(printer['name']) + " " + "\"" + printer['name'] + "\" \"Google Cloud Print\"" )
-  except  Exception as error:
-    print error
+  except Exception as error:
     pass
   sys.exit(0)
   
