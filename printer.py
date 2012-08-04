@@ -68,6 +68,13 @@ class Printer():
 	return None
 
   @staticmethod
+  def GetPrinterDetails(printerid, tokens, proxy=None):
+      printer_id = None
+      response = Auth.GetUrl('%s/printer?printerid=%s' % (Printer.CLOUDPRINT_URL, printerid), tokens)
+      return response
+
+
+  @staticmethod
   def ReadFile(pathname):
     """Read contents of a file and return content.
 
@@ -201,11 +208,14 @@ class Printer():
 		    'jpeg': 'image/jpeg',
 		    'png': 'image/png',
 		  }
-    headers = [('printerid', printerid),
-	      ('title', title),
-	      ('content', content[jobtype]),
-	      ('contentType', content_type[jobtype])]
-    files = [('capabilities', 'capabilities', '{"capabilities":[]}')]
+    headers = [ 
+		('printerid', printerid),
+		('title', title),
+		('content', content[jobtype]),
+		('contentType', content_type[jobtype]),
+		('capabilities', '{"capabilities":[{"name":"ns1:Colors","type":"Feature","options":[{"name":"Color"}]}]}') 
+	      ]
+    files = []
     if jobtype in ['pdf', 'jpeg', 'png']:
       edata = Printer.EncodeMultiPart(headers, files, file_type=content_type[jobtype])
     else:
