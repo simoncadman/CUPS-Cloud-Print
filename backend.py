@@ -96,6 +96,7 @@ else:
     copies = 1
     
   uri = os.getenv('DEVICE_URI')
+  printername = os.getenv('PRINTER')
   if uri == None:
     sys.stdout.write("URI must be \"cloudprint:/<cloud printer name>\"!\n")
     sys.exit(255)
@@ -104,7 +105,7 @@ else:
   optionsstring = ""
   for option in sys.argv:
     optionsstring += " '" + option + "'"
-  logfile.write("Device is " + uri + " , Params are: " + optionsstring + "\n")
+  logfile.write("Device is " + uri + " , printername is " + printername + ", Params are: " + optionsstring + "\n")
 
   def which(program):
       import os
@@ -144,7 +145,7 @@ else:
   sys.stderr.write( "INFO: Sending document to Cloud Print\n")
   logfile.write("Sending "+ pdfFile + " to cloud\n")
   result = 0
-  p = subprocess.Popen([submitjobpath, pdfFile, uri, jobTitle], stdout=subprocess.PIPE)
+  p = subprocess.Popen([submitjobpath, pdfFile, uri, jobTitle, printername], stdout=subprocess.PIPE)
   output = p.communicate()[0]
   result = p.returncode
   sys.stderr.write(output)

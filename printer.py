@@ -71,7 +71,7 @@ class Printer():
   def GetPrinterDetails(printerid, tokens, proxy=None):
       printer_id = None
       response = Auth.GetUrl('%s/printer?printerid=%s' % (Printer.CLOUDPRINT_URL, printerid), tokens)
-      return response
+      return json.loads(response)
 
 
   @staticmethod
@@ -175,11 +175,43 @@ class Printer():
       return Printer.CRLF.join(lines)
   
   @staticmethod
-  def getCapabilities (printerid) :
-    return { "capabilities" : [{ "name" : "ns1:Colors", "type" : "Feature", "options" : [{ "name":"Color" }] }] }
+  def getCapabilities (name, id, tokens) :
+    # define mappings
+    itemmapping = { 
+		    'DefaultColorModel' : 'ns1:Colors',
+		  }
+    
+    valuemapping = {		     # CUPS to GCP
+		    'ns1:Colors' : {
+				     'Gray' : 'Grey_K',
+				     'RGB' : 'Color' ,
+				     'CMYK' : 'Color' ,
+				   }
+		  }
+    
+    import cups
+    connection = cups.Connection()
+    cupsprinters = connection.getPrinters()
+    capabilities = { "capabilities" : [] }
+    
+    for cupsprinter in cupsprinters:
+      if cupsprinters[cupsprinter]['printer-info'] == name:
+	attrs = cups.PPD(connection.getPPD(cupsprinter)).attributes
+	printerdetails = Printer.GetPrinterDetails(id, tokens)
+	
+	for mapping in itemmapping:
+	  cupsitem = mapping 
+	  gcpitem = itemmapping[mapping]
+	  for capability in printerdetails['printers'][0]['capabilities']:
+	    if capability['name'] == gcpitem:
+	      for attr in attrs:
+		if attr.name == cupsitem:
+		  if attr.value in valuemapping[gcpitem]:
+		    capabilities['capabilities'].append( { 'type' : capability['type'], 'name' : capability['name'], 'options' : [ { 'name' : valuemapping[gcpitem][attr.value] } ] } )
+    return capabilities
       
   @staticmethod
-  def SubmitJob(printerid, jobtype, jobsrc, jobname, tokens):
+  def SubmitJob(printerid, jobtype, jobsrc, jobname, tokens, printername):
     """Submit a job to printerid with content of dataUrl.
 
     Args:
@@ -217,7 +249,7 @@ class Printer():
 		('title', title),
 		('content', content[jobtype]),
 		('contentType', content_type[jobtype]),
-		('capabilities', json.dumps( Printer.getCapabilities(printerid) ) ) 
+		('capabilities', json.dumps( Printer.getCapabilities(printername, printerid, tokens) ) ) 
 	      ]
     files = []
     if jobtype in ['pdf', 'jpeg', 'png']:

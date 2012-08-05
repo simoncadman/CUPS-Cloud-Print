@@ -48,7 +48,7 @@ name = sys.argv[1]
 if len(sys.argv) > 3:
   name = sys.argv[3]
 
-if Printer.SubmitJob(printerid, 'pdf', sys.argv[1], name, tokens):
+if Printer.SubmitJob(printerid, 'pdf', sys.argv[1], name, tokens, sys.argv[4]):
   print("INFO: Successfully printed")
   sys.exit(0)
 else:
