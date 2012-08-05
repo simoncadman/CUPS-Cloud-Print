@@ -29,20 +29,9 @@ Attribute 1284DeviceID "" "MFG:Google;MDL:Cloud Print;DES:GoogleCloudPrint;"
 MediaSize Legal
 MediaSize A4
 
-// Query command for page size
-Attribute "?PageSize" "" "
-      save
-      currentpagedevice /PageSize get aload pop
-      2 copy gt {exch} if (Unknown)
-      23 dict
-              dup [612 792] (Letter) put
-              dup [612 1008] (Legal) put
-              dup [595 842] (A4) put
-              {exch aload pop 4 index sub abs 5 le exch 
-               5 index sub abs 5 le and
-              {exch pop exit} {pop} ifelse
-      } bind forall = flush pop pop
-      restore"
+ColorModel Gray/Grayscale w chunky 0
+*ColorModel RGB/Color rgb chunky 0
+ColorModel CMYK cmyk chunky 0
 
 // Specify the name of the PPD file we want to generate
 PCFileName "cloudprint.ppd"
