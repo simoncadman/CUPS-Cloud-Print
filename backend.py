@@ -101,6 +101,10 @@ else:
     sys.exit(255)
 
   logfile.write("Printing file " + printFile + "\n")
+  optionsstring = ""
+  for option in sys.argv:
+    optionsstring += " '" + option + "'"
+  logfile.write("Device is " + uri + " , Params are: " + optionsstring + "\n")
 
   def which(program):
       import os
