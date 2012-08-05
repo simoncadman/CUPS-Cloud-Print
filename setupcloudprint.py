@@ -60,14 +60,14 @@ if printers == None:
 printeruris = []
 
 for printer in printers:
-  uri = Printer.printerNameToUri(printer['name'].encode('ascii', 'ignore'))
+  uri = Printer.printerNameToUri(printer['name'].encode('ascii', 'replace'))
   found = False
   printeruris.append(uri)
   for cupsprinter in cupsprinters:
     if cupsprinters[cupsprinter]['device-uri'] == uri:
       found = True
   if found == False:
-    Printer.AddPrinter(prefix + printer['name'].encode('ascii', 'ignore'), uri, connection)
+    Printer.AddPrinter(prefix + printer['name'].encode('ascii', 'replace'), uri, connection)
     addedCount+=1
     
 if addedCount > 0:
