@@ -9,6 +9,7 @@ license=('GPL3')
 depends=('cups' 'pycups' 'python2' 'ghostscript')
 makedepends=('cupsddk' 'git')
 changelog=ChangeLog
+install=Install
 source=()
 md5sums=()
 _gitroot="git://github.com/simoncadman/CUPS-Cloud-Print.git"
