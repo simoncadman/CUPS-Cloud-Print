@@ -1,3 +1,11 @@
+2012-08-12 Simon Cadman <src@niftiestsoftware.com>
+
+        * 20120812 :
+	 Fixed: Error when installing printer with non ASCII characters
+	 Fixed: More Python 3 fixes
+	 Added colour option to printer, should now allow colour printig on most printers
+	 Added more logging to aid debugging
+
 2012-05-13 Simon Cadman <src@niftiestsoftware.com>
 
         * 20120513 :

@@ -7,7 +7,7 @@ inherit git-2 eutils
 DESCRIPTION="Google Cloud Print "
 HOMEPAGE="https://ccp.niftiestsoftware.com"
 EGIT_REPO_URI="git://github.com/simoncadman/CUPS-Cloud-Print.git"
-EGIT_COMMIT="49b8eb4be075873c9f61ed5a0aece904c977882b"
+EGIT_COMMIT="1e37aa72e2b3eb14e971f58dcee2d964178daa6a"
 LICENSE="GPL-3"
 SLOT="0"
 KEYWORDS="~alpha ~amd64 ~arm ~ia64 ~ppc ~ppc64 ~s390 ~sh ~sparc ~x86"
@@ -24,5 +24,6 @@ src_install() {
 }
 
 pkg_postinst() {
+	/usr/lib/cloudprint-cups/refreshppd.py
 	elog Run: /usr/lib/cloudprint-cups/setupcloudprint.py to setup your Google Credentials and add your printers to CUPS
 }

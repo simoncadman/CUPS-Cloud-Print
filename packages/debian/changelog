@@ -1,3 +1,12 @@
+cupscloudprint (20120812-1) precise; urgency=low
+
+  * Fixed: Error when installing printer with non ASCII characters
+  * Fixed: More Python 3 fixes
+  * Added colour option to printer, should now allow colour printig on most printers
+  * Added more logging to aid debugging
+
+ -- simon cadman <src@niftiestsoftware.com>  Sun, 12 Aug 2012 00:00:00 +0000
+   
 cupscloudprint (20120513-1) precise; urgency=low
 
   * Fixed: cloudprint.conf details exposed to users

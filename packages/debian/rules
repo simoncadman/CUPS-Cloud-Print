@@ -6,3 +6,4 @@
 
 %:
 	dh $@ 
+	/usr/lib/cloudprint-cups/refreshppd.py

@@ -1,6 +1,6 @@
 # Maintainer: Simon Cadman <src@niftiestsoftware.com>
 pkgname=cupscloudprint
-pkgver=20120513
+pkgver=20120812
 pkgrel=1
 pkgdesc="Print via Google Cloud print using CUPS"
 arch=('any')
@@ -12,7 +12,7 @@ changelog=ChangeLog
 source=()
 md5sums=()
 _gitroot="git://github.com/simoncadman/CUPS-Cloud-Print.git"
-_gitversion=""
+_gitversion="1e37aa72e2b3eb14e971f58dcee2d964178daa6a"
 
 
 build() {
@@ -26,6 +26,7 @@ build() {
 package() {
   cd "$srcdir/$pkgname-$pkgver"
   make DESTDIR="$pkgdir/" install
+  /usr/lib/cloudprint-cups/refreshppd.py
 }
 
 # vim:set ts=2 sw=2 et:
