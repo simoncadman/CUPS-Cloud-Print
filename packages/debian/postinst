@@ -4,3 +4,4 @@ chown root:lp /var/log/cups/cloudprint_log
 chmod 660 /var/log/cups/cloudprint_log
 chown root:root /usr/lib/cups/backend/cloudprint
 chmod 700 /usr/lib/cups/backend/cloudprint
+/usr/lib/cloudprint-cups/refreshppd.py

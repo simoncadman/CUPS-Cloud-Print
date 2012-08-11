@@ -26,7 +26,6 @@ build() {
 package() {
   cd "$srcdir/$pkgname-$pkgver"
   make DESTDIR="$pkgdir/" install
-  /usr/lib/cloudprint-cups/refreshppd.py
 }
 
 # vim:set ts=2 sw=2 et:
