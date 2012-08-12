@@ -27,11 +27,11 @@ rm -rf $RPM_BUILD_ROOT
 make install DESTDIR=$RPM_BUILD_ROOT
 
 %post
-%{_libdir}cloudprint-cups/refreshppd.py
+/usr/lib/cloudprint-cups/refreshppd.py
 
 %files
-%{_libdir}/cloudprint-cups
-%{_libdir}/cups/backend/cloudprint
+/usr/lib/cloudprint-cups
+/usr/lib/cups/backend/cloudprint
 %{_datadir}/cups/model/CloudPrint.ppd
 %{_localstatedir}/log/cups/cloudprint_log
 
