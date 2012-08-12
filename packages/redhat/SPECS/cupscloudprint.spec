@@ -7,7 +7,7 @@ License:        GPLv3+
 URL:            http://ccp.niftiestsoftware.com
 Source0:        http://ccp.niftiestsoftware.com/cupscloudprint-20120812.tar.bz2
 
-BuildRequires:  cups-devel
+BuildRequires:  cups-devel,cups,make
 Requires:       cups,ghostscript,python-cups
 
 %description
@@ -25,7 +25,9 @@ make %{?_smp_mflags}
 %install
 rm -rf $RPM_BUILD_ROOT
 make install DESTDIR=$RPM_BUILD_ROOT
-/usr/lib/cloudprint-cups/refreshppd.py
+
+%post
+%{_libdir}cloudprint-cups/refreshppd.py
 
 %files
 %{_libdir}/cloudprint-cups
