@@ -56,9 +56,9 @@ class Printer():
     except Exception as error:
       result = error
     if result == None:
-      print("Added",printername)
+      print("Added " + printername)
     else:
-      print("Error adding:",printername,result)
+      print("Error adding: " + printername,result)
       return None
       
   @staticmethod
