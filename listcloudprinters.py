@@ -19,7 +19,7 @@ import sys
 from auth import Auth
 from printer import Printer
 
-requestors = Auth.SetupAuth(True)
+requestors, storage = Auth.SetupAuth(True)
 printer = Printer(requestors)
 printers = printer.getPrinters(requestors)
 if printers == None:
