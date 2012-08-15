@@ -21,20 +21,24 @@ class Printer():
   BOUNDARY = mimetools.choose_boundary()
   CRLF = '\r\n'
   PROTOCOL = 'cloudprint://'
+  requestors = None
+  
+  def __init__( self, requestors ):
+    self.requestors = requestors
 
-  @staticmethod
-  def GetPrinters(tokens, proxy=None):
-      response = Auth.GetUrl('%s/search?q=' % (Printer.CLOUDPRINT_URL), tokens)
-      responseobj = json.loads(response)
+  def getPrinters(self, proxy=None):
+    allprinters = []
+    for requestor in self.requestors:
+      responseobj = requestor.doRequest('search?q=')
       if 'printers' in responseobj and len(responseobj['printers']) > 0:
-	return responseobj['printers']
-      else:
-	return None
-
+	for printer in responseobj['printers']:
+	  printer['account'] = requestor.getAccount()
+	  allprinters.append(printer)
+    return allprinters
+  
   @staticmethod
-  def printerNameToUri( printer ) :
-    printer = urllib.quote(printer)
-    return Printer.PROTOCOL + printer
+  def printerNameToUri( account, printer ) :
+    return Printer.PROTOCOL + urllib.quote(printer) + "/" + urllib.quote(account)
 
   @staticmethod
   def AddPrinter( printername, uri, connection ) :

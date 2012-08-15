@@ -1,4 +1,3 @@
-#! /usr/bin/env python2.7
 #    CUPS Cloudprint - Print via Google Cloud Print                          
 #    Copyright (C) 2011 Simon Cadman
 #
@@ -14,17 +13,20 @@
 #
 #    You should have received a copy of the GNU General Public License    
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+import httplib2, json
 
-import sys
-from auth import Auth
-from printer import Printer
-
-requestors = Auth.SetupAuth(True)
-printer = Printer(requestors)
-printers = printer.getPrinters(requestors)
-if printers == None:
-  print("No Printers Found")
-  sys.exit(1)
-
-for foundprinter in printers:
-  print(foundprinter['name'] + ' - ' + printer.printerNameToUri(foundprinter['account'], foundprinter['name']) + " - " + foundprinter['account'])
+class cloudprintrequestor(httplib2.Http):
+  
+  CLOUDPRINT_URL = 'http://www.google.com/cloudprint'
+  account = None
+  
+  def setAccount ( self, account ):
+    self.account = account
+  
+  def getAccount ( self ):
+    return self.account
+  
+  def doRequest ( self, path ):
+    url = '%s/%s' % (self.CLOUDPRINT_URL, path)
+    headers, response = self.request(url, "GET")
+    return json.loads(response)

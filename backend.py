@@ -32,12 +32,8 @@ if len(sys.argv) == 1:
     if not os.path.exists( libpath  ):
 	libpath = "/usr/local/lib/cloudprint-cups"
     sys.path.insert(0, libpath)
-    from config import Config
-    configuration = Config()
     from auth import Auth
     from printer import Printer
-    email = configuration.get("Google", "Username")
-    password = configuration.get("Google", "Password")
 
     token = Auth.GetAuthTokens(email, password)
     if token != None:

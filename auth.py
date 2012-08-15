@@ -15,45 +15,15 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import urllib, urllib2, mimetools, time
+from oauth2client import client
+from oauth2client.file import Storage
+from oauth2client import multistore_file
+from cloudprintrequestor import cloudprintrequestor 
 
 class Auth():
-  SERVICE = 'cloudprint'
-  CLIENT_NAME = 'CUPS Cloud Print'
-  LOGIN_URL = 'https://www.google.com/accounts/ClientLogin'
   
   @staticmethod
-  def GetAuthTokens(email, password):
-      """Assign login credentials from GAIA accounts service.
-
-      Args:
-	email: Email address of the Google account to use.
-	password: Cleartext password of the email account.
-      Returns:
-	dictionary containing Auth token.
-      """
-      tokens = {}
-
-      # We still need to get the Auth token.    
-      params = {'accountType': 'GOOGLE',
-		'Email': email,
-		'Passwd': password,
-		'service': Auth.SERVICE,
-		'source': Auth.CLIENT_NAME}
-      stream = urllib.urlopen(Auth.LOGIN_URL, urllib.urlencode(params))
-
-      success = False
-      for line in stream:
-	if line.strip().startswith('Auth='):
-	  tokens['Auth'] = line.strip().replace('Auth=', '')
-	  success = True
-      
-      if not success:
-	return None
-      
-      return tokens
-    
-  @staticmethod
-  def GetUrl(url, tokens, data=None, cookies=False, anonymous=False, boundary=None):
+  def GetUrl(url, data=None, cookies=False, anonymous=False, boundary=None):
     """Get URL, with GET or POST depending data, adds Authorization header.
 
     Args:
@@ -94,3 +64,37 @@ class Auth():
 	retry_count += 1
 	if retry_count == 5:
 	  return err_msg
+
+  @staticmethod
+  def SetupAuth(interactive=False):
+    clientid = '843805314553.apps.googleusercontent.com'
+    clientsecret = 'MzTBsY4xlrD_lxkmwFbBrvBv'
+    userids = [ "src@niftiestsoftware.com" , "netnifty@gmail.com" ]
+    requestors = []
+    for userid in userids:
+      storage = multistore_file.get_credential_storage(
+	    '/etc/cloudprint.conf',
+	    clientid,
+	    userid,
+	    ['https://www.googleapis.com/auth/cloudprint'])
+      credentials = storage.get()
+
+      if not credentials and interactive:
+	flow = client.OAuth2WebServerFlow(client_id=clientid,
+				  client_secret=clientsecret,
+				  scope='https://www.googleapis.com/auth/cloudprint',
+				  user_agent=userid)
+	auth_uri = flow.step1_get_authorize_url()
+	print(userid)
+	print("Open this URL and provide the code: " + auth_uri)
+	code = raw_input('Code from Google: ')
+	credentials = flow.step2_exchange(code)
+	storage.put(credentials)
+      elif not interactive:
+	return False
+
+      requestor = cloudprintrequestor()
+      requestor = credentials.authorize(requestor)
+      requestor.setAccount(userid)
+      requestors.append(requestor)
+    return requestors
