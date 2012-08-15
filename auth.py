@@ -69,7 +69,7 @@ class Auth():
   def SetupAuth(interactive=False):
     clientid = '843805314553.apps.googleusercontent.com'
     clientsecret = 'MzTBsY4xlrD_lxkmwFbBrvBv'
-    userids = [ "src@niftiestsoftware.com" , "netnifty@gmail.com" ]
+    userids = [ "cloudprint" ]
     requestors = []
     for userid in userids:
       storage = multistore_file.get_credential_storage(
