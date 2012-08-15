@@ -90,7 +90,7 @@ class Auth():
 	code = raw_input('Code from Google: ')
 	credentials = flow.step2_exchange(code)
 	storage.put(credentials)
-      elif not interactive:
+      elif not interactive and not credentials:
 	return False
 
       requestor = cloudprintrequestor()

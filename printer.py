@@ -24,7 +24,10 @@ class Printer():
   requestors = None
   
   def __init__( self, requestors ):
-    self.requestors = requestors
+    if isinstance(requestors, list):
+      self.requestors = requestors
+    else:
+      self.requestors = [requestors]
 
   def getPrinters(self, proxy=None):
     allprinters = []

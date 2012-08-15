@@ -27,4 +27,4 @@ if printers == None:
   sys.exit(1)
 
 for foundprinter in printers:
-  print(foundprinter['name'] + ' - ' + printer.printerNameToUri(foundprinter['account'], foundprinter['name']) + " - " + foundprinter['account'])
+  print(foundprinter['name'].encode('ascii', 'replace') + ' - ' + printer.printerNameToUri(foundprinter['account'], foundprinter['name'].encode('ascii', 'replace')) + " - " + foundprinter['account'])
