@@ -46,9 +46,27 @@ for requestor in requestors:
     for cupsprinter in cupsprinters:
       if cupsprinters[cupsprinter]['device-uri'] == uri:
 	found = True
+    
     if found == False:
-      printer.AddPrinter(prefix + ccpprinter['name'].encode('ascii', 'replace'), uri, connection)
-      addedCount+=1
+      printername = prefix + ccpprinter['name'].encode('ascii', 'replace')
+      
+      # check if printer name already exists
+      foundbyname = False
+      for ccpprinter2 in cupsprinters:
+	if cupsprinters[ccpprinter2]['printer-info'].replace(' ', '_') == printername.replace(' ', '_'):
+	  foundbyname = True
+      if ( foundbyname ) :
+	answer = raw_input("Printer " + printername + " already exists, supply another name? ")
+	if ( answer.startswith("Y") or answer.startswith("y") ):
+	  printername = raw_input("New printer name? ")
+	else:
+	  answer = raw_input("Overwrite " + printername + " with new printer? ")
+	  if ( answer.startswith("N") or answer.startswith("n") ):
+	    printername = ""
+      
+      if printername != "":
+	printer.AddPrinter(printername, uri, connection)
+	addedCount+=1
       
   if addedCount > 0:
     print("Added " + str(addedCount) + " new printers to CUPS")
