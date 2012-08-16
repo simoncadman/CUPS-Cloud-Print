@@ -113,6 +113,8 @@ class Auth():
 
       if not credentials and interactive:
 	credentials = Auth.AddAccount(storage, userid)
+	if userid == None:
+	  userid = credentials.user_agent
       elif not interactive and not credentials:
 	return False
 
