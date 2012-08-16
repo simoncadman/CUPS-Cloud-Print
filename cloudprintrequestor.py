@@ -26,7 +26,11 @@ class cloudprintrequestor(httplib2.Http):
   def getAccount ( self ):
     return self.account
   
-  def doRequest ( self, path ):
+  def doRequest ( self, path, headers = None, data = None , boundary = None ):
     url = '%s/%s' % (self.CLOUDPRINT_URL, path)
-    headers, response = self.request(url, "GET")
+    if data == None:
+      headers, response = self.request(url, "GET")
+    else:
+      headers, response = self.request(url, "GET", body=data, headers=headers)
+      print response
     return json.loads(response)

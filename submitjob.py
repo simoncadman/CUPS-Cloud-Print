@@ -15,40 +15,24 @@
 #    You should have received a copy of the GNU General Public License    
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-import mimetools, time, sys
-from config import Config
+import sys
 from auth import Auth
 from printer import Printer
 
-try:
-  configuration = Config()
-except IOError:
-  print("ERROR: Unable to load configuration file, run", sys.path[0] + "/setupcloudprint.py within a terminal")
-  sys.exit(1)
-except Exception as error:
-  print("ERROR: Unknown error when reading configuration file - ", error)
+if ( len(sys.argv) < 5 ):
+  sys.stderr.write("ERROR: Usage: " + sys.argv[0] + " pdf-file page-title printer-uri cups-printer-name\n")
   sys.exit(1)
 
-email = configuration.get("Google", "Username")
-password = configuration.get("Google", "Password")
+requestors, storage = Auth.SetupAuth(False)
+printer = Printer(requestors)
 
-tokens = Auth.GetAuthTokens(email, password)
-if tokens == None:
-  print("ERROR: Invalid username/password, run", sys.path[0] + "/setupcloudprint.py within a terminal")
-  sys.exit(1)
-
-printername = sys.argv[2].replace(Printer.PROTOCOL,'')
-
-printerid = Printer.GetPrinter(printername, tokens)
+printerid, requestor = printer.getPrinterIDByURI(sys.argv[3])
+printer.requestor = requestor
 if printerid == None:
-  print("ERROR: Printer '" + printername + "' not found")
+  print("ERROR: Printer '" + sys.argv[3] + "' not found")
   sys.exit(1)
 
-name = sys.argv[1]
-if len(sys.argv) > 3:
-  name = sys.argv[3]
-
-if Printer.SubmitJob(printerid, 'pdf', sys.argv[1], name, tokens, sys.argv[4]):
+if printer.submitJob(printerid, 'pdf', sys.argv[1], sys.argv[2], sys.argv[4] ):
   print("INFO: Successfully printed")
   sys.exit(0)
 else:

@@ -79,7 +79,6 @@ class Auth():
 				  scope='https://www.googleapis.com/auth/cloudprint',
 				  user_agent=userid)
     auth_uri = flow.step1_get_authorize_url()
-    print(userid)
     print("Open this URL and provide the code: " + auth_uri)
     code = raw_input('Code from Google: ')
     credentials = flow.step2_exchange(code)

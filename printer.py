@@ -15,6 +15,7 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 import json, urllib, urllib2, os, mimetypes, base64, mimetools
 from auth import Auth
+from urlparse import urlparse
 
 class Printer():
   CLOUDPRINT_URL = 'http://www.google.com/cloudprint'
@@ -61,28 +62,32 @@ class Printer():
       print("Error adding: " + printername,result)
       return None
       
-  @staticmethod
-  def GetPrinter(printer, tokens, proxy=None):
-      printer_id = None
-      response = Auth.GetUrl('%s/search?q=%s' % (Printer.CLOUDPRINT_URL, printer), tokens)
-      printer = urllib.unquote(printer)
-      responseobj = json.loads(response)
+  def parseURI( self, uristring ):
+      uri = urlparse(uristring)
+      return uri.netloc, uri.path.lstrip('/')
+      
+  def findRequestorForAccount(self, account):
+      for requestor in self.requestors:
+	if requestor.getAccount() == account:
+	  return requestor
+      
+  def getPrinterIDByURI(self, printer):
+      printername, account = self.parseURI(printer)
+      # find requestor based on account
+      requestor = self.findRequestorForAccount(account)
+      responseobj = requestor.doRequest('search?q=%s' % (printername))
+      printername = urllib.unquote(printername)
       if 'printers' in responseobj and len(responseobj['printers']) > 0:
 	for printerdetail in responseobj['printers']:
-	  if printer == printerdetail['name']:
-	    return printerdetail['id']
+	  if printername == printerdetail['name']:
+	    return printerdetail['id'], requestor
       else:
 	return None
 
-  @staticmethod
-  def GetPrinterDetails(printerid, tokens, proxy=None):
-      printer_id = None
-      response = Auth.GetUrl('%s/printer?printerid=%s' % (Printer.CLOUDPRINT_URL, printerid), tokens)
-      return json.loads(response)
+  def getPrinterDetails(self, printerid):
+      return self.requestor.doRequest( 'printer?printerid=%s' % (  printerid) )
 
-
-  @staticmethod
-  def ReadFile(pathname):
+  def readFile(self, pathname):
     """Read contents of a file and return content.
 
     Args:
@@ -128,8 +133,7 @@ class Printer():
 
     return status
 
-  @staticmethod
-  def Base64Encode(pathname):
+  def base64Encode(self, pathname):
     """Convert a file to a base64 encoded file.
 
     Args:
@@ -141,7 +145,7 @@ class Printer():
     """
     b64_pathname = pathname + '.b64'
     file_type = mimetypes.guess_type(pathname)[0] or 'application/octet-stream'
-    data = Printer.ReadFile(pathname)
+    data = self.readFile(pathname)
 
     # Convert binary data to base64 encoded data.
     header = 'data:%s;base64,' % file_type
@@ -152,8 +156,7 @@ class Printer():
     else:
       return None
 
-  @staticmethod
-  def EncodeMultiPart(fields, files, file_type='application/xml'):
+  def encodeMultiPart(self, fields, files, file_type='application/xml'):
       """Encodes list of parameters and files for HTTP multipart format.
 
       Args:
@@ -181,8 +184,7 @@ class Printer():
       lines.append('')  # blank line
       return Printer.CRLF.join(lines)
   
-  @staticmethod
-  def getCapabilities (name, id, tokens) :
+  def getCapabilities ( self, ccpid, cupsprintername ) :
     # define mappings
     itemmapping = { 
 		    'DefaultColorModel' : 'ns1:Colors',
@@ -202,9 +204,9 @@ class Printer():
     capabilities = { "capabilities" : [] }
     
     for cupsprinter in cupsprinters:
-      if cupsprinters[cupsprinter]['printer-info'] == name:
+      if cupsprinters[cupsprinter]['printer-info'] == cupsprintername:
 	attrs = cups.PPD(connection.getPPD(cupsprinter)).attributes
-	printerdetails = Printer.GetPrinterDetails(id, tokens)
+	printerdetails = self.getPrinterDetails(ccpid)
 	
 	for mapping in itemmapping:
 	  cupsitem = mapping 
@@ -217,57 +219,56 @@ class Printer():
 		    capabilities['capabilities'].append( { 'type' : capability['type'], 'name' : capability['name'], 'options' : [ { 'name' : valuemapping[gcpitem][attr.value] } ] } )
     return capabilities
       
-  @staticmethod
-  def SubmitJob(printerid, jobtype, jobsrc, jobname, tokens, printername):
+  def submitJob(self, printerid, jobtype, jobfile, jobname, printername ):
     """Submit a job to printerid with content of dataUrl.
 
     Args:
       printerid: string, the printer id to submit the job to.
       jobtype: string, must match the dictionary keys in content and content_type.
-      jobsrc: string, points to source for job. Could be a pathname or id string.
+      jobfile: string, points to source for job. Could be a pathname or id string.
     Returns:
       boolean: True = submitted, False = errors.
     """
     if jobtype == 'pdf':
       
-      if not os.path.exists(jobsrc):
+      if not os.path.exists(jobfile):
 	print("ERROR: PDF doesnt exist")
 	return False
-      b64file = Printer.Base64Encode(jobsrc)
-      fdata = Printer.ReadFile(b64file)
+      b64file = self.base64Encode(jobfile)
+      fdata = self.readFile(b64file)
       os.unlink(b64file)
       hsid = True
     elif jobtype in ['png', 'jpeg']:
-      fdata = Printer.ReadFile(jobsrc)
+      fdata = self.readFile(jobfile)
     else:
       fdata = None
     
     title = jobname
     content = {'pdf': fdata,
-	      'jpeg': jobsrc,
-	      'png': jobsrc,
+	      'jpeg': jobfile,
+	      'png': jobfile,
 	      }
     content_type = {'pdf': 'dataUrl',
 		    'jpeg': 'image/jpeg',
 		    'png': 'image/png',
 		  }
-    headers = [ 
-		('printerid', printerid),
-		('title', title),
-		('content', content[jobtype]),
-		('contentType', content_type[jobtype]),
-		('capabilities', json.dumps( Printer.getCapabilities(printername, printerid, tokens) ) ) 
-	      ]
+    headers = {
+		'printerid' : printerid,
+		'title' : title,
+		'content' : content[jobtype],
+		'contentType' : content_type[jobtype],
+		'capabilities' : json.dumps( self.getCapabilities(printerid, printername ) )
+	      }
     files = []
-    if jobtype in ['pdf', 'jpeg', 'png']:
-      edata = Printer.EncodeMultiPart(headers, files, file_type=content_type[jobtype])
-    else:
-      edata = Printer.EncodeMultiPart(headers, files)
+    #if jobtype in ['pdf', 'jpeg', 'png']:
+    #  edata = self.encodeMultiPart(headers, files, file_type=content_type[jobtype])
+    #else:
+    #  edata = self.encodeMultiPart(headers, files)
+    edata = ""
     
-    response = Auth.GetUrl('%s/submit' % Printer.CLOUDPRINT_URL, tokens, data=edata,
-		      cookies=False, boundary=Printer.BOUNDARY)
+    responseobj = self.requestor.doRequest( 'submit', headers, edata, self.BOUNDARY )
+    print responseobj
     try:
-      responseobj = json.loads(response)
       if responseobj['success'] == True:
 	return True
       else:
