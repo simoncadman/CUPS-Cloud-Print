@@ -27,10 +27,16 @@ class cloudprintrequestor(httplib2.Http):
     return self.account
   
   def doRequest ( self, path, headers = None, data = None , boundary = None ):
+    # force useragent to CCP
+    if headers == None:
+      headers = {}
+    headers['user-agent'] = "CUPS Cloud Print"
+    
     url = '%s/%s' % (self.CLOUDPRINT_URL, path)
     if data == None:
-      headers, response = self.request(url, "GET")
+      headers, response = self.request(url, "GET", headers=headers)
     else:
-      headers, response = self.request(url, "GET", body=data, headers=headers)
-      print response
+      headers['Content-Length'] = str(len(data))
+      headers['Content-Type'] = 'multipart/form-data;boundary=%s' % boundary
+      headers, response = self.request(url, "POST", body=data, headers=headers)
     return json.loads(response)

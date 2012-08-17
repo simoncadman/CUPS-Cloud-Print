@@ -184,7 +184,7 @@ class Printer():
       lines.append('')  # blank line
       return Printer.CRLF.join(lines)
   
-  def getCapabilities ( self, ccpid, cupsprintername ) :
+  def getCapabilities ( self, gcpid, cupsprintername ) :
     # define mappings
     itemmapping = { 
 		    'DefaultColorModel' : 'ns1:Colors',
@@ -206,7 +206,7 @@ class Printer():
     for cupsprinter in cupsprinters:
       if cupsprinters[cupsprinter]['printer-info'] == cupsprintername:
 	attrs = cups.PPD(connection.getPPD(cupsprinter)).attributes
-	printerdetails = self.getPrinterDetails(ccpid)
+	printerdetails = self.getPrinterDetails(gcpid)
 	
 	for mapping in itemmapping:
 	  cupsitem = mapping 
@@ -252,22 +252,21 @@ class Printer():
 		    'jpeg': 'image/jpeg',
 		    'png': 'image/png',
 		  }
-    headers = {
-		'printerid' : printerid,
-		'title' : title,
-		'content' : content[jobtype],
-		'contentType' : content_type[jobtype],
-		'capabilities' : json.dumps( self.getCapabilities(printerid, printername ) )
-	      }
+    headers = [
+      ('printerid', printerid),
+      ('title', title),
+      ('content', content[jobtype]),
+      ('contentType', content_type[jobtype]),
+      ('capabilities', json.dumps( self.getCapabilities(printerid, printername) ) )
+    ]
     files = []
-    #if jobtype in ['pdf', 'jpeg', 'png']:
-    #  edata = self.encodeMultiPart(headers, files, file_type=content_type[jobtype])
-    #else:
-    #  edata = self.encodeMultiPart(headers, files)
     edata = ""
+    if jobtype in ['pdf', 'jpeg', 'png']:
+      edata = self.encodeMultiPart(headers, files, file_type=content_type[jobtype])
+    else:
+      edata = self.encodeMultiPart(headers, files)
     
-    responseobj = self.requestor.doRequest( 'submit', headers, edata, self.BOUNDARY )
-    print responseobj
+    responseobj = self.requestor.doRequest( 'submit', None, edata, self.BOUNDARY )
     try:
       if responseobj['success'] == True:
 	return True
