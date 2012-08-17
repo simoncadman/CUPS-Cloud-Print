@@ -116,8 +116,12 @@ class Auth():
 	  userid = credentials.user_agent
       elif not interactive and not credentials:
 	return False
-
+	
+      # renew if expired
       requestor = cloudprintrequestor()
+      if credentials.access_token_expired:
+	credentials.refresh(requestor)
+      
       requestor = credentials.authorize(requestor)
       requestor.setAccount(userid)
       requestors.append(requestor)
