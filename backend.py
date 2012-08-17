@@ -34,14 +34,14 @@ if len(sys.argv) == 1:
     sys.path.insert(0, libpath)
     from auth import Auth
     from printer import Printer
-
-    token = Auth.GetAuthTokens(email, password)
-    if token != None:
-      printers = Printer.GetPrinters(token)
-      if printers != None:
-	for printer in printers:
-	  print("network " + Printer.printerNameToUri(printer['name']) + " " + "\"" + printer['name'] + "\" \"Google Cloud Print\"" + " \"MFG:Google;MDL:Cloud Print;DES:GoogleCloudPrint;\"" )
+    requestors, storage = Auth.SetupAuth(False)
+    printer = Printer(requestors)
+    printers = printer.getPrinters()
+    if printers != None:
+      for foundprinter in printers:
+	print("network " + printer.printerNameToUri(foundprinter['account'], foundprinter['name']) + " " + "\"" + foundprinter['name'] + "\" \"Google Cloud Print\"" + " \"MFG:Google;MDL:Cloud Print;DES:GoogleCloudPrint;\"" )
   except Exception as error:
+    print error
     pass
   sys.exit(0)
   
