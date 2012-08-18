@@ -16,7 +16,6 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import sys, os, subprocess, mimetypes
-progname = sys.argv[0]
 progname = 'cloudprint'
 
 def fileIsPDF ( filename ) :
