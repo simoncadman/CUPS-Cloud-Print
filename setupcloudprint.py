@@ -1,6 +1,6 @@
 #! /usr/bin/env python2.7
 
-import sys, os, grp, getpass, cups
+import cups
 from auth import Auth
 from printer import Printer
 

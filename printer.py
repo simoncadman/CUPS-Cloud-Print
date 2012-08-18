@@ -13,7 +13,7 @@
 #
 #    You should have received a copy of the GNU General Public License    
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
-import json, urllib, urllib2, os, mimetypes, base64, mimetools
+import json, urllib, os, mimetypes, base64
 from auth import Auth
 from urlparse import urlparse
 

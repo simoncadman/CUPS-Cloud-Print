@@ -1,6 +1,6 @@
 #! /usr/bin/env python2.7
 
-import sys, os, grp, getpass, cups, subprocess
+import sys, cups, subprocess
 
 connection = cups.Connection()
 cupsprinters = connection.getPrinters()

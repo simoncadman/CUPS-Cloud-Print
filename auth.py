@@ -14,9 +14,8 @@
 #    You should have received a copy of the GNU General Public License    
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-import urllib, urllib2, mimetools, time, json, os
+import json, os
 from oauth2client import client
-from oauth2client.file import Storage
 from oauth2client import multistore_file
 from cloudprintrequestor import cloudprintrequestor 
 
