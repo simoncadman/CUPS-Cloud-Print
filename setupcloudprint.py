@@ -30,10 +30,8 @@ for requestor in requestors:
   if printers == None:
     print("No Printers Found")
     continue
-    
-  prefix = raw_input("Use a prefix for names of created printers ( e.g. GCP- )? ")
-  if prefix == "":
-    print("Not using prefix")
+  
+  prefix = None
 
   for ccpprinter in printers:
     uri = printer.printerNameToUri(ccpprinter['account'], ccpprinter['name'].encode('ascii', 'replace'))
@@ -43,6 +41,12 @@ for requestor in requestors:
 	found = True
     
     if found == False:
+      
+      if prefix == None:
+	prefix = raw_input("Use a prefix for names of created printers ( e.g. GCP- )? ")
+	if prefix == "":
+	  print("Not using prefix")
+      
       printername = prefix + ccpprinter['name'].encode('ascii', 'replace')
       
       # check if printer name already exists
