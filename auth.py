@@ -14,7 +14,7 @@
 #    You should have received a copy of the GNU General Public License    
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-import json, os
+import json, os, grp
 from oauth2client import client
 from oauth2client import multistore_file
 from cloudprintrequestor import cloudprintrequestor 
@@ -43,6 +43,7 @@ class Auth():
 
   @staticmethod
   def SetupAuth(interactive=False):
+    modifiedconfig = False
     
     # parse config file and extract useragents, which we use for account names
     userids = []
@@ -68,6 +69,7 @@ class Auth():
 
       if not credentials and interactive:
 	credentials = Auth.AddAccount(storage, userid)
+	modifiedconfig = True
 	if userid == None:
 	  userid = credentials.user_agent
       elif not interactive and not credentials:
@@ -77,8 +79,16 @@ class Auth():
       requestor = cloudprintrequestor()
       if credentials.access_token_expired:
 	credentials.refresh(requestor)
+	modifiedconfig = False
       
       requestor = credentials.authorize(requestor)
       requestor.setAccount(userid)
       requestors.append(requestor)
+    
+    # fix permissions
+    if modifiedconfig:
+      os.chmod('/etc/cloudprint.conf', 0640)
+      lpid = grp.getgrnam('lp').gr_gid
+      os.chown('/etc/cloudprint.conf', 0, lpid)
+
     return requestors, storage
