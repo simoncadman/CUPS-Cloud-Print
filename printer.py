@@ -40,12 +40,10 @@ class Printer():
 	  allprinters.append(printer)
     return allprinters
   
-  @staticmethod
-  def printerNameToUri( account, printer ) :
+  def printerNameToUri( self, account, printer ) :
     return Printer.PROTOCOL + urllib.quote(printer) + "/" + urllib.quote(account)
 
-  @staticmethod
-  def AddPrinter( printername, uri, connection ) :
+  def addPrinter( self, printername, uri, connection ) :
     # fix printer name
     printername = printername.replace(' ','_')
     result = None
@@ -108,8 +106,7 @@ class Printer():
       print('ERROR: Error opening %s\n%s', pathname, e)
       return None
 
-  @staticmethod
-  def WriteFile(file_name, data):
+  def writeFile(self, file_name, data):
     """Write contents of data to a file_name.
 
     Args:
@@ -151,7 +148,7 @@ class Printer():
     header = 'data:%s;base64,' % file_type
     b64data = header + base64.b64encode(data)
 
-    if Printer.WriteFile(b64_pathname, b64data):
+    if self.writeFile(b64_pathname, b64data):
       return b64_pathname
     else:
       return None

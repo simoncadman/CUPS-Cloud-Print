@@ -65,7 +65,7 @@ for requestor in requestors:
 	    printername = ""
       
       if printername != "":
-	printer.AddPrinter(printername, uri, connection)
+	printer.addPrinter(printername, uri, connection)
 	addedCount+=1
       
   if addedCount > 0:
