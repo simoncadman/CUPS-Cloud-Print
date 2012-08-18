@@ -164,21 +164,21 @@ class Printer():
       """
       lines = []
       for (key, value) in fields:
-	lines.append('--' + Printer.BOUNDARY)
+	lines.append('--' + self.BOUNDARY)
 	lines.append('Content-Disposition: form-data; name="%s"' % key)
 	lines.append('')  # blank line
 	lines.append(str(value))
       for (key, filename, value) in files:
-	lines.append('--' + Printer.BOUNDARY)
+	lines.append('--' + self.BOUNDARY)
 	lines.append(
 	    'Content-Disposition: form-data; name="%s"; filename="%s"'
 	    % (key, filename))
 	lines.append('Content-Type: %s' % file_type)
 	lines.append('')  # blank line
 	lines.append(str(value))
-      lines.append('--' + Printer.BOUNDARY + '--')
+      lines.append('--' + self.BOUNDARY + '--')
       lines.append('')  # blank line
-      return Printer.CRLF.join(lines)
+      return self.CRLF.join(lines)
   
   def getCapabilities ( self, gcpid, cupsprintername ) :
     # define mappings

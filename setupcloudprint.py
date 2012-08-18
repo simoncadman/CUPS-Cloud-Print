@@ -81,7 +81,7 @@ connection = cups.Connection()
 cupsprinters = connection.getPrinters()
 
 for cupsprinter in cupsprinters:
-  if cupsprinters[cupsprinter]['device-uri'].startswith( Printer.PROTOCOL ):
+  if cupsprinters[cupsprinter]['device-uri'].startswith( printer.PROTOCOL ):
     if cupsprinters[cupsprinter]['device-uri'] not in printeruris:
       prunePrinters.append(cupsprinter)
 
