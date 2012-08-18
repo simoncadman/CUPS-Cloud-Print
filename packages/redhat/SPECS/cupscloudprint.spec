@@ -27,7 +27,7 @@ rm -rf $RPM_BUILD_ROOT
 make install DESTDIR=$RPM_BUILD_ROOT
 
 %post
-/usr/lib/cloudprint-cups/refreshppd.py
+/usr/lib/cloudprint-cups/upgrade.py
 
 %files
 /usr/lib/cloudprint-cups
