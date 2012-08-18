@@ -1,3 +1,11 @@
+cupscloudprint (20120818-1) precise; urgency=low
+
+  * New: Depreciated Google ClientLogin replaced with OAuth2 implementation – Google Account password no longer stored locally – when upgrading you will need to remove and re-add your Google Account and printers
+  * New: Multiple Google user account support, you can now add printers from multiple Google Cloud Print accounts
+  * Fix: No longer blindly overwrite printers when adding a new printer with same name as an existing printer
+
+ -- simon cadman <src@niftiestsoftware.com>  Sun, 18 Aug 2012 17:55:03 +0000
+
 cupscloudprint (20120812-1) precise; urgency=low
 
   * Fixed: Error when installing printer with non ASCII characters

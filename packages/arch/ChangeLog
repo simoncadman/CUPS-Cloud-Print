@@ -1,3 +1,10 @@
+2012-08-18 Simon Cadman <src@niftiestsoftware.com>
+
+        * 20120818 :
+	 New: Depreciated Google ClientLogin replaced with OAuth2 implementation – Google Account password no longer stored locally – when upgrading you will need to remove and re-add your Google Account and printers
+	 New: Multiple Google user account support, you can now add printers from multiple Google Cloud Print accounts
+	 Fix: No longer blindly overwrite printers when adding a new printer with same name as an existing printer
+
 2012-08-12 Simon Cadman <src@niftiestsoftware.com>
 
         * 20120812 :
