@@ -21,12 +21,32 @@ class cloudprintrequestor(httplib2.Http):
   account = None
   
   def setAccount ( self, account ):
+    """Sets the account name
+
+    Args:
+      filename: string, name of the account
+    """
     self.account = account
   
   def getAccount ( self ):
+    """Gets the account name
+
+    Return:
+      string: Account name.
+    """
     return self.account
   
   def doRequest ( self, path, headers = None, data = None , boundary = None ):
+    """Sends a request to Google Cloud Print
+
+    Args:
+      path: string, path part of url
+      headers: list, headers to send to GCP
+      data: string, body part of request
+      boundary: string, boundary part of http forms
+    Return:
+      list: Decoded json response from Google.
+    """
     # force useragent to CCP
     if headers == None:
       headers = {}

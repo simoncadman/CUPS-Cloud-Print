@@ -19,6 +19,13 @@ import sys, os, subprocess, mimetypes
 progname = 'cloudprint'
 
 def fileIsPDF ( filename ) :
+  """Check if a file is or isnt a PDF
+
+  Args:
+    filename: string, name of the file to check
+  Returns:
+    boolean: True = is a PDF, False = not a PDF.
+  """
   type = mimetypes.guess_type(filename)
   return type[0] == "application/pdf"
 

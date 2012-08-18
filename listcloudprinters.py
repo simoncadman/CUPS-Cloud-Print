@@ -21,7 +21,7 @@ from printer import Printer
 
 requestors, storage = Auth.SetupAuth(True)
 printer = Printer(requestors)
-printers = printer.getPrinters(requestors)
+printers = printer.getPrinters()
 if printers == None:
   print("No Printers Found")
   sys.exit(1)

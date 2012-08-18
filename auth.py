@@ -27,6 +27,15 @@ class Auth():
   
   @staticmethod
   def AddAccount(storage, userid=None):
+    """Adds an account to the configuration file
+
+    Args:
+      storage: storage, instance of storage to store credentials in.
+      userid: string, reference for the account
+      
+    Returns:
+      credentials: A credentials instance with the account details
+    """
     if userid == None:
       userid = raw_input("Name for this user account? ")
       
@@ -43,6 +52,14 @@ class Auth():
 
   @staticmethod
   def SetupAuth(interactive=False):
+    """Sets up requestors with authentication tokens
+
+    Args:
+      interactive: boolean, when set to true can prompt user, otherwise returns False if authentication fails
+      
+    Returns:
+      requestor, storage: Authenticated requestors and an instance of storage
+    """
     modifiedconfig = False
     
     # parse config file and extract useragents, which we use for account names

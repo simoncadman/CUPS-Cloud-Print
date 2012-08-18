@@ -24,12 +24,22 @@ class Printer():
   requestors = None
   
   def __init__( self, requestors ):
+    """Create an instance of Printer, with authorised requestor
+
+    Args:
+      requestors: list or cloudprintrequestor instance, A list of requestors, or a single requestor to use for all Cloud Print requests.
+    """
     if isinstance(requestors, list):
       self.requestors = requestors
     else:
       self.requestors = [requestors]
 
-  def getPrinters(self, proxy=None):
+  def getPrinters(self):
+    """Fetch a list of printers
+
+    Returns:
+      list: list of printers for the accounts.
+    """
     allprinters = []
     for requestor in self.requestors:
       responseobj = requestor.doRequest('search?q=')
@@ -40,9 +50,28 @@ class Printer():
     return allprinters
   
   def printerNameToUri( self, account, printer ) :
+    """Generates a URI for the Cloud Print Printer
+
+    Args:
+      account: string, account name reference
+      printer: string, name of printer from Google Cloud Print
+      
+    Returns:
+      string: URI for the printer
+    """
     return self.PROTOCOL + urllib.quote(printer) + "/" + urllib.quote(account)
 
   def addPrinter( self, printername, uri, connection ) :
+    """Adds a printer to CUPS
+
+    Args:
+      printername: string, name of the printer to add
+      uri: string, uri of the Cloud Print device
+      connection: connection, CUPS connection
+      
+    Returns:
+      None
+    """
     # fix printer name
     printername = printername.replace(' ','_')
     result = None
@@ -60,29 +89,60 @@ class Printer():
       return None
       
   def parseURI( self, uristring ):
-      uri = urlparse(uristring)
-      return uri.netloc, uri.path.lstrip('/')
+    """Parses a CUPS Cloud Print URI
+
+    Args:
+      uristring: string, uri of the Cloud Print device
+      
+    Returns:
+      string: google cloud print printer name
+      string: account name
+    """
+    uri = urlparse(uristring)
+    return uri.netloc, uri.path.lstrip('/')
       
   def findRequestorForAccount(self, account):
-      for requestor in self.requestors:
-	if requestor.getAccount() == account:
-	  return requestor
+    """Searches the requestors in the printer object for the requestor for a specific account
+
+    Args:
+      account: string, account name
+    Return:
+      requestor: Single requestor object for the account, or None if no account found
+    """
+    for requestor in self.requestors:
+      if requestor.getAccount() == account:
+	return requestor
       
-  def getPrinterIDByURI(self, printer):
-      printername, account = self.parseURI(printer)
-      # find requestor based on account
-      requestor = self.findRequestorForAccount(account)
-      responseobj = requestor.doRequest('search?q=%s' % (printername))
-      printername = urllib.unquote(printername)
-      if 'printers' in responseobj and len(responseobj['printers']) > 0:
-	for printerdetail in responseobj['printers']:
-	  if printername == printerdetail['name']:
-	    return printerdetail['id'], requestor
-      else:
-	return None
+  def getPrinterIDByURI(self, uri):
+    """Gets printer id and requestor by printer
+
+    Args:
+      uri: string, printer uri
+    Return:
+      printer id: Single requestor object for the account, or None if no account found
+      requestor: Single requestor object for the account
+    """
+    printername, account = self.parseURI(uri)
+    # find requestor based on account
+    requestor = self.findRequestorForAccount(account)
+    responseobj = requestor.doRequest('search?q=%s' % (printername))
+    printername = urllib.unquote(printername)
+    if 'printers' in responseobj and len(responseobj['printers']) > 0:
+      for printerdetail in responseobj['printers']:
+	if printername == printerdetail['name']:
+	  return printerdetail['id'], requestor
+    else:
+      return None
 
   def getPrinterDetails(self, printerid):
-      return self.requestor.doRequest( 'printer?printerid=%s' % (  printerid) )
+    """Gets details about printer from Google
+
+    Args:
+      printerid: string, Google printer id
+    Return:
+      list: data from Google
+    """
+    return self.requestor.doRequest( 'printer?printerid=%s' % (  printerid) )
 
   def readFile(self, pathname):
     """Read contents of a file and return content.
@@ -181,7 +241,14 @@ class Printer():
       return self.CRLF.join(lines)
   
   def getCapabilities ( self, gcpid, cupsprintername ) :
-    # define mappings
+    """Gets capabilities of printer and maps them against list
+
+    Args:
+      gcpid: printer id from google
+      cupsprintername: name of the printer in cups
+    Returns:
+      List of capabilities
+    """
     itemmapping = { 
 		    'DefaultColorModel' : 'ns1:Colors',
 		  }
@@ -222,6 +289,8 @@ class Printer():
       printerid: string, the printer id to submit the job to.
       jobtype: string, must match the dictionary keys in content and content_type.
       jobfile: string, points to source for job. Could be a pathname or id string.
+      jobname: string, name of the print job ( usually page name ).
+      printername: string, Google Cloud Print printer name.
     Returns:
       boolean: True = submitted, False = errors.
     """
