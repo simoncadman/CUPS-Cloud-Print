@@ -14,7 +14,7 @@ if os.path.exists(Auth.config):
 	content = content_file.read()
 	data = json.loads(content)
   except:
-    sys.stderr.write("\n\nYou have an old CUPS Cloud Print configuration file, with plaintext login details, you will need to run /usr/lib/cupscloudprint/setupcloudprint.py to upgrade to the latest authentication method before you can print.\n\n")
+    sys.stderr.write("\n\nYou have an old CUPS Cloud Print configuration file, with plaintext login details, you will need to run /usr/lib/cloudprint-cups/setupcloudprint.py to upgrade to the latest authentication method before you can print.\n\n")
     sys.exit(0)
     
 else:
