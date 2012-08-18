@@ -22,11 +22,6 @@ for requestor in requestors:
   if not ( answer.startswith("Y") or answer.startswith("y") ):
     print("Not adding printers automatically")
     continue
-
-  prefix = raw_input("Use a prefix for names of created printers ( e.g. GCP- )? ")
-  if prefix == "":
-    print("Not using prefix")
-
   connection = cups.Connection()
   cupsprinters = connection.getPrinters()
 
@@ -36,6 +31,10 @@ for requestor in requestors:
     print("No Printers Found")
     continue
     
+  prefix = raw_input("Use a prefix for names of created printers ( e.g. GCP- )? ")
+  if prefix == "":
+    print("Not using prefix")
+
   for ccpprinter in printers:
     uri = printer.printerNameToUri(ccpprinter['account'], ccpprinter['name'].encode('ascii', 'replace'))
     found = False
