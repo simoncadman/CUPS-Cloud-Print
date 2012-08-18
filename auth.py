@@ -37,19 +37,24 @@ class Auth():
       credentials: A credentials instance with the account details
     """
     if userid == None:
-      userid = raw_input("Name for this user account? ")
-      
-    flow = client.OAuth2WebServerFlow(client_id=Auth.clientid,
-				  client_secret=Auth.clientsecret,
-				  scope='https://www.googleapis.com/auth/cloudprint',
-				  user_agent=userid)
-    auth_uri = flow.step1_get_authorize_url()
-    print("Open this URL and provide the code: " + auth_uri)
-    code = raw_input('Code from Google: ')
-    credentials = flow.step2_exchange(code)
-    storage.put(credentials)
-    return credentials
-
+      userid = raw_input("Name for this user account ( eg something@gmail.com )? ")
+    
+    while True:
+      flow = client.OAuth2WebServerFlow(client_id=Auth.clientid,
+				    client_secret=Auth.clientsecret,
+				    scope='https://www.googleapis.com/auth/cloudprint',
+				    user_agent=userid)
+      auth_uri = flow.step1_get_authorize_url()
+      print("Open this URL, grant access to CUPS Cloud Print, then provide the code displayed : \n\n" + auth_uri + "\n")
+      code = raw_input('Code from Google: ')
+      try:
+	print("")
+	credentials = flow.step2_exchange(code)
+	storage.put(credentials)
+	return credentials
+      except:
+	print("\nThe code does not seem to be valid, please try again.\n")
+	
   @staticmethod
   def SetupAuth(interactive=False):
     """Sets up requestors with authentication tokens
@@ -96,7 +101,7 @@ class Auth():
       requestor = cloudprintrequestor()
       if credentials.access_token_expired:
 	credentials.refresh(requestor)
-	modifiedconfig = False
+	modifiedconfig = True
       
       requestor = credentials.authorize(requestor)
       requestor.setAccount(userid)
