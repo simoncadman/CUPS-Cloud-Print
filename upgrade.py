@@ -3,6 +3,7 @@
 import sys, cups, subprocess, os, json
 from oauth2client import client
 from oauth2client import multistore_file
+from auth import Auth
 
 connection = cups.Connection()
 cupsprinters = connection.getPrinters()
@@ -19,9 +20,9 @@ try:
 except :
   sys.stderr.write("Error connecting to CUPS")
 
-if os.path.exists('/etc/cloudprint.conf'):
+if os.path.exists(Auth.config):
   try:
-    with open('/etc/cloudprint.conf', 'r') as content_file:
+    with open(Auth.config, 'r') as content_file:
 	content = content_file.read()
 	data = json.loads(content)
   except:

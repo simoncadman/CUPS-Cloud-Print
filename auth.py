@@ -87,8 +87,8 @@ class Auth():
     
     # fix permissions
     if modifiedconfig:
-      os.chmod('/etc/cloudprint.conf', 0640)
+      os.chmod(Auth.config, 0640)
       lpid = grp.getgrnam('lp').gr_gid
-      os.chown('/etc/cloudprint.conf', 0, lpid)
+      os.chown(Auth.config, 0, lpid)
 
     return requestors, storage
