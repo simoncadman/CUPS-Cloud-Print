@@ -1,8 +1,19 @@
 #! /usr/bin/env python2.7
 
-import cups
+import cups, os, json
 from auth import Auth
 from printer import Printer
+
+if os.path.exists(Auth.config):
+  try:
+    with open(Auth.config, 'r') as content_file:
+	content = content_file.read()
+	data = json.loads(content)
+  except:
+    # remove old config file
+    print("Deleting old configuration file: " + Auth.config)
+    os.remove(Auth.config)
+
 
 while True:
   requestors, storage = Auth.SetupAuth(True)
