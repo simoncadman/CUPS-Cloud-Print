@@ -4,10 +4,6 @@ import cups
 from auth import Auth
 from printer import Printer
 
-useConfigDetails = True
-
-tokens = None
-
 while True:
   requestors, storage = Auth.SetupAuth(True)
   print "You currently have these accounts configured: "

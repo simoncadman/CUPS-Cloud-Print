@@ -18,7 +18,6 @@ from auth import Auth
 from urlparse import urlparse
 
 class Printer():
-  CLOUDPRINT_URL = 'http://www.google.com/cloudprint'
   BOUNDARY = mimetools.choose_boundary()
   CRLF = '\r\n'
   PROTOCOL = 'cloudprint://'
@@ -41,7 +40,7 @@ class Printer():
     return allprinters
   
   def printerNameToUri( self, account, printer ) :
-    return Printer.PROTOCOL + urllib.quote(printer) + "/" + urllib.quote(account)
+    return self.PROTOCOL + urllib.quote(printer) + "/" + urllib.quote(account)
 
   def addPrinter( self, printername, uri, connection ) :
     # fix printer name

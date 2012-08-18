@@ -27,7 +27,6 @@ if len(sys.argv) == 1:
   print("network cloudprint \"Unknown\" \"Google Cloud Print\"")
   
   try:
-    
     libpath = "/usr/lib/cloudprint-cups/"
     if not os.path.exists( libpath  ):
 	libpath = "/usr/local/lib/cloudprint-cups"
