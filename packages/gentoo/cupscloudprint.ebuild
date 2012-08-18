@@ -25,5 +25,4 @@ src_install() {
 
 pkg_postinst() {
 	/usr/lib/cloudprint-cups/upgrade.py
-	elog Run: /usr/lib/cloudprint-cups/setupcloudprint.py to setup your Google Credentials and add your printers to CUPS
 }
