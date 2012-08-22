@@ -124,7 +124,9 @@ class Printer():
     """
     printername, account = self.parseURI(uri)
     # find requestor based on account
-    requestor = self.findRequestorForAccount(account)
+    requestor = self.findRequestorForAccount(urllib.unquote(account))
+    if requestor == None:
+    	return None, None 
     responseobj = requestor.doRequest('search?q=%s' % (printername))
     printername = urllib.unquote(printername)
     if 'printers' in responseobj and len(responseobj['printers']) > 0:
@@ -132,7 +134,7 @@ class Printer():
 	if printername == printerdetail['name']:
 	  return printerdetail['id'], requestor
     else:
-      return None
+      return None, None
 
   def getPrinterDetails(self, printerid):
     """Gets details about printer from Google
