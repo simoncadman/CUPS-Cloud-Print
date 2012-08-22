@@ -1,4 +1,10 @@
-cupscloudprint (20120818-1) precise; urgency=low
+cupscloudprint (20120823-1) precise; urgency=high
+
+  * Fix: Fixed error when trying to print to printers with an account name containing an '@' symbol ( commit 8b8cc6edf419656e192ce82dd0e8cf662d80a54a )
+
+ -- simon cadman <src@niftiestsoftware.com>  Wed, 22 Aug 2012 19:26:07 +0000
+ 
+ cupscloudprint (20120818-1) precise; urgency=low
 
   * New: Depreciated Google ClientLogin replaced with OAuth2 implementation – Google Account password no longer stored locally – when upgrading you will need to remove and re-add your Google Account and printers
   * New: Multiple Google user account support, you can now add printers from multiple Google Cloud Print accounts

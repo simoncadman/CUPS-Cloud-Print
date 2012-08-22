@@ -1,3 +1,8 @@
+2012-08-22 Simon Cadman <src@niftiestsoftware.com>
+
+        * 20120823 :
+	 Fix: Fixed error when trying to print to printers with an account name containing an '@' symbol ( commit 8b8cc6edf419656e192ce82dd0e8cf662d80a54a )
+
 2012-08-18 Simon Cadman <src@niftiestsoftware.com>
 
         * 20120818 :
