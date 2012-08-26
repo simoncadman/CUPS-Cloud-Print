@@ -58,19 +58,19 @@ for requestor in requestors:
 	if prefix == "":
 	  print("Not using prefix")
       
-      printername = prefix + ccpprinter['name'].encode('ascii', 'replace')
+      printername = prefix + ccpprinter['name']
       
       # check if printer name already exists
       foundbyname = False
       for ccpprinter2 in cupsprinters:
-	if cupsprinters[ccpprinter2]['printer-info'].replace(' ', '_') == printername.replace(' ', '_'):
+	if printer.sanitizePrinterName(cupsprinters[ccpprinter2]['printer-info']) == printer.sanitizePrinterName(printername):
 	  foundbyname = True
       if ( foundbyname ) :
-	answer = raw_input("Printer " + printername + " already exists, supply another name? ")
+	answer = raw_input("Printer " + printer.sanitizePrinterName(printername) + " already exists, supply another name? ")
 	if ( answer.startswith("Y") or answer.startswith("y") ):
 	  printername = raw_input("New printer name? ")
 	else:
-	  answer = raw_input("Overwrite " + printername + " with new printer? ")
+	  answer = raw_input("Overwrite " + printer.sanitizePrinterName(printername) + " with new printer? ")
 	  if ( answer.startswith("N") or answer.startswith("n") ):
 	    printername = ""
       

@@ -13,7 +13,7 @@
 #
 #    You should have received a copy of the GNU General Public License    
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
-import json, urllib, os, mimetypes, base64, mimetools
+import json, urllib, os, mimetypes, base64, mimetools, re
 from auth import Auth
 from urlparse import urlparse
 
@@ -61,6 +61,18 @@ class Printer():
     """
     return self.PROTOCOL + urllib.quote(printer) + "/" + urllib.quote(account)
 
+
+  def sanitizePrinterName ( self, name ) :
+    """Sanitizes printer name for CUPS
+
+    Args:
+      name: string, name of printer from Google Cloud Print
+      
+    Returns:
+      string: CUPS-friendly name for the printer
+    """
+    return re.sub('[^a-zA-Z0-9\-_]', '', name.encode('ascii', 'replace').replace( ' ', '_' ) )
+
   def addPrinter( self, printername, uri, connection ) :
     """Adds a printer to CUPS
 
@@ -73,7 +85,7 @@ class Printer():
       None
     """
     # fix printer name
-    printername = printername.replace(' ','_')
+    printername = self.sanitizePrinterName(printername)
     result = None
     try:
       result = connection.addPrinter(name=printername,ppdname='CloudPrint.ppd',info=printername,location='Google Cloud Print',device=uri)
