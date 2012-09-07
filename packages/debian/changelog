@@ -1,3 +1,9 @@
+cupscloudprint (20120908-1) precise; urgency=high
+
+  * Fix: Issue #13 - Invalid CUPS printer name generated
+
+ -- simon cadman <src@niftiestsoftware.com>  Sat, 8 Sept 2012 00:01:58 +0000
+
 cupscloudprint (20120823-1) precise; urgency=high
 
   * Fix: Fixed error when trying to print to printers with an account name containing an '@' symbol ( commit 8b8cc6edf419656e192ce82dd0e8cf662d80a54a )

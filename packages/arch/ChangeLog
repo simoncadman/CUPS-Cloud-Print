@@ -1,3 +1,8 @@
+2012-09-08 Simon Cadman <src@niftiestsoftware.com>
+
+        * 20120908 :
+	 Fix: Issue #13 - Invalid CUPS printer name generated
+
 2012-08-22 Simon Cadman <src@niftiestsoftware.com>
 
         * 20120823 :
