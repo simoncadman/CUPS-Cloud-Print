@@ -42,7 +42,7 @@ class Printer():
     """
     allprinters = []
     for requestor in self.requestors:
-      responseobj = requestor.doRequest('search?q=')
+      responseobj = requestor.doRequest('search?connection_status=ALL')
       if 'printers' in responseobj and len(responseobj['printers']) > 0:
 	for printer in responseobj['printers']:
 	  printer['account'] = requestor.getAccount()
@@ -139,7 +139,7 @@ class Printer():
     requestor = self.findRequestorForAccount(urllib.unquote(account))
     if requestor == None:
     	return None, None 
-    responseobj = requestor.doRequest('search?q=%s' % (printername))
+    responseobj = requestor.doRequest('search?connection_status=ALL&q=%s' % (printername))
     printername = urllib.unquote(printername)
     if 'printers' in responseobj and len(responseobj['printers']) > 0:
       for printerdetail in responseobj['printers']:
