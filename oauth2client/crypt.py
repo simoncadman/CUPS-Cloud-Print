@@ -60,7 +60,6 @@ class Verifier(object):
     except:
       return False
 
-  @staticmethod
   def from_string(key_pem, is_x509_cert):
     """Construct a Verified instance from a string.
 
@@ -80,6 +79,7 @@ class Verifier(object):
     else:
       pubkey = crypto.load_privatekey(crypto.FILETYPE_PEM, key_pem)
     return Verifier(pubkey)
+  from_string = staticmethod(from_string)
 
 
 class Signer(object):
@@ -104,7 +104,6 @@ class Signer(object):
     """
     return crypto.sign(self._key, message, 'sha256')
 
-  @staticmethod
   def from_string(key, password='notasecret'):
     """Construct a Signer instance from a string.
 
@@ -120,6 +119,7 @@ class Signer(object):
     """
     pkey = crypto.load_pkcs12(key, password).get_privatekey()
     return Signer(pkey)
+  from_string = staticmethod(from_string)
 
 
 def _urlsafe_b64encode(raw_bytes):

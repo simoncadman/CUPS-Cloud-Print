@@ -177,7 +177,6 @@ class Credentials(object):
     """
     return self._to_json(Credentials.NON_SERIALIZED_MEMBERS)
 
-  @classmethod
   def new_from_json(cls, s):
     """Utility class method to instantiate a Credentials subclass from a JSON
     representation produced by to_json().
@@ -204,7 +203,8 @@ class Credentials(object):
     from_json = getattr(kls, 'from_json')
     return from_json(s)
 
-  @classmethod
+  new_from_json = classmethod(new_from_json)
+
   def from_json(cls, s):
     """Instantiate a Credentials object from a JSON description of it.
 
@@ -217,6 +217,8 @@ class Credentials(object):
       An instance of a Credentials subclass.
     """
     return Credentials()
+
+  from_json = classmethod(from_json)
 
 
 class Flow(object):
@@ -453,7 +455,6 @@ class OAuth2Credentials(Credentials):
   def to_json(self):
     return self._to_json(Credentials.NON_SERIALIZED_MEMBERS)
 
-  @classmethod
   def from_json(cls, s):
     """Instantiate a Credentials object from a JSON description of it. The JSON
     should have been produced by calling .to_json() on the object.
@@ -483,8 +484,9 @@ class OAuth2Credentials(Credentials):
         data.get('id_token', None))
     retval.invalid = data['invalid']
     return retval
+  
+  from_json = classmethod(from_json)
 
-  @property
   def access_token_expired(self):
     """True if the credential is expired or invalid.
 
@@ -502,6 +504,7 @@ class OAuth2Credentials(Credentials):
                   now, self.token_expiry)
       return True
     return False
+  access_token_expired = property(access_token_expired)
 
   def set_store(self, store):
     """Set the Storage for the credential.
@@ -673,14 +676,13 @@ class AccessTokenCredentials(OAuth2Credentials):
         None,
         user_agent)
 
-
-  @classmethod
   def from_json(cls, s):
     data = simplejson.loads(s)
     retval = AccessTokenCredentials(
         data['access_token'],
         data['user_agent'])
     return retval
+  from_json = classmethod(from_json)
 
   def _refresh(self, http_request):
     raise AccessTokenCredentialsError(
@@ -789,7 +791,6 @@ if HAS_OPENSSL:
       self.service_account_name = service_account_name
       self.kwargs = kwargs
 
-    @classmethod
     def from_json(cls, s):
       data = simplejson.loads(s)
       retval = SignedJwtAssertionCredentials(
@@ -803,6 +804,7 @@ if HAS_OPENSSL:
           )
       retval.invalid = data['invalid']
       return retval
+    from_json = classmethod(from_json)
 
     def _generate_assertion(self):
       """Generate the assertion that will be used in the request."""

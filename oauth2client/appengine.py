@@ -78,10 +78,11 @@ class AppAssertionCredentials(AssertionCredentials):
         None,
         None)
 
-  @classmethod
   def from_json(cls, json):
     data = simplejson.loads(json)
     return AppAssertionCredentials(data['scope'])
+
+  from_json = classmethod(from_json)
 
   def _refresh(self, http_request):
     """Refreshes the access_token.
