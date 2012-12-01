@@ -1,4 +1,33 @@
 #! /bin/bash
+
+# if python2 symlink doesnt exist, change to /usr/bin/env python2.7 or /usr/bin/env python2.6
+if [[ ! -f /usr/bin/python2 ]]; then
+    export pyversion=""
+    if [[ -f /usr/bin/python2.3 ]]; then
+        export pyversion="python2.3"
+    fi
+    
+    if [[ -f /usr/bin/python2.4 ]]; then
+        export pyversion="python2.4"
+    fi
+    
+    if [[ -f /usr/bin/python2.5 ]]; then
+        export pyversion="python2.5"
+    fi
+    
+    if [[ -f /usr/bin/python2.6 ]]; then
+        export pyversion="python2.6"
+    fi
+    
+    if [[ -f /usr/bin/python2.7 ]]; then
+        export pyversion="python2.7"
+    fi
+    
+    if [[ $pyversion != "" ]]; then
+        sed -i "1 s/\/usr\/bin\/env python2$/\/usr\/bin\/env $pyversion/" /usr/lib/cloudprint-cups/{backend.py,listcloudprinters.py,setupcloudprint.py,submitjob.py,upgrade.py}
+    fi
+fi
+
 touch /var/log/cups/cloudprint_log
 chown root:lp /var/log/cups/cloudprint_log
 chmod 660 /var/log/cups/cloudprint_log
