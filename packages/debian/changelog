@@ -1,4 +1,13 @@
-cupscloudprint (20120908-1) precise; urgency=high
+cupscloudprint (20121202-1) precise; urgency=high
+
+  * Change: Backwards compatiblity changes for older versions of python
+  * Fix: Show all printers, including ones marked as dormant
+  * Fix: Issue #16 - Arch package, cupsddk dependency is discontinued.
+  * Fix: Depend on system-config-printer-libs instead of python-cups in RPM
+
+ -- simon cadman <src@niftiestsoftware.com>  Sun, 2 Dec 2012 00:00:00 +0000
+
+ cupscloudprint (20120908-1) precise; urgency=high
 
   * Fix: Issue #13 - Invalid CUPS printer name generated
 

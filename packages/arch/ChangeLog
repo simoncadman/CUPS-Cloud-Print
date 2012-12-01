@@ -1,3 +1,11 @@
+2012-12-02 Simon Cadman <src@niftiestsoftware.com>
+
+        * 20121202 :
+         Change: Backwards compatiblity changes for older versions of python
+         Fix: Show all printers, including ones marked as dormant
+         Fix: Issue #16 - Arch package, cupsddk dependency is discontinued.
+         Fix: Depend on system-config-printer-libs instead of python-cups in RPM
+
 2012-09-08 Simon Cadman <src@niftiestsoftware.com>
 
         * 20120908 :
