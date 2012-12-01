@@ -17,7 +17,7 @@ import json, urllib, os, mimetypes, base64, mimetools, re
 from auth import Auth
 from urlparse import urlparse
 
-class Printer():
+class Printer:
   BOUNDARY = mimetools.choose_boundary()
   CRLF = '\r\n'
   PROTOCOL = 'cloudprint://'
@@ -92,7 +92,7 @@ class Printer():
       connection.enablePrinter(printername)
       connection.acceptJobs(printername)
       connection.setPrinterShared(printername, False)
-    except Exception as error:
+    except Exception , error:
       result = error
     if result == None:
       print("Added " + printername)
@@ -172,9 +172,8 @@ class Printer():
 	s = f.read()
       except IOError, e:
 	print('ERROR: Error reading %s\n%s', pathname, e)
-      finally:
-	f.close()
-	return s
+      f.close()
+      return s
     except IOError, e:
       print('ERROR: Error opening %s\n%s', pathname, e)
       return None
@@ -196,8 +195,7 @@ class Printer():
 	f.write(data)
       except IOError, e:
 	status = False
-      finally:
-	f.close()
+      f.close()
     except IOError, e:
       status = False
 
@@ -353,6 +351,6 @@ class Printer():
 	print('ERROR: Print job %s failed with %s', jobtype, responseobj['message'])
 	return False
 	
-    except Exception as error_msg:
+    except Exception, error_msg:
       print('ERROR: Print job %s failed with %s', jobtype, error_msg)
       return False
