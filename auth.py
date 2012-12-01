@@ -19,13 +19,12 @@ from oauth2client import client
 from oauth2client import multistore_file
 from cloudprintrequestor import cloudprintrequestor 
 
-class Auth():
+class Auth:
   
   clientid = "843805314553.apps.googleusercontent.com"
   clientsecret = 'MzTBsY4xlrD_lxkmwFbBrvBv'
   config = '/etc/cloudprint.conf'
   
-  @staticmethod
   def AddAccount(storage, userid=None):
     """Adds an account to the configuration file
 
@@ -55,7 +54,8 @@ class Auth():
       except:
 	print("\nThe code does not seem to be valid, please try again.\n")
 	
-  @staticmethod
+  AddAccount = staticmethod(AddAccount)
+  
   def SetupAuth(interactive=False):
     """Sets up requestors with authentication tokens
 
@@ -70,12 +70,11 @@ class Auth():
     # parse config file and extract useragents, which we use for account names
     userids = []
     if os.path.exists( Auth.config ):
-      with open(Auth.config, 'r') as content_file:
-	  content = content_file.read()
-	  data = json.loads(content)
-	  for user in data['data']:
-	    userids.append(str(user['credential']['user_agent']))
-      
+      content_file = open(Auth.config, 'r')
+      content = content_file.read()
+      data = json.loads(content)
+      for user in data['data']:
+        userids.append(str(user['credential']['user_agent']))
     
     if len(userids) == 0:
       userids = [ None ]
@@ -114,3 +113,5 @@ class Auth():
       os.chown(Auth.config, 0, lpid)
 
     return requestors, storage
+  
+  SetupAuth = staticmethod(SetupAuth)
