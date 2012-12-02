@@ -7,7 +7,7 @@ cupscloudprint (20121202-1) precise; urgency=high
 
  -- simon cadman <src@niftiestsoftware.com>  Sun, 2 Dec 2012 00:00:00 +0000
 
- cupscloudprint (20120908-1) precise; urgency=high
+cupscloudprint (20120908-1) precise; urgency=high
 
   * Fix: Issue #13 - Invalid CUPS printer name generated
 
