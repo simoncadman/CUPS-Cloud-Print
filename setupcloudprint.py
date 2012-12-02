@@ -21,9 +21,9 @@ from printer import Printer
 
 if os.path.exists(Auth.config):
   try:
-    with open(Auth.config, 'r') as content_file:
-	content = content_file.read()
-	data = json.loads(content)
+    content_file = open(Auth.config, 'r')
+    content = content_file.read()
+    data = json.loads(content)
   except:
     # remove old config file
     print("Deleting old configuration file: " + Auth.config)

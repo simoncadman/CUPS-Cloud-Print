@@ -25,9 +25,9 @@ cupsprinters = connection.getPrinters()
 
 if os.path.exists(Auth.config):
   try:
-    with open(Auth.config, 'r') as content_file:
-	content = content_file.read()
-	data = json.loads(content)
+    content_file = open(Auth.config, 'r')
+    content = content_file.read()
+    data = json.loads(content)
   except:
     sys.stderr.write("\n\nYou have an old CUPS Cloud Print configuration file, with plaintext login details, you will need to run /usr/lib/cloudprint-cups/setupcloudprint.py to upgrade to the latest authentication method before you can print.\n\n")
     sys.exit(0)
