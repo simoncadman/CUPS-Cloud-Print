@@ -8,7 +8,7 @@ before_install:
  - sudo apt-get install -qq debhelper autotools-dev cups-ppdc libcups2-dev cups python-cups python-httplib2
 install:
  - ./configure
- - make install
+ - sudo make install
 script:
  - cd /usr/local/lib/cloudprint-cups/
  - python test.py
