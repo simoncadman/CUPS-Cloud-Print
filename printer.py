@@ -309,12 +309,11 @@ class Printer:
       boolean: True = submitted, False = errors.
     """
     if jobtype == 'pdf':
-      
       if not os.path.exists(jobfile):
 	print("ERROR: PDF doesnt exist")
 	return False
       b64file = self.base64Encode(jobfile)
-      fdata = self.readFile(b64file)
+      fdata = self.readFile(unicode(b64file))
       os.unlink(b64file)
       hsid = True
     elif jobtype in ['png', 'jpeg']:
