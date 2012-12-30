@@ -226,12 +226,11 @@ class Printer:
     else:
       return None
 
-  def encodeMultiPart(self, fields, files, file_type='application/xml'):
-      """Encodes list of parameters and files for HTTP multipart format.
+  def encodeMultiPart(self, fields, file_type='application/xml'):
+      """Encodes list of parameters for HTTP multipart format.
 
       Args:
 	fields: list of tuples containing name and value of parameters.
-	files: list of tuples containing param name, filename, and file contents.
 	file_type: string if file type different than application/xml.
       Returns:
 	A string to be sent as data for the HTTP post request.
@@ -240,14 +239,6 @@ class Printer:
       for (key, value) in fields:
 	lines.append('--' + self.BOUNDARY)
 	lines.append('Content-Disposition: form-data; name="%s"' % key)
-	lines.append('')  # blank line
-	lines.append(str(value))
-      for (key, filename, value) in files:
-	lines.append('--' + self.BOUNDARY)
-	lines.append(
-	    'Content-Disposition: form-data; name="%s"; filename="%s"'
-	    % (key, filename))
-	lines.append('Content-Type: %s' % file_type)
 	lines.append('')  # blank line
 	lines.append(str(value))
       lines.append('--' + self.BOUNDARY + '--')
@@ -344,10 +335,9 @@ class Printer:
       ('contentType', content_type[jobtype]),
       ('capabilities', json.dumps( self.getCapabilities(printerid, printername) ) )
     ]
-    files = []
     edata = ""
     if jobtype in ['pdf', 'jpeg', 'png']:
-      edata = self.encodeMultiPart(headers, files, file_type=content_type[jobtype])
+      edata = self.encodeMultiPart(headers, file_type=content_type[jobtype])
     
     responseobj = self.requestor.doRequest( 'submit', None, edata, self.BOUNDARY )
     try:
