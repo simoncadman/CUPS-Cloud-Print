@@ -16,33 +16,98 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 from printer import Printer
+import json
 
 class MockRequestor:
-    pass
+    
+    account = None
+    printers = []
+    
+    def setAccount ( self, account ):
+        """Sets the account name
 
-global requestors
+        Args:
+        filename: string, name of the account
+        """
+        self.account = account
+    
+    def getAccount ( self ):
+        """Gets the account name
+
+        Return:
+        string: Account name.
+        """
+        return self.account
+    
+    def mockSearch ( self, path, headers, data , boundary ) :
+        result = { 'printers' : self.printers }
+        return json.dumps( result )
+        
+    def doRequest ( self, path, headers = None, data = None , boundary = None ):
+        if ( path.startswith('search?') ) :
+            return json.loads(self.mockSearch(path, headers, data, boundary))
+        return None
+
+global requestors, printerItem
 
 def setup_function(function):
     # setup mock requestors
     global requestors
     requestors = []
+    
+    # account without special chars
     mockRequestorInstance1 = MockRequestor()
+    mockRequestorInstance1.setAccount('testaccount1')
+    mockRequestorInstance1.printers = []
     requestors.append(mockRequestorInstance1)
+    
+    # with @ symbol
     mockRequestorInstance2 = MockRequestor()
+    mockRequestorInstance2.setAccount('testaccount2@gmail.com')
+    mockRequestorInstance2.printers = [ { 'name' : 'Save to Google Drive' },  ]
     requestors.append(mockRequestorInstance2)
+    
+    # 1 letter
+    mockRequestorInstance3 = MockRequestor()
+    mockRequestorInstance3.setAccount('t')
+    mockRequestorInstance3.printers = []
+    requestors.append(mockRequestorInstance3)
+    
+    # instantiate printer item
+    if function != test_instantiate:
+        test_instantiate()
 
 def teardown_function(function):
     global requestors
     requestors = None
 
 def test_instantiate():
-    global requestors
+    global requestors, printerItem
+    # verify adding single requestor works
+    printerItem = Printer(requestors[0])
+    assert printerItem.requestors[0] == requestors[0]
+    assert len(printerItem.requestors) == 1
+    
     # verify adding whole array of requestors works
     printerItem = Printer(requestors)
     assert printerItem.requestors == requestors
     assert len(printerItem.requestors) == len(requestors)
     
-    # verify adding single requestor works
-    printerItem = Printer(requestors[0])
-    assert printerItem.requestors[0] == requestors[0]
-    assert len(printerItem.requestors) == 1
+def test_getPrinters():
+    global printerItem, requestors
+    
+    # total printer
+    totalPrinters = 0
+    for requestor in requestors:
+        totalPrinters+=len(requestor.printers)
+    
+    printers = printerItem.getPrinters()
+    assert len(printers) == totalPrinters
+    for printer in printers:
+        # name
+        assert isinstance(printer['name'], unicode)
+        assert len(printer['name']) > 0
+        
+        # account
+        assert isinstance(printer['account'], str)
+        assert len(printer['account']) > 0
