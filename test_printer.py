@@ -143,5 +143,15 @@ def test_printers():
         assert printerItem.addPrinter( printername, uri, connection) != None
         testprintername = printerItem.sanitizePrinterName(printername)
         
+        # test printer actually added to cups
+        cupsPrinters = connection.getPrinters()
+        found = False
+        for cupsPrinter in cupsPrinters:
+            if ( cupsPrinters[cupsPrinter]['printer-info'] == testprintername ):
+                found = True
+                break
+        
+        assert found == True
+        
         # delete test printer
         connection.deletePrinter( testprintername )
