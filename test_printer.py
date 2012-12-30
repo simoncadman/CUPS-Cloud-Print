@@ -140,8 +140,8 @@ def test_printers():
         assert isinstance(requestor, MockRequestor)
         
         # test add printer to cups
-        testprintername = 'Test-' + urllib.unquote(printername).encode('ascii', 'replace').replace(' ', '_')
-        assert printerItem.addPrinter( testprintername, uri, connection) != None
+        assert printerItem.addPrinter( printername, uri, connection) != None
+        testprintername = printerItem.sanitizePrinterName(printername)
         
         # delete test printer
         connection.deletePrinter( testprintername )
