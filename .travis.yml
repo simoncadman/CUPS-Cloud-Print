@@ -10,7 +10,7 @@ install:
  - ./configure
  - sudo make install
 script:
- - cp .coveragerc /usr/local/lib/cloudprint-cups/
+ - sudo cp .coveragerc /usr/local/lib/cloudprint-cups/
  - cd /usr/local/lib/cloudprint-cups/
  - sudo chmod -R o+rw .
  - py.test --cov .
