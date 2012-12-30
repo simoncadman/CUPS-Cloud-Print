@@ -1,3 +1,5 @@
+[![Build Status](https://travis-ci.org/simoncadman/CUPS-Cloud-Print.png)](https://travis-ci.org/simoncadman/CUPS-Cloud-Print)
+
 INTRODUCTION
 ============
 Google Cloud Print driver for CUPS, allows printing to printers hosted on Google Cloud Print. 
