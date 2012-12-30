@@ -43,8 +43,12 @@ class MockRequestor:
         result = { 'printers' : self.printers }
         return json.dumps( result )
         
+    def mockSubmit ( self, path, headers, data , boundary ) :
+        result = { 'success' : True }
+        return json.dumps( result )
+    
     def mockPrinter ( self, path, headers, data , boundary ) :
-        printername = '__google__docs'
+        printername = path.split('=')[1]
         foundPrinter = None
         for printer in self.printers:
             if printer['id'] == printername:
@@ -62,6 +66,8 @@ class MockRequestor:
             return json.loads(self.mockSearch(path, headers, data, boundary))
         if ( path.startswith('printer?') ) :
             return json.loads(self.mockPrinter(path, headers, data, boundary))
+        if ( path == 'submit' ) :
+            return json.loads(self.mockSubmit(path, headers, data, boundary))
         return None
 
 global requestors, printerItem
@@ -199,3 +205,16 @@ def test_printers():
         assert printerdetails['printers'][0] != None
         assert 'capabilities' in printerdetails['printers'][0]
         assert isinstance(printerdetails['printers'][0]['capabilities'], dict)
+        
+        # test submitting job
+        assert printerItem.submitJob(printerId, 'pdf', 'testfiles/Test Page.pdf', 'Test Page', printername ) == True
+        assert printerItem.submitJob(printerId, 'pdf', 'testfiles/Test Page Doesnt Exist.pdf', 'Test Page', printername ) == False
+        
+        # png
+        assert printerItem.submitJob(printerId, 'png', 'testfiles/Test Page.png', 'Test Page', printername ) == True
+        assert printerItem.submitJob(printerId, 'png', 'testfiles/Test Page Doesnt Exist.png', 'Test Page', printername ) == False
+        
+        # ps
+        assert printerItem.submitJob(printerId, 'ps', 'testfiles/Test Page.ps', 'Test Page', printername ) == False
+        assert printerItem.submitJob(printerId, 'ps', 'testfiles/Test Page Doesnt Exist.ps', 'Test Page', printername ) == False
+        
