@@ -318,10 +318,10 @@ class Printer:
       os.unlink(b64file)
       hsid = True
     elif jobtype in ['png', 'jpeg']:
-      fdata = self.readFile(jobfile)
       if not os.path.exists(jobfile):
         print("ERROR: File doesnt exist")
         return False
+      fdata = self.readFile(jobfile)
     else:
       print("ERROR: Unknown job type")
       return False
