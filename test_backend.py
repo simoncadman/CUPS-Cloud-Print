@@ -16,7 +16,10 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import sys, cups
-from auth import Auth
-from printer import Printer
+import backend
 
-# setup basic printers
+def test_fileIsPDFFails():
+    assert backend.fileIsPDF('testfiles/NotPdf.txt') == False
+    
+def test_fileIsPDFSucceeds():
+    assert backend.fileIsPDF('testfiles/Test Page.pdf') == True

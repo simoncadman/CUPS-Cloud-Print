@@ -11,4 +11,4 @@ install:
  - sudo make install
 script:
  - cd /usr/local/lib/cloudprint-cups/
- - ./test.py
+ - py.test
