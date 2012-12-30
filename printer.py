@@ -346,8 +346,6 @@ class Printer:
     edata = ""
     if jobtype in ['pdf', 'jpeg', 'png']:
       edata = self.encodeMultiPart(headers, files, file_type=content_type[jobtype])
-    else:
-      edata = self.encodeMultiPart(headers, files)
     
     responseobj = self.requestor.doRequest( 'submit', None, edata, self.BOUNDARY )
     try:
