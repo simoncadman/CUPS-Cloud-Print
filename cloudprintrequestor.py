@@ -36,7 +36,7 @@ class cloudprintrequestor(httplib2.Http):
     """
     return self.account
   
-  def doRequest ( self, path, headers = None, data = None , boundary = None ):
+  def doRequest ( self, path, headers = None, data = None , boundary = None ): # pragma: no cover 
     """Sends a request to Google Cloud Print
 
     Args:
