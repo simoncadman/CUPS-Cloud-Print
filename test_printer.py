@@ -45,7 +45,7 @@ class MockRequestor:
         
     def mockSubmit ( self, path, headers, data , boundary ) :
         if 'FAIL PAGE' in data:
-            result = { 'success' : False }
+            result = { 'success' : False, 'message' : 'FAIL PAGE was in message' }
         else:
             result = { 'success' : True }
         return json.dumps( result )
