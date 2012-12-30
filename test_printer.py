@@ -125,6 +125,10 @@ def test_GetPrinterIDByURIFails (  ):
     assert printerIdNoneTest == None
     assert requestorNoneTest == None
 
+def test_addPrinterFails ( ) :
+    global printerItem
+    assert printerItem.addPrinter( '', '', '' ) == False
+
 def test_printers():
     global printerItem, requestors
     
