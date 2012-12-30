@@ -96,9 +96,10 @@ class Printer:
       result = error
     if result == None:
       print("Added " + printername)
+      return True
     else:
       print("Error adding: " + printername,result)
-      return None
+      return False
       
   def parseURI( self, uristring ):
     """Parses a CUPS Cloud Print URI

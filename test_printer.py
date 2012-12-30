@@ -16,7 +16,7 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 from printer import Printer
-import json, urllib
+import json, urllib, cups
 
 class MockRequestor:
     
@@ -96,6 +96,10 @@ def test_instantiate():
 def test_printers():
     global printerItem, requestors
     
+    # test cups connection
+    connection = cups.Connection()
+    cupsprinters = connection.getPrinters()
+    
     # total printer
     totalPrinters = 0
     for requestor in requestors:
@@ -134,3 +138,10 @@ def test_printers():
         printerId, requestor = printerItem.getPrinterIDByURI(uri)
         assert isinstance(printerId, unicode)
         assert isinstance(requestor, MockRequestor)
+        
+        # test add printer to cups
+        testprintername = 'Test-' + urllib.unquote(printername).encode('ascii', 'replace').replace(' ', '_')
+        assert printerItem.addPrinter( testprintername, uri, connection) != None
+        
+        # delete test printer
+        connection.deletePrinter( testprintername )
