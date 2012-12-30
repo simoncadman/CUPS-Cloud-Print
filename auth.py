@@ -98,7 +98,7 @@ class Auth:
 	
       # renew if expired
       requestor = cloudprintrequestor()
-      if credentials.access_token_expired:
+      if credentials.access_token_expired: # pragma: no cover 
 	credentials.refresh(requestor)
 	modifiedconfig = True
       
@@ -107,7 +107,7 @@ class Auth:
       requestors.append(requestor)
     
     # fix permissions
-    if modifiedconfig:
+    if modifiedconfig: # pragma: no cover 
       os.chmod(Auth.config, 0640)
       lpid = grp.getgrnam('lp').gr_gid
       os.chown(Auth.config, 0, lpid)
