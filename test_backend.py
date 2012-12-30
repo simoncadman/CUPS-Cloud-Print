@@ -23,3 +23,10 @@ def test_fileIsPDFFails():
     
 def test_fileIsPDFSucceeds():
     assert backend.fileIsPDF('testfiles/Test Page.pdf') == True
+    
+def test_whichFails():
+    assert backend.which('dsaph9oaghd9ahdsadsadsadsadasd') == None
+    
+def test_whichSuceeds():
+    assert backend.which('bash') == '/bin/bash'
+    
