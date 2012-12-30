@@ -34,17 +34,17 @@ import urlparse
 from anyjson import simplejson
 
 HAS_OPENSSL = False
-try:
+try: # pragma: no cover 
   from oauth2client.crypt import Signer
   from oauth2client.crypt import make_signed_jwt
   from oauth2client.crypt import verify_signed_jwt_with_certs
   HAS_OPENSSL = True
-except ImportError:
+except ImportError: # pragma: no cover 
   pass
 
-try:
+try: # pragma: no cover 
   from urlparse import parse_qsl
-except ImportError:
+except ImportError: # pragma: no cover 
   from cgi import parse_qsl
 
 logger = logging.getLogger(__name__)
@@ -88,7 +88,7 @@ class VerifyJwtTokenError(Error):
   pass
 
 
-def _abstract():
+def _abstract(): # pragma: no cover 
   raise NotImplementedError('You need to override this function')
 
 

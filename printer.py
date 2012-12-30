@@ -347,6 +347,6 @@ class Printer:
 	print('ERROR: Print job %s failed with %s', jobtype, responseobj['message'])
 	return False
 	
-    except Exception, error_msg:
+    except Exception, error_msg: # pragma: no cover 
       print('ERROR: Print job %s failed with %s', jobtype, error_msg)
       return False

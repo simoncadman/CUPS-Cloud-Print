@@ -44,7 +44,10 @@ class MockRequestor:
         return json.dumps( result )
         
     def mockSubmit ( self, path, headers, data , boundary ) :
-        result = { 'success' : True }
+        if 'FAIL PAGE' in data:
+            result = { 'success' : False }
+        else:
+            result = { 'success' : True }
         return json.dumps( result )
     
     def mockPrinter ( self, path, headers, data , boundary ) :
@@ -223,6 +226,9 @@ def test_printers():
         # ps
         assert printerItem.submitJob(printerId, 'ps', 'testfiles/Test Page.ps', 'Test Page', testprintername ) == False
         assert printerItem.submitJob(printerId, 'ps', 'testfiles/Test Page Doesnt Exist.ps', 'Test Page', testprintername ) == False
+        
+        # test failure of print job
+        assert printerItem.submitJob(printerId, 'pdf', 'testfiles/Test Page.pdf', 'FAIL PAGE', testprintername ) == False
         
         # delete test printer
         connection.deletePrinter( testprintername )
