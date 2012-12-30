@@ -313,6 +313,9 @@ class Printer:
 	print("ERROR: PDF doesnt exist")
 	return False
       b64file = self.base64Encode(jobfile)
+      if b64file == None:
+        print("ERROR: Cannot write to file: " + b64file)
+        return False
       fdata = self.readFile(b64file)
       os.unlink(b64file)
       hsid = True
