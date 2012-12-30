@@ -28,4 +28,11 @@ def test_whichFails():
     
 def test_whichSuceeds():
     assert backend.which('bash') == '/bin/bash'
-    
+
+def test_backendDescription():
+    import re
+    backendtest = re.compile("^\w+ \w+ \"\w+\" \".+\"$")
+    description = backend.getBackendDescription()
+    assert isinstance(description, str)
+    assert description.startswith('network')
+    assert backendtest.match(description) != None

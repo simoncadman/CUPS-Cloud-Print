@@ -46,10 +46,13 @@ def which(program):
               return exe_file
   return None
 
+def getBackendDescription ( ) :
+  return "network cloudprint \"Unknown\" \"Google Cloud Print\""
+
 if __name__ == '__main__':
     
   if len(sys.argv) == 1:
-    print("network cloudprint \"Unknown\" \"Google Cloud Print\"")
+    print(getBackendDescription())
   
     try:
       libpath = "/usr/lib/cloudprint-cups/"
