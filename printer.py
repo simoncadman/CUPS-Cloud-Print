@@ -22,6 +22,7 @@ class Printer:
   CRLF = '\r\n'
   PROTOCOL = 'cloudprint://'
   requestors = None
+  requestor = None
   
   def __init__( self, requestors ):
     """Create an instance of Printer, with authorised requestor
