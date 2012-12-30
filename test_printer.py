@@ -89,7 +89,7 @@ def setup_function(function):
     
     # [{u'UIType': u'PickOne', u'displayName': u'Color Device', u'name': u'ColorDevice', u'value': u'True', u'type': u'Feature', u'options': [{u'default': True, u'displayName': u'True', u'name': u'True'}]}, {u'UIType': u'PickOne', u'displayName': u'File System', u'name': u'FileSystem', u'value': u'False', u'type': u'Feature', u'options': [{u'default': True, u'displayName': u'False', u'name': u'False'}]}, {u'UIType': u'PickOne', u'displayName': u'Language Level', u'name': u'LanguageLevel', u'value': u'2', u'type': u'Feature', u'options': [{u'default': True, u'displayName': u'Two 2', u'name': u'2'}]}, {u'UIType': u'PickOne', u'displayName': u'TT Rasterizer', u'name': u'TTRasterizer', u'value': u'Type42', u'type': u'Feature', u'options': [{u'default': True, u'displayName': u'Type42', u'name': u'Type42'}]}, {u'UIType': u'PickOne', u'displayName': u'Throughput', u'name': u'Throughput', u'value': u'10', u'type': u'Feature', u'options': [{u'default': True, u'displayName': u'10', u'name': u'10'}]}, {u'UIType': u'PickOne', u'displayName': u'Color Space', u'name': u'ColorSpace', u'value': u'CMYK', u'type': u'Feature', u'options': [{u'default': True, u'displayName': u'CMYK', u'name': u'CMYK'}]}]
     
-    mockRequestorInstance2.printers = [ { 'name' : 'Save to Google Drive', 'id' : '__google__docs', 'capabilities' : { 'UIType' : 'PickOne' } },  ]
+    mockRequestorInstance2.printers = [ { 'name' : 'Save to Google Drive', 'id' : '__google__docs', 'capabilities' : [{ 'name' : 'ns1:Colors', 'type' : 'Feature' }] },  ]
     requestors.append(mockRequestorInstance2)
     
     # 1 letter
@@ -195,26 +195,25 @@ def test_printers():
         
         assert found == True
         
-        # delete test printer
-        connection.deletePrinter( testprintername )
-        
         # get details about printer
         printerItem.requestor = requestor
         printerdetails = printerItem.getPrinterDetails(printer['id'])
         assert printerdetails != None
         assert printerdetails['printers'][0] != None
         assert 'capabilities' in printerdetails['printers'][0]
-        assert isinstance(printerdetails['printers'][0]['capabilities'], dict)
+        assert isinstance(printerdetails['printers'][0]['capabilities'], list)
         
         # test submitting job
-        assert printerItem.submitJob(printerId, 'pdf', 'testfiles/Test Page.pdf', 'Test Page', printername ) == True
-        assert printerItem.submitJob(printerId, 'pdf', 'testfiles/Test Page Doesnt Exist.pdf', 'Test Page', printername ) == False
+        assert printerItem.submitJob(printerId, 'pdf', 'testfiles/Test Page.pdf', 'Test Page', testprintername ) == True
+        assert printerItem.submitJob(printerId, 'pdf', 'testfiles/Test Page Doesnt Exist.pdf', 'Test Page', testprintername ) == False
         
         # png
-        assert printerItem.submitJob(printerId, 'png', 'testfiles/Test Page.png', 'Test Page', printername ) == True
-        assert printerItem.submitJob(printerId, 'png', 'testfiles/Test Page Doesnt Exist.png', 'Test Page', printername ) == False
+        assert printerItem.submitJob(printerId, 'png', 'testfiles/Test Page.png', 'Test Page', testprintername ) == True
+        assert printerItem.submitJob(printerId, 'png', 'testfiles/Test Page Doesnt Exist.png', 'Test Page', testprintername ) == False
         
         # ps
-        assert printerItem.submitJob(printerId, 'ps', 'testfiles/Test Page.ps', 'Test Page', printername ) == False
-        assert printerItem.submitJob(printerId, 'ps', 'testfiles/Test Page Doesnt Exist.ps', 'Test Page', printername ) == False
+        assert printerItem.submitJob(printerId, 'ps', 'testfiles/Test Page.ps', 'Test Page', testprintername ) == False
+        assert printerItem.submitJob(printerId, 'ps', 'testfiles/Test Page Doesnt Exist.ps', 'Test Page', testprintername ) == False
         
+        # delete test printer
+        connection.deletePrinter( testprintername )
