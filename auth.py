@@ -88,7 +88,7 @@ class Auth:
 	    ['https://www.googleapis.com/auth/cloudprint'])
       credentials = storage.get()
 
-      if not credentials and interactive:
+      if not credentials and interactive: # pragma: no cover
 	credentials = Auth.AddAccount(storage, userid)
 	modifiedconfig = True
 	if userid == None:

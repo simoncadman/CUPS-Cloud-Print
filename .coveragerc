@@ -1,2 +1,2 @@
 [run]
-omit = oauth2client/*,tests/*
+omit = oauth2client/*,test_*
