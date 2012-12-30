@@ -16,7 +16,7 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 from printer import Printer
-import json
+import json, urllib
 
 class MockRequestor:
     
@@ -64,7 +64,7 @@ def setup_function(function):
     # with @ symbol
     mockRequestorInstance2 = MockRequestor()
     mockRequestorInstance2.setAccount('testaccount2@gmail.com')
-    mockRequestorInstance2.printers = [ { 'name' : 'Save to Google Drive' },  ]
+    mockRequestorInstance2.printers = [ { 'name' : 'Save to Google Drive', 'id' : '__google__docs' },  ]
     requestors.append(mockRequestorInstance2)
     
     # 1 letter
@@ -102,8 +102,10 @@ def test_getPrinters():
         totalPrinters+=len(requestor.printers)
     
     printers = printerItem.getPrinters()
+    import re
     assert len(printers) == totalPrinters
     for printer in printers:
+        
         # name
         assert isinstance(printer['name'], unicode)
         assert len(printer['name']) > 0
@@ -111,3 +113,24 @@ def test_getPrinters():
         # account
         assert isinstance(printer['account'], str)
         assert len(printer['account']) > 0
+        
+        # id
+        assert isinstance(printer['id'], unicode)
+        assert len(printer['id']) > 0
+        
+        # test encoding and decoding printer details to/from uri
+        uritest = re.compile("cloudprint://(.*)/" + urllib.quote( printer['account'] ))
+        uri = printerItem.printerNameToUri(printer['account'], printer['name'])
+        assert isinstance(uri, str)
+        assert len(uri) > 0
+        assert uritest.match(uri) != None
+        
+        printername, account = printerItem.parseURI(uri)
+        assert isinstance(printername, str)
+        assert urllib.unquote(printername) == printer['name']
+        assert isinstance(account, str)
+        assert urllib.unquote(account) == printer['account']
+        
+        printerId, requestor = printerItem.getPrinterIDByURI(uri)
+        assert isinstance(printerId, unicode)
+        assert isinstance(requestor, MockRequestor)
