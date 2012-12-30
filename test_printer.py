@@ -93,6 +93,19 @@ def test_instantiate():
     assert printerItem.requestors == requestors
     assert len(printerItem.requestors) == len(requestors)
     
+def test_GetPrinterIDByURIFails (  ):
+    global printerItem, requestors
+    
+    # ensure invalid account returns None/None
+    printerIdNoneTest , requestorNoneTest = printerItem.getPrinterIDByURI('cloudprint://testprinter/accountthatdoesntexist')
+    assert printerIdNoneTest == None
+    assert requestorNoneTest == None
+    
+    # ensure invalid printer on valid account returns None/None
+    printerIdNoneTest , requestorNoneTest = printerItem.getPrinterIDByURI('cloudprint://testprinter/' + urllib.quote(requestors[0].getAccount()) )
+    assert printerIdNoneTest == None
+    assert requestorNoneTest == None
+
 def test_printers():
     global printerItem, requestors
     
