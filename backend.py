@@ -32,17 +32,17 @@ def fileIsPDF ( filename ) :
 
 def which(program):
   import os
-  def is_exe(fpath):
+  def is_exe(fpath): # pragma: no cover
       return os.path.exists(fpath) and os.access(fpath, os.X_OK)
 
   fpath, fname = os.path.split(program)
   if fpath:
-      if is_exe(program):
+      if is_exe(program): # pragma: no cover
           return program
   else:
       for path in os.environ["PATH"].split(os.pathsep):
           exe_file = os.path.join(path, program)
-          if is_exe(exe_file):
+          if is_exe(exe_file): # pragma: no cover
               return exe_file
   return None
 
