@@ -49,7 +49,7 @@ def which(program):
 def getBackendDescription ( ) :
   return "network cloudprint \"Unknown\" \"Google Cloud Print\""
 
-if __name__ == '__main__':
+if __name__ == '__main__': # pragma: no cover 
     
   if len(sys.argv) == 1:
     print(getBackendDescription())

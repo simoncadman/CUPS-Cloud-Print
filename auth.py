@@ -25,7 +25,7 @@ class Auth:
   clientsecret = 'MzTBsY4xlrD_lxkmwFbBrvBv'
   config = '/etc/cloudprint.conf'
   
-  def AddAccount(storage, userid=None):
+  def AddAccount(storage, userid=None): # pragma: no cover 
     """Adds an account to the configuration file
 
     Args:
