@@ -16,62 +16,8 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 from printer import Printer
-import json, urllib, cups
-
-class MockRequestor:
-    
-    account = None
-    printers = []
-    
-    def setAccount ( self, account ):
-        """Sets the account name
-
-        Args:
-        filename: string, name of the account
-        """
-        self.account = account
-    
-    def getAccount ( self ):
-        """Gets the account name
-
-        Return:
-        string: Account name.
-        """
-        return self.account
-    
-    def mockSearch ( self, path, headers, data , boundary ) :
-        result = { 'printers' : self.printers }
-        return json.dumps( result )
-        
-    def mockSubmit ( self, path, headers, data , boundary ) :
-        if 'FAIL PAGE' in data:
-            result = { 'success' : False, 'message' : 'FAIL PAGE was in message' }
-        else:
-            result = { 'success' : True }
-        return json.dumps( result )
-    
-    def mockPrinter ( self, path, headers, data , boundary ) :
-        printername = path.split('=')[1]
-        foundPrinter = None
-        for printer in self.printers:
-            if printer['id'] == printername:
-                foundPrinter = printer
-                break
-        
-        if foundPrinter == None:
-            return json.dumps(None)
-        
-        result = { 'printers' : [foundPrinter] }
-        return json.dumps( result )
-    
-    def doRequest ( self, path, headers = None, data = None , boundary = None ):
-        if ( path.startswith('search?') ) :
-            return json.loads(self.mockSearch(path, headers, data, boundary))
-        if ( path.startswith('printer?') ) :
-            return json.loads(self.mockPrinter(path, headers, data, boundary))
-        if ( path == 'submit' ) :
-            return json.loads(self.mockSubmit(path, headers, data, boundary))
-        return None
+from test_mockrequestor import MockRequestor
+import cups, urllib
 
 global requestors, printerItem
 
@@ -89,9 +35,6 @@ def setup_function(function):
     # with @ symbol
     mockRequestorInstance2 = MockRequestor()
     mockRequestorInstance2.setAccount('testaccount2@gmail.com')
-    
-    # [{u'UIType': u'PickOne', u'displayName': u'Color Device', u'name': u'ColorDevice', u'value': u'True', u'type': u'Feature', u'options': [{u'default': True, u'displayName': u'True', u'name': u'True'}]}, {u'UIType': u'PickOne', u'displayName': u'File System', u'name': u'FileSystem', u'value': u'False', u'type': u'Feature', u'options': [{u'default': True, u'displayName': u'False', u'name': u'False'}]}, {u'UIType': u'PickOne', u'displayName': u'Language Level', u'name': u'LanguageLevel', u'value': u'2', u'type': u'Feature', u'options': [{u'default': True, u'displayName': u'Two 2', u'name': u'2'}]}, {u'UIType': u'PickOne', u'displayName': u'TT Rasterizer', u'name': u'TTRasterizer', u'value': u'Type42', u'type': u'Feature', u'options': [{u'default': True, u'displayName': u'Type42', u'name': u'Type42'}]}, {u'UIType': u'PickOne', u'displayName': u'Throughput', u'name': u'Throughput', u'value': u'10', u'type': u'Feature', u'options': [{u'default': True, u'displayName': u'10', u'name': u'10'}]}, {u'UIType': u'PickOne', u'displayName': u'Color Space', u'name': u'ColorSpace', u'value': u'CMYK', u'type': u'Feature', u'options': [{u'default': True, u'displayName': u'CMYK', u'name': u'CMYK'}]}]
-    
     mockRequestorInstance2.printers = [ { 'name' : 'Save to Google Drive', 'id' : '__google__docs', 'capabilities' : [{ 'name' : 'ns1:Colors', 'type' : 'Feature' }] },  ]
     requestors.append(mockRequestorInstance2)
     
