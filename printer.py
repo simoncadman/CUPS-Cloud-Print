@@ -323,6 +323,7 @@ class Printer:
         print("ERROR: File doesnt exist")
         return False
     else:
+      print("ERROR: Unknown job type")
       return False
     
     title = jobname
