@@ -93,7 +93,7 @@ def test_instantiate():
     assert printerItem.requestors == requestors
     assert len(printerItem.requestors) == len(requestors)
     
-def test_getPrinters():
+def test_printers():
     global printerItem, requestors
     
     # total printer
