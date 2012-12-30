@@ -56,7 +56,7 @@ class MockRequestor:
                 break
         
         if foundPrinter == None:
-            return None
+            return json.dumps(None)
         
         result = { 'printers' : [foundPrinter] }
         return json.dumps( result )
@@ -68,7 +68,7 @@ class MockRequestor:
             return json.loads(self.mockPrinter(path, headers, data, boundary))
         if ( path == 'submit' ) :
             return json.loads(self.mockSubmit(path, headers, data, boundary))
-        return None
+        return json.loads(None)
 
 global requestors, printerItem
 
@@ -134,6 +134,11 @@ def test_GetPrinterIDByURIFails (  ):
 def test_addPrinterFails ( ) :
     global printerItem
     assert printerItem.addPrinter( '', '', '' ) == False
+
+def test_findPrinterFails ( ) :
+    global printerItem
+    printerItem.requestor = requestors[0]
+    assert printerItem.getPrinterDetails('dsah-sdhjsda-sd') == None
 
 def test_printers():
     global printerItem, requestors
