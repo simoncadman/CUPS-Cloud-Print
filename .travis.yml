@@ -11,6 +11,5 @@ install:
  - sudo make install
 script:
  - cd /usr/local/lib/cloudprint-cups/
- - sudo touch .coverage
- - sudo chmod o+rw .coverage
+ - sudo chmod o+rw .
  - py.test --cov .
