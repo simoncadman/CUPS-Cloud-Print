@@ -172,11 +172,11 @@ class Printer:
       f = open(pathname, 'rb')
       try:
 	s = f.read()
-      except IOError, e:
+      except IOError, e: # pragma: no cover 
 	print('ERROR: Error reading %s\n%s', pathname, e)
       f.close()
       return s
-    except IOError, e:
+    except IOError, e: # pragma: no cover 
       print('ERROR: Error opening %s\n%s', pathname, e)
       return None
 
@@ -195,10 +195,10 @@ class Printer:
       f = open(file_name, 'wb')
       try:
 	f.write(data)
-      except IOError, e:
+      except IOError, e: # pragma: no cover 
 	status = False
       f.close()
-    except IOError, e:
+    except IOError, e: # pragma: no cover 
       status = False
 
     return status
@@ -224,7 +224,7 @@ class Printer:
     if self.writeFile(b64_pathname, b64data):
       return b64_pathname
     else:
-      return None
+      return None # pragma: no cover 
 
   def encodeMultiPart(self, fields, file_type='application/xml'):
       """Encodes list of parameters for HTTP multipart format.
@@ -304,7 +304,7 @@ class Printer:
 	print("ERROR: PDF doesnt exist")
 	return False
       b64file = self.base64Encode(jobfile)
-      if b64file == None:
+      if b64file == None: # pragma: no cover 
         print("ERROR: Cannot write to file: " + b64file)
         return False
       fdata = self.readFile(b64file)
@@ -347,6 +347,6 @@ class Printer:
 	print('ERROR: Print job %s failed with %s', jobtype, responseobj['message'])
 	return False
 	
-    except Exception, error_msg: # pragma: no cover 
+    except Exception, error_msg: # pragma: no cover
       print('ERROR: Print job %s failed with %s', jobtype, error_msg)
       return False
