@@ -68,7 +68,7 @@ class MockRequestor:
             return json.loads(self.mockPrinter(path, headers, data, boundary))
         if ( path == 'submit' ) :
             return json.loads(self.mockSubmit(path, headers, data, boundary))
-        return json.loads(None)
+        return None
 
 global requestors, printerItem
 
@@ -139,6 +139,10 @@ def test_findPrinterFails ( ) :
     global printerItem
     printerItem.requestor = requestors[0]
     assert printerItem.getPrinterDetails('dsah-sdhjsda-sd') == None
+
+def test_invalidRequest ( ) :
+    testMock = MockRequestor()
+    assert testMock.doRequest('thisrequestisinvalid') == None
 
 def test_printers():
     global printerItem, requestors
