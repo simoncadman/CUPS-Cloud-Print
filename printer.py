@@ -319,8 +319,11 @@ class Printer:
       hsid = True
     elif jobtype in ['png', 'jpeg']:
       fdata = self.readFile(jobfile)
+      if not os.path.exists(jobfile):
+        print("ERROR: File doesnt exist")
+        return False
     else:
-      fdata = None
+      return False
     
     title = jobname
     content = {'pdf': fdata,
