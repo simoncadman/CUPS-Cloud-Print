@@ -34,9 +34,11 @@ def setup_function(function):
     
     Auth.config = '/tmp/cloudprint.conf'
 
-def test_setupAuth():
+
+def teardown_function(function):
     os.unlink('/tmp/cloudprint.conf')
-    
+
+def test_setupAuth():
     # create initial file
     assert os.path.exists('/tmp/cloudprint.conf') == False
     assert Auth.SetupAuth(False) == False
