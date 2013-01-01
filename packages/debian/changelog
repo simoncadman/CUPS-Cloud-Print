@@ -1,3 +1,9 @@
+cupscloudprint (20130101-1) precise; urgency=low
+
+  * New: Python 2.6 now properly supported
+
+ -- simon cadman <src@niftiestsoftware.com>  Sat, 8 Dec 2012 14:20:03 +0000
+
 cupscloudprint (20121208-1) precise; urgency=high
 
   * New: Added FedEx office support
