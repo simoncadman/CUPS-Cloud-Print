@@ -2,7 +2,7 @@
 
 INTRODUCTION
 ============
-Google Cloud Print driver for CUPS, allows printing to printers hosted on Google Cloud Print. 
+Google Cloud Print driver for CUPS, allows printing to printers hosted on Google Cloud Print.
 
 INSTALLATION
 ============
