@@ -1907,10 +1907,10 @@ if test "${cupsgroup}" = ""; then
 		cupsgroupexists=`grep -w -c cups /etc/group`
 
 		if test "${cupsgroupexists}" = "0"; then
+			as_fn_error $? "cannot identify cups group, specify with --cupsgroup=something" "$LINENO" 5
+		else
 			cupsgroup="cups"
 
-		else
-			as_fn_error $? "cannot identify cups group, specify with --cupsgroup=something" "$LINENO" 5
 		fi
 	else
 		cupsgroup="lp"
