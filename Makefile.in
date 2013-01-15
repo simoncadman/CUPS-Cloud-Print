@@ -3,6 +3,7 @@ srcdir = @srcdir@
 INSTALL = @INSTALL@
 cupsbackend = ${DESTDIR}@cupsserverpath@/backend/
 cupsmodel = ${DESTDIR}@cupsdatapath@/model/
+cupsgroup = @cupsgroup@
 ppdcpath = @ppdcpath@
 
 all: cloudprint.ppd
@@ -25,5 +26,5 @@ install: all
 	${INSTALL} ${srcdir}/cloudprint.ppd ${cupsmodel}CloudPrint.ppd
 	mkdir -p $(DESTDIR)/var/log/cups/
 	touch $(DESTDIR)/var/log/cups/cloudprint_log
-	chown root:lp $(DESTDIR)/var/log/cups/cloudprint_log
+	chown root:${cupsgroup} $(DESTDIR)/var/log/cups/cloudprint_log
 	chmod 660 $(DESTDIR)/var/log/cups/cloudprint_log

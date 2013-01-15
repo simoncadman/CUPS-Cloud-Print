@@ -2,7 +2,8 @@
 # Process this file with autoconf to produce a configure script.
 
 AC_PREREQ([2.68])
-AC_INIT([cupscloudprint], [20110909], [src@niftiestsoftware.com])
+AC_INIT([cupscloudprint], [20130120], [src@niftiestsoftware.com])
+AC_ARG_VAR(cupsgroup, Name of the cups system group)
 AC_PROG_INSTALL
 AC_PATH_PROG(ppdcpath,ppdc,[missing])
 if test "${ppdcpath}" = "missing"; then
@@ -16,6 +17,21 @@ fi
 
 AC_SUBST(cupsserverpath, [`cups-config --serverbin`])
 AC_SUBST(cupsdatapath, [`cups-config --datadir`])
+
+if test "${cupsgroup}" = ""; then
+	# configure group
+	AC_SUBST(lpgroupexists, [`grep -w -c lp /etc/group`])
+	if test "${lpgroupexists}" = "0"; then
+		AC_SUBST(cupsgroupexists, [`grep -w -c cups /etc/group`])
+		if test "${cupsgroupexists}" = "0"; then
+			AC_SUBST(cupsgroup, "cups")
+		else
+			AC_MSG_ERROR([cannot identify cups group, specify with --cupsgroup=something])
+		fi
+	else
+		AC_SUBST(cupsgroup, "lp")
+	fi
+fi
 
 # Checks for header files.
 
