@@ -27,4 +27,5 @@ install: all
 	mkdir -p $(DESTDIR)/var/log/cups/
 	touch $(DESTDIR)/var/log/cups/cloudprint_log
 	chown root:${cupsgroup} $(DESTDIR)/var/log/cups/cloudprint_log
+	chown -R root:${cupsgroup} ${prefix}/lib/cloudprint-cups/
 	chmod 660 $(DESTDIR)/var/log/cups/cloudprint_log

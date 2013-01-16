@@ -66,6 +66,8 @@ class Auth:
       requestor, storage: Authenticated requestors and an instance of storage
     """
     modifiedconfig = False
+    filedetails = os.stat(__file__)
+    lpid = filedetails.st_gid
     
     # parse config file and extract useragents, which we use for account names
     userids = []
@@ -109,7 +111,6 @@ class Auth:
     # fix permissions
     if modifiedconfig: # pragma: no cover 
       os.chmod(Auth.config, 0640)
-      lpid = grp.getgrnam('lp').gr_gid
       os.chown(Auth.config, 0, lpid)
 
     return requestors, storage
