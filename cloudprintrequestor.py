@@ -13,7 +13,7 @@
 #
 #    You should have received a copy of the GNU General Public License    
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
-import httplib2, json
+import httplib2, json, sys
 
 class cloudprintrequestor(httplib2.Http):
   
@@ -36,7 +36,7 @@ class cloudprintrequestor(httplib2.Http):
     """
     return self.account
   
-  def doRequest ( self, path, headers = None, data = None , boundary = None ): # pragma: no cover 
+  def doRequest ( self, path, headers = None, data = None , boundary = None, testResponse=None ): # pragma: no cover 
     """Sends a request to Google Cloud Print
 
     Args:
@@ -53,10 +53,22 @@ class cloudprintrequestor(httplib2.Http):
     headers['user-agent'] = "CUPS Cloud Print"
     
     url = '%s/%s' % (self.CLOUDPRINT_URL, path)
-    if data == None:
-      headers, response = self.request(url, "GET", headers=headers)
+    
+    # use test response for testing
+    if testResponse == None:
+        if data == None:
+            headers, response = self.request(url, "GET", headers=headers)
+        else:
+            headers['Content-Length'] = str(len(data))
+            headers['Content-Type'] = 'multipart/form-data;boundary=%s' % boundary
+            headers, response = self.request(url, "POST", body=data, headers=headers)
     else:
-      headers['Content-Length'] = str(len(data))
-      headers['Content-Type'] = 'multipart/form-data;boundary=%s' % boundary
-      headers, response = self.request(url, "POST", body=data, headers=headers)
-    return json.loads(response)
+        response = testResponse
+    
+    try:
+    	decodedresponse = json.loads(response)
+    except ValueError as e:
+    	print("ERROR: Failed to decode JSON, value was: " + response)
+    	raise e
+    
+    return decodedresponse

@@ -15,9 +15,20 @@
 #    You should have received a copy of the GNU General Public License    
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+import json, pytest
 from cloudprintrequestor import cloudprintrequestor
 
-def test_requestor():
+global requestor
+
+def setup_function(function):
+    global requestor
     requestor = cloudprintrequestor()
+    
+def test_requestor():
     requestor.setAccount('testdetails')
     assert requestor.getAccount() == 'testdetails'
+    
+def test_request():
+    assert requestor.doRequest(path="/test",testResponse=json.dumps("randomstring1233")) == "randomstring1233"
+    with pytest.raises(ValueError):
+        assert requestor.doRequest(path="/test",testResponse="")
