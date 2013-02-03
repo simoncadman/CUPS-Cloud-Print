@@ -1,3 +1,11 @@
+2013-02-03 Simon Cadman <src@niftiestsoftware.com>
+
+        * 20130203 :
+	  Major Fix: Ensure printing is always sent over HTTPS, fixes an issue where Google has began returning errors on HTTP API requests
+	  New: Extra debug data now logged if JSON decoding fails
+	  New: Added gentoo/freebsd support
+	  Change: Detect CUPS user group automatically rather than assume group name is always lp
+
 2013-01-01 Simon Cadman <src@niftiestsoftware.com>
 
         * 20130101 :

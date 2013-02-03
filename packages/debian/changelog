@@ -1,3 +1,12 @@
+cupscloudprint (20130203-1) precise; urgency=low
+
+  * Major Fix: Ensure printing is always sent over HTTPS, fixes an issue where Google has began returning errors on HTTP API requests
+  * New: Extra debug data now logged if JSON decoding fails
+  * New: Added gentoo/freebsd support
+  * Change: Detect CUPS user group automatically rather than assume group name is always lp
+
+ -- simon cadman <src@niftiestsoftware.com>  Tue, 3 Feb 2013 00:45:20 +0000
+
 cupscloudprint (20130101-1) precise; urgency=low
 
   * New: Python 2.6 now properly supported
