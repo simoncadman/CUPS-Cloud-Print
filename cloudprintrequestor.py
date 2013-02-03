@@ -17,7 +17,7 @@ import httplib2, json, sys
 
 class cloudprintrequestor(httplib2.Http):
   
-  CLOUDPRINT_URL = 'http://www.google.com/cloudprint'
+  CLOUDPRINT_URL = 'https://www.google.com/cloudprint'
   account = None
   
   def setAccount ( self, account ):
