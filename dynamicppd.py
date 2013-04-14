@@ -35,7 +35,7 @@ if ( len(sys.argv) < 2 ):
 
 if sys.argv[1] == 'list':
     for foundprinter in printers:
-        print('"cupscloudprint:' + foundprinter['name'].encode('ascii', 'replace').replace(' ', '-') + '.ppd" en "Google" "Google Cloud Print 2.0" "DRV:GCP;"')
+        print('"cupscloudprint:' + foundprinter['name'].encode('ascii', 'replace').replace(' ', '-') + '.ppd" en "Google" "' + foundprinter['name'].encode('ascii', 'replace') + ' (' + foundprinter['account'] + ')" "DRV:GCP;"')
         
 elif sys.argv[1] == 'cat':
     if len(sys.argv) == 2 or sys.argv[2] == "":

@@ -110,8 +110,11 @@ class Auth:
     
     # fix permissions
     if modifiedconfig: # pragma: no cover 
-      os.chmod(Auth.config, 0640)
-      os.chown(Auth.config, 0, lpid)
+      try:
+        os.chmod(Auth.config, 0640)
+        os.chown(Auth.config, 0, lpid)
+      except:
+        print("DEBUG: Cannot alter file permissions")
 
     return requestors, storage
   
