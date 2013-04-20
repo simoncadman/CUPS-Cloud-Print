@@ -99,15 +99,16 @@ elif sys.argv[1] == 'cat':
 *ColorModel Gray/Grayscale: "<</cupsColorSpace 0/cupsColorOrder 0/cupsCompression 0>>setpagedevice"
 *ColorModel RGB/Color: "<</cupsColorSpace 1/cupsColorOrder 0/cupsCompression 0>>setpagedevice"
 *ColorModel CMYK/CMYK: "<</cupsColorSpace 6/cupsColorOrder 0/cupsCompression 0>>setpagedevice"
-*CloseUI: *ColorModel"""
+*CloseUI: *ColorModel
+"""
 
                 #print foundprinter['fulldetails']
                 if 'capabilities' in foundprinter['fulldetails']:
                     for capability in foundprinter['fulldetails']['capabilities']:
                         if capability['type'] == 'Feature':
-                            ppddetails += '*OpenUI *' + capability['name']+': PickOne' + "\n"
+                            ppddetails += '*OpenUI *' + capability['name'].replace(':','_') + '/' + capability['displayName'] +': PickOne' + "\n"
                             for option in capability['options']:
-                                ppddetails += '*' + capability['name'] + ': ' + option['displayName'] + ' "' + option['name'] + '"' + "\n"
+                                ppddetails += '*' + capability['name'].replace(':','_') + ': ' + option['displayName'] + ' "' + option['name'] + '"' + "\n"
                             ppddetails += '*CloseUI: *' + capability['displayName'] + "\n"
                         elif capability['type'] == 'ParameterDef':
                             pass
