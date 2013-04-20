@@ -25,7 +25,7 @@ def showUsage():
         
 requestors, storage = Auth.SetupAuth(False)
 printer = Printer(requestors)
-printers = printer.getPrinters()
+printers = printer.getPrinters(True)
 if printers == None:
     print("ERROR: No Printers Found")
     sys.exit(1)
@@ -45,6 +45,7 @@ elif sys.argv[1] == 'cat':
         # find printer
         for foundprinter in printers:
             if ppdname == 'cupscloudprint:'+ foundprinter['name'].encode('ascii', 'replace').replace(' ', '-') + '.ppd':
+                capabilities = []
                 # generate and output ppd
                 ppddetails = """*PPD-Adobe: "4.3"
 *%%%% PPD file for Cloud Print with CUPS.
@@ -98,8 +99,22 @@ elif sys.argv[1] == 'cat':
 *ColorModel Gray/Grayscale: "<</cupsColorSpace 0/cupsColorOrder 0/cupsCompression 0>>setpagedevice"
 *ColorModel RGB/Color: "<</cupsColorSpace 1/cupsColorOrder 0/cupsCompression 0>>setpagedevice"
 *ColorModel CMYK/CMYK: "<</cupsColorSpace 6/cupsColorOrder 0/cupsCompression 0>>setpagedevice"
-*CloseUI: *ColorModel
-*DefaultFont: Courier
+*CloseUI: *ColorModel"""
+
+                #print foundprinter['fulldetails']
+                if 'capabilities' in foundprinter['fulldetails']:
+                    for capability in foundprinter['fulldetails']['capabilities']:
+                        if capability['type'] == 'Feature':
+                            ppddetails += '*OpenUI *' + capability['name']+': PickOne' + "\n"
+                            for option in capability['options']:
+                                ppddetails += '*' + capability['name'] + ': ' + option['displayName'] + ' "' + option['name'] + '"' + "\n"
+                            ppddetails += '*CloseUI: *' + capability['displayName'] + "\n"
+                        elif capability['type'] == 'ParameterDef':
+                            pass
+                            #print option['displayName']
+                            #print capability['psf:MinValue'], capability['psf:MaxValue']
+                        
+                ppddetails += """*DefaultFont: Courier
 *Font AvantGarde-Book: Standard "(1.05)" Standard ROM
 *Font AvantGarde-BookOblique: Standard "(1.05)" Standard ROM
 *Font AvantGarde-Demi: Standard "(1.05)" Standard ROM

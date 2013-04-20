@@ -35,7 +35,7 @@ class Printer:
     else:
       self.requestors = [requestors]
 
-  def getPrinters(self):
+  def getPrinters(self, fulldetails = False):
     """Fetch a list of printers
 
     Returns:
@@ -47,6 +47,12 @@ class Printer:
       if 'printers' in responseobj and len(responseobj['printers']) > 0:
 	for printer in responseobj['printers']:
 	  printer['account'] = requestor.getAccount()
+	  
+	  # fetch all details - search doesnt return all capabilities
+	  if fulldetails:
+            self.requestor = requestor
+            details = self.getPrinterDetails( printer['id'] )
+            printer['fulldetails'] = details['printers'][0]
 	  allprinters.append(printer)
     return allprinters
   
