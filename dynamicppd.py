@@ -93,13 +93,6 @@ elif sys.argv[1] == 'cat':
 *PaperDimension Letter/US Letter: "612 792"
 *PaperDimension Legal/US Legal: "612 1008"
 *PaperDimension A4/A4: "595 842"
-*OpenUI *ColorModel/Color Mode: PickOne
-*OrderDependency: 10 AnySetup *ColorModel
-*DefaultColorModel: RGB
-*ColorModel Gray/Grayscale: "<</cupsColorSpace 0/cupsColorOrder 0/cupsCompression 0>>setpagedevice"
-*ColorModel RGB/Color: "<</cupsColorSpace 1/cupsColorOrder 0/cupsCompression 0>>setpagedevice"
-*ColorModel CMYK/CMYK: "<</cupsColorSpace 6/cupsColorOrder 0/cupsCompression 0>>setpagedevice"
-*CloseUI: *ColorModel
 """
 
                 #print foundprinter['fulldetails']
@@ -107,8 +100,12 @@ elif sys.argv[1] == 'cat':
                     for capability in foundprinter['fulldetails']['capabilities']:
                         if capability['type'] == 'Feature':
                             ppddetails += '*OpenUI *' + capability['name'].replace(':','_') + '/' + capability['displayName'] +': PickOne' + "\n"
+                            firstoption = True
                             for option in capability['options']:
-                                ppddetails += '*' + capability['name'].replace(':','_') + ': ' + option['displayName'] + ' "' + option['name'] + '"' + "\n"
+                                if firstoption:
+                                    firstoption = False
+                                    ppddetails += '*Default' + capability['name'].replace(':','_') + ': ' + option['name'] + "\n"
+                                ppddetails += '*' + capability['name'].replace(':','_') + ' ' + option['displayName'] + ':' + option['name'] + '' + "\n"
                             ppddetails += '*CloseUI: *' + capability['displayName'] + "\n"
                         elif capability['type'] == 'ParameterDef':
                             pass
