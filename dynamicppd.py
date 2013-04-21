@@ -100,10 +100,8 @@ elif sys.argv[1] == 'cat':
                     for capability in foundprinter['fulldetails']['capabilities']:
                         if capability['type'] == 'Feature':
                             ppddetails += '*OpenUI *' + capability['name'].replace(':','_') + '/' + capability['displayName'] +': PickOne' + "\n"
-                            firstoption = True
                             for option in capability['options']:
-                                if firstoption:
-                                    firstoption = False
+                                if 'default' in option and option['default'] == True:
                                     ppddetails += '*Default' + capability['name'].replace(':','_') + ': ' + option['name'] + "\n"
                                 ppddetails += '*' + capability['name'].replace(':','_') + ' ' + option['displayName'] + ':' + option['name'] + '' + "\n"
                             ppddetails += '*CloseUI: *' + capability['displayName'] + "\n"
