@@ -260,37 +260,18 @@ class Printer:
     Returns:
       List of capabilities
     """
-    itemmapping = { 
-		    'DefaultColorModel' : 'ns1:Colors',
-		  }
-    
-    valuemapping = {		     # CUPS to GCP
-		    'ns1:Colors' : {
-				     'Gray' : 'Grey_K',
-				     'RGB' : 'Color' ,
-				     'CMYK' : 'Color' ,
-				   }
-		  }
-    
     import cups
     connection = cups.Connection()
     cupsprinters = connection.getPrinters()
     capabilities = { "capabilities" : [] }
     
-    for cupsprinter in cupsprinters:
-      if cupsprinters[cupsprinter]['printer-info'] == cupsprintername:
-	attrs = cups.PPD(connection.getPPD(cupsprinter)).attributes
-	printerdetails = self.getPrinterDetails(gcpid)
-	
-	for mapping in itemmapping:
-	  cupsitem = mapping 
-	  gcpitem = itemmapping[mapping]
-	  for capability in printerdetails['printers'][0]['capabilities']:
-	    if capability['name'] == gcpitem:
-	      for attr in attrs:
-		if attr.name == cupsitem:
-		  if attr.value in valuemapping[gcpitem]:
-		    capabilities['capabilities'].append( { 'type' : capability['type'], 'name' : capability['name'], 'options' : [ { 'name' : valuemapping[gcpitem][attr.value] } ] } )
+    attrs = cups.PPD(connection.getPPD(cupsprintername)).attributes
+    for attr in attrs:
+        if attr.name.startswith('DefaultGCP_'):
+            # gcp setting, reverse back to GCP capability
+            gcpname = attr.name.replace('DefaultGCP_', '').replace('_', ':')
+            # hardcoded to feature type temporarily
+            capabilities['capabilities'].append( { 'type' : 'Feature', 'name' : gcpname, 'options' : [ { 'name' : attr.value } ] } )
     return capabilities
       
   def submitJob(self, printerid, jobtype, jobfile, jobname, printername ):
