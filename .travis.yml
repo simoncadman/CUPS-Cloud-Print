@@ -8,13 +8,15 @@ before_install:
  - pip install httplib2 pycups pytest-cov --use-mirrors
 install:
  - ./configure
+ - sudo gpasswd -a `whoami` lpadmin
  - sudo make install
  - sudo cupsctl --debug-logging
-script:
  - sudo cp .coveragerc /usr/local/lib/cloudprint-cups/
- - cd /usr/local/lib/cloudprint-cups/
  - sudo cp testfiles/testppd.ppd  /usr/share/cups/model/testppd.ppd
+script:
+ - cd /usr/local/lib/cloudprint-cups/
  - sudo chmod -R o+rw .
- - sudo /usr/bin/py.test --cov .
+ - py.test --cov .
+ - sudo gpasswd -d `whoami` lpadmin
  - sudo cat /var/log/cups/cloudprint_log /var/log/cups/error_log
  - sudo unlink /usr/share/cups/model/testppd.ppd 
