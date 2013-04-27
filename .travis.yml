@@ -9,6 +9,7 @@ before_install:
 install:
  - ./configure
  - sudo make install
+ - sudo cupsctl --debug-logging
 script:
  - sudo cp .coveragerc /usr/local/lib/cloudprint-cups/
  - cd /usr/local/lib/cloudprint-cups/
