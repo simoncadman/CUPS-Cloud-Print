@@ -137,7 +137,7 @@ def test_printers():
         assert isinstance(requestor, MockRequestor)
         
         # test add printer to cups
-        assert printerItem.addPrinter( printername, uri, connection) != None
+        assert printerItem.addPrinter( printername, uri, connection, 'testppd.ppd') != None
         testprintername = printerItem.sanitizePrinterName(printername)
         
         # test printer actually added to cups
