@@ -95,7 +95,10 @@ class Printer:
     printername = self.sanitizePrinterName(printername)
     result = None
     try:
-      result = connection.addPrinter(name=printername,ppdname='CloudPrint.ppd',info=printername,location='Google Cloud Print',device=uri)
+      ppdid = 'MFG:GOOGLE;DRV:GCP;CMD:POSTSCRIPT;MDL:' + uri + ';'
+      ppds = connection.getPPDs(ppd_device_id=ppdid)
+      printerppdname, printerppd = ppds.popitem()
+      result = connection.addPrinter(name=printername,ppdname=printerppdname,info=printername,location='Google Cloud Print',device=uri)
       connection.enablePrinter(printername)
       connection.acceptJobs(printername)
       connection.setPrinterShared(printername, False)

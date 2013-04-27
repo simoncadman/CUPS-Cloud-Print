@@ -23,7 +23,6 @@ install: all
 	mkdir -p ${cupsbackend}
 	${INSTALL} -g `groups root | cut -d' ' -f1` -o root -m 700  ${srcdir}/backend.py ${cupsbackend}cloudprint
 	mkdir -p ${cupsmodel}
-	${INSTALL} ${srcdir}/cloudprint.ppd ${cupsmodel}CloudPrint.ppd
 	mkdir -p $(DESTDIR)/var/log/cups/
 	touch $(DESTDIR)/var/log/cups/cloudprint_log
 	chown root:${cupsgroup} $(DESTDIR)/var/log/cups/cloudprint_log

@@ -35,7 +35,7 @@ if ( len(sys.argv) < 2 ):
 
 if sys.argv[1] == 'list':
     for foundprinter in printers:
-        print('"cupscloudprint:' + foundprinter['name'].encode('ascii', 'replace').replace(' ', '-') + '.ppd" en "Google" "' + foundprinter['name'].encode('ascii', 'replace') + ' (' + foundprinter['account'] + ')" "DRV:GCP;"')
+        print('"cupscloudprint:' + foundprinter['account'].encode('ascii', 'replace').replace(' ', '-') +':' + foundprinter['name'].encode('ascii', 'replace').replace(' ', '-') + '.ppd" en "Google" "' + foundprinter['name'].encode('ascii', 'replace') + ' (' + foundprinter['account'] + ')" "MFG:GOOGLE;DRV:GCP;CMD:POSTSCRIPT;MDL:' + printer.printerNameToUri( foundprinter['account'], foundprinter['name'] ) +';"')
         
 elif sys.argv[1] == 'cat':
     if len(sys.argv) == 2 or sys.argv[2] == "":
@@ -44,7 +44,7 @@ elif sys.argv[1] == 'cat':
         ppdname = sys.argv[2]
         # find printer
         for foundprinter in printers:
-            if ppdname == 'cupscloudprint:'+ foundprinter['name'].encode('ascii', 'replace').replace(' ', '-') + '.ppd':
+            if ppdname == 'cupscloudprint:' + foundprinter['account'].encode('ascii', 'replace').replace(' ', '-') +':' + foundprinter['name'].encode('ascii', 'replace').replace(' ', '-') + '.ppd':
                 capabilities = []
                 # generate and output ppd
                 ppddetails = """*PPD-Adobe: "4.3"
@@ -69,7 +69,7 @@ elif sys.argv[1] == 'cat':
 *LandscapeOrientation: Minus90
 *TTRasterizer: Type42
 *% Driver-defined attributes...
-*1284DeviceID: "MFG:Google;MDL:Cloud Print;DES:GoogleCloudPrint;"
+*1284DeviceID: "MFG:GOOGLE;DRV:GCP;CMD:POSTSCRIPT;MDL:""" + printer.printerNameToUri( foundprinter['account'], foundprinter['name'] ) + """;"
 *cupsLanguages: "en"
 *OpenUI *PageSize/Media Size: PickOne
 *OrderDependency: 10 AnySetup *PageSize
