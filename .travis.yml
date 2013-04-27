@@ -12,7 +12,7 @@ install:
 script:
  - sudo cp .coveragerc /usr/local/lib/cloudprint-cups/
  - cd /usr/local/lib/cloudprint-cups/
- - sudo cp testppd.ppd  /usr/share/cups/model/testppd.ppd
+ - sudo cp testfiles/testppd.ppd  /usr/share/cups/model/testppd.ppd
  - sudo chmod -R o+rw .
  - py.test --cov .
  - sudo unlink /usr/share/cups/model/testppd.ppd 
