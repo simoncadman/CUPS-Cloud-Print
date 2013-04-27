@@ -15,5 +15,5 @@ script:
  - sudo cp testfiles/testppd.ppd  /usr/share/cups/model/testppd.ppd
  - sudo chmod -R o+rw .
  - py.test --cov .
- - if [[ $? == 0 ]]; then cat /var/log/cups/cloudprint_log /var/log/cups/error_log fi
+ - cat /var/log/cups/cloudprint_log /var/log/cups/error_log
  - sudo unlink /usr/share/cups/model/testppd.ppd 
