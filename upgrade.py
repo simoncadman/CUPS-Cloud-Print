@@ -28,8 +28,8 @@ if os.path.exists(Auth.config):
     content_file = open(Auth.config, 'r')
     content = content_file.read()
     data = json.loads(content)
-  except:
-    sys.stderr.write("\n\nYou have an old CUPS Cloud Print configuration file, with plaintext login details, you will need to run /usr/lib/cloudprint-cups/setupcloudprint.py to upgrade to the latest authentication method before you can print.\n\n")
+  except Exception, e:
+    sys.stderr.write("Unable to read config file: " + e +"\n\n")
     sys.exit(0)
     
 else:
@@ -40,10 +40,13 @@ try:
   for device in cupsprinters:
     if ( cupsprinters[device]["device-uri"].find("cloudprint://") == 0 ):
       print "Updating " + cupsprinters[device]["printer-info"]
-      
-      p = subprocess.Popen(["lpadmin", "-p", cupsprinters[device]["printer-info"], "-m", "CloudPrint.ppd"], stdout=subprocess.PIPE)
+      ppdid = 'MFG:GOOGLE;DRV:GCP;CMD:POSTSCRIPT;MDL:' + cupsprinters[device]["device-uri"] + ';'
+      ppds = connection.getPPDs(ppd_device_id=ppdid)
+      printerppdname, printerppd = ppds.popitem()
+      print printerppdname
+      p = subprocess.Popen(["lpadmin", "-p", cupsprinters[device]["printer-info"], "-m", printerppdname], stdout=subprocess.PIPE)
       output = p.communicate()[0]
       result = p.returncode
       sys.stderr.write(output)
-except :
-  sys.stderr.write("Error connecting to CUPS")
+except Exception, e:
+  sys.stderr.write("Error connecting to CUPS: " + str(e))
