@@ -43,7 +43,6 @@ try:
       ppdid = 'MFG:GOOGLE;DRV:GCP;CMD:POSTSCRIPT;MDL:' + cupsprinters[device]["device-uri"] + ';'
       ppds = connection.getPPDs(ppd_device_id=ppdid)
       printerppdname, printerppd = ppds.popitem()
-      print printerppdname
       p = subprocess.Popen(["lpadmin", "-p", cupsprinters[device]["printer-info"], "-m", printerppdname], stdout=subprocess.PIPE)
       output = p.communicate()[0]
       result = p.returncode
