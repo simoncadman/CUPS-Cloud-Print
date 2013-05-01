@@ -166,7 +166,7 @@ class _MultiStore(object):
       Args:
         credentials: Credentials, the credentials to store.
       """
-      self._multistore._delete_credential(self._client_id, self._user_agent,
+      return self._multistore._delete_credential(self._client_id, self._user_agent,
           self._scope)
 
   def _create_file_if_needed(self):
@@ -232,10 +232,10 @@ class _MultiStore(object):
     """
     assert self._thread_lock.locked()
     if self._read_only:
-      return
+      return False
     self._file.file_handle().seek(0)
     simplejson.dump(data, self._file.file_handle(), sort_keys=True, indent=2)
-    self._file.file_handle().truncate()
+    return self._file.file_handle().truncate()
 
   def _refresh_data_cache(self):
     """Refresh the contents of the multistore.
@@ -314,7 +314,7 @@ class _MultiStore(object):
           }
       raw_cred = simplejson.loads(cred.to_json())
       raw_creds.append({'key': raw_key, 'credential': raw_cred})
-    self._locked_json_write(raw_data)
+    return self._locked_json_write(raw_data)
 
   def _get_credential(self, client_id, user_agent, scope):
     """Get a credential from the multistore.
@@ -361,7 +361,7 @@ class _MultiStore(object):
       del self._data[key]
     except KeyError:
       pass
-    self._write()
+    return self._write()
 
   def _get_storage(self, client_id, user_agent, scope):
     """Get a Storage object to get/set a credential.
