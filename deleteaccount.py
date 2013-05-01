@@ -1,0 +1,43 @@
+#! /usr/bin/env python2
+#    CUPS Cloudprint - Print via Google Cloud Print                          
+#    Copyright (C) 2011 Simon Cadman
+#
+#    This program is free software: you can redistribute it and/or modify
+#    it under the terms of the GNU General Public License as published by
+#    the Free Software Foundation, either version 3 of the License, or
+#    (at your option) any later version.
+#
+#    This program is distributed in the hope that it will be useful,
+#    but WITHOUT ANY WARRANTY; without even the implied warranty of
+#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#    GNU General Public License for more details.
+#
+#    You should have received a copy of the GNU General Public License    
+#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
+import cups, os, json
+from auth import Auth
+
+while True:
+  result = Auth.SetupAuth(False)
+  if not result:
+    print("No accounts are currently setup")
+    break
+  else:
+    requestors, storage = result
+    print("You currently have these accounts configured: ")
+    i=0
+    accounts = []
+    for requestor in requestors:
+        i+=1
+        accounts.append(requestor.getAccount())
+        print(str(i) + ") " + requestor.getAccount())
+    print("0) Exit")
+    answer = raw_input("Which account to delete (1-" + str(i) + ") ? ")
+    if ( answer.isdigit() and int(answer) <= i and int(answer) >= 1 ):
+        Auth.DeleteAccount(accounts[int(answer)-1])
+        print(accounts[int(answer)-1] + " deleted.")
+    elif ( answer == "0" ):
+        break
+    else:
+        print("Invalid response, use '0' to exit")

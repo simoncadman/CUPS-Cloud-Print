@@ -25,6 +25,25 @@ class Auth:
   clientsecret = 'MzTBsY4xlrD_lxkmwFbBrvBv'
   config = '/etc/cloudprint.conf'
   
+  def DeleteAccount(userid=None): # pragma: no cover 
+    """Delete an account from the configuration file
+
+    Args:
+      storage: storage, instance of storage to store credentials in.
+      userid: string, reference for the account
+      
+    Returns:
+      deleted: boolean , true on success
+    """
+    storage = multistore_file.get_credential_storage(
+            Auth.config,
+            Auth.clientid,
+            userid,
+            ['https://www.googleapis.com/auth/cloudprint'])
+    return storage.delete()
+  
+  DeleteAccount = staticmethod(DeleteAccount)
+  
   def AddAccount(storage, userid=None): # pragma: no cover 
     """Adds an account to the configuration file
 
