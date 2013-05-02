@@ -95,7 +95,7 @@ class Printer:
     printername = self.sanitizePrinterName(printername)
     result = None
     try:
-      if ppd == None:
+      if ppd == None: # pragma: no cover
         ppdid = 'MFG:GOOGLE;DRV:GCP;CMD:POSTSCRIPT;MDL:' + uri + ';'
         ppds = connection.getPPDs(ppd_device_id=ppdid)
         printerppdname, printerppd = ppds.popitem()
