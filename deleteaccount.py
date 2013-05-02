@@ -36,7 +36,7 @@ while True:
     answer = raw_input("Which account to delete (1-" + str(i) + ") ? ")
     if ( answer.isdigit() and int(answer) <= i and int(answer) >= 1 ):
         if ( Auth.DeleteAccount(accounts[int(answer)-1]) == None ):
-            print(accounts[int(answer)-1] + " deleted.")
+            print(accounts[int(answer)-1] + " deleted. Associated printers were not deleted.")
         else:
             print("Error deleting stored credentials, perhaps /etc/cloudprint.conf is not writable?")
     elif ( answer == "0" ):
