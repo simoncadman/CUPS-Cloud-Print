@@ -11,12 +11,11 @@ install:
  - sudo gpasswd -a `whoami` lpadmin
  - sudo make install
  - sudo cupsctl --debug-logging
+script:
  - sudo cp .coveragerc /usr/local/lib/cloudprint-cups/
  - sudo cp testfiles/testppd.ppd  /usr/share/cups/model/testppd.ppd
-script:
  - cd /usr/local/lib/cloudprint-cups/
  - sudo chmod -R o+rw .
  - py.test --cov .
- - sudo gpasswd -d `whoami` lpadmin
  - sudo cat /var/log/cups/cloudprint_log /var/log/cups/error_log
- - sudo unlink /usr/share/cups/model/testppd.ppd 
+ - sudo unlink /usr/share/cups/model/testppd.ppd

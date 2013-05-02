@@ -24,9 +24,12 @@ make %{?_smp_mflags}
 
 %install
 rm -rf $RPM_BUILD_ROOT
-make install DESTDIR=$RPM_BUILD_ROOT
+make install DESTDIR=$RPM_BUILD_ROOT NOPERMS=1
 
 %post
+chown root:lp /var/log/cups/cloudprint_log
+chown -R root:lp /usr/lib/cloudprint-cups/
+chmod 660 /var/log/cups/cloudprint_log
 /usr/lib/cloudprint-cups/upgrade.py
 
 %files
