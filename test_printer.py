@@ -102,7 +102,11 @@ def test_printers():
     for requestor in requestors:
         totalPrinters+=len(requestor.printers)
     
+    fullprinters = printerItem.getPrinters(True)
+    assert 'fulldetails' in fullprinters[0]
+    
     printers = printerItem.getPrinters()
+    assert 'fulldetails' not in printers[0]
     import re
     assert len(printers) == totalPrinters
     for printer in printers:
