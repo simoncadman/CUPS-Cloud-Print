@@ -33,8 +33,8 @@ fi
 touch /var/log/cups/cloudprint_log
 chown root:lp /var/log/cups/cloudprint_log
 chmod 660 /var/log/cups/cloudprint_log
-chown root:root /usr/lib/cups/backend/cloudprint
-chmod 700 /usr/lib/cups/backend/cloudprint
-chown root:root /usr/lib/cups/driver/cupscloudprint
-chmod 700 /usr/lib/cups/driver/cupscloudprint
+chown root:lp /usr/lib/cups/backend/cloudprint
+chmod 750 /usr/lib/cups/backend/cloudprint
+chown root:lp /usr/lib/cups/driver/cupscloudprint
+chmod 750 /usr/lib/cups/driver/cupscloudprint
 /usr/lib/cloudprint-cups/upgrade.py
