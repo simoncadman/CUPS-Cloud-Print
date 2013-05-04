@@ -1,6 +1,7 @@
 prefix = $(DESTDIR)@prefix@
 srcdir = @srcdir@
 INSTALL = @INSTALL@
+cupsdriver = ${DESTDIR}@cupsserverpath@/driver/
 cupsbackend = ${DESTDIR}@cupsserverpath@/backend/
 cupsmodel = ${DESTDIR}@cupsdatapath@/model/
 cupsgroup = @cupsgroup@
@@ -21,13 +22,16 @@ install: all
 	${INSTALL} ${srcdir}/testfiles/* ${prefix}/lib/cloudprint-cups/testfiles/
 	${INSTALL} ${srcdir}/oauth2client/*.py ${prefix}/lib/cloudprint-cups/oauth2client/
 	mkdir -p ${cupsbackend}
+	mkdir -p ${cupsdriver}
 	mkdir -p ${cupsmodel}
 	mkdir -p $(DESTDIR)/var/log/cups/
 	touch $(DESTDIR)/var/log/cups/cloudprint_log
 ifeq ($(NOPERMS),1)
 	${INSTALL} ${srcdir}/backend.py ${cupsbackend}cloudprint
+	${INSTALL} ${srcdir}/dynamicppd.py ${cupsdriver}cloudprint
 else
 	${INSTALL} -g `groups root | cut -d' ' -f1` -o root -m 700  ${srcdir}/backend.py ${cupsbackend}cloudprint
+	${INSTALL} -g `groups root | cut -d' ' -f1` -o root -m 700  ${srcdir}/dynamicppd.py ${cupsdriver}cloudprint
 	chown root:${cupsgroup} $(DESTDIR)/var/log/cups/cloudprint_log
 	chown -R root:${cupsgroup} ${prefix}/lib/cloudprint-cups/
 	chmod 660 $(DESTDIR)/var/log/cups/cloudprint_log
