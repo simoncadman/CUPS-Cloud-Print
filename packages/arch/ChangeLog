@@ -1,3 +1,11 @@
+2013-05-04 Simon Cadman <src@niftiestsoftware.com>
+
+        * 20130504 :
+          New: Capabilities for printer supplied by Google Cloud Print ( eg Colour, Print tray, etc ) now appear as options in dialogs.
+          New: Script to delete user accounts ( deleteaccount.py )
+          Change: PPD file now generated dynamically
+          Fix: RPM package can now be built as a non-root user.
+
 2013-02-03 Simon Cadman <src@niftiestsoftware.com>
 
         * 20130203 :
