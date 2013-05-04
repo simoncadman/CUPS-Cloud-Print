@@ -36,16 +36,16 @@ else:
   sys.stderr.write("\n\nRun: /usr/lib/cloudprint-cups/setupcloudprint.py to setup your Google Credentials and add your printers to CUPS\n\n")
   sys.exit(0)
   
-try:
-  for device in cupsprinters:
-    if ( cupsprinters[device]["device-uri"].find("cloudprint://") == 0 ):
-      print "Updating " + cupsprinters[device]["printer-info"]
-      ppdid = 'MFG:GOOGLE;DRV:GCP;CMD:POSTSCRIPT;MDL:' + cupsprinters[device]["device-uri"] + ';'
-      ppds = connection.getPPDs(ppd_device_id=ppdid)
-      printerppdname, printerppd = ppds.popitem()
-      p = subprocess.Popen(["lpadmin", "-p", cupsprinters[device]["printer-info"], "-m", printerppdname], stdout=subprocess.PIPE)
-      output = p.communicate()[0]
-      result = p.returncode
-      sys.stderr.write(output)
-except Exception, e:
-  sys.stderr.write("Error connecting to CUPS: " + str(e))
+for device in cupsprinters:
+    try:
+        if ( cupsprinters[device]["device-uri"].find("cloudprint://") == 0 ):
+            print "Updating " + cupsprinters[device]["printer-info"]
+            ppdid = 'MFG:GOOGLE;DRV:GCP;CMD:POSTSCRIPT;MDL:' + cupsprinters[device]["device-uri"] + ';'
+            ppds = connection.getPPDs(ppd_device_id=ppdid)
+            printerppdname, printerppd = ppds.popitem()
+            p = subprocess.Popen(["lpadmin", "-p", cupsprinters[device]["printer-info"], "-m", printerppdname], stdout=subprocess.PIPE)
+            output = p.communicate()[0]
+            result = p.returncode
+            sys.stderr.write(output)
+    except Exception, e:
+        sys.stderr.write("Error connecting to CUPS: " + str(e) + "\n")
