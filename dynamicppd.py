@@ -15,7 +15,12 @@
 #    You should have received a copy of the GNU General Public License    
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-import sys
+import sys, os
+libpath = "/usr/lib/cloudprint-cups/"
+if not os.path.exists( libpath  ):
+    libpath = "/usr/local/lib/cloudprint-cups"
+sys.path.insert(0, libpath)
+
 from auth import Auth
 from printer import Printer
 

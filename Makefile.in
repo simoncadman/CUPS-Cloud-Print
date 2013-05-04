@@ -26,11 +26,12 @@ install: all
 	mkdir -p ${cupsmodel}
 	mkdir -p $(DESTDIR)/var/log/cups/
 	touch $(DESTDIR)/var/log/cups/cloudprint_log
-	ln -s /usr/lib/cloudprint-cups/dynamicppd.py ${cupsdriver}cloudprint
 ifeq ($(NOPERMS),1)
 	${INSTALL} ${srcdir}/backend.py ${cupsbackend}cloudprint
+	${INSTALL} ${srcdir}/driverwrapper.py ${cupsdriver}cupscloudprint
 else
 	${INSTALL} -g `groups root | cut -d' ' -f1` -o root -m 700  ${srcdir}/backend.py ${cupsbackend}cloudprint
+	${INSTALL} -g `groups root | cut -d' ' -f1` -o root -m 700  ${srcdir}/driverwrapper.py ${cupsdriver}cupscloudprint
 	chown root:${cupsgroup} $(DESTDIR)/var/log/cups/cloudprint_log
 	chown -R root:${cupsgroup} ${prefix}/lib/cloudprint-cups/
 	chmod 660 $(DESTDIR)/var/log/cups/cloudprint_log
