@@ -35,8 +35,7 @@ chmod 660 /var/log/cups/cloudprint_log
 %files
 /usr/lib/cloudprint-cups
 /usr/lib/cups/backend/cloudprint
-/usr/lib/cups/driver/cloudprint
-%{_datadir}/cups/model/CloudPrint.ppd
+/usr/lib/cups/driver/cupscloudprint
 %{_localstatedir}/log/cups/cloudprint_log
 
 %changelog
