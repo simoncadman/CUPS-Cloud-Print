@@ -26,6 +26,7 @@ if [[ ! -f /usr/bin/python2 ]]; then
     if [[ $pyversion != "" ]]; then
         sed -i "1 s/\/usr\/bin\/env python2$/\/usr\/bin\/env $pyversion/" /usr/lib/cloudprint-cups/{backend.py,deleteaccount.py,dynamicppd.py,listcloudprinters.py,setupcloudprint.py,submitjob.py,upgrade.py}
         sed -i "1 s/\/usr\/bin\/env python2$/\/usr\/bin\/env $pyversion/" /usr/lib/cups/backend/cloudprint
+        sed -i "1 s/\/usr\/bin\/env python2$/\/usr\/bin\/env $pyversion/" /usr/lib/cups/driver/cloudprint
     fi
 fi
 
@@ -34,4 +35,6 @@ chown root:lp /var/log/cups/cloudprint_log
 chmod 660 /var/log/cups/cloudprint_log
 chown root:root /usr/lib/cups/backend/cloudprint
 chmod 700 /usr/lib/cups/backend/cloudprint
+chown root:root /usr/lib/cups/driver/cloudprint
+chmod 700 /usr/lib/cups/driver/cloudprint
 /usr/lib/cloudprint-cups/upgrade.py
