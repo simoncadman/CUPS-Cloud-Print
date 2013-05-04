@@ -29,7 +29,7 @@ if os.path.exists(Auth.config):
     content = content_file.read()
     data = json.loads(content)
   except Exception, e:
-    sys.stderr.write("Unable to read config file: " + e +"\n\n")
+    sys.stderr.write("Unable to read config file: " + e.message +"\n\n")
     sys.exit(0)
     
 else:
