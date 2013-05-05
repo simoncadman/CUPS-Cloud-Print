@@ -1,3 +1,4 @@
 post_upgrade() {
+  chgrp lp /etc/cloudprint.conf
   /usr/lib/cloudprint-cups/upgrade.py
 }

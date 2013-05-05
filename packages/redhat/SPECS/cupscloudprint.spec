@@ -30,6 +30,7 @@ make install DESTDIR=$RPM_BUILD_ROOT NOPERMS=1
 chown root:lp /var/log/cups/cloudprint_log
 chown -R root:lp /usr/lib/cloudprint-cups/
 chmod 660 /var/log/cups/cloudprint_log
+chgrp lp /etc/cloudprint.conf
 /usr/lib/cloudprint-cups/upgrade.py
 
 %files
