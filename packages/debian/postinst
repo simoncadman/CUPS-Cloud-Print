@@ -38,4 +38,5 @@ chmod 750 /usr/lib/cups/backend/cloudprint
 chown root:lp /usr/lib/cups/driver/cupscloudprint
 chmod 750 /usr/lib/cups/driver/cupscloudprint
 chgrp lp /etc/cloudprint.conf
+chgrp lp /usr/lib/cloudprint-cups/auth.py
 /usr/lib/cloudprint-cups/upgrade.py
