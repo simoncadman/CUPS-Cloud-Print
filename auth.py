@@ -121,7 +121,6 @@ class Auth:
       requestor = cloudprintrequestor()
       if credentials.access_token_expired: # pragma: no cover 
 	credentials.refresh(requestor)
-	modifiedconfig = True
       
       requestor = credentials.authorize(requestor)
       requestor.setAccount(userid)
