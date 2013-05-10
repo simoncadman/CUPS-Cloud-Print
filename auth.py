@@ -14,7 +14,7 @@
 #    You should have received a copy of the GNU General Public License    
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-import json, os, grp, sys
+import json, os, grp, sys, grp
 from oauth2client import client
 from oauth2client import multistore_file
 from cloudprintrequestor import cloudprintrequestor 
@@ -69,8 +69,8 @@ class Auth:
         print("")
         credentials = flow.step2_exchange(code)
         storage.put(credentials)
-        filedetails = os.stat(__file__)
-        lpid = filedetails.st_gid
+	lpgrp = grp.getgrnam('lp')
+	lpid = lpgrp.gr_gid
 
         # fix permissions
         try:
@@ -94,8 +94,8 @@ class Auth:
       requestor, storage: Authenticated requestors and an instance of storage
     """
     modifiedconfig = False
-    filedetails = os.stat(__file__)
-    lpid = filedetails.st_gid
+    lpgrp = grp.getgrnam('lp')
+    lpid = lpgrp.gr_gid
     
     # parse config file and extract useragents, which we use for account names
     userids = []
