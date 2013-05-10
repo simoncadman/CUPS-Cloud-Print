@@ -1,3 +1,9 @@
+2013-05-10 Simon Cadman <src@niftiestsoftware.com>
+
+	* 20130510 :
+	  Fix: Deb package installs cloudprint files with correct permissions.
+	  Fix: Only update config file permissions when config options changed, not when tokens refreshed.
+
 2013-05-04 Simon Cadman <src@niftiestsoftware.com>
 
         * 20130504 :

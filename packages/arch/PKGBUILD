@@ -1,6 +1,6 @@
 # Maintainer: Simon Cadman <src@niftiestsoftware.com>
 pkgname=cupscloudprint
-pkgver=20130504
+pkgver=20130510
 pkgrel=1
 pkgdesc="Print via Google Cloud print using CUPS"
 arch=('any')
@@ -13,7 +13,7 @@ install=INSTALL
 source=()
 md5sums=()
 _gitroot="git://github.com/simoncadman/CUPS-Cloud-Print.git"
-_gitversion="9f0391598ebc36847e985b76f038545d6a4c3761"
+_gitversion="3bfdc32eb4526698b198263d7a179eb832fee3c8"
 
 
 build() {

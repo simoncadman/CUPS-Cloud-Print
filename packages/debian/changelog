@@ -1,6 +1,7 @@
 cupscloudprint (20130510-1) raring; urgency=low
 
   * Fix: Deb package installs cloudprint files with correct permissions.
+  * Fix: Only update config file permissions when config options changed, not when tokens refreshed.
 
  -- simon cadman <src@niftiestsoftware.com>  Fri, 10 May 2013 22:39:00 +0000
 
