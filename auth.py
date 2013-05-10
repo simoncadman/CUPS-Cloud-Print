@@ -69,6 +69,8 @@ class Auth:
         print("")
         credentials = flow.step2_exchange(code)
         storage.put(credentials)
+        filedetails = os.stat(__file__)
+        lpid = filedetails.st_gid
 
         # fix permissions
         try:
