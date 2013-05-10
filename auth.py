@@ -66,9 +66,16 @@ class Auth:
       print("Open this URL, grant access to CUPS Cloud Print, then provide the code displayed : \n\n" + auth_uri + "\n")
       code = raw_input('Code from Google: ')
       try:
-	print("")
-	credentials = flow.step2_exchange(code)
-	storage.put(credentials)
+        print("")
+        credentials = flow.step2_exchange(code)
+        storage.put(credentials)
+
+        # fix permissions
+        try:
+           os.chmod(Auth.config, 0640)
+           os.chown(Auth.config, 0, lpid)
+        except:
+           sys.stderr.write("DEBUG: Cannot alter file permissions\n")
 	return credentials
       except:
 	print("\nThe code does not seem to be valid, please try again.\n")
