@@ -1,7 +1,7 @@
 # $FreeBSD$
 
 PORTNAME=	cupscloudprint
-PORTVERSION=	20130510
+PORTVERSION=	20130517rc1
 CATEGORIES=	print
 
 MAINTAINER=	src@niftiestsoftware.com
@@ -18,10 +18,14 @@ USE_PYTHON=	2.6-2.7
 GH_ACCOUNT=     simoncadman
 GH_PROJECT=     CUPS-Cloud-Print
 GH_TAGNAME=     ${PORTVERSION}
-GH_COMMIT=	aadb6f2
+GH_COMMIT=	80e71d1
 
 GNU_CONFIGURE=	yes
 USE_PKGCONFIG=  build
 USE_GMAKE=	yes
+
+post-install:
+		chgrp cups /etc/cloudprint.conf
+		/usr/local/lib/cloudprint-cups/upgrade.py	
 
 .include <bsd.port.mk>
