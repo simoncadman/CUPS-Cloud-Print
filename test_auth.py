@@ -36,7 +36,8 @@ def setup_function(function):
 
 
 def teardown_function(function):
-    os.unlink('/tmp/cloudprint.conf')
+    if os.path.exists('/tmp/cloudprint.conf'):
+        os.unlink('/tmp/cloudprint.conf')
 
 def test_setupAuth():
     # create initial file
@@ -61,3 +62,6 @@ def test_setupAuth():
     assert requestors != None
     assert storage != None
     
+def test_getLPID():
+    assert int(Auth.GetLPID()) > 0
+    assert Auth.GetLPID() != None

@@ -25,6 +25,32 @@ class Auth:
   clientsecret = 'MzTBsY4xlrD_lxkmwFbBrvBv'
   config = '/etc/cloudprint.conf'
   
+  def GetLPID():
+    """Delete an account from the configuration file
+
+    Args:
+      storage: storage, instance of storage to store credentials in.
+      userid: string, reference for the account
+      
+    Returns:
+      deleted: int , None on failure
+    """
+    # try lp first, then cups#
+    lpgrp = None
+    try:
+        lpgrp = grp.getgrnam('lp')
+    except:
+        try:
+            lpgrp = grp.getgrnam('cups')
+        except:
+            pass
+    if lpgrp == None:
+        return None
+    else:
+        return lpgrp.gr_gid
+    
+  GetLPID = staticmethod(GetLPID)
+  
   def DeleteAccount(userid=None): # pragma: no cover 
     """Delete an account from the configuration file
 
@@ -69,13 +95,11 @@ class Auth:
         print("")
         credentials = flow.step2_exchange(code)
         storage.put(credentials)
-	lpgrp = grp.getgrnam('lp')
-	lpid = lpgrp.gr_gid
 
         # fix permissions
         try:
            os.chmod(Auth.config, 0640)
-           os.chown(Auth.config, 0, lpid)
+           os.chown(Auth.config, 0, Auth.GetLPID())
         except:
            sys.stderr.write("DEBUG: Cannot alter file permissions\n")
 	return credentials
@@ -94,8 +118,6 @@ class Auth:
       requestor, storage: Authenticated requestors and an instance of storage
     """
     modifiedconfig = False
-    lpgrp = grp.getgrnam('lp')
-    lpid = lpgrp.gr_gid
     
     # parse config file and extract useragents, which we use for account names
     userids = []
@@ -139,7 +161,7 @@ class Auth:
     if modifiedconfig: # pragma: no cover 
       try:
         os.chmod(Auth.config, 0640)
-        os.chown(Auth.config, 0, lpid)
+        os.chown(Auth.config, 0, Auth.GetLPID())
       except:
         sys.stderr.write("DEBUG: Cannot alter file permissions\n")
         pass
