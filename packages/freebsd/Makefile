@@ -22,5 +22,6 @@ GH_COMMIT=	aadb6f2
 
 GNU_CONFIGURE=	yes
 USE_PKGCONFIG=  build
+USE_GMAKE=	yes
 
 .include <bsd.port.mk>
