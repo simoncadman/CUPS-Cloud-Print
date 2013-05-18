@@ -103,16 +103,21 @@ elif sys.argv[1] == 'cat':
                 #print foundprinter['fulldetails']
                 if 'capabilities' in foundprinter['fulldetails']:
                     for capability in foundprinter['fulldetails']['capabilities']:
+                        capabilityName = None
+                        if 'displayName' in capability:
+                            capabilityName = capability['displayName']
+                        else:
+                            capabilityName = capability['name']
                         if capability['type'] == 'Feature':
-                            ppddetails += '*OpenUI *GCP_' + capability['name'].replace(':','_') + '/' + capability['displayName'] +': PickOne' + "\n"
+                            ppddetails += '*OpenUI *GCP_' + capability['name'].replace(':','_') + '/' + capabilityName +': PickOne' + "\n"
                             for option in capability['options']:
                                 if 'default' in option and option['default'] == True:
                                     ppddetails += '*DefaultGCP_' + capability['name'].replace(':','_') + ': ' + option['name'] + "\n"
-                                ppddetails += '*GCP_' + capability['name'].replace(':','_') + ' ' + option['displayName'] + ':' + option['name'] + '' + "\n"
-                            ppddetails += '*CloseUI: *GCP_' + capability['displayName'] + "\n"
+                                ppddetails += '*GCP_' + capability['name'].replace(':','_') + ' ' + capabilityName + ':' + option['name'] + '' + "\n"
+                            ppddetails += '*CloseUI: *GCP_' + capabilityName + "\n"
                         elif capability['type'] == 'ParameterDef':
                             pass
-                            #print option['displayName']
+                            #print capabilityName
                             #print capability['psf:MinValue'], capability['psf:MaxValue']
                         
                 ppddetails += """*DefaultFont: Courier
