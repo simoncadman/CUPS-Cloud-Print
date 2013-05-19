@@ -1,3 +1,9 @@
+cupscloudprint (20130519-1) raring; urgency=low
+
+  * Fix: No longer error on capabilities with missing display name.
+
+ -- simon cadman <src@niftiestsoftware.com>  Sun, 19 May 2013 11:06:00 +0000
+
 cupscloudprint (20130510-1) raring; urgency=low
 
   * Fix: Deb package installs cloudprint files with correct permissions.

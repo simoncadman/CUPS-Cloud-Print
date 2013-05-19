@@ -1,3 +1,8 @@
+2013-05-19 Simon Cadman <src@niftiestsoftware.com>
+
+        * 20130519 :
+          Fix: No longer error on capabilities with missing display name.
+
 2013-05-10 Simon Cadman <src@niftiestsoftware.com>
 
 	* 20130510 :
