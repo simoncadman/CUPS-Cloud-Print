@@ -109,12 +109,12 @@ elif sys.argv[1] == 'cat':
                         else:
                             capabilityName = capability['name']
                         if capability['type'] == 'Feature':
-                            ppddetails += '*OpenUI *GCP_' + capability['name'].replace(':','_') + '/' + capabilityName +': PickOne' + "\n"
+                            ppddetails += '*OpenUI *GCP_' + capability['name'].replace(':','_') + '/' + capabilityName.replace(':','_') +': PickOne' + "\n"
                             for option in capability['options']:
                                 if 'default' in option and option['default'] == True:
                                     ppddetails += '*DefaultGCP_' + capability['name'].replace(':','_') + ': ' + option['name'] + "\n"
-                                ppddetails += '*GCP_' + capability['name'].replace(':','_') + ' ' + option['displayName'] + ':' + option['name'] + '' + "\n"
-                            ppddetails += '*CloseUI: *GCP_' + capabilityName + "\n"
+                                ppddetails += '*GCP_' + capability['name'].replace(':','_') + ' ' + option['displayName'].replace(':','_') + ':' + option['name'].replace(':','_') + '' + "\n"
+                            ppddetails += '*CloseUI: *GCP_' + capabilityName.replace(':','_') + "\n"
                         elif capability['type'] == 'ParameterDef':
                             pass
                             #print capabilityName
