@@ -113,7 +113,7 @@ elif sys.argv[1] == 'cat':
                             for option in capability['options']:
                                 if 'default' in option and option['default'] == True:
                                     ppddetails += '*DefaultGCP_' + capability['name'].replace(':','_') + ': ' + option['name'] + "\n"
-                                ppddetails += '*GCP_' + capability['name'].replace(':','_') + ' ' + capabilityName + ':' + option['name'] + '' + "\n"
+                                ppddetails += '*GCP_' + capability['name'].replace(':','_') + ' ' + option['displayName'] + ':' + option['name'] + '' + "\n"
                             ppddetails += '*CloseUI: *GCP_' + capabilityName + "\n"
                         elif capability['type'] == 'ParameterDef':
                             pass
