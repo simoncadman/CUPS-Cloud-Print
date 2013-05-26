@@ -1,3 +1,8 @@
+2013-05-26 Simon Cadman <src@niftiestsoftware.com>
+
+        * 20130526 :
+          Fix: Strip out colon chars from capability and options in ppd.
+
 2013-05-19 Simon Cadman <src@niftiestsoftware.com>
 
         * 20130519 :
