@@ -35,7 +35,7 @@ while True:
   print "You currently have these accounts configured: "
   for requestor in requestors:
     print requestor.getAccount()
-  answer = raw_input("Add more accounts? ")
+  answer = raw_input("Add more accounts (Y/N)? ")
   if not ( answer.startswith("Y") or answer.startswith("y") ):
     break
   else:
@@ -44,7 +44,7 @@ while True:
 
 for requestor in requestors:
   addedCount = 0
-  answer = raw_input("Add all Google Cloud Print printers to local CUPS install from " + requestor.getAccount() + " ? ")
+  answer = raw_input("Add all Google Cloud Print printers to local CUPS install from " + requestor.getAccount() + " (Y/N)? ")
   if not ( answer.startswith("Y") or answer.startswith("y") ):
     print("Not adding printers automatically")
     continue
@@ -57,7 +57,7 @@ for requestor in requestors:
     print("No Printers Found")
     continue
   
-  prefix = None
+  prefix = ""
 
   for ccpprinter in printers:
     uri = printer.printerNameToUri(ccpprinter['account'], ccpprinter['name'].encode('ascii', 'replace'))
@@ -67,11 +67,11 @@ for requestor in requestors:
 	found = True
     
     if found == False:
-      
-      if prefix == None:
-	prefix = raw_input("Use a prefix for names of created printers ( e.g. GCP- )? ")
-	if prefix == "":
-	  print("Not using prefix")
+      prefixanswer = raw_input("Use a prefix for names of created printers (Y/N)? ")
+      if ( prefixanswer.startswith("Y") or prefixanswer.startswith("y") ):
+          prefix = raw_input("Prefix ( e.g. GCP- )? ")
+          if prefix == "":
+            print("Not using prefix")
       
       printername = prefix + ccpprinter['name']
       
@@ -81,11 +81,11 @@ for requestor in requestors:
 	if printer.sanitizePrinterName(cupsprinters[ccpprinter2]['printer-info']) == printer.sanitizePrinterName(printername):
 	  foundbyname = True
       if ( foundbyname ) :
-	answer = raw_input("Printer " + printer.sanitizePrinterName(printername) + " already exists, supply another name? ")
+	answer = raw_input("Printer " + printer.sanitizePrinterName(printername) + " already exists, supply another name (Y/N)? ")
 	if ( answer.startswith("Y") or answer.startswith("y") ):
 	  printername = raw_input("New printer name? ")
 	else:
-	  answer = raw_input("Overwrite " + printer.sanitizePrinterName(printername) + " with new printer? ")
+	  answer = raw_input("Overwrite " + printer.sanitizePrinterName(printername) + " with new printer (Y/N)? ")
 	  if ( answer.startswith("N") or answer.startswith("n") ):
 	    printername = ""
       
@@ -118,7 +118,7 @@ if len( prunePrinters ) > 0 :
   print("Found " + str(len( prunePrinters )) + " printers which no longer exist on cloud print:")
   for printer in prunePrinters:
     print(printer)
-  answer = raw_input("Remove? ")
+  answer = raw_input("Remove (Y/N)? ")
   if answer.startswith("Y") or answer.startswith("y"):
     for printer in prunePrinters:
       connection.deletePrinter(printer)
