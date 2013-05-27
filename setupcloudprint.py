@@ -44,21 +44,54 @@ while True:
 
 for requestor in requestors:
   addedCount = 0
-  answer = raw_input("Add all Google Cloud Print printers to local CUPS install from " + requestor.getAccount() + " (Y/N)? ")
-  if not ( answer.startswith("Y") or answer.startswith("y") ):
-    print("Not adding printers automatically")
-    continue
   connection = cups.Connection()
   cupsprinters = connection.getPrinters()
-
+  prefix = ""
   printer = Printer(requestor)
   printers = printer.getPrinters()
   if printers == None:
-    print("No Printers Found")
+    print("Sorry, no printers were found on your Google Cloud Print account.")
     continue
   
-  prefix = ""
-
+  answer = raw_input("Add all Google Cloud Print printers to local CUPS install from " + requestor.getAccount() + " (Y/N)? ")
+  if not ( answer.startswith("Y") or answer.startswith("y") ):
+    answer = 1
+    print("Not adding printers automatically")
+    
+    while int(answer) != 0:
+        i=0
+        for printeritem in printers:
+            i+=1
+            print str(i) + ") " + printeritem['displayName']
+        maxprinterid = i
+        answer = raw_input("Add printer (1-" + str(maxprinterid) + ", 0 to exit)? ")
+        try:
+            answer = int(answer)
+        except ValueError:
+            answer = 0
+        if answer != 0:
+            if answer >= 1 and answer <= maxprinterid:
+                ccpprinter = printers[answer-1]
+                print "Adding " + printers[answer-1]['displayName']
+                prefixanswer = raw_input("Use a prefix for name of printer (Y/N)? ")
+                if ( prefixanswer.startswith("Y") or prefixanswer.startswith("y") ):
+                    prefix = raw_input("Prefix ( e.g. GCP- )? ")
+                    if prefix == "":
+                        print("Not using prefix")
+                
+                printername = prefix + ccpprinter['name']
+                uri = printer.printerNameToUri(ccpprinter['account'], ccpprinter['name'].encode('ascii', 'replace'))
+                for cupsprinter in cupsprinters:
+                    if cupsprinters[cupsprinter]['device-uri'] == uri:
+                        found = True
+                if found == True:
+                    print "\nPrinter with " + printername +" already exists\n"
+                else:
+                    printer.addPrinter(printername, uri, connection)
+            else:
+                print "\nPrinter " + str(answer) + " not found\n"
+    continue
+  
   for ccpprinter in printers:
     uri = printer.printerNameToUri(ccpprinter['account'], ccpprinter['name'].encode('ascii', 'replace'))
     found = False
