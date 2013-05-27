@@ -1,6 +1,6 @@
 cupscloudprint (20130526-1) raring; urgency=low
 
-  * Fix: No longer error on capabilities with missing display name.
+  * Fix: Strip out colon chars from capability and options in ppd. 
 
  -- simon cadman <src@niftiestsoftware.com>  Sun, 26 May 2013 15:55:00 +0000
 
