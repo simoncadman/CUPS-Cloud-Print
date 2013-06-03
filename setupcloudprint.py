@@ -81,6 +81,7 @@ for requestor in requestors:
                 
                 printername = prefix + ccpprinter['name']
                 uri = printer.printerNameToUri(ccpprinter['account'], ccpprinter['name'].encode('ascii', 'replace'))
+                found = False
                 for cupsprinter in cupsprinters:
                     if cupsprinters[cupsprinter]['device-uri'] == uri:
                         found = True
