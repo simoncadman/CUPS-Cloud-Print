@@ -15,7 +15,7 @@
 #    You should have received a copy of the GNU General Public License    
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-import sys, os
+import sys, os, subprocess
 libpath = "/usr/lib/cloudprint-cups/"
 if not os.path.exists( libpath  ):
     libpath = "/usr/local/lib/cloudprint-cups"
@@ -36,3 +36,22 @@ for foundprinter in printers:
     print("")
     print(foundprinter['fulldetails'])
     print("\n")
+    p = subprocess.Popen([os.path.join(libpath,'dynamicppd.py'), 'cat', 'cupscloudprint:' + foundprinter['account'].encode('ascii', 'replace').replace(' ', '-') +':' + foundprinter['name'].encode('ascii', 'replace').replace(' ', '-') + '.ppd'], stdout=subprocess.PIPE)
+    ppddata = p.communicate()[0]
+    result = p.returncode
+    tempfile = open('/tmp/.ppdfile', 'w')
+    tempfile.write(ppddata)
+    tempfile.close()
+    
+    p = subprocess.Popen(['cupstestppd', '/tmp/.ppdfile'], stdout=subprocess.PIPE)
+    testdata = p.communicate()[0]
+    result = p.returncode
+    print("Result of cupstestppd was " + str(result))
+    print("".join(testdata))
+    if result != 0:
+        print "cupstestppd errored: "
+        print ppddata
+        print "\n"
+    
+    os.unlink('/tmp/.ppdfile')
+    
