@@ -1,3 +1,9 @@
+cupscloudprint (20130604-1) raring; urgency=high
+
+  * Fix: Fixed syntax error on adding individual printers.
+
+ -- simon cadman <src@niftiestsoftware.com>  Tue, 04 Jun 2013 00:10:00 +0000
+
 cupscloudprint (20130603-1) raring; urgency=low
 
   * New: Added reportissues.py script to assist in debugging issues.
