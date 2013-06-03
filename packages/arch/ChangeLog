@@ -1,3 +1,11 @@
+2013-06-03 Simon Cadman <src@niftiestsoftware.com>
+
+        * 20130603 :
+          New: Added reportissues.py script to assist in debugging issues.
+          Change: On answering no for adding all printers, ask to add individual printers.
+          Change: Ask whether or not to use prefix rather than assuming user knows to enter prefix directly.
+          Fix: Use option name instead of displayname if displayname is missing.
+
 2013-05-26 Simon Cadman <src@niftiestsoftware.com>
 
         * 20130526 :

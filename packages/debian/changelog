@@ -1,3 +1,12 @@
+cupscloudprint (20130603-1) raring; urgency=low
+
+  * New: Added reportissues.py script to assist in debugging issues.
+  * Change: On answering no for adding all printers, ask to add individual printers.
+  * Change: Ask whether or not to use prefix rather than assuming user knows to enter prefix directly.
+  * Fix: Use option name instead of displayname if displayname is missing.
+
+ -- simon cadman <src@niftiestsoftware.com>  Mon, 03 Jun 2013 21:58:00 +0000
+
 cupscloudprint (20130526-1) raring; urgency=low
 
   * Fix: Strip out colon chars from capability and options in ppd. 

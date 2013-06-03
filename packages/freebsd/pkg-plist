@@ -16,6 +16,7 @@ lib/cloudprint-cups/deleteaccount.py
 lib/cloudprint-cups/dynamicppd.py
 lib/cloudprint-cups/listcloudprinters.py
 lib/cloudprint-cups/printer.py
+lib/cloudprint-cups/reportissues.py
 lib/cloudprint-cups/setupcloudprint.py
 lib/cloudprint-cups/submitjob.py
 lib/cloudprint-cups/test_auth.py
