@@ -99,27 +99,28 @@ elif sys.argv[1] == 'cat':
 *PaperDimension Legal/US Legal: "612 1008"
 *PaperDimension A4/A4: "595 842"
 """
-
                 #print foundprinter['fulldetails']
                 if 'capabilities' in foundprinter['fulldetails']:
                     for capability in foundprinter['fulldetails']['capabilities']:
                         capabilityName = None
+                        internalcapabilityName = capability['name'].replace(':','_')
                         if 'displayName' in capability:
-                            capabilityName = capability['displayName']
+                            capabilityName = capability['displayName'].replace(':','_')
                         else:
-                            capabilityName = capability['name']
+                            capabilityName = capability['name'].replace(':','_')
                         if capability['type'] == 'Feature':
-                            ppddetails += '*OpenUI *GCP_' + capability['name'].replace(':','_') + '/' + capabilityName.replace(':','_') +': PickOne' + "\n"
+                            ppddetails += '*OpenUI *GCP_' + internalcapabilityName + '/' + capabilityName +': PickOne' + "\n"
                             for option in capability['options']:
+                                internalOptionName = option['name'].replace(':','_')
                                 if 'default' in option and option['default'] == True:
-                                    ppddetails += '*DefaultGCP_' + capability['name'].replace(':','_') + ': ' + option['name'] + "\n"
+                                    ppddetails += '*DefaultGCP_' + internalcapabilityName + ': ' + internalOptionName + "\n"
                                 optionName = None
                                 if 'displayName' in option:
-                                    optionName = option['displayName']
+                                    optionName = option['displayName'].replace(':','_')
                                 else:
-                                    optionName = option['name']
-                                ppddetails += '*GCP_' + capability['name'].replace(':','_') + ' ' + optionName.replace(':','_') + ':' + option['name'].replace(':','_') + "\n"
-                            ppddetails += '*CloseUI: *GCP_' + capabilityName.replace(':','_') + "\n"
+                                    optionName = option['name'].replace(':','_')
+                                ppddetails += '*GCP_' + internalcapabilityName + ' ' + internalOptionName + ':' + optionName + "\n"
+                            ppddetails += '*CloseUI: *GCP_' + internalcapabilityName + "\n"
                         elif capability['type'] == 'ParameterDef':
                             pass
                             #print capabilityName
