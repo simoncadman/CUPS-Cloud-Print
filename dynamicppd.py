@@ -15,7 +15,7 @@
 #    You should have received a copy of the GNU General Public License    
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-import sys, os
+import sys, os, hashlib
 libpath = "/usr/lib/cloudprint-cups/"
 if not os.path.exists( libpath  ):
     libpath = "/usr/local/lib/cloudprint-cups"
@@ -103,23 +103,27 @@ elif sys.argv[1] == 'cat':
                 if 'capabilities' in foundprinter['fulldetails']:
                     for capability in foundprinter['fulldetails']['capabilities']:
                         capabilityName = None
-                        internalcapabilityName = capability['name'].replace(':','_')
+                        internalcapabilityName = hashlib.sha256(capability['name'].replace(':','_')).hexdigest()[:7]
                         if 'displayName' in capability:
-                            capabilityName = capability['displayName'].replace(':','_')
+                            capabilityName = capability['displayName'].replace(':','_').replace('&','').replace(' ','_')
+                        elif 'psk:DisplayName' in capability:
+                            capabilityName = capability['psk:DisplayName'].replace(':','_').replace('&','').replace(' ','_')
                         else:
                             capabilityName = capability['name'].replace(':','_')
                         if capability['type'] == 'Feature':
                             ppddetails += '*OpenUI *GCP_' + internalcapabilityName + '/' + capabilityName +': PickOne' + "\n"
                             for option in capability['options']:
-                                internalOptionName = option['name'].replace(':','_')
-                                if 'default' in option and option['default'] == True:
-                                    ppddetails += '*DefaultGCP_' + internalcapabilityName + ': ' + internalOptionName + "\n"
                                 optionName = None
                                 if 'displayName' in option:
-                                    optionName = option['displayName'].replace(':','_')
+                                    optionName = option['displayName'].replace(':','_').replace('&','').replace(' ','_')
+                                elif 'psk:DisplayName' in option:
+                                    optionName = option['psk:DisplayName'].replace(':','_').replace('&','').replace(' ','_')
                                 else:
                                     optionName = option['name'].replace(':','_')
-                                ppddetails += '*GCP_' + internalcapabilityName + ' ' + internalOptionName + ':' + optionName + "\n"
+                                internalOptionName = hashlib.sha256(option['name'].replace(':','_')).hexdigest()[:7]
+                                if 'default' in option and option['default'] == True:
+                                    ppddetails += '*DefaultGCP_' + internalcapabilityName + ': ' + optionName + "\n"
+                                ppddetails += '*GCP_' + internalcapabilityName + ' ' + optionName + ':' + internalOptionName + "\n"
                             ppddetails += '*CloseUI: *GCP_' + internalcapabilityName + "\n"
                         elif capability['type'] == 'ParameterDef':
                             pass

@@ -13,7 +13,7 @@
 #
 #    You should have received a copy of the GNU General Public License    
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
-import json, urllib, os, mimetypes, base64, mimetools, re
+import json, urllib, os, mimetypes, base64, mimetools, re, hashlib
 from auth import Auth
 from urlparse import urlparse
 
@@ -275,7 +275,16 @@ class Printer:
     for attr in attrs:
         if attr.name.startswith('DefaultGCP_'):
             # gcp setting, reverse back to GCP capability
-            gcpname = attr.name.replace('DefaultGCP_', '').replace('_', ':')
+            gcpname = ""
+            hashname = attr.name.replace('DefaultGCP_', '')
+            
+            # find item name from hashes
+            details = self.getPrinterDetails( gcpid )
+            fulldetails = details['printers'][0]
+            for capability in fulldetails['capabilities']:
+                gcpname = capability['name']
+                break
+            
             # hardcoded to feature type temporarily
             capabilities['capabilities'].append( { 'type' : 'Feature', 'name' : gcpname, 'options' : [ { 'name' : attr.value } ] } )
     return capabilities
