@@ -105,9 +105,9 @@ elif sys.argv[1] == 'cat':
                         capabilityName = None
                         internalcapabilityName = hashlib.sha256(capability['name'].replace(':','_')).hexdigest()[:7]
                         if 'displayName' in capability:
-                            capabilityName = capability['displayName'].replace(':','_').replace('&','').replace(' ','_')
+                            capabilityName = capability['displayName'].replace(':','_').replace(' ','_')
                         elif 'psk:DisplayName' in capability:
-                            capabilityName = capability['psk:DisplayName'].replace(':','_').replace('&','').replace(' ','_')
+                            capabilityName = capability['psk:DisplayName'].replace(':','_').replace(' ','_')
                         else:
                             capabilityName = capability['name'].replace(':','_')
                         if capability['type'] == 'Feature':
@@ -115,9 +115,9 @@ elif sys.argv[1] == 'cat':
                             for option in capability['options']:
                                 optionName = None
                                 if 'displayName' in option:
-                                    optionName = option['displayName'].replace(':','_').replace('&','').replace(' ','_')
+                                    optionName = option['displayName'].replace(':','_').replace(' ','_')
                                 elif 'psk:DisplayName' in option:
-                                    optionName = option['psk:DisplayName'].replace(':','_').replace('&','').replace(' ','_')
+                                    optionName = option['psk:DisplayName'].replace(':','_').replace(' ','_')
                                 else:
                                     optionName = option['name'].replace(':','_')
                                 internalOptionName = hashlib.sha256(option['name'].replace(':','_')).hexdigest()[:7]
