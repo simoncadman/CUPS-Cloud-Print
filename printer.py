@@ -23,6 +23,7 @@ class Printer:
   PROTOCOL = 'cloudprint://'
   requestors = None
   requestor = None
+  cachedPrinterDetails = {}
   
   def __init__( self, requestors ):
     """Create an instance of Printer, with authorised requestor
@@ -170,7 +171,12 @@ class Printer:
     Return:
       list: data from Google
     """
-    return self.requestor.doRequest( 'printer?printerid=%s' % (  printerid) )
+    if printerid not in self.cachedPrinterDetails:
+        printerdetails = self.requestor.doRequest( 'printer?printerid=%s' % (  printerid ) )
+        self.cachedPrinterDetails[printerid] = printerdetails
+    else:
+        printerdetails = self.cachedPrinterDetails[printerid]
+    return printerdetails
 
   def readFile(self, pathname):
     """Read contents of a file and return content.
