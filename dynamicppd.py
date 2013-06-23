@@ -105,21 +105,21 @@ elif sys.argv[1] == 'cat':
                         capabilityName = None
                         internalcapabilityName = hashlib.sha256(capability['name'].replace(':','_')).hexdigest()[:7]
                         if 'displayName' in capability:
-                            capabilityName = capability['displayName'].replace(':','_').replace(' ','_')
+                            capabilityName = capability['displayName'].replace(':','_').replace(' ','_').encode('ascii', 'ignore')
                         elif 'psk:DisplayName' in capability:
-                            capabilityName = capability['psk:DisplayName'].replace(':','_').replace(' ','_')
+                            capabilityName = capability['psk:DisplayName'].replace(':','_').replace(' ','_').encode('ascii', 'ignore')
                         else:
-                            capabilityName = capability['name'].replace(':','_')
+                            capabilityName = capability['name'].replace(':','_').encode('ascii', 'ignore')
                         if capability['type'] == 'Feature':
                             ppddetails += '*OpenUI *GCP_' + internalcapabilityName + '/' + capabilityName +': PickOne' + "\n"
                             for option in capability['options']:
                                 optionName = None
                                 if 'displayName' in option:
-                                    optionName = option['displayName'].replace(':','_').replace(' ','_')
+                                    optionName = option['displayName'].replace(':','_').replace(' ','_').encode('ascii', 'ignore')
                                 elif 'psk:DisplayName' in option:
-                                    optionName = option['psk:DisplayName'].replace(':','_').replace(' ','_')
+                                    optionName = option['psk:DisplayName'].replace(':','_').replace(' ','_').encode('ascii', 'ignore')
                                 else:
-                                    optionName = option['name'].replace(':','_')
+                                    optionName = option['name'].replace(':','_').encode('ascii', 'ignore')
                                 internalOptionName = hashlib.sha256(option['name'].replace(':','_')).hexdigest()[:7]
                                 if 'default' in option and option['default'] == True:
                                     ppddetails += '*DefaultGCP_' + internalcapabilityName + ': ' + optionName + "\n"
