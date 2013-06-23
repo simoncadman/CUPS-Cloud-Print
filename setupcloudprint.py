@@ -64,7 +64,7 @@ for requestor in requestors:
             i+=1
             print str(i) + ") " + printeritem['displayName']
         maxprinterid = i
-        answer = raw_input("Add printer (1-" + str(maxprinterid) + ", 0 to exit)? ")
+        answer = raw_input("Add printer (1-" + str(maxprinterid) + ", 0 to cancel)? ")
         try:
             answer = int(answer)
         except ValueError:
@@ -93,6 +93,12 @@ for requestor in requestors:
                 print "\nPrinter " + str(answer) + " not found\n"
     continue
   
+  prefixanswer = raw_input("Use a prefix for names of created printers (Y/N)? ")
+  if ( prefixanswer.startswith("Y") or prefixanswer.startswith("y") ):
+      prefix = raw_input("Prefix ( e.g. GCP- )? ")
+      if prefix == "":
+        print("Not using prefix")
+    
   for ccpprinter in printers:
     uri = printer.printerNameToUri(ccpprinter['account'], ccpprinter['name'].encode('ascii', 'replace'))
     found = False
@@ -101,12 +107,6 @@ for requestor in requestors:
 	found = True
     
     if found == False:
-      prefixanswer = raw_input("Use a prefix for names of created printers (Y/N)? ")
-      if ( prefixanswer.startswith("Y") or prefixanswer.startswith("y") ):
-          prefix = raw_input("Prefix ( e.g. GCP- )? ")
-          if prefix == "":
-            print("Not using prefix")
-      
       printername = prefix + ccpprinter['name']
       
       # check if printer name already exists
