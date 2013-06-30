@@ -56,6 +56,9 @@ elif sys.argv[1] == 'cat':
                 defaultlocal = locale.getdefaultlocale()[0]
                 if defaultlocal != None:
                     language = defaultlocal
+                
+                defaultpapertype = "Letter"
+                
                 ppddetails = """*PPD-Adobe: "4.3"
 *%%%% PPD file for Cloud Print with CUPS.
 *%%%% Created by the CUPS PPD Compiler CUPS v1.6.1.
@@ -80,11 +83,10 @@ elif sys.argv[1] == 'cat':
 *TTRasterizer: Type42
 *% Driver-defined attributes...
 *1284DeviceID: "MFG:GOOGLE;DRV:GCP;CMD:POSTSCRIPT;MDL:""" + printer.printerNameToUri( foundprinter['account'], foundprinter['name'] ) + """;"
-*cupsLanguages: "en"
 *OpenUI *PageSize/Media Size: PickOne
 *""" + language + """.Translation PageSize/Media Size: ""
 *OrderDependency: 10 AnySetup *PageSize
-*DefaultPageSize: Letter.Fullbleed
+*DefaultPageSize: """ + defaultpapertype + """.Fullbleed
 *PageSize Letter.Fullbleed/US Letter: "<</PageSize[612 792]/ImagingBBox null>>setpagedevice"
 *""" + language + """.PageSize Letter.Fullbleed/US Letter: ""
 *PageSize Legal.Fullbleed/US Legal: "<</PageSize[612 1008]/ImagingBBox null>>setpagedevice"
@@ -94,16 +96,16 @@ elif sys.argv[1] == 'cat':
 *CloseUI: *PageSize
 *OpenUI *PageRegion/Media Size: PickOne
 *OrderDependency: 10 AnySetup *PageRegion
-*DefaultPageRegion: Letter.Fullbleed
+*DefaultPageRegion: """ + defaultpapertype + """.Fullbleed
 *PageRegion Letter.Fullbleed/US Letter: "<</PageSize[612 792]/ImagingBBox null>>setpagedevice"
 *PageRegion Legal.Fullbleed/US Legal: "<</PageSize[612 1008]/ImagingBBox null>>setpagedevice"
 *PageRegion A4.Fullbleed/A4: "<</PageSize[595 842]/ImagingBBox null>>setpagedevice"
 *CloseUI: *PageRegion
-*DefaultImageableArea: Letter.Fullbleed
+*DefaultImageableArea: """ + defaultpapertype + """.Fullbleed
 *ImageableArea Letter.Fullbleed/US Letter: "0 0 612 792"
 *ImageableArea Legal.Fullbleed/US Legal: "0 0 612 1008"
 *ImageableArea A4.Fullbleed/A4: "0 0 595 842"
-*DefaultPaperDimension: Letter.Fullbleed
+*DefaultPaperDimension: """ + defaultpapertype + """.Fullbleed
 *PaperDimension Letter.Fullbleed/US Letter: "612 792"
 *PaperDimension Legal.Fullbleed/US Legal: "612 1008"
 *PaperDimension A4.Fullbleed/A4: "595 842"
