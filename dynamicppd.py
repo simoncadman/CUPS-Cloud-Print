@@ -53,11 +53,15 @@ elif sys.argv[1] == 'cat':
                 capabilities = []
                 # generate and output ppd
                 language = "en"
+                defaultpapertype = "Letter"
                 defaultlocal = locale.getdefaultlocale()[0]
                 if defaultlocal != None:
                     language = defaultlocal
-                
-                defaultpapertype = "Letter"
+                    
+                    # taken from wikipedia 
+                    lettercountries = [ 'US', 'CA', 'MX', 'BO', 'CO', 'VE', 'PH', 'CL' ]
+                    if language.split('_')[1] not in lettercountries:
+                        defaultpapertype = "A4"
                 
                 ppddetails = """*PPD-Adobe: "4.3"
 *%%%% PPD file for Cloud Print with CUPS.
