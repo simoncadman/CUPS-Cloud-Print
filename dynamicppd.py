@@ -15,7 +15,7 @@
 #    You should have received a copy of the GNU General Public License    
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-import sys, os, hashlib
+import sys, os, hashlib, locale
 libpath = "/usr/lib/cloudprint-cups/"
 if not os.path.exists( libpath  ):
     libpath = "/usr/local/lib/cloudprint-cups"
@@ -52,6 +52,10 @@ elif sys.argv[1] == 'cat':
             if ppdname == 'cupscloudprint:' + foundprinter['account'].encode('ascii', 'replace').replace(' ', '-') +':' + foundprinter['name'].encode('ascii', 'replace').replace(' ', '-') + '.ppd':
                 capabilities = []
                 # generate and output ppd
+                language = "en"
+                defaultlocal = locale.getdefaultlocale()[0]
+                if defaultlocal != None:
+                    language = defaultlocal
                 ppddetails = """*PPD-Adobe: "4.3"
 *%%%% PPD file for Cloud Print with CUPS.
 *%%%% Created by the CUPS PPD Compiler CUPS v1.6.1.
@@ -59,6 +63,7 @@ elif sys.argv[1] == 'cat':
 *FileVersion: "1.0"
 *LanguageVersion: English
 *LanguageEncoding: ISOLatin1
+*cupsLanguages: \"""" + language +"""\"
 *PCFileName: "cloudprint.ppd"
 *Product: "(Google Cloud Print)"
 *Manufacturer: "Google"
@@ -77,11 +82,15 @@ elif sys.argv[1] == 'cat':
 *1284DeviceID: "MFG:GOOGLE;DRV:GCP;CMD:POSTSCRIPT;MDL:""" + printer.printerNameToUri( foundprinter['account'], foundprinter['name'] ) + """;"
 *cupsLanguages: "en"
 *OpenUI *PageSize/Media Size: PickOne
+*""" + language + """.Translation PageSize/Media Size: ""
 *OrderDependency: 10 AnySetup *PageSize
 *DefaultPageSize: Letter
 *PageSize Letter/US Letter: "<</PageSize[612 792]/ImagingBBox null>>setpagedevice"
+*""" + language + """.PageSize Letter/US Letter: ""
 *PageSize Legal/US Legal: "<</PageSize[612 1008]/ImagingBBox null>>setpagedevice"
+*""" + language + """.PageSize Legal/US Legal: ""
 *PageSize A4/A4: "<</PageSize[595 842]/ImagingBBox null>>setpagedevice"
+*""" + language + """.PageSize A4/A4: ""
 *CloseUI: *PageSize
 *OpenUI *PageRegion/Media Size: PickOne
 *OrderDependency: 10 AnySetup *PageRegion
@@ -103,27 +112,41 @@ elif sys.argv[1] == 'cat':
                 if 'capabilities' in foundprinter['fulldetails']:
                     for capability in foundprinter['fulldetails']['capabilities']:
                         capabilityName = None
+                        originCapabilityName = None
                         internalcapabilityName = hashlib.sha256(capability['name'].replace(':','_')).hexdigest()[:7]
+                        
                         if 'displayName' in capability:
-                            capabilityName = capability['displayName'].replace(':','_').replace(' ','_').encode('ascii', 'ignore')
+                            originCapabilityName = capability['displayName'].replace(':','_').replace(' ','_')
                         elif 'psk:DisplayName' in capability:
-                            capabilityName = capability['psk:DisplayName'].replace(':','_').replace(' ','_').encode('ascii', 'ignore')
+                            originCapabilityName = capability['psk:DisplayName'].replace(':','_').replace(' ','_')
                         else:
-                            capabilityName = capability['name'].replace(':','_').encode('ascii', 'ignore')
+                            originCapabilityName = capability['name'].replace(':','_')
+                            
+                        capabilityName = originCapabilityName.encode('ascii', 'ignore')
                         if capability['type'] == 'Feature':
                             ppddetails += '*OpenUI *GCP_' + internalcapabilityName + '/' + capabilityName +': PickOne' + "\n"
+                            
+                            # translation of capability, allows use of 8 bit chars
+                            ppddetails += '*' + language + '.Translation' + ' GCP_' + internalcapabilityName + '/' + originCapabilityName + ": \"\"\n"
+                            
                             for option in capability['options']:
                                 optionName = None
+                                originOptionName = None
                                 if 'displayName' in option:
-                                    optionName = option['displayName'].replace(':','_').replace(' ','_').encode('ascii', 'ignore')
+                                    originOptionName = option['displayName'].replace(':','_').replace(' ','_')
                                 elif 'psk:DisplayName' in option:
-                                    optionName = option['psk:DisplayName'].replace(':','_').replace(' ','_').encode('ascii', 'ignore')
+                                    originOptionName = option['psk:DisplayName'].replace(':','_').replace(' ','_')
                                 else:
-                                    optionName = option['name'].replace(':','_').encode('ascii', 'ignore')
+                                    originOptionName = option['name'].replace(':','_')
+                                optionName = originOptionName.encode('ascii', 'ignore')
                                 internalOptionName = hashlib.sha256(option['name'].replace(':','_')).hexdigest()[:7]
                                 if 'default' in option and option['default'] == True:
                                     ppddetails += '*DefaultGCP_' + internalcapabilityName + ': ' + optionName + "\n"
                                 ppddetails += '*GCP_' + internalcapabilityName + ' ' + optionName + ':' + internalOptionName + "\n"
+                                
+                                # translation of option, allows use of 8 bit chars
+                                ppddetails += '*' + language + '.GCP_' + internalcapabilityName + ' ' + optionName + "/" + originOptionName + ": \"\"\n"
+                                
                             ppddetails += '*CloseUI: *GCP_' + internalcapabilityName + "\n"
                         elif capability['type'] == 'ParameterDef':
                             pass
@@ -167,7 +190,7 @@ elif sys.argv[1] == 'cat':
 *Font ZapfChancery-MediumItalic: Standard "(1.05)" Standard ROM
 *Font ZapfDingbats: Special "(001.005)" Special ROM
 *% End of cloudprint.ppd, 04169 bytes."""
-                print ppddetails
+                print ppddetails.encode('latin1')
                 sys.exit(0)
                 
         # no printers found
