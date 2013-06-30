@@ -84,29 +84,29 @@ elif sys.argv[1] == 'cat':
 *OpenUI *PageSize/Media Size: PickOne
 *""" + language + """.Translation PageSize/Media Size: ""
 *OrderDependency: 10 AnySetup *PageSize
-*DefaultPageSize: Letter
-*PageSize Letter/US Letter: "<</PageSize[612 792]/ImagingBBox null>>setpagedevice"
-*""" + language + """.PageSize Letter/US Letter: ""
-*PageSize Legal/US Legal: "<</PageSize[612 1008]/ImagingBBox null>>setpagedevice"
-*""" + language + """.PageSize Legal/US Legal: ""
-*PageSize A4/A4: "<</PageSize[595 842]/ImagingBBox null>>setpagedevice"
-*""" + language + """.PageSize A4/A4: ""
+*DefaultPageSize: Letter.Fullbleed
+*PageSize Letter.Fullbleed/US Letter: "<</PageSize[612 792]/ImagingBBox null>>setpagedevice"
+*""" + language + """.PageSize Letter.Fullbleed/US Letter: ""
+*PageSize Legal.Fullbleed/US Legal: "<</PageSize[612 1008]/ImagingBBox null>>setpagedevice"
+*""" + language + """.PageSize Legal.Fullbleed/US Legal: ""
+*PageSize A4.Fullbleed/A4: "<</PageSize[595 842]/ImagingBBox null>>setpagedevice"
+*""" + language + """.PageSize A4.Fullbleed/A4: ""
 *CloseUI: *PageSize
 *OpenUI *PageRegion/Media Size: PickOne
 *OrderDependency: 10 AnySetup *PageRegion
-*DefaultPageRegion: Letter
-*PageRegion Letter/US Letter: "<</PageSize[612 792]/ImagingBBox null>>setpagedevice"
-*PageRegion Legal/US Legal: "<</PageSize[612 1008]/ImagingBBox null>>setpagedevice"
-*PageRegion A4/A4: "<</PageSize[595 842]/ImagingBBox null>>setpagedevice"
+*DefaultPageRegion: Letter.Fullbleed
+*PageRegion Letter.Fullbleed/US Letter: "<</PageSize[612 792]/ImagingBBox null>>setpagedevice"
+*PageRegion Legal.Fullbleed/US Legal: "<</PageSize[612 1008]/ImagingBBox null>>setpagedevice"
+*PageRegion A4.Fullbleed/A4: "<</PageSize[595 842]/ImagingBBox null>>setpagedevice"
 *CloseUI: *PageRegion
-*DefaultImageableArea: Letter
-*ImageableArea Letter/US Letter: "0 0 612 792"
-*ImageableArea Legal/US Legal: "0 0 612 1008"
-*ImageableArea A4/A4: "0 0 595 842"
-*DefaultPaperDimension: Letter
-*PaperDimension Letter/US Letter: "612 792"
-*PaperDimension Legal/US Legal: "612 1008"
-*PaperDimension A4/A4: "595 842"
+*DefaultImageableArea: Letter.Fullbleed
+*ImageableArea Letter.Fullbleed/US Letter: "0 0 612 792"
+*ImageableArea Legal.Fullbleed/US Legal: "0 0 612 1008"
+*ImageableArea A4.Fullbleed/A4: "0 0 595 842"
+*DefaultPaperDimension: Letter.Fullbleed
+*PaperDimension Letter.Fullbleed/US Letter: "612 792"
+*PaperDimension Legal.Fullbleed/US Legal: "612 1008"
+*PaperDimension A4.Fullbleed/A4: "595 842"
 """
                 #print foundprinter['fulldetails']
                 if 'capabilities' in foundprinter['fulldetails']:
