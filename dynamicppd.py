@@ -64,7 +64,7 @@ elif sys.argv[1] == 'cat':
 *LanguageVersion: English
 *LanguageEncoding: ISOLatin1
 *cupsLanguages: \"""" + language +"""\"
-*PCFileName: "cloudprint.ppd"
+*PCFileName: "ccp.ppd"
 *Product: "(Google Cloud Print)"
 *Manufacturer: "Google"
 *ModelName: "Google Cloud Print"
