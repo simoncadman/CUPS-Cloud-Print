@@ -132,8 +132,10 @@ if __name__ == '__main__': # pragma: no cover
 
     pdfFile = printFile+".pdf"
     ps2PdfName = "ps2pdf"
+    convertToPDFParams = [ps2PdfName, "-dPDFSETTINGS=/printer", printFile, pdfFile]
     if which(ps2PdfName) == None:
       ps2PdfName = "pstopdf"
+      convertToPDFParams = [ps2PdfName, printFile, pdfFile]
 
     submitjobpath = "/usr/lib/cloudprint-cups/" + "submitjob.py"
     if not os.path.exists( submitjobpath  ):
@@ -141,7 +143,7 @@ if __name__ == '__main__': # pragma: no cover
 
     if not fileIsPDF( printFile  ):
   	sys.stderr.write( "INFO: Converting print job to PDF\n")
-	subprocess.call([ps2PdfName, printFile, pdfFile])
+	subprocess.call(convertToPDFParams)
 	logfile.write("Running " +  submitjobpath  + "\n")
 	logfile.write("Converted to PDF as "+ pdfFile + "\n")
     else:
