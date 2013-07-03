@@ -71,6 +71,8 @@ elif sys.argv[1] == 'cat':
 *LanguageVersion: English
 *LanguageEncoding: ISOLatin1
 *cupsLanguages: \"""" + language +"""\"
+*cupsFilter:    "application/vnd.cups-postscript 100 pdftopdf"
+*cupsFilter:    "application/vnd.cups-pdf 0 pdftopdf"
 *PCFileName: "ccp.ppd"
 *Product: "(Google Cloud Print)"
 *Manufacturer: "Google"
