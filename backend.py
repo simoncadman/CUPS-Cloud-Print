@@ -26,8 +26,14 @@ def fileIsPDF ( filename ) :
   Returns:
     boolean: True = is a PDF, False = not a PDF.
   """
-  type = mimetypes.guess_type(filename)
-  return type[0] == "application/pdf"
+  result = 0
+  p = subprocess.Popen(["file", filename], stdout=subprocess.PIPE)
+  output = p.communicate()[0]
+  result = p.returncode
+  if result != 0:
+      return False
+  else:
+      return "PDF document" in output
 
 def which(program):
   import os
@@ -146,8 +152,9 @@ if __name__ == '__main__': # pragma: no cover
 	logfile.write("Running " +  submitjobpath  + "\n")
 	logfile.write("Converted to PDF as "+ pdfFile + "\n")
     else:
-	logfile.write("Using " + printFile  + " as is already PDF\n")
-	pdfFile = printFile
+	pdfFile = printFile + '.pdf'
+	os.rename(printFile,pdfFile)
+	logfile.write("Using " + pdfFile  + " as is already PDF\n")
 
     sys.stderr.write( "INFO: Sending document to Cloud Print\n")
     logfile.write("Sending "+ pdfFile + " to cloud\n")
@@ -159,11 +166,11 @@ if __name__ == '__main__': # pragma: no cover
     logfile.write(output)
     logfile.write(pdfFile + " sent to cloud print, deleting\n")
     if os.path.exists( printFile ):
-	os.unlink( printFile )
+       os.unlink( printFile )
     sys.stderr.write("INFO: Cleaning up temporary files\n")
     logfile.write("Deleted "+ printFile + "\n")
     if os.path.exists( pdfFile ):
-	os.unlink( pdfFile )
+       os.unlink( pdfFile )
     logfile.write("Deleted "+ pdfFile + "\n")
     logfile.close()
     sys.stderr.write("INFO: Printing Successful\n")
