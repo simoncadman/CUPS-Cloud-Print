@@ -27,7 +27,6 @@ def fileIsPDF ( filename ) :
     boolean: True = is a PDF, False = not a PDF.
   """
   type = mimetypes.guess_type(filename)
-  print type[0]
   return type[0] == "application/pdf"
 
 def which(program):
