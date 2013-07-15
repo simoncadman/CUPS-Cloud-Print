@@ -57,6 +57,9 @@ class Printer:
 	  allprinters.append(printer)
     return allprinters
   
+  def sanitiseText(self, text):
+      return text.replace(':','_').replace(';','_').replace(' ','_').encode('latin1', 'ignore')
+  
   def printerNameToUri( self, account, printer ) :
     """Generates a URI for the Cloud Print Printer
 
@@ -288,7 +291,7 @@ class Printer:
             details = self.getPrinterDetails( gcpid )
             fulldetails = details['printers'][0]
             for capability in fulldetails['capabilities']:
-                if hashname == hashlib.sha256(capability['name'].replace(':','_')).hexdigest()[:7]:
+                if hashname == hashlib.sha256(self.sanitiseText(capability['name'])).hexdigest()[:7]:
                     gcpname = capability['name']
                     break
             
