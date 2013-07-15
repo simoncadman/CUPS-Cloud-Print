@@ -58,7 +58,7 @@ class Printer:
     return allprinters
   
   def sanitiseText(self, text):
-      return text.replace(':','_').replace(';','_').replace(' ','_').encode('latin1', 'ignore')
+      return text.replace(':','_').replace(';','_').replace(' ','_').encode('latin1', 'ignore')[0:40]
   
   def printerNameToUri( self, account, printer ) :
     """Generates a URI for the Cloud Print Printer
