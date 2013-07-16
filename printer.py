@@ -57,7 +57,7 @@ class Printer:
 	  allprinters.append(printer)
     return allprinters
   
-  def sanitiseText(self, text):
+  def sanitizeText(self, text):
       return text.replace(':','_').replace(';','_').replace(' ','_').encode('latin1', 'ignore')[0:40]
   
   def printerNameToUri( self, account, printer ) :
@@ -291,7 +291,7 @@ class Printer:
             details = self.getPrinterDetails( gcpid )
             fulldetails = details['printers'][0]
             for capability in fulldetails['capabilities']:
-                if hashname == hashlib.sha256(self.sanitiseText(capability['name'])).hexdigest()[:7]:
+                if hashname == hashlib.sha256(self.sanitizeText(capability['name'])).hexdigest()[:7]:
                     gcpname = capability['name']
                     break
             

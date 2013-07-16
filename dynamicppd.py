@@ -121,14 +121,14 @@ elif sys.argv[1] == 'cat':
                     for capability in foundprinter['fulldetails']['capabilities']:
                         capabilityName = None
                         originCapabilityName = None
-                        internalcapabilityName = hashlib.sha256(printer.sanitiseText(capability['name'])).hexdigest()[:7]
+                        internalcapabilityName = hashlib.sha256(printer.sanitizeText(capability['name'])).hexdigest()[:7]
                         
                         if 'displayName' in capability:
-                            originCapabilityName = printer.sanitiseText(capability['displayName'])
+                            originCapabilityName = printer.sanitizeText(capability['displayName'])
                         elif 'psk:DisplayName' in capability:
-                            originCapabilityName = printer.sanitiseText(capability['psk:DisplayName'])
+                            originCapabilityName = printer.sanitizeText(capability['psk:DisplayName'])
                         else:
-                            originCapabilityName = printer.sanitiseText(capability['name'])
+                            originCapabilityName = printer.sanitizeText(capability['name'])
                             
                         capabilityName = originCapabilityName
                         if capability['type'] == 'Feature':
@@ -141,13 +141,13 @@ elif sys.argv[1] == 'cat':
                                 optionName = None
                                 originOptionName = None
                                 if 'displayName' in option:
-                                    originOptionName = printer.sanitiseText(option['displayName'])
+                                    originOptionName = printer.sanitizeText(option['displayName'])
                                 elif 'psk:DisplayName' in option:
-                                    originOptionName = printer.sanitiseText(option['psk:DisplayName'])
+                                    originOptionName = printer.sanitizeText(option['psk:DisplayName'])
                                 else:
-                                    originOptionName = printer.sanitiseText(option['name'])
+                                    originOptionName = printer.sanitizeText(option['name'])
                                 optionName = originOptionName
-                                internalOptionName = hashlib.sha256(printer.sanitiseText(option['name'])).hexdigest()[:7]
+                                internalOptionName = hashlib.sha256(printer.sanitizeText(option['name'])).hexdigest()[:7]
                                 if 'default' in option and option['default'] == True:
                                     ppddetails += '*DefaultGCP_' + internalcapabilityName + ': ' + optionName + "\n"
                                 ppddetails += '*GCP_' + internalcapabilityName + ' ' + optionName + ':' + internalOptionName + "\n"
