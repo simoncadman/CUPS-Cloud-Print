@@ -7,13 +7,7 @@ cupsmodel = ${DESTDIR}@cupsdatapath@/model/
 cupsgroup = @cupsgroup@
 ppdcpath = @ppdcpath@
 
-all: cloudprint.ppd
-
-cloudprint.ppd:
-	${ppdcpath} cloudprint.drv  -d .
-	
-clean:
-	rm -f cloudprint.ppd
+all: backend.py
 
 install: all
 	mkdir -p ${prefix}/lib/cloudprint-cups/oauth2client
