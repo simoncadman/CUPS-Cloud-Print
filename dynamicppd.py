@@ -116,7 +116,10 @@ elif sys.argv[1] == 'cat':
 *PaperDimension Legal.Fullbleed/US Legal: "612 1008"
 *PaperDimension A4.Fullbleed/A4: "595 842"
 """
-                #print foundprinter['fulldetails']
+                if len(sys.argv) > 3 and sys.argv[3] == "testmode" and os.path.exists('test-capabilities.serial'):
+                    with file("test-capabilities.serial") as f:
+                        foundprinter['fulldetails'] = eval(f.read())
+                        
                 if 'capabilities' in foundprinter['fulldetails']:
                     for capability in foundprinter['fulldetails']['capabilities']:
                         capabilityName = None
