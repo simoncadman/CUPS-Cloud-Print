@@ -118,7 +118,8 @@ elif sys.argv[1] == 'cat':
 """
                 if len(sys.argv) > 3 and sys.argv[3] == "testmode" and os.path.exists('test-capabilities.serial'):
                     with file("test-capabilities.serial") as f:
-                        foundprinter['fulldetails'] = eval(f.read())
+                        import ast
+                        foundprinter['fulldetails'] = ast.literal_eval(f.read())
                         
                 if 'capabilities' in foundprinter['fulldetails']:
                     for capability in foundprinter['fulldetails']['capabilities']:
