@@ -123,47 +123,43 @@ elif sys.argv[1] == 'cat':
                         
                 if 'capabilities' in foundprinter['fulldetails']:
                     for capability in foundprinter['fulldetails']['capabilities']:
-                        capabilityName = None
                         originCapabilityName = None
                         internalcapabilityName = hashlib.sha256(printer.sanitizeText(capability['name'])).hexdigest()[:7]
                         
-                        if 'displayName' in capability:
+                        if 'displayName' in capability and len(capability['displayName']) > 0:
                             originCapabilityName = printer.sanitizeText(capability['displayName'])
-                        elif 'psk:DisplayName' in capability:
+                        elif 'psk:DisplayName' in capability and len(capability['psk:DisplayName']) > 0:
                             originCapabilityName = printer.sanitizeText(capability['psk:DisplayName'])
                         else:
                             originCapabilityName = printer.sanitizeText(capability['name'])
                             
-                        capabilityName = originCapabilityName
+                        engCapabilityName = printer.sanitizeText(capability['name'])
                         if capability['type'] == 'Feature':
-                            ppddetails += '*OpenUI *GCP_' + internalcapabilityName + '/' + capabilityName +': PickOne' + "\n"
+                            ppddetails += '*OpenUI *GCP_' + internalcapabilityName + '/' + internalcapabilityName +': PickOne' + "\n"
                             
                             # translation of capability, allows use of 8 bit chars
                             ppddetails += '*' + language + '.Translation' + ' GCP_' + internalcapabilityName + '/' + originCapabilityName + ": \"\"\n"
                             
                             for option in capability['options']:
-                                optionName = None
                                 originOptionName = None
-                                if 'displayName' in option:
+                                if 'displayName' in option and len(option['displayName']) > 0:
                                     originOptionName = printer.sanitizeText(option['displayName'])
-                                elif 'psk:DisplayName' in option:
+                                elif 'psk:DisplayName' in option and len(option['psk:DisplayName']) > 0:
                                     originOptionName = printer.sanitizeText(option['psk:DisplayName'])
                                 else:
                                     originOptionName = printer.sanitizeText(option['name'])
-                                optionName = originOptionName
+                                engOptionName = printer.sanitizeText(option['name'])
                                 internalOptionName = hashlib.sha256(printer.sanitizeText(option['name'])).hexdigest()[:7]
                                 if 'default' in option and option['default'] == True:
-                                    ppddetails += '*DefaultGCP_' + internalcapabilityName + ': ' + optionName + "\n"
-                                ppddetails += '*GCP_' + internalcapabilityName + ' ' + optionName + ':' + internalOptionName + "\n"
+                                    ppddetails += '*DefaultGCP_' + internalcapabilityName + ': ' + internalOptionName + "\n"
+                                ppddetails += '*GCP_' + internalcapabilityName + ' ' + internalOptionName + ':' + internalOptionName + "\n"
                                 
                                 # translation of option, allows use of 8 bit chars
-                                ppddetails += '*' + language + '.GCP_' + internalcapabilityName + ' ' + optionName + "/" + originOptionName + ": \"\"\n"
+                                ppddetails += '*' + language + '.GCP_' + internalcapabilityName + ' ' + internalOptionName + "/" + originOptionName + ": \"\"\n"
                                 
                             ppddetails += '*CloseUI: *GCP_' + internalcapabilityName + "\n"
                         elif capability['type'] == 'ParameterDef':
                             pass
-                            #print capabilityName
-                            #print capability['psf:MinValue'], capability['psf:MaxValue']
                         
                 ppddetails += """*DefaultFont: Courier
 *Font AvantGarde-Book: Standard "(1.05)" Standard ROM
@@ -202,7 +198,7 @@ elif sys.argv[1] == 'cat':
 *Font ZapfChancery-MediumItalic: Standard "(1.05)" Standard ROM
 *Font ZapfDingbats: Special "(001.005)" Special ROM
 *% End of cloudprint.ppd, 04169 bytes."""
-                print ppddetails.encode('latin1')
+                print ppddetails
                 sys.exit(0)
                 
         # no printers found
