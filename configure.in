@@ -5,10 +5,6 @@ AC_PREREQ([2.68])
 AC_INIT([cupscloudprint], [20130120], [src@niftiestsoftware.com])
 AC_ARG_VAR(cupsgroup, Name of the cups system group)
 AC_PROG_INSTALL
-AC_PATH_PROG(ppdcpath,ppdc,[missing])
-if test "${ppdcpath}" = "missing"; then
-	AC_MSG_ERROR([cannot find ppdc])
-fi
 
 AC_PATH_PROG(cupsconfpath,cups-config,[missing])
 if test "${cupsconfpath}" = "missing"; then

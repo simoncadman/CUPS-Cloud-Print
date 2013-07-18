@@ -5,7 +5,6 @@ cupsdriver = ${DESTDIR}@cupsserverpath@/driver/
 cupsbackend = ${DESTDIR}@cupsserverpath@/backend/
 cupsmodel = ${DESTDIR}@cupsdatapath@/model/
 cupsgroup = @cupsgroup@
-ppdcpath = @ppdcpath@
 
 all: backend.py
 

@@ -7,7 +7,6 @@ CATEGORIES=	print
 MAINTAINER=	src@niftiestsoftware.com
 COMMENT=	Google Cloud Print driver for CUPS
 
-BUILD_DEPENDS=	ppdc:${PORTSDIR}/print/cups
 RUN_DEPENDS=	cups:${PORTSDIR}/print/cups\
 		ps2pdf:${PORTSDIR}/print/ghostscript9-nox11\
 		${PYTHON_SITELIBDIR}/cups.so:${PORTSDIR}/print/py-cups\

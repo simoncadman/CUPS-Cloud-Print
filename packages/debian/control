@@ -2,7 +2,7 @@ Source: cupscloudprint
 Section: net
 Priority: extra
 Maintainer: simon cadman <src@niftiestsoftware.com>
-Build-Depends: debhelper (>= 8.0.0), autotools-dev, cups-ppdc, libcups2-dev
+Build-Depends: debhelper (>= 8.0.0), autotools-dev, libcups2-dev
 Standards-Version: 3.9.2
 Homepage: http://ccp.niftiestsoftware.com/
 Vcs-Git: git://github.com/simoncadman/CUPS-Cloud-Print.git
