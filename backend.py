@@ -60,9 +60,9 @@ if __name__ == '__main__': # pragma: no cover
     print(getBackendDescription())
   
     try:
-      libpath = "/usr/lib/cloudprint-cups/"
+      libpath = "/usr/local/lib/cloudprint-cups/"
       if not os.path.exists( libpath  ):
-  	  libpath = "/usr/local/lib/cloudprint-cups"
+          libpath = "/usr/lib/cloudprint-cups"
       sys.path.insert(0, libpath)
       from auth import Auth
       from printer import Printer

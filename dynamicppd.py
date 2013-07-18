@@ -16,9 +16,9 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import sys, os, hashlib, locale
-libpath = "/usr/lib/cloudprint-cups/"
+libpath = "/usr/local/lib/cloudprint-cups/"
 if not os.path.exists( libpath  ):
-    libpath = "/usr/local/lib/cloudprint-cups"
+    libpath = "/usr/lib/cloudprint-cups"
 sys.path.insert(0, libpath)
 
 from auth import Auth
