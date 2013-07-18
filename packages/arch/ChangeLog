@@ -1,3 +1,18 @@
+2013-07-18 Simon Cadman <src@niftiestsoftware.com>
+
+        * 20130718 :
+          New: PDF now supplied to CCP via CUPS, increases printing speed.
+          New: Default to A4 paper size in countries that use A4 paper.
+          Fix: Use utf8 output for ppd, use internal option and capability hashes for names to prevent errors - should fix a lot of errors related to non-ASCII chars in capabilities.
+          Fix: Removed redundant ppdc dependencies.
+          Fix: Removed old PPD files, as no longer used.
+          Fix: Optimise PDF generated for printing.
+          Fix: Only ask once per account for prefix.
+          Fix: CUPS Backend etc now use source install by default.
+          Fix: Custom printer name should now work.
+          Fix: Fixed final warnings in PPD.
+          Fix: Add translations into cups ppd.
+
 2013-06-08 Simon Cadman <src@niftiestsoftware.com>
 
         * 20130608 :
