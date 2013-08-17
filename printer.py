@@ -290,13 +290,18 @@ class Printer:
             # find item name from hashes
             details = self.getPrinterDetails( gcpid )
             fulldetails = details['printers'][0]
+            gcpoption = ""
             for capability in fulldetails['capabilities']:
                 if hashname == hashlib.sha256(self.sanitizeText(capability['name'])).hexdigest()[:7]:
                     gcpname = capability['name']
+                    for option in capability['options']:
+                        if attr.value == hashlib.sha256(self.sanitizeText(option['name'])).hexdigest()[:7]:
+                            gcpoption = option['name']
+                            break
                     break
             
             # hardcoded to feature type temporarily
-            capabilities['capabilities'].append( { 'type' : 'Feature', 'name' : gcpname, 'options' : [ { 'name' : attr.value.replace('_',' ') } ] } )
+            capabilities['capabilities'].append( { 'type' : 'Feature', 'name' : gcpname, 'options' : [ { 'name' : gcpoption } ] } )
     return capabilities
       
   def submitJob(self, printerid, jobtype, jobfile, jobname, printername ):
