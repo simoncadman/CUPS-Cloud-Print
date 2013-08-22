@@ -19,8 +19,8 @@ import sys
 from auth import Auth
 from printer import Printer
 
-if ( len(sys.argv) < 5 ):
-  sys.stderr.write("ERROR: Usage: " + sys.argv[0] + " pdf-file page-title printer-uri cups-printer-name\n")
+if ( len(sys.argv) < 6 ):
+  sys.stderr.write("ERROR: Usage: " + sys.argv[0] + " pdf-file page-title printer-uri cups-printer-name options\n")
   sys.exit(1)
 
 requestors, storage = Auth.SetupAuth(False)
@@ -32,7 +32,7 @@ if printerid == None:
   print("ERROR: Printer '" + sys.argv[3] + "' not found")
   sys.exit(1)
 
-if printer.submitJob(printerid, 'pdf', sys.argv[1], sys.argv[2], sys.argv[4] ):
+if printer.submitJob(printerid, 'pdf', sys.argv[1], sys.argv[2], sys.argv[4], sys.argv[5] ):
   print("INFO: Successfully printed")
   sys.exit(0)
 else:

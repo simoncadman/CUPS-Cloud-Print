@@ -266,31 +266,40 @@ class Printer:
       lines.append('')  # blank line
       return self.CRLF.join(lines)
   
-  def getCapabilities ( self, gcpid, cupsprintername ) :
+  def getCapabilities ( self, gcpid, cupsprintername, overrideoptionsstring ) :
     """Gets capabilities of printer and maps them against list
 
     Args:
       gcpid: printer id from google
       cupsprintername: name of the printer in cups
+      overrideoptionsstring: override for print job
     Returns:
       List of capabilities
     """
+    overrideoptions = overrideoptionsstring.split(' ')
     import cups
     connection = cups.Connection()
     cupsprinters = connection.getPrinters()
     capabilities = { "capabilities" : [] }
-    
+    overridecapabilities = {}
+    for optiontext in overrideoptions:
+        if '=' in optiontext :
+            optionparts = optiontext.split('=')
+            option = optionparts[0]
+            value = optionparts[1]
+            overridecapabilities[option] = value
+            
     attrs = cups.PPD(connection.getPPD(cupsprintername)).attributes
     for attr in attrs:
         if attr.name.startswith('DefaultGCP_'):
             # gcp setting, reverse back to GCP capability
-            gcpname = ""
+            gcpname = None
             hashname = attr.name.replace('DefaultGCP_', '')
             
             # find item name from hashes
             details = self.getPrinterDetails( gcpid )
             fulldetails = details['printers'][0]
-            gcpoption = ""
+            gcpoption = None
             for capability in fulldetails['capabilities']:
                 if hashname == hashlib.sha256(self.sanitizeText(capability['name'])).hexdigest()[:7]:
                     gcpname = capability['name']
@@ -298,13 +307,23 @@ class Printer:
                         if attr.value == hashlib.sha256(self.sanitizeText(option['name'])).hexdigest()[:7]:
                             gcpoption = option['name']
                             break
+                    
+                    for overridecapability in overridecapabilities:
+                        if 'Default' + overridecapability == attr.name:
+                            selectedoption = overridecapabilities[overridecapability]
+                            for option in capability['options']:
+                                if selectedoption == hashlib.sha256(self.sanitizeText(option['name'])).hexdigest()[:7]:
+                                    gcpoption = option['name']
+                                    break
+                            break
                     break
             
             # hardcoded to feature type temporarily
-            capabilities['capabilities'].append( { 'type' : 'Feature', 'name' : gcpname, 'options' : [ { 'name' : gcpoption } ] } )
+            if gcpname != None and gcpoption != None:
+                capabilities['capabilities'].append( { 'type' : 'Feature', 'name' : gcpname, 'options' : [ { 'name' : gcpoption } ] } )
     return capabilities
       
-  def submitJob(self, printerid, jobtype, jobfile, jobname, printername ):
+  def submitJob(self, printerid, jobtype, jobfile, jobname, printername, options ):
     """Submit a job to printerid with content of dataUrl.
 
     Args:
@@ -313,6 +332,7 @@ class Printer:
       jobfile: string, points to source for job. Could be a pathname or id string.
       jobname: string, name of the print job ( usually page name ).
       printername: string, Google Cloud Print printer name.
+      options: string, key-value pair of options from print job.
     Returns:
       boolean: True = submitted, False = errors.
     """
@@ -350,7 +370,7 @@ class Printer:
       ('title', title),
       ('content', content[jobtype]),
       ('contentType', content_type[jobtype]),
-      ('capabilities', json.dumps( self.getCapabilities(printerid, printername) ) )
+      ('capabilities', json.dumps( self.getCapabilities(printerid, printername, options ) ) )
     ]
     edata = ""
     if jobtype in ['pdf', 'jpeg', 'png']:
