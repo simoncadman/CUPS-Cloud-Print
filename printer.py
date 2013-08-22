@@ -323,7 +323,7 @@ class Printer:
                 capabilities['capabilities'].append( { 'type' : 'Feature', 'name' : gcpname, 'options' : [ { 'name' : gcpoption } ] } )
     return capabilities
       
-  def submitJob(self, printerid, jobtype, jobfile, jobname, printername, options ):
+  def submitJob(self, printerid, jobtype, jobfile, jobname, printername, options="" ):
     """Submit a job to printerid with content of dataUrl.
 
     Args:
