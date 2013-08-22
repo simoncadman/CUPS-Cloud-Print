@@ -372,6 +372,7 @@ class Printer:
       ('contentType', content_type[jobtype]),
       ('capabilities', json.dumps( self.getCapabilities(printerid, printername, options ) ) )
     ]
+    print('DEBUG: Capability headers are: %s', headers[4])
     edata = ""
     if jobtype in ['pdf', 'jpeg', 'png']:
       edata = self.encodeMultiPart(headers, file_type=content_type[jobtype])
