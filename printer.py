@@ -382,9 +382,9 @@ class Printer:
       if responseobj['success'] == True:
 	return True
       else:
-	print('ERROR: Print job %s failed with %s', jobtype, responseobj['message'])
+	print('ERROR: Error response from Cloud Print for type %s: %s' % ( jobtype, responseobj['message'] ) )
 	return False
 	
     except Exception, error_msg: # pragma: no cover
-      print('ERROR: Print job %s failed with %s', jobtype, error_msg)
+      print('ERROR: Print job %s failed with %s' % ( jobtype, error_msg ))
       return False
