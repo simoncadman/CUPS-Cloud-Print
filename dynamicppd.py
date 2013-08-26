@@ -100,12 +100,16 @@ elif sys.argv[1] == 'cat':
 *PageSize A4.Fullbleed/A4: "<</PageSize[595 842]/ImagingBBox null>>setpagedevice"
 *""" + language + """.PageSize A4.Fullbleed/A4: ""
 *CloseUI: *PageSize
-*OpenUI *PageRegion/Media Size: PickOne
+*OpenUI *PageRegion/Page Region: PickOne
+*""" + language + """.Translation PageRegion/Page Region: ""
 *OrderDependency: 10 AnySetup *PageRegion
 *DefaultPageRegion: """ + defaultpapertype + """.Fullbleed
 *PageRegion Letter.Fullbleed/US Letter: "<</PageSize[612 792]/ImagingBBox null>>setpagedevice"
+*""" + language + """.PageRegion Letter.Fullbleed/US Letter: ""
 *PageRegion Legal.Fullbleed/US Legal: "<</PageSize[612 1008]/ImagingBBox null>>setpagedevice"
+*""" + language + """.PageRegion Legal.Fullbleed/US Legal: ""
 *PageRegion A4.Fullbleed/A4: "<</PageSize[595 842]/ImagingBBox null>>setpagedevice"
+*""" + language + """.PageRegion A4.Fullbleed/A4: ""
 *CloseUI: *PageRegion
 *DefaultImageableArea: """ + defaultpapertype + """.Fullbleed
 *ImageableArea Letter.Fullbleed/US Letter: "0 0 612 792"
