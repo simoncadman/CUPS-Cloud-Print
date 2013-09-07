@@ -301,10 +301,10 @@ class Printer:
             fulldetails = details['printers'][0]
             gcpoption = None
             for capability in fulldetails['capabilities']:
-                if hashname == hashlib.sha256(self.sanitizeText(capability['name'])).hexdigest()[:7]:
+                if hashname == self.getInternalName(capability['name']):
                     gcpname = capability['name']
                     for option in capability['options']:
-                        if attr.value == hashlib.sha256(self.sanitizeText(option['name'])).hexdigest()[:7]:
+                        if attr.value == self.getInternalName(option['name']):
                             gcpoption = option['name']
                             break
                     
@@ -312,7 +312,7 @@ class Printer:
                         if 'Default' + overridecapability == attr.name:
                             selectedoption = overridecapabilities[overridecapability]
                             for option in capability['options']:
-                                if selectedoption == hashlib.sha256(self.sanitizeText(option['name'])).hexdigest()[:7]:
+                                if selectedoption == self.getInternalName(option['name']):
                                     gcpoption = option['name']
                                     break
                             break
@@ -388,3 +388,6 @@ class Printer:
     except Exception, error_msg: # pragma: no cover
       print('ERROR: Print job %s failed with %s' % ( jobtype, error_msg ))
       return False
+
+  def getInternalName ( self, name ) :
+      return hashlib.sha256(self.sanitizeText(name)).hexdigest()[:7]

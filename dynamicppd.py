@@ -15,7 +15,7 @@
 #    You should have received a copy of the GNU General Public License    
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-import sys, os, hashlib, locale
+import sys, os, locale
 libpath = "/usr/local/lib/cloudprint-cups/"
 if not os.path.exists( libpath  ):
     libpath = "/usr/lib/cloudprint-cups"
@@ -128,7 +128,7 @@ elif sys.argv[1] == 'cat':
                 if 'capabilities' in foundprinter['fulldetails']:
                     for capability in foundprinter['fulldetails']['capabilities']:
                         originCapabilityName = None
-                        internalcapabilityName = hashlib.sha256(printer.sanitizeText(capability['name'])).hexdigest()[:7]
+                        internalcapabilityName = printer.getInternalName(capability['name'])
                         
                         if 'displayName' in capability and len(capability['displayName']) > 0:
                             originCapabilityName = printer.sanitizeText(capability['displayName'])
@@ -153,7 +153,7 @@ elif sys.argv[1] == 'cat':
                                 else:
                                     originOptionName = printer.sanitizeText(option['name'])
                                 engOptionName = printer.sanitizeText(option['name'])
-                                internalOptionName = hashlib.sha256(printer.sanitizeText(option['name'])).hexdigest()[:7]
+                                internalOptionName = printer.getInternalName(option['name'])
                                 if 'default' in option and option['default'] == True:
                                     ppddetails += '*DefaultGCP_' + internalcapabilityName + ': ' + internalOptionName + "\n"
                                 ppddetails += '*GCP_' + internalcapabilityName + ' ' + internalOptionName + ':' + internalOptionName + "\n"
