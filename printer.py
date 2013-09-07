@@ -301,10 +301,10 @@ class Printer:
             fulldetails = details['printers'][0]
             gcpoption = None
             for capability in fulldetails['capabilities']:
-                if hashname == self.getInternalName(capability['name']):
+                if hashname == self.getInternalName(capability):
                     gcpname = capability['name']
                     for option in capability['options']:
-                        if attr.value == self.getInternalName(option['name']):
+                        if attr.value == self.getInternalName(option):
                             gcpoption = option['name']
                             break
                     
@@ -312,7 +312,7 @@ class Printer:
                         if 'Default' + overridecapability == attr.name:
                             selectedoption = overridecapabilities[overridecapability]
                             for option in capability['options']:
-                                if selectedoption == self.getInternalName(option['name']):
+                                if selectedoption == self.getInternalName(option):
                                     gcpoption = option['name']
                                     break
                             break
@@ -389,5 +389,19 @@ class Printer:
       print('ERROR: Print job %s failed with %s' % ( jobtype, error_msg ))
       return False
 
-  def getInternalName ( self, name ) :
-      return hashlib.sha256(self.sanitizeText(name)).hexdigest()[:7]
+  def getInternalName ( self, details ) :
+      
+      if 'displayName' in details and len(details['displayName']) > 0:
+        name = details['displayName']
+      elif 'psk:DisplayName' in details and len(details['psk:DisplayName']) > 0:
+        name = details['psk:DisplayName']
+      else:
+        name = details['name']
+      
+      sanitisedName = self.sanitizeText(name)
+      
+      # only sanitise, no hash
+      if len(sanitisedName) <= 30 and sanitisedName.encode("ascii","ignore") == sanitisedName:
+          return sanitisedName
+      
+      return hashlib.sha256(sanitisedName).hexdigest()[:7]
