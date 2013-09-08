@@ -403,6 +403,7 @@ class Printer:
           # capability
           fixedNameMap['ns1:Colors']         = "ColorModel"
           fixedNameMap['ns1:PrintQualities'] = "OutputMode"
+          fixedNameMap['ns1:InputBins']      = "InputSlot"
           
       for itemName in fixedNameMap:  
         if details['name'] == itemName:
