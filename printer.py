@@ -392,6 +392,7 @@ class Printer:
   def getInternalName ( self, details, internalType, capabilityName = None ) :
       
       fixedNameMap = {}
+      reservedWords = { 'Duplex' }
       
       # use fixed options for options we recognise
       if internalType == "option":
@@ -418,8 +419,11 @@ class Printer:
       
       sanitisedName = self.sanitizeText(name)
       
+      if sanitisedName in reservedWords:
+          sanitisedName = 'GCP_' + sanitisedName
+      
       # only sanitise, no hash
-      if len(sanitisedName) <= 30 and sanitisedName.encode("ascii","ignore") == sanitisedName:
+      if len(sanitisedName) <= 30 and sanitisedName.decode("utf-8", 'ignore').encode("ascii","ignore") == sanitisedName:
           return sanitisedName
       
       return hashlib.sha256(sanitisedName).hexdigest()[:7]
