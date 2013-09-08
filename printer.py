@@ -401,7 +401,8 @@ class Printer:
           pass
       else:
           # capability
-          fixedNameMap['ns1:Colors'] = "ColorModel";
+          fixedNameMap['ns1:Colors']         = "ColorModel"
+          fixedNameMap['ns1:PrintQualities'] = "OutputMode"
           
       for itemName in fixedNameMap:  
         if details['name'] == itemName:
