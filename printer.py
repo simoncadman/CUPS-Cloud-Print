@@ -291,10 +291,10 @@ class Printer:
             
     attrs = cups.PPD(connection.getPPD(cupsprintername)).attributes
     for attr in attrs:
-        if attr.name.startswith('DefaultGCP_'):
+        if attr.name.startswith('Default'):
             # gcp setting, reverse back to GCP capability
             gcpname = None
-            hashname = attr.name.replace('DefaultGCP_', '')
+            hashname = attr.name.replace('Default', '')
             
             # find item name from hashes
             details = self.getPrinterDetails( gcpid )

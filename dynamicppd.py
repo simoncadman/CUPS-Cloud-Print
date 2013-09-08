@@ -139,10 +139,10 @@ elif sys.argv[1] == 'cat':
                             
                         engCapabilityName = printer.sanitizeText(capability['name'])
                         if capability['type'] == 'Feature':
-                            ppddetails += '*OpenUI *GCP_' + internalcapabilityName + '/' + internalcapabilityName +': PickOne' + "\n"
+                            ppddetails += '*OpenUI *' + internalcapabilityName + '/' + internalcapabilityName +': PickOne' + "\n"
                             
                             # translation of capability, allows use of 8 bit chars
-                            ppddetails += '*' + language + '.Translation' + ' GCP_' + internalcapabilityName + '/' + originCapabilityName + ": \"\"\n"
+                            ppddetails += '*' + language + '.Translation' + ' ' + internalcapabilityName + '/' + originCapabilityName + ": \"\"\n"
                             
                             for option in capability['options']:
                                 originOptionName = None
@@ -155,13 +155,13 @@ elif sys.argv[1] == 'cat':
                                 engOptionName = printer.sanitizeText(option['name'])
                                 internalOptionName = printer.getInternalName(option, 'option', capability['name'])
                                 if 'default' in option and option['default'] == True:
-                                    ppddetails += '*DefaultGCP_' + internalcapabilityName + ': ' + internalOptionName + "\n"
-                                ppddetails += '*GCP_' + internalcapabilityName + ' ' + internalOptionName + ':' + internalOptionName + "\n"
+                                    ppddetails += '*Default' + internalcapabilityName + ': ' + internalOptionName + "\n"
+                                ppddetails += '*' + internalcapabilityName + ' ' + internalOptionName + ':' + internalOptionName + "\n"
                                 
                                 # translation of option, allows use of 8 bit chars
-                                ppddetails += '*' + language + '.GCP_' + internalcapabilityName + ' ' + internalOptionName + "/" + originOptionName + ": \"\"\n"
+                                ppddetails += '*' + language + '.' + internalcapabilityName + ' ' + internalOptionName + "/" + originOptionName + ": \"\"\n"
                                 
-                            ppddetails += '*CloseUI: *GCP_' + internalcapabilityName + "\n"
+                            ppddetails += '*CloseUI: *' + internalcapabilityName + "\n"
                         elif capability['type'] == 'ParameterDef':
                             pass
                         
