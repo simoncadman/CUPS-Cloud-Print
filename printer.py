@@ -300,19 +300,24 @@ class Printer:
             details = self.getPrinterDetails( gcpid )
             fulldetails = details['printers'][0]
             gcpoption = None
+            addedCapabilities = []
             for capability in fulldetails['capabilities']:
                 if hashname == self.getInternalName(capability, 'capability'):
                     gcpname = capability['name']
                     for option in capability['options']:
-                        if attr.value == self.getInternalName(option, 'option', gcpname):
+                        internalCapability = self.getInternalName(option, 'option', gcpname, addedCapabilities)
+                        addedCapabilities.append(internalCapability)
+                        if attr.value == internalCapability:
                             gcpoption = option['name']
                             break
-                    
+                    addedOptions = []
                     for overridecapability in overridecapabilities:
                         if 'Default' + overridecapability == attr.name:
                             selectedoption = overridecapabilities[overridecapability]
                             for option in capability['options']:
-                                if selectedoption == self.getInternalName(option, 'option', gcpname):
+                                internalOption = self.getInternalName(option, 'option', gcpname, addedOptions)
+                                addedOptions.append(internalOption)
+                                if selectedoption == internalOption:
                                     gcpoption = option['name']
                                     break
                             break
@@ -389,8 +394,8 @@ class Printer:
       print('ERROR: Print job %s failed with %s' % ( jobtype, error_msg ))
       return False
 
-  def getInternalName ( self, details, internalType, capabilityName = None ) :
-      
+  def getInternalName ( self, details, internalType, capabilityName = None, existingList = [] ) :
+      returnValue = None
       fixedNameMap = {}
       reservedWords = [ 'Duplex', 'Resolution' ]
       
@@ -408,7 +413,8 @@ class Printer:
           
       for itemName in fixedNameMap:
         if details['name'] == itemName:
-            return fixedNameMap[itemName]
+            returnValue = fixedNameMap[itemName]
+            break
         
       if 'displayName' in details and len(details['displayName']) > 0:
         name = details['displayName']
@@ -423,7 +429,20 @@ class Printer:
           sanitisedName = 'GCP_' + sanitisedName
       
       # only sanitise, no hash
-      if len(sanitisedName) <= 30 and sanitisedName.decode("utf-8", 'ignore').encode("ascii","ignore") == sanitisedName:
-          return sanitisedName
+      if returnValue == None and len(sanitisedName) <= 30 and sanitisedName.decode("utf-8", 'ignore').encode("ascii","ignore") == sanitisedName:
+          returnValue = sanitisedName
       
-      return hashlib.sha256(sanitisedName).hexdigest()[:7]
+      if returnValue == None:
+        returnValue = hashlib.sha256(sanitisedName).hexdigest()[:7]
+      
+      if returnValue not in existingList:
+        return returnValue
+    
+      # max 100 rotations, prevent infinite loop
+      for i in range(1,100):
+          if returnValue in existingList:
+            returnValue += '_' + str(i)
+      
+      # TODO: need to error if limit hit, or run out of chars allowed etc
+      
+      return returnValue

@@ -126,9 +126,12 @@ elif sys.argv[1] == 'cat':
                         foundprinter['fulldetails'] = ast.literal_eval(f.read())
                         
                 if 'capabilities' in foundprinter['fulldetails']:
+                    addedCapabilities = []
+                    
                     for capability in foundprinter['fulldetails']['capabilities']:
                         originCapabilityName = None
-                        internalcapabilityName = printer.getInternalName(capability, 'capability')
+                        internalcapabilityName = printer.getInternalName(capability, 'capability', addedCapabilities)
+                        addedCapabilities.append(internalcapabilityName)
                         
                         if 'displayName' in capability and len(capability['displayName']) > 0:
                             originCapabilityName = printer.sanitizeText(capability['displayName'])
@@ -144,6 +147,8 @@ elif sys.argv[1] == 'cat':
                             # translation of capability, allows use of 8 bit chars
                             ppddetails += '*' + language + '.Translation' + ' ' + internalcapabilityName + '/' + originCapabilityName + ": \"\"\n"
                             
+                            addedOptions = []
+                            
                             for option in capability['options']:
                                 originOptionName = None
                                 if 'displayName' in option and len(option['displayName']) > 0:
@@ -153,7 +158,8 @@ elif sys.argv[1] == 'cat':
                                 else:
                                     originOptionName = printer.sanitizeText(option['name'])
                                 engOptionName = printer.sanitizeText(option['name'])
-                                internalOptionName = printer.getInternalName(option, 'option', capability['name'])
+                                internalOptionName = printer.getInternalName(option, 'option', capability['name'], addedOptions)
+                                addedOptions.append(internalOptionName)
                                 if 'default' in option and option['default'] == True:
                                     ppddetails += '*Default' + internalcapabilityName + ': ' + internalOptionName + "\n"
                                 ppddetails += '*' + internalcapabilityName + ' ' + internalOptionName + ':' + internalOptionName + "\n"
