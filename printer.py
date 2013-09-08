@@ -392,7 +392,7 @@ class Printer:
   def getInternalName ( self, details, internalType, capabilityName = None ) :
       
       fixedNameMap = {}
-      reservedWords = { 'Duplex' }
+      reservedWords = [ 'Duplex' ]
       
       # use fixed options for options we recognise
       if internalType == "option":
