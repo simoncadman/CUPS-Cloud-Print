@@ -79,7 +79,7 @@ elif sys.argv[1] == 'cat':
 *ModelName: "Google Cloud Print"
 *ShortNickName: "Google Cloud Print"
 *NickName: "Google Cloud Print, 1.0"
-*PSVersion: "(1) 0"
+*PSVersion: "(3010.000) 550"
 *LanguageLevel: "3"
 *ColorDevice: True
 *DefaultColorSpace: RGB
@@ -128,7 +128,7 @@ elif sys.argv[1] == 'cat':
                 if 'capabilities' in foundprinter['fulldetails']:
                     for capability in foundprinter['fulldetails']['capabilities']:
                         originCapabilityName = None
-                        internalcapabilityName = printer.getInternalName(capability)
+                        internalcapabilityName = printer.getInternalName(capability, 'capability')
                         
                         if 'displayName' in capability and len(capability['displayName']) > 0:
                             originCapabilityName = printer.sanitizeText(capability['displayName'])
@@ -153,7 +153,7 @@ elif sys.argv[1] == 'cat':
                                 else:
                                     originOptionName = printer.sanitizeText(option['name'])
                                 engOptionName = printer.sanitizeText(option['name'])
-                                internalOptionName = printer.getInternalName(option)
+                                internalOptionName = printer.getInternalName(option, 'option', capability['name'])
                                 if 'default' in option and option['default'] == True:
                                     ppddetails += '*DefaultGCP_' + internalcapabilityName + ': ' + internalOptionName + "\n"
                                 ppddetails += '*GCP_' + internalcapabilityName + ' ' + internalOptionName + ':' + internalOptionName + "\n"

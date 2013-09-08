@@ -301,10 +301,10 @@ class Printer:
             fulldetails = details['printers'][0]
             gcpoption = None
             for capability in fulldetails['capabilities']:
-                if hashname == self.getInternalName(capability):
+                if hashname == self.getInternalName(capability, 'capability'):
                     gcpname = capability['name']
                     for option in capability['options']:
-                        if attr.value == self.getInternalName(option):
+                        if attr.value == self.getInternalName(option, 'option', gcpname):
                             gcpoption = option['name']
                             break
                     
@@ -312,7 +312,7 @@ class Printer:
                         if 'Default' + overridecapability == attr.name:
                             selectedoption = overridecapabilities[overridecapability]
                             for option in capability['options']:
-                                if selectedoption == self.getInternalName(option):
+                                if selectedoption == self.getInternalName(option, 'option', gcpname):
                                     gcpoption = option['name']
                                     break
                             break
@@ -389,8 +389,24 @@ class Printer:
       print('ERROR: Print job %s failed with %s' % ( jobtype, error_msg ))
       return False
 
-  def getInternalName ( self, details ) :
+  def getInternalName ( self, details, internalType, capabilityName = None ) :
       
+      fixedNameMap = {}
+      
+      # use fixed options for options we recognise
+      if internalType == "option":
+          # option
+          #if capabilityName == "ns1:Colors":
+          #  fixedNameMap['Black'] = "Black"
+          pass
+      else:
+          # capability
+          fixedNameMap['ns1:Colors'] = "ColorModel";
+          
+      for itemName in fixedNameMap:  
+        if details['name'] == itemName:
+            return fixedNameMap[itemName]
+        
       if 'displayName' in details and len(details['displayName']) > 0:
         name = details['displayName']
       elif 'psk:DisplayName' in details and len(details['psk:DisplayName']) > 0:
