@@ -40,6 +40,12 @@ Print a test page, to confirm it is working.
 
 Assuming the test page prints correctly, installation is complete.
 
+DEVELOPING
+==========
+
+Before commiting to the git repository you should set up the pre-commit hook, this ensures the version numbers in the scripts are updated:
+
+ln -s ../../pre-commit.py .git/hooks/pre-commit
 
 Copyright and Trademark Information
 ===================================
