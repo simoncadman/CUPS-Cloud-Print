@@ -15,7 +15,7 @@
 #    You should have received a copy of the GNU General Public License    
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-import fileinput, re, sys, glob
+import fileinput, re, sys, glob, subprocess
 from datetime import date
 
 searchRegex = 'CCPVersion = "(\d)+"'
@@ -37,3 +37,8 @@ for file in files:
             
         sys.stdout.write(line)
         
+    p = subprocess.Popen(["git", "add", file], stdout=subprocess.PIPE)
+    output = p.communicate()[0]
+    result = p.returncode
+    if result != 0:
+        sys.exit(result)
