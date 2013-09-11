@@ -16,6 +16,13 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import sys, os, subprocess
+
+if len(sys.argv) == 2 and sys.argv[1] == 'version':
+    # line below is replaced on commit
+    CCPVersion = "20130911"
+    print "CUPS Cloud Print Issue Reporting Script Version " + CCPVersion
+    sys.exit(0)
+
 libpath = "/usr/local/lib/cloudprint-cups/"
 if not os.path.exists( libpath  ):
     libpath = "/usr/lib/cloudprint-cups"

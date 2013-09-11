@@ -16,6 +16,13 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import sys, os, locale
+
+if len(sys.argv) == 2 and sys.argv[1] == 'version':
+    # line below is replaced on commit
+    CCPVersion = "20130911"
+    print "CUPS Cloud Print Dynamic PPD Generator Version " + CCPVersion
+    sys.exit(0)
+
 libpath = "/usr/local/lib/cloudprint-cups/"
 if not os.path.exists( libpath  ):
     libpath = "/usr/lib/cloudprint-cups"
@@ -25,7 +32,7 @@ from auth import Auth
 from printer import Printer
 
 def showUsage():
-    sys.stderr.write("ERROR: Usage: " + sys.argv[0] + " [list|cat drivername]\n")
+    sys.stderr.write("ERROR: Usage: " + sys.argv[0] + " [list|version|cat drivername]\n")
     sys.exit(1)
         
 requestors, storage = Auth.SetupAuth(False)

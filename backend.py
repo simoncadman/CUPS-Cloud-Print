@@ -18,6 +18,12 @@
 import sys, os, subprocess, mimetypes
 progname = 'cloudprint'
 
+if len(sys.argv) == 2 and sys.argv[1] == 'version':
+    # line below is replaced on commit
+    CCPVersion = "20130911"
+    print "CUPS Cloud Print CUPS Backend Version " + CCPVersion
+    sys.exit(0)
+
 def fileIsPDF ( filename ) :
   """Check if a file is or isnt a PDF
 

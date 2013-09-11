@@ -19,6 +19,12 @@ import sys
 from auth import Auth
 from printer import Printer
 
+if len(sys.argv) == 2 and sys.argv[1] == 'version':
+    # line below is replaced on commit
+    CCPVersion = "20130911"
+    print "CUPS Cloud Print Printer Lister Version " + CCPVersion
+    sys.exit(0)
+
 requestors, storage = Auth.SetupAuth(True)
 printer = Printer(requestors)
 printers = printer.getPrinters()

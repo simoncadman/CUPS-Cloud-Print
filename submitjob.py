@@ -19,6 +19,12 @@ import sys
 from auth import Auth
 from printer import Printer
 
+if len(sys.argv) == 2 and sys.argv[1] == 'version':
+    # line below is replaced on commit
+    CCPVersion = "20130911"
+    print "CUPS Cloud Print Submit Job Version " + CCPVersion
+    sys.exit(0)
+    
 if ( len(sys.argv) < 6 ):
   sys.stderr.write("ERROR: Usage: " + sys.argv[0] + " pdf-file page-title printer-uri cups-printer-name options\n")
   sys.exit(1)

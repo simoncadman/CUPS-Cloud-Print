@@ -15,8 +15,14 @@
 #    You should have received a copy of the GNU General Public License    
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-import cups, os, json
+import cups, os, json, sys
 from auth import Auth
+
+if len(sys.argv) == 2 and sys.argv[1] == 'version':
+    # line below is replaced on commit
+    CCPVersion = "20130911"
+    print "CUPS Cloud Print Delete Account Script Version " + CCPVersion
+    sys.exit(0)
 
 while True:
   result = Auth.SetupAuth(False)
