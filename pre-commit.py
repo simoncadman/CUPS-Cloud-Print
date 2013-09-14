@@ -16,10 +16,10 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import fileinput, re, sys, glob, subprocess
-from datetime import date
+from datetime import datetime
 
-searchRegex = 'CCPVersion = "(\d)+"'
-replaceValue = 'CCPVersion = "' + date.today().strftime('%Y%m%d') + '"'
+searchRegex = 'CCPVersion = "(\d)+ (\d){6}"'
+replaceValue = 'CCPVersion = "' + datetime.utcnow().strftime('%Y%m%d %H%M%S') + '"'
 
 files = glob.glob('*.py')
 
