@@ -9,6 +9,7 @@ lib/cloudprint-cups/testfiles/NotPdf.txt
 lib/cloudprint-cups/testfiles/Test Page.pdf
 lib/cloudprint-cups/testfiles/Test Page.png
 lib/cloudprint-cups/testfiles/testppd.ppd
+lib/cloudprint-cups/testfiles/capabilitylist
 lib/cloudprint-cups/auth.py
 lib/cloudprint-cups/backend.py
 lib/cloudprint-cups/cloudprintrequestor.py

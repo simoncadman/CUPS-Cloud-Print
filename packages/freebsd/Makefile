@@ -1,7 +1,7 @@
 # $FreeBSD$
 
 PORTNAME=	cupscloudprint
-PORTVERSION=	20130718
+PORTVERSION=	20130914
 CATEGORIES=	print
 
 MAINTAINER=	src@niftiestsoftware.com
@@ -17,7 +17,7 @@ USE_PYTHON=	2.6-2.7
 GH_ACCOUNT=     simoncadman
 GH_PROJECT=     CUPS-Cloud-Print
 GH_TAGNAME=     ${PORTVERSION}
-GH_COMMIT=	0fcd7cb
+GH_COMMIT=	9c0d725
 
 GNU_CONFIGURE=	yes
 USE_PKGCONFIG=  build

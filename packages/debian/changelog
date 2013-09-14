@@ -1,3 +1,16 @@
+cupscloudprint (20130914-1) raring; urgency=low
+
+  * New: Use display name if available for generating values for ppd
+  * New: Added version param to scripts
+  * New: Added test cases and list of capabilities for testing internal name function
+  * Fix: Prevent duplicate options and capabilities being generated
+  * Fix: Post name of capability instead of internal hash, should fix issues with capabilities failing to work correctly
+  * Fix: Fixed displaying of errors from Google side ( eg when print proxy is down )
+  * Fix: Allow overriding print params per print job
+  * Change: Removed gcp_ prefix for capabilities ( unless conflicts with reserved words )
+
+ -- simon cadman <src@niftiestsoftware.com>  Sat, 14 Sep 2013 14:16:17 +0000
+
 cupscloudprint (20130718-1) raring; urgency=low
 
   * New: PDF now supplied to CCP via CUPS, increases printing speed.
