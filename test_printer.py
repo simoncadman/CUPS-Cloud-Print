@@ -90,6 +90,26 @@ def test_invalidRequest ( ) :
     testMock = MockRequestor()
     assert testMock.doRequest('thisrequestisinvalid') == None
 
+def test_internalName():
+    global printerItem
+    
+    internalCapabilityTests = []
+    
+    # generate test cases for each reserved word
+    #for word in printerItem.reservedCapabilityWords:
+    #    internalCapabilityTests.append( { 'name' : word } )
+    
+    # load test file and try all those
+    for filelineno, line in enumerate(open('testfiles/capabilitylist')):
+        internalCapabilityTests.append( { 'name' : line.decode("utf-8") } )
+    
+    for internalTest in internalCapabilityTests:
+        assert printerItem.getInternalName( internalTest, 'capability' ) not in printerItem.reservedCapabilityWords
+        assert ':' not in printerItem.getInternalName( internalTest, 'capability' )
+        assert ' ' not in printerItem.getInternalName( internalTest, 'capability' )
+        assert len(printerItem.getInternalName( internalTest, 'capability' )) <= 30
+        assert len(printerItem.getInternalName( internalTest, 'capability' )) >= 1
+
 def test_printers():
     global printerItem, requestors
     

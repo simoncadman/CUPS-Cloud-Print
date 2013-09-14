@@ -24,6 +24,14 @@ class Printer:
   requestors = None
   requestor = None
   cachedPrinterDetails = {}
+  reservedCapabilityWords = [ 
+                             'Duplex', 'Resolution', 'Attribute', 'Choice', 'ColorDevice', 'ColorModel', 'ColorProfile', 
+                             'Copyright', 'CustomMedia', 'Cutter', 'Darkness', 'DriverType', 'FileName', 'Filter',
+                             'Filter', 'Finishing', 'Font', 'Group', 'HWMargins', 'InputSlot', 'Installable',
+                             'LocAttribute', 'ManualCopies', 'Manufacturer', 'MaxSize', 'MediaSize', 'MediaType',
+                             'MinSize', 'ModelName', 'ModelNumber', 'Option', 'PCFileName', 'SimpleColorProfile',
+                             'Throughput', 'UIConstraints', 'VariablePaperSize', 'Version', 'Color'
+                            ]
   
   def __init__( self, requestors ):
     """Create an instance of Printer, with authorised requestor
@@ -397,7 +405,7 @@ class Printer:
   def getInternalName ( self, details, internalType, capabilityName = None, existingList = [] ) :
       returnValue = None
       fixedNameMap = {}
-      reservedWords = [ 'Duplex', 'Resolution' ]
+      reservedWords = self.reservedCapabilityWords
       
       # use fixed options for options we recognise
       if internalType == "option":
