@@ -1,6 +1,9 @@
 0Deg
 0rhit
 10
+10 x 15 Borderless
+10 x 15 cm
+10 x 20 cm
 1001
 1002
 1003
@@ -11,6 +14,8 @@
 1200dpi
 12x18
 12x18.FullBleed
+13 x 18 Borderless
+13 x 18 cm
 135Deg
 150ppi
 16Kai
@@ -26,7 +31,11 @@
 24
 2BitsPerPixel
 2Cassette
+2L
+2L Borderless
 2Tray
+3.5 x 5 Borderless
+3.5 x 5 in
 3001
 3002
 3003
@@ -34,6 +43,10 @@
 36
 3Tray
 3rhit
+4 x 6 Borderless
+4 x 6 in
+4 x 8 Borderless
+4 x 8 in
 4001
 4002
 4003
@@ -42,6 +55,8 @@
 4BitsPerPixel
 4Color
 4Tray
+5 x 7 Borderless
+5 x 7 in
 5Tray
 60
 600dpi
@@ -50,32 +65,50 @@
 8Kai.FullBleed
 90Deg
 90ppi
+A2 Baronial
 A3
 A3.FullBleed
 A4
+A4 Banner
+A4 Borderless
 A4.FullBleed
 A4.Fullbleed
 A5
+A5 Borderless
 A5.FullBleed
 A6
+A6 Card
+A6 Card Borderless
 A6.FullBleed
 Adobe PDF
 Auto
+Automatic
+Avery Business Cards
+Avery Labels
 B4
 B4.FullBleed
 B5
+B5 Borderless
 B5.FullBleed
 B6
 B6.FullBleed
+Best
+Better
 Bin1
 Black
 Blue
 Bond
 Business
+Business Cards
+CD/DVD Labels
 CMYK
 Canon LBP5100
+Card Stock
 Cardstock
 CenterW
+Chokei 3
+Chokei 4
+Chokei 40
 Cloud Print
 Clpsimulation1
 Clpsimulation2
@@ -88,6 +121,7 @@ ColorSpace
 Colored
 Colorimetric
 Confidential
+Copies:
 Copy
 Copyright
 CourierB
@@ -99,6 +133,7 @@ DetailBright
 DetailNormal
 DocServer
 DocServerPassword
+Draft
 Duplex
 DuplexNoTumble
 DuplexTumble
@@ -114,6 +149,14 @@ EnvC6.FullBleed
 EnvMonarch
 EnvMonarch.FullBleed
 Envelope
+Envelope #10
+Envelope #9
+Envelope 6 \xbe
+Envelope 7 \xbe
+Envelope B5
+Envelope C5
+Envelope C6
+Envelope DL
 Euroscale
 Everyone
 Executive
@@ -142,9 +185,11 @@ Finisher
 Folio
 Folio.FullBleed
 Full Name
+GDrive File Name
 GT-I9000
 GT-N7105
 Glossy
+Glossy Photo Paper
 GovernmentLG
 GovernmentLG.FullBleed
 Gray
@@ -153,17 +198,28 @@ Grey_CMY
 Grey_K
 HP LaserJet CM1415fnw
 HP Universal Printing PCL 5
+Hagaki
+Hagaki Borderless
 HelveticaB
 ICMprocess
+Index Card
+Inkjet Paper
 InnerTray2
 InputSlot
 Installed
+Iron-on Transfer
 JapanColor
 JobType
 KCyan
 KMagenta
 KYellow
+Kakugata 3
+Kakugata 4
+Kakugata 5
+Kakugata 6
 Kylie Wheeler
+L
+L  Borderless
 LCT
 Labels
 Landscape
@@ -174,13 +230,18 @@ Left3
 Left4
 LeftW
 Legal
+Legal Borderless
 Legal.FullBleed
 Legal.Fullbleed
 Letter
+Letter Banner
+Letter Borderless
 Letter.FullBleed
 Letter.Fullbleed
 Letterhead
 Lexmark 4900 Series (Network)
+Lexmark PerfectFinish Photo Paper
+Lexmark Photo Paper
 LockedPrint
 LockedPrintPassword
 M135Deg
@@ -189,9 +250,11 @@ M45Deg
 M90Deg
 Magenta
 MainTray
+Matte Photo Paper
 MediaType
 Microsoft XPS Document Writer
 Middlethick
+Multi-Purpose Paper
 MultiTray
 NearestSizeAdjust
 NearestSizeNoAdjust
@@ -208,10 +271,13 @@ PANTONE
 PageRegion
 PageSize
 Photo
+Photo Greeting Cards
 Photograph
 Plain
+Plain Paper
 Portrait
 Preprinted
+Print Color Images in Black and White
 Print to FedEx Office
 Printer Love
 PromptUser
@@ -248,11 +314,13 @@ RightW
 Rimagesm
 SamplePrint
 Save to Google Docs
+Sensed
 Shift
 ShiftTray
 Special
 Special2
 Special3
+Specialty Labels
 Standard
 StapleLocation
 Statement
@@ -268,7 +336,10 @@ Thin
 Throughput
 TimesB
 TopSecret
+Transparency
+Tray 1
 True
+Two-Sided
 Type42
 USOffsetPrint
 Upper2
