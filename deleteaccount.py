@@ -20,7 +20,7 @@ from auth import Auth
 
 if len(sys.argv) == 2 and sys.argv[1] == 'version':
     # line below is replaced on commit
-    CCPVersion = "20130914 142312"
+    CCPVersion = "20130927 220020"
     print "CUPS Cloud Print Delete Account Script Version " + CCPVersion
     sys.exit(0)
 

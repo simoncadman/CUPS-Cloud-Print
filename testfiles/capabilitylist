@@ -180,6 +180,7 @@ Letter
 Letter.FullBleed
 Letter.Fullbleed
 Letterhead
+Lexmark 4900 Series (Network)
 LockedPrint
 LockedPrintPassword
 M135Deg
@@ -279,7 +280,6 @@ UpperW
 User
 UserCode
 Yellow
-Константин Зайцев
 __gcp_cups_disable_flag_option__
 __gcp_cups_enable_flag_option__
 __goog__drive_file_name
@@ -302,6 +302,64 @@ fit-to-page
 gray
 grayText
 hpcopies
+lps:A4Banner
+lps:AutoSharpen
+lps:AutoSoften
+lps:Automatic
+lps:BaronialEnvelope
+lps:Chokei40Envelope
+lps:Draft
+lps:High
+lps:ISOA4Borderless
+lps:ISOA5Borderless
+lps:ISOA6Borderless
+lps:JISB5Borderless
+lps:Japan2LPhotoBorderless
+lps:JapanHagakiPostcardBorderless
+lps:JapanLPhotoBorderless
+lps:JobBlankPageSuppression
+lps:JobImageEnhanceContrast
+lps:JobImageEnhanceFlashFill
+lps:Kakugata4Envelope
+lps:Kakugata5Envelope
+lps:Kakugata6Envelope
+lps:LetterBanner
+lps:Metric4x6
+lps:Metric4x6Borderless
+lps:Metric4x8
+lps:Metric4x8Borderless
+lps:Metric5x7
+lps:Metric5x7Borderless
+lps:NUp1
+lps:NUp2
+lps:NUp3
+lps:NUp4
+lps:NUp8
+lps:NoBlankPageSuppression
+lps:None
+lps:Normal
+lps:NorthAmerica3x5
+lps:NorthAmerica4x6Borderless
+lps:NorthAmerica4x8Borderless
+lps:NorthAmerica5x7Borderless
+lps:NorthAmericaLegalBorderless
+lps:NorthAmericaLetterBorderless
+lps:Off
+lps:On
+lps:PageMediaSizeCustomPaperLength
+lps:PageMediaSizeCustomPaperWidth
+lps:Photo312x5
+lps:Photo312x5Borderless
+lps:Poster1x1
+lps:Poster2x2
+lps:Poster3x3
+lps:Poster4x4
+lps:SuppressBlankPage
+lps:Tray1
+lps:lxkAveryBusinessCard (lps:DMValue:273;psk:BackCoating:Matte;psk:DisplayName:Avery Business Cards;psk:FrontCoating:Matte;psk:Material:Paper;)
+lps:lxkAveryLabel (lps:DMValue:275;psk:BackCoating:None;psk:DisplayName:Avery Labels;psk:FrontCoating:None;psk:Material:Paper;)
+lps:lxkBusinessCard (lps:DMValue:274;psk:BackCoating:Matte;psk:DisplayName:Business Cards;psk:FrontCoating:Matte;psk:Material:Paper;)
+lps:lxkMultiPurposePaper (lps:DMValue:270;psk:BackCoating:None;psk:DisplayName:Multi-Purpose Paper;psk:FrontCoating:None;psk:Material:Paper;)
 mti:AfterExceptionPages
 mti:BeforeExceptionPages
 mti:BlackText
@@ -923,55 +981,55 @@ psk:EndSheet
 psk:EnvelopePlain
 psk:FitApplicationMediaSizeToPageImageableSize
 psk:ISOA2
-psk:ISOA3 (psk:DisplayName:A3 (297 x 420 mm);psk:MediaSizeHeight:420000;psk:MediaSizeWidth:297000;)
 psk:ISOA3
+psk:ISOA3 (psk:DisplayName:A3 (297 x 420 mm);psk:MediaSizeHeight:420000;psk:MediaSizeWidth:297000;)
 psk:ISOA3Extra
 psk:ISOA3Rotated
-psk:ISOA4 (psk:DisplayName:A4 (210 x 297 мм);psk:MediaSizeHeight:297000;psk:MediaSizeWidth:210000;)
 psk:ISOA4
+psk:ISOA4 (psk:DisplayName:A4 (210 x 297 мм);psk:MediaSizeHeight:297000;psk:MediaSizeWidth:210000;)
 psk:ISOA4Extra
 psk:ISOA4Rotated
-psk:ISOA5 (psk:DisplayName:A5 (148 x 210 мм);psk:MediaSizeHeight:210000;psk:MediaSizeWidth:148000;)
 psk:ISOA5
+psk:ISOA5 (psk:DisplayName:A5 (148 x 210 мм);psk:MediaSizeHeight:210000;psk:MediaSizeWidth:148000;)
 psk:ISOA5Extra
 psk:ISOA5Rotated
-psk:ISOA6 (psk:DisplayName:A6 (105 x 148 мм);psk:MediaSizeHeight:148000;psk:MediaSizeWidth:105000;)
 psk:ISOA6
+psk:ISOA6 (psk:DisplayName:A6 (105 x 148 мм);psk:MediaSizeHeight:148000;psk:MediaSizeWidth:105000;)
 psk:ISOA6Rotated
 psk:ISOB4
 psk:ISOB4Envelope
-psk:ISOB5Envelope (psk:DisplayName:B5 Env;psk:MediaSizeHeight:250000;psk:MediaSizeWidth:176000;)
 psk:ISOB5Envelope
+psk:ISOB5Envelope (psk:DisplayName:B5 Env;psk:MediaSizeHeight:250000;psk:MediaSizeWidth:176000;)
 psk:ISOB5Extra
 psk:ISOC3Envelope
 psk:ISOC4Envelope
-psk:ISOC5Envelope (psk:DisplayName:C5 Env;psk:MediaSizeHeight:229000;psk:MediaSizeWidth:162000;)
 psk:ISOC5Envelope
+psk:ISOC5Envelope (psk:DisplayName:C5 Env;psk:MediaSizeHeight:229000;psk:MediaSizeWidth:162000;)
 psk:ISOC6C5Envelope
-psk:ISOC6Envelope (psk:DisplayName:C6 Env;psk:MediaSizeHeight:162000;psk:MediaSizeWidth:114000;)
 psk:ISOC6Envelope
-psk:ISODLEnvelope (psk:DisplayName:DL Env;psk:MediaSizeHeight:220000;psk:MediaSizeWidth:110000;)
+psk:ISOC6Envelope (psk:DisplayName:C6 Env;psk:MediaSizeHeight:162000;psk:MediaSizeWidth:114000;)
 psk:ISODLEnvelope
-psk:JISB4 (psk:DisplayName:B4 JIS (257 x 364 mm);psk:MediaSizeHeight:364000;psk:MediaSizeWidth:257000;)
+psk:ISODLEnvelope (psk:DisplayName:DL Env;psk:MediaSizeHeight:220000;psk:MediaSizeWidth:110000;)
 psk:JISB4
+psk:JISB4 (psk:DisplayName:B4 JIS (257 x 364 mm);psk:MediaSizeHeight:364000;psk:MediaSizeWidth:257000;)
 psk:JISB4Rotated
-psk:JISB5 (psk:DisplayName:B5 JIS (182 x 257 мм);psk:MediaSizeHeight:257000;psk:MediaSizeWidth:182000;)
 psk:JISB5
+psk:JISB5 (psk:DisplayName:B5 JIS (182 x 257 мм);psk:MediaSizeHeight:257000;psk:MediaSizeWidth:182000;)
 psk:JISB5Rotated
-psk:JISB6 (psk:DisplayName:B6 JIS (128 x 182 мм);psk:MediaSizeHeight:182000;psk:MediaSizeWidth:128000;)
 psk:JISB6
+psk:JISB6 (psk:DisplayName:B6 JIS (128 x 182 мм);psk:MediaSizeHeight:182000;psk:MediaSizeWidth:128000;)
 psk:JISB6Rotated
 psk:Japan2LPhoto
-psk:JapanChou3Envelope (psk:DisplayName:Choukei 3 Env;psk:MediaSizeHeight:235000;psk:MediaSizeWidth:120000;)
 psk:JapanChou3Envelope
+psk:JapanChou3Envelope (psk:DisplayName:Choukei 3 Env;psk:MediaSizeHeight:235000;psk:MediaSizeWidth:120000;)
 psk:JapanChou3EnvelopeRotated
-psk:JapanChou4Envelope (psk:DisplayName:Choukei 4 Env;psk:MediaSizeHeight:205000;psk:MediaSizeWidth:90000;)
 psk:JapanChou4Envelope
+psk:JapanChou4Envelope (psk:DisplayName:Choukei 4 Env;psk:MediaSizeHeight:205000;psk:MediaSizeWidth:90000;)
 psk:JapanChou4EnvelopeRotated
 psk:JapanDoubleHagakiPostcard
 psk:JapanDoubleHagakiPostcardRotated
-psk:JapanHagakiPostcard (psk:DisplayName:Hagaki;psk:MediaSizeHeight:148000;psk:MediaSizeWidth:100000;)
 psk:JapanHagakiPostcard
+psk:JapanHagakiPostcard (psk:DisplayName:Hagaki;psk:MediaSizeHeight:148000;psk:MediaSizeWidth:100000;)
 psk:JapanHagakiPostcardRotated
 psk:JapanKaku2Envelope
 psk:JapanKaku2EnvelopeRotated
@@ -999,44 +1057,44 @@ psk:Monochrome
 psk:None
 psk:NorthAmerica10x11
 psk:NorthAmerica10x14
-psk:NorthAmerica11x17 (psk:DisplayName:11" x 17";psk:MediaSizeHeight:431800;psk:MediaSizeWidth:279400;)
 psk:NorthAmerica11x17
+psk:NorthAmerica11x17 (psk:DisplayName:11" x 17";psk:MediaSizeHeight:431800;psk:MediaSizeWidth:279400;)
 psk:NorthAmerica4x6
 psk:NorthAmerica8x10
 psk:NorthAmerica9x11
 psk:NorthAmericaCSheet
 psk:NorthAmericaDSheet
 psk:NorthAmericaESheet
-psk:NorthAmericaExecutive (psk:DisplayName:Executive (7 1/4" x 10 1/2");psk:MediaSizeHeight:266700;psk:MediaSizeWidth:184200;)
 psk:NorthAmericaExecutive
-psk:NorthAmericaGermanLegalFanfold (psk:DisplayName:Folio;psk:MediaSizeHeight:330200;psk:MediaSizeWidth:215900;)
+psk:NorthAmericaExecutive (psk:DisplayName:Executive (7 1/4" x 10 1/2");psk:MediaSizeHeight:266700;psk:MediaSizeWidth:184200;)
 psk:NorthAmericaGermanLegalFanfold
-psk:NorthAmericaGermanStandardFanfold (psk:DisplayName:8K (267 x 390 mm);psk:MediaSizeHeight:304800;psk:MediaSizeWidth:215900;)
+psk:NorthAmericaGermanLegalFanfold (psk:DisplayName:Folio;psk:MediaSizeHeight:330200;psk:MediaSizeWidth:215900;)
 psk:NorthAmericaGermanStandardFanfold
-psk:NorthAmericaLegal (psk:DisplayName:Legal;psk:MediaSizeHeight:355600;psk:MediaSizeWidth:215900;)
+psk:NorthAmericaGermanStandardFanfold (psk:DisplayName:8K (267 x 390 mm);psk:MediaSizeHeight:304800;psk:MediaSizeWidth:215900;)
 psk:NorthAmericaLegal
+psk:NorthAmericaLegal (psk:DisplayName:Legal;psk:MediaSizeHeight:355600;psk:MediaSizeWidth:215900;)
 psk:NorthAmericaLegalExtra
-psk:NorthAmericaLetter (psk:DisplayName:Letter (8,5" x 11");psk:MediaSizeHeight:279400;psk:MediaSizeWidth:215900;)
 psk:NorthAmericaLetter
+psk:NorthAmericaLetter (psk:DisplayName:Letter (8,5" x 11");psk:MediaSizeHeight:279400;psk:MediaSizeWidth:215900;)
 psk:NorthAmericaLetterExtra
-psk:NorthAmericaLetterPlus (psk:DisplayName:Letter Plus;psk:MediaSizeHeight:322300;psk:MediaSizeWidth:215900;)
 psk:NorthAmericaLetterPlus
+psk:NorthAmericaLetterPlus (psk:DisplayName:Letter Plus;psk:MediaSizeHeight:322300;psk:MediaSizeWidth:215900;)
 psk:NorthAmericaLetterRotated
-psk:NorthAmericaMonarchEnvelope (psk:DisplayName:Monarch Env;psk:MediaSizeHeight:190500;psk:MediaSizeWidth:98400;)
 psk:NorthAmericaMonarchEnvelope
+psk:NorthAmericaMonarchEnvelope (psk:DisplayName:Monarch Env;psk:MediaSizeHeight:190500;psk:MediaSizeWidth:98400;)
 psk:NorthAmericaNote
-psk:NorthAmericaNumber10Envelope (psk:DisplayName:#10 Env;psk:MediaSizeHeight:241300;psk:MediaSizeWidth:104800;)
 psk:NorthAmericaNumber10Envelope
+psk:NorthAmericaNumber10Envelope (psk:DisplayName:#10 Env;psk:MediaSizeHeight:241300;psk:MediaSizeWidth:104800;)
 psk:NorthAmericaNumber11Envelope
 psk:NorthAmericaNumber12Envelope
 psk:NorthAmericaNumber14Envelope
 psk:NorthAmericaNumber9Envelope
 psk:NorthAmericaPersonalEnvelope
-psk:NorthAmericaQuarto (psk:DisplayName:Quarto;psk:MediaSizeHeight:275000;psk:MediaSizeWidth:215000;)
 psk:NorthAmericaQuarto
+psk:NorthAmericaQuarto (psk:DisplayName:Quarto;psk:MediaSizeHeight:275000;psk:MediaSizeWidth:215000;)
+psk:NorthAmericaStatement
 psk:NorthAmericaStatement (psk:DisplayName:5 1/2" x 8 1/2";psk:MediaSizeHeight:215900;psk:MediaSizeWidth:139700;)
 psk:NorthAmericaStatement (psk:DisplayName:Statement;psk:MediaSizeHeight:215900;psk:MediaSizeWidth:139700;)
-psk:NorthAmericaStatement
 psk:NorthAmericaSuperA
 psk:NorthAmericaSuperB
 psk:NorthAmericaTabloid
@@ -1134,3 +1192,4 @@ psk:TwoSidedLongEdge
 psk:TwoSidedShortEdge
 psk:Uncollated
 reverse
+Константин Зайцев
