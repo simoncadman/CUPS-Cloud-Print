@@ -410,14 +410,16 @@ class Printer:
       # use fixed options for options we recognise
       if internalType == "option":
           # option
-          #if capabilityName == "ns1:Colors":
-          #  fixedNameMap['Black'] = "Black"
-          pass
+          if capabilityName == "psk:JobDuplexAllDocumentsContiguously":
+            fixedNameMap['psk:OneSided'] = "None"
+            fixedNameMap['psk:TwoSidedShortEdge'] = "DuplexTumble"
+            fixedNameMap['psk:TwoSidedLongEdge'] = "DuplexNoTumble"
       else:
           # capability
-          fixedNameMap['ns1:Colors']         = "ColorModel"
-          fixedNameMap['ns1:PrintQualities'] = "OutputMode"
-          fixedNameMap['ns1:InputBins']      = "InputSlot"
+          fixedNameMap['ns1:Colors']                                 = "ColorModel"
+          fixedNameMap['ns1:PrintQualities']                         = "OutputMode"
+          fixedNameMap['ns1:InputBins']                              = "InputSlot"
+          fixedNameMap['psk:JobDuplexAllDocumentsContiguously']      = "Duplex"
           
       for itemName in fixedNameMap:
         if details['name'] == itemName:
