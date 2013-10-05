@@ -297,6 +297,12 @@ class Printer:
             value = optionparts[1]
             overridecapabilities[option] = value
             
+    overrideDefaultDefaults = { 'Duplex' : 'None' }
+    
+    for capability in overrideDefaultDefaults:
+        if capability not in overridecapabilities:
+            overridecapabilities[capability] = overrideDefaultDefaults[capability]
+    
     attrs = cups.PPD(connection.getPPD(cupsprintername)).attributes
     for attr in attrs:
         if attr.name.startswith('Default'):
