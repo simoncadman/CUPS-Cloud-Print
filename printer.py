@@ -30,7 +30,8 @@ class Printer:
                              'Filter', 'Finishing', 'Font', 'Group', 'HWMargins', 'InputSlot', 'Installable',
                              'LocAttribute', 'ManualCopies', 'Manufacturer', 'MaxSize', 'MediaSize', 'MediaType',
                              'MinSize', 'ModelName', 'ModelNumber', 'Option', 'PCFileName', 'SimpleColorProfile',
-                             'Throughput', 'UIConstraints', 'VariablePaperSize', 'Version', 'Color'
+                             'Throughput', 'UIConstraints', 'VariablePaperSize', 'Version', 'Color', 'Background', 
+                             'Stamp', 'DestinationColorProfile'
                             ]
   
   def __init__( self, requestors ):
@@ -66,7 +67,7 @@ class Printer:
     return allprinters
   
   def sanitizeText(self, text):
-      return text.replace(':','_').replace(';','_').replace(' ','_').encode('utf8', 'ignore')
+      return text.replace('/','-').replace(':','_').replace(';','_').replace(' ','_').encode('utf8', 'ignore')
   
   def printerNameToUri( self, account, printer ) :
     """Generates a URI for the Cloud Print Printer
@@ -454,10 +455,15 @@ class Printer:
       if returnValue not in existingList:
         return returnValue
     
+      origReturnValue = returnValue
+    
+      if "GCP_" + origReturnValue not in existingList:
+        return "GCP_" + origReturnValue
+       
       # max 100 rotations, prevent infinite loop
       for i in range(1,100):
           if returnValue in existingList:
-            returnValue += '_' + str(i)
+            returnValue = "GCP_" + str(i) + "_" + origReturnValue
       
       # TODO: need to error if limit hit, or run out of chars allowed etc
       

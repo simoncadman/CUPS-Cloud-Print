@@ -19,7 +19,7 @@ import sys, os, locale
 
 if len(sys.argv) == 2 and sys.argv[1] == 'version':
     # line below is replaced on commit
-    CCPVersion = "20131005 192654"
+    CCPVersion = "20131005 212032"
     print "CUPS Cloud Print Dynamic PPD Generator Version " + CCPVersion
     sys.exit(0)
 
@@ -137,7 +137,7 @@ elif sys.argv[1] == 'cat':
                     
                     for capability in foundprinter['fulldetails']['capabilities']:
                         originCapabilityName = None
-                        internalcapabilityName = printer.getInternalName(capability, 'capability', addedCapabilities)
+                        internalcapabilityName = printer.getInternalName(capability, 'capability', None, addedCapabilities)
                         addedCapabilities.append(internalcapabilityName)
                         
                         if 'displayName' in capability and len(capability['displayName']) > 0:
