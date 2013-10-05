@@ -1,14 +1,19 @@
+
+0
 0Deg
 0rhit
+1
 10
 10 x 15 Borderless
 10 x 15 cm
 10 x 20 cm
+10"x12" 25x30cm (Scaled)
 1001
 1002
 1003
 10x14
 10x14.FullBleed
+11"x17" 279.4x431.8mm (Scaled)
 11x15
 11x15.FullBleed
 1200dpi
@@ -16,10 +21,14 @@
 12x18.FullBleed
 13 x 18 Borderless
 13 x 18 cm
+13.5"x17" 342.9x431.8mm (Scaled)
 135Deg
+14"x17" 36x43cm (Scaled)
 150ppi
+16-Page Print
 16Kai
 16Kai.FullBleed
+17"x22" 431.8x558.8mm (Scaled)
 180Deg
 1BitsPerPixel
 1Cassette
@@ -27,11 +36,13 @@
 1ColorText
 1Tray
 2
+2-Page Print
 200ppi
 24
 2BitsPerPixel
 2Cassette
 2L
+2L 127x178mm
 2L Borderless
 2Tray
 3.5 x 5 Borderless
@@ -40,13 +51,18 @@
 3002
 3003
 300ppi
+300x300
 36
+3D Printing
 3Tray
 3rhit
 4 x 6 Borderless
 4 x 6 in
 4 x 8 Borderless
 4 x 8 in
+4"x6" 10x15cm
+4"x8" 101.6x203.2mm
+4-Page Print
 4001
 4002
 4003
@@ -57,20 +73,30 @@
 4Tray
 5 x 7 Borderless
 5 x 7 in
+5"x7" 13x18cm
 5Tray
+6-Page Print
 60
 600dpi
+600x600
 72
+8"x10" 20x25cm
+8BitPerColor
 8Kai
 8Kai.FullBleed
+9-Page Print
 90Deg
 90ppi
+A2 (Scaled)
 A2 Baronial
 A3
+A3 (Scaled)
+A3+ 13"x19" 33x48cm (Scaled)
 A3.FullBleed
 A4
 A4 Banner
 A4 Borderless
+A4+ (Scaled)
 A4.FullBleed
 A4.Fullbleed
 A5
@@ -80,61 +106,130 @@ A6
 A6 Card
 A6 Card Borderless
 A6.FullBleed
+Absolute Colorimetric
 Adobe PDF
+Adobe RGB (1998)
+Amount of Extension
+Amount of Pattern Instances
+Apple RGB
+Application
+Apply Throughout Page
 Auto
 Automatic
+Automatic Duplex Printing(Hagaki)
+Automatically Select
+Automatically reduce large document that the printer cannot output
 Avery Business Cards
 Avery Labels
+B3 (Scaled)
 B4
+B4 (Scaled)
 B4.FullBleed
 B5
 B5 Borderless
 B5.FullBleed
 B6
 B6.FullBleed
+BJ Cartridge
+Background
+Background first page only
 Best
 Better
 Bin1
+BitPerColor
 Black
 Blue
 Bond
+Booklet
+Borderless
+Brightness
 Business
 Business Cards
 CD/DVD Labels
 CMYK
+CalibrationDue
+CalibrationPatternPrint
 Canon LBP5100
+Canon MG5200 series Printer
+Card 2.17"x3.58" 55x91mm
 Card Stock
 Cardstock
+Cassette
 CenterW
+Change the print data size to match the port
 Chokei 3
 Chokei 4
 Chokei 40
+Choukei 3 120x235mm
+Choukei 4 90x205mm
+Clear Coat
 Cloud Print
 Clpsimulation1
 Clpsimulation2
 Coated
 Collate
 Color
+Color Correction
+Color Mode
+Color Variation Between Instances
 ColorDevice
+ColorMatch RGB
 ColorModel
 ColorSpace
 Colored
 Colorimetric
+Comm. Env. #10
+CommonlyUsedSettings
 Confidential
+Continuous Autofeed
+Contrast
+Copies
 Copies:
 Copy
 Copyright
 CourierB
+Custom (1)
+Custom (2)
+Custom (3)
+Custom (4)
+Custom (5)
+Custom...
 Cyan
+Cyan/Magenta/Yellow
+DL Env.
 DLEnv
 DLEnv.FullBleed
+Dark
 Default
+DestinationColorProfile
+DestinationColorProfileURI
+DestinationColorProfileURIType
+DestinationColorProfileURITypeHash
 DetailBright
 DetailNormal
+Diffusion
+DigitalSignatureProcessing
+Disable ICM required from the application software
+Disable halftone method switching
+Disable the color profile setting of the application software
+Disable the paper source setting of the application software
+Disc tray
+Dither
+Divided into 16 (4 x 4)
+Divided into 2
+Divided into 4 (2 x 2)
+Divided into 9 (3 x 3)
+Do not allow application software to compress print data
 DocServer
 DocServerPassword
 Draft
+Driver
+Driver Matching
+DriverConfiguration
 Duplex
+Duplex Printing
+Duplex Printing (Long-side stapling)
+Duplex Printing (Short-side stapling)
 DuplexNoTumble
 DuplexTumble
 EPSON XP-302 303 305 306 Series (EPSONABF894)
@@ -157,6 +252,7 @@ Envelope B5
 Envelope C5
 Envelope C6
 Envelope DL
+Erik Mace
 Euroscale
 Everyone
 Executive
@@ -169,6 +265,7 @@ FXDocuPrintCM205fw
 False
 FanFoldGermanLegal
 FanFoldGermanLegal.FullBleed
+Fast
 FileCopy
 FileSystem
 FinELBE
@@ -182,6 +279,7 @@ FinTigMiddle
 FinTigUpper
 Final
 Finisher
+Fit-to-Page
 Folio
 Folio.FullBleed
 Full Name
@@ -192,21 +290,40 @@ Glossy
 Glossy Photo Paper
 GovernmentLG
 GovernmentLG.FullBleed
+Graphics
 Gray
+Grayscale
+Grayscale Printing (Application Direct)
 Green
 Grey_CMY
 Grey_K
 HP LaserJet CM1415fnw
 HP Universal Printing PCL 5
 Hagaki
+Hagaki 100x148mm
+Hagaki 2 200x148mm
+Hagaki A
 Hagaki Borderless
+Hagaki K
+Halftoning
+Height
 HelveticaB
+High
+High Resolution Paper
+ICM
 ICMprocess
+Identify the paper type
+Image Optimizer
 Index Card
+Ink Jet Hagaki
 Inkjet Paper
 InnerTray2
+Input Profile
 InputSlot
+Insert blank page
 Installed
+Intensity
+Intensity/Contrast
 Iron-on Transfer
 JapanColor
 JobType
@@ -220,40 +337,67 @@ Kakugata 6
 Kylie Wheeler
 L
 L  Borderless
+L 89x127mm
+LCPMI1
+LCPMI2
+LCPMI3
+LCPMI4
+LCPMT
+LCPrintMode
 LCT
 Labels
 Landscape
 LanguageLevel
+Large
 LargeCapacityTray
+Largest
+Left or Top
+Left page or Top page
 Left2
 Left3
 Left4
 LeftW
 Legal
+Legal 8.5"x14" 22x36cm
 Legal Borderless
 Legal.FullBleed
 Legal.Fullbleed
 Letter
+Letter 8.5"x11" 22x28cm
 Letter Banner
 Letter Borderless
+Letter+ (Scaled)
 Letter.FullBleed
 Letter.Fullbleed
 Letterhead
 Lexmark 4900 Series (Network)
 Lexmark PerfectFinish Photo Paper
 Lexmark Photo Paper
+Light
 LockedPrint
 LockedPrintPassword
+Long-side stapling(left or top)
+Long-side stapling(right or bottom)
 M135Deg
 M180Deg
 M45Deg
 M90Deg
 Magenta
 MainTray
+Margin
+Margin for stapling
 Matte Photo Paper
+Maximum
+Media Specific Profile
+Media Type
 MediaType
+Medium
+Medium Light
 Microsoft XPS Document Writer
+Middle
 Middlethick
+Minimum
+Monochrome Effects
 Multi-Purpose Paper
 MultiTray
 NearestSizeAdjust
@@ -261,25 +405,63 @@ NearestSizeNoAdjust
 None
 Normal
 NotInstalled
+OFF
 OHP
+ON
 Off
 On
 OptionTray
+Orientation
+Other Photo Paper
 Outline
 OutputBin
 PANTONE
+Page Border
+Page Layout
+Page Size
 PageRegion
 PageSize
+Paper Allocation
+Paper Size
+Paper Source
+Parallel Copy
+Parameters to Adjust
+Pattern Print
+Perceptual
 Photo
 Photo Greeting Cards
+Photo Noise Reduction
+Photo Optimizer
+Photo Paper Plus Glossy II
+Photo Paper Plus Semi-gloss
+Photo Paper Pro Platinum
+PhotoPrintingIntent
 Photograph
+Pink
+Place stamp over text
 Plain
 Plain Paper
 Portrait
 Preprinted
+Prevention of Print Data Loss/Prevent loss of print data
+Preview before printing
+Print "Cut/Paste" in margins
+Print "Cut/Paste" lines in margins
+Print Area Setup
 Print Color Images in Black and White
+Print Quality
+Print address side
+Print from Last Page
+Print front side
+Print page range
 Print to FedEx Office
+PrintInvalidSignatures
+Printable disc (others)
+Printable disc (recommended)
 Printer Love
+Printer Paper Size
+Printer Profile for Easy Color Matching
+ProPhoto RGB
 PromptUser
 Proof
 RICOH Aficio MP C3501
@@ -304,27 +486,52 @@ RPSColorUniversalDesign
 RPSDitherType
 RPSRGBcorrect
 Rcmyksimulation
+Rear Tray
+Recommended
 Recycled
 Red
+Relative Colorimetric
+Rendering Intent
 Resolution
+Right or Bottom
+Right page or Bottom page
 Right2
 Right3
 Right4
 RightW
 Rimagesm
+Rotate 180 degrees
+Rotate 90 degrees left when orientation is [Landscape]
+Sample Type
 SamplePrint
+Saturation
 Save to Google Docs
+Scaled
+Scaling
+Select Color
 Sensed
+Sepia
 Shift
 ShiftTray
+Short-side stapling(left or top)
+Short-side stapling(right or bottom)
+Simulate Illustration
+Small
 Special
 Special2
 Special3
 Specialty Labels
+Specify Margin
+Stamp
+Stamp first page only
 Standard
+Staple Side
 StapleLocation
 Statement
 Statement.FullBleed
+Strong
+System
+T-Shirt Transfers
 TTRasterizer
 Tabloid
 Tabloid.FullBleed
@@ -334,6 +541,7 @@ Thick3
 Thick4
 Thin
 Throughput
+Tiling/Poster
 TimesB
 TopSecret
 Transparency
@@ -342,18 +550,32 @@ True
 Two-Sided
 Type42
 USOffsetPrint
+Ungroup Papers
+Unit of Print Data Processing
+Unknown
 Upper2
 Upper3
 Upper4
 UpperLeft
 UpperRight
 UpperW
+Use normal-size printing
+Use reduced printing
 User
 UserCode
+View Color Pattern
+Vivid Photo
+Wide 4"x7.1" 101.6x180.6mm
+Wide Gamut RGB
+Width
 Yellow
+Youkei 4 105x235mm
+Youkei 6 98x190mm
 __gcp_cups_disable_flag_option__
 __gcp_cups_enable_flag_option__
 __goog__drive_file_name
+bpe:JobBPECalibrationDue
+bpe:None
 cloud print
 cloudprint gcptest
 cloudprint hyd05
@@ -527,22 +749,34 @@ mti:PrintFront
 mti:Rotate180
 mti:Text
 normal
+ns0000:8BitPerColor
 ns0000:A3_EXTRA_TRANSVERSE
 ns0000:A3_TRANSVERSE
+ns0000:A4Plus
 ns0000:A4SMALL
 ns0000:A4_TRANSVERSE
 ns0000:A5_TRANSVERSE
 ns0000:ADVANCED_PHOTO_PAPERS
+ns0000:ALittleLight
 ns0000:AUTO
+ns0000:AddressPostcard
+ns0000:AddressSide
 ns0000:AdobeRGB
+ns0000:AdobeRGB1998
 ns0000:Adobe_RGB
+ns0000:AllPages
+ns0000:AppleRGB
 ns0000:Auto
 ns0000:Automatic
+ns0000:AutomaticallySelect
 ns0000:B5_TRANSVERSE
 ns0000:BEST
 ns0000:BOND
+ns0000:Back
 ns0000:BlackOnly
+ns0000:Blue
 ns0000:Booklet
+ns0000:BusinessCard
 ns0000:BypassTray
 ns0000:CARDGLOSSY
 ns0000:CARDSTOCK
@@ -550,15 +784,38 @@ ns0000:CARDSTOCK176
 ns0000:COLOR
 ns0000:COLOR_MODE
 ns0000:COLOR_TRANSPARENCY
+ns0000:Cassette
 ns0000:Collator8150
 ns0000:Color
+ns0000:ColorMatchRGB
+ns0000:Common
+ns0000:ContentsGlossy
+ns0000:ContentsSide
+ns0000:ContinuousAutofeed
+ns0000:Contrast
 ns0000:CoverInsertion
+ns0000:CustomMediaSize
 ns0000:CustomProfile
+ns0000:Custom_HQ
+ns0000:Custom_HS
+ns0000:Custom_MQ
+ns0000:Custom_NORMAL
+ns0000:Custom_SPECIAL
 ns0000:DEFAULT
+ns0000:Dark
 ns0000:Default_sRGB
 ns0000:Default_sRGB_
 ns0000:Detail
 ns0000:Device
+ns0000:Disc1
+ns0000:Disc2
+ns0000:DiscTray
+ns0000:Dither
+ns0000:Division_2
+ns0000:Division_2X2
+ns0000:Division_3X3
+ns0000:Division_4X4
+ns0000:Driver
 ns0000:ENVELOPE
 ns0000:ENV_B6
 ns0000:EXECUTIVE_JIS
@@ -566,13 +823,21 @@ ns0000:EXTRA_HEAVY
 ns0000:EXTRA_HEAVY_GLOSSY
 ns0000:EdgeToEdge
 ns0000:EnvFeed
+ns0000:ErrorDiffusion
 ns0000:FACEDOWN
 ns0000:FACEUP
 ns0000:FANFOLD_US
+ns0000:FOOLS
 ns0000:FaceUp8150
 ns0000:False
+ns0000:FirstPageOnly
+ns0000:Fitpage
+ns0000:Front
 ns0000:GLOSS
 ns0000:GLOSSY_FILM
+ns0000:Glossy
+ns0000:Graphics
+ns0000:Green
 ns0000:HEAVY
 ns0000:HEAVY_ENVELOPE
 ns0000:HEAVY_GLOSSY
@@ -621,13 +886,19 @@ ns0000:HelpID_15254
 ns0000:HelpID_15300
 ns0000:HelpID_15578
 ns0000:INTERMEDIATE
+ns0000:ISOA4
+ns0000:ISOA5
+ns0000:ISODLEnvelope
+ns0000:Icm
 ns0000:ImagesRGB
+ns0000:Individual
 ns0000:Inet_SID_251_BID_514_HID_267
 ns0000:Inet_SID_252_BID_514_HID_268
 ns0000:Inet_SID_253_BID_514_HID_269
 ns0000:Inet_SID_263_BID_514_HID_265
 ns0000:Inet_SID_264_BID_514_HID_266
 ns0000:JBJO
+ns0000:JISB5
 ns0000:JPEGHigh
 ns0000:JPEGLow
 ns0000:JPEGMed
@@ -638,8 +909,23 @@ ns0000:JRHDPrivate
 ns0000:JRHDProof
 ns0000:JRHDQuickCopy
 ns0000:JRHDStore
+ns0000:Japan2LPhoto
+ns0000:JapanChou3Envelope
+ns0000:JapanChou4Envelope
+ns0000:JapanDoubleHagakiPostcard
+ns0000:JapanHagakiPostcard
+ns0000:JapanLPhoto
+ns0000:JapanYou4Envelope
+ns0000:JapanYou6Envelope
+ns0000:JapaneseInkjetPostcard
+ns0000:JapanesePostcard
 ns0000:JobAlternateLetterHead
 ns0000:JobBooklet
+ns0000:JobBookletBlankPage
+ns0000:JobBookletBorder
+ns0000:JobBookletStapleMargin
+ns0000:JobBookletStapleSide
+ns0000:JobDuplexMode
 ns0000:JobESPRITSupported
 ns0000:JobEconomode
 ns0000:JobEdgeToEdgePrint
@@ -694,7 +980,15 @@ ns0000:JobInterleaving
 ns0000:JobJRConstraints
 ns0000:JobJRHDInstalled
 ns0000:JobJRHDNotInstalled
+ns0000:JobLCPrintMode
+ns0000:JobLCPrintModeInfo1
+ns0000:JobLCPrintModeInfo2
+ns0000:JobLCPrintModeInfo3
+ns0000:JobLCPrintModeInfo4
+ns0000:JobLCPrintModeType
+ns0000:JobNUpBorder
 ns0000:JobPSAlignmentFile
+ns0000:JobPreview
 ns0000:JobPrintDensity
 ns0000:JobPrintQualityGroup
 ns0000:JobPunching
@@ -718,12 +1012,23 @@ ns0000:LETTERSMALL
 ns0000:LETTER_EXTRA_TRANSVERSE
 ns0000:LETTER_TRANSVERSE
 ns0000:LIGHT
+ns0000:Landscape
+ns0000:Large
+ns0000:Largest
 ns0000:Ledger
 ns0000:Left
 ns0000:Left9000
 ns0000:LeftBinUp
+ns0000:Left_or_Top
+ns0000:LetterPlus
 ns0000:Letterhead
+ns0000:Level_0
+ns0000:Level_1
+ns0000:Level_2
+ns0000:Level_3
 ns0000:Light
+ns0000:Longside_Left_or_Top
+ns0000:Longside_Right_or_Bottom
 ns0000:LowerLeftBin
 ns0000:LowerLeftBin9500MFP
 ns0000:MATTE_BROCHURE
@@ -736,11 +1041,21 @@ ns0000:MainBinFaceDown
 ns0000:MainBinFaceUp
 ns0000:Manual
 ns0000:ManualFeed
+ns0000:MattePhoto
 ns0000:Maximum
+ns0000:Medium
+ns0000:Middle
 ns0000:MiddleLeftBin
 ns0000:NoCmd
 ns0000:None
 ns0000:Normal
+ns0000:NorthAmerica4x6
+ns0000:NorthAmerica4x8
+ns0000:NorthAmerica5x7
+ns0000:NorthAmerica8x10
+ns0000:NorthAmericaLegal
+ns0000:NorthAmericaLetter
+ns0000:NorthAmericaNumber10Envelope
 ns0000:OFF
 ns0000:ON
 ns0000:OPAQUEFILM
@@ -753,6 +1068,7 @@ ns0000:Oficio_216x347mm
 ns0000:On
 ns0000:OnlyOne
 ns0000:Option1
+ns0000:OtherPhoto
 ns0000:OutputBin15
 ns0000:OutputBin2
 ns0000:OutputBin29500MFP
@@ -808,11 +1124,89 @@ ns0000:PQGroup_7
 ns0000:PREM_CHOICE_MATTE_120G
 ns0000:PREPRINTED
 ns0000:PREPUNCHED
+ns0000:PageApplyThroughoutPage
+ns0000:PageAutoDuplexMarginAdjustment
+ns0000:PageAutoReduce
+ns0000:PageBackground
+ns0000:PageBackgroundPageMode
+ns0000:PageBitPerColor
+ns0000:PageBorderlessExpandLevel
+ns0000:PageBrightness
+ns0000:PageCalibrationPatternPrint
+ns0000:PageCartridge
+ns0000:PageClearCoat
+ns0000:PageColorBalanceCyan
+ns0000:PageColorBalanceMagenta
+ns0000:PageColorBalanceYellow
+ns0000:PageColorCorrection
+ns0000:PageColorPattern
+ns0000:PageContrast
+ns0000:PageDestinationColorProfileURIHash
+ns0000:PageDestinationColorProfileURIType
 ns0000:PageDevmodeSnapshot
+ns0000:PageDirectGrayscaleMode
+ns0000:PageDisableApplicationColorProfile
+ns0000:PageDisableApplicationICM
+ns0000:PageDisableHalftoneMethodSwitching
+ns0000:PageDisabledmDefaultSource
+ns0000:PageDriverMatchingMode
+ns0000:PageForbidJpegThrough
+ns0000:PageFormTrayAssign_InputBin
+ns0000:PageHagakiAutoDuplexMode
+ns0000:PageHalftone
+ns0000:PageIllustretch
+ns0000:PageImageOptimizer
+ns0000:PageInputProfileType
+ns0000:PageIntensity
+ns0000:PageMediaTypeOfFormTrayAssign_1
+ns0000:PageMonochromeEffects
+ns0000:PageMonochromeEffectsColor
+ns0000:PageOperationOfICCProfileType
+ns0000:PageOutputMediaSize
+ns0000:PageOutputMediaSizeMediaSizeHieght
+ns0000:PageOutputMediaSizeMediaSizeWidth
+ns0000:PageOutputMediaSizeOfFormTrayAssign_1
+ns0000:PagePatternPrint
+ns0000:PagePatternPrintAmount
+ns0000:PagePatternPrintMode
+ns0000:PagePatternPrintVariation
+ns0000:PagePhotoNoiseReduction
+ns0000:PagePhotoOptimizer
+ns0000:PagePosterPrintCAP
+ns0000:PagePosterPrintCAPLine
+ns0000:PagePosterPrintPage
+ns0000:PagePrintDataProcessingUnitType
 ns0000:PageRGBColor
+ns0000:PageReduceDataSizeMatchPort
+ns0000:PageReduceSpoolSize
+ns0000:PageRotate180
+ns0000:PageRotate90Left
+ns0000:PageSampleType
+ns0000:PageScannerHighSpeedCopyMode
+ns0000:PageSelectedPresetID
+ns0000:PageStamp
+ns0000:PageStampLayerMode
+ns0000:PageStampPageMode
+ns0000:PageThreeDPrint
+ns0000:PageUngroupPapers
+ns0000:PageUsePrinterMediaType
+ns0000:PageVivid
+ns0000:PagesPerSheet_16
+ns0000:PagesPerSheet_2
+ns0000:PagesPerSheet_4
+ns0000:PagesPerSheet_6
+ns0000:PagesPerSheet_9
+ns0000:PaperAllocation
+ns0000:Photo
 ns0000:PhotoImage
+ns0000:PhotoPaperPlusGlossy2
+ns0000:PhotoPaperProPlatinum
+ns0000:Pink
+ns0000:Plain
+ns0000:Portrait
 ns0000:PrintedInsertion
 ns0000:PrinterDefault
+ns0000:ProPhotoRGB
 ns0000:RA3
 ns0000:RA4
 ns0000:RASTERMODE
@@ -831,6 +1225,7 @@ ns0000:RECYCLED
 ns0000:RETAIL_SHELF_EDGE_LABELS
 ns0000:ROUGH
 ns0000:RearBin
+ns0000:Recommended
 ns0000:Recycled
 ns0000:Reverse
 ns0000:RicDocumentServer
@@ -839,14 +1234,21 @@ ns0000:RicPrintLocked
 ns0000:RicPrintNormal
 ns0000:RicPrintSample
 ns0000:Right
+ns0000:Right_or_Bottom
 ns0000:SRA3
 ns0000:SRA4
 ns0000:STANDARD
 ns0000:SWFW
+ns0000:Scaling
 ns0000:Screen
+ns0000:SelectColor
 ns0000:Separator8150
+ns0000:Sepia
+ns0000:Shortside_Left_or_Top
+ns0000:Shortside_Right_or_Bottom
 ns0000:ShowPageExceptions
 ns0000:Slide
+ns0000:Small
 ns0000:Smooth
 ns0000:Special
 ns0000:Stacker
@@ -855,12 +1257,15 @@ ns0000:Stacker8150
 ns0000:StackerBinX0X5
 ns0000:StackerFaceDown
 ns0000:StackerFaceUp
+ns0000:Standard
 ns0000:StandardBin
 ns0000:Standard_Recycled
 ns0000:Stapler750
 ns0000:Stapler8150
 ns0000:Stitching
 ns0000:StitchingReverse
+ns0000:Strong
+ns0000:SuperPhotoSilky
 ns0000:THICK_PLAIN
 ns0000:TRUE
 ns0000:TTModeBitmap
@@ -887,6 +1292,8 @@ ns0000:TrayExt4
 ns0000:TrayExt5
 ns0000:TrayExt6
 ns0000:True
+ns0000:Type0
+ns0000:Type1
 ns0000:USERDEFINEDMEDIA1
 ns0000:USERDEFINEDMEDIA10
 ns0000:USERDEFINEDMEDIA2
@@ -898,6 +1305,7 @@ ns0000:USERDEFINEDMEDIA7
 ns0000:USERDEFINEDMEDIA8
 ns0000:USERDEFINEDMEDIA9
 ns0000:UTF8
+ns0000:Unknown
 ns0000:Upper
 ns0000:Upper9000
 ns0000:UpperBin
@@ -934,8 +1342,11 @@ ns0000:User0000004600
 ns0000:UserAuthenticationDisabled
 ns0000:UserAuthenticationEnabled
 ns0000:VELLUM
+ns0000:VeryDark
 ns0000:Vivid
 ns0000:Vivid8060
+ns0000:Wide4x7
+ns0000:WideGamutRGB
 ns0000:_0
 ns0000:_10X15CM
 ns0000:_1200dpi
@@ -986,6 +1397,9 @@ ns0000:hpc_en_130_chm
 ns0000:hpc_en_130_hlp
 ns0000:hpchl130_cab
 ns0000:hpcu1305_xml
+ns0000:r300x300
+ns0000:r600x600
+ns0000:sRGB
 ns1:Colors
 ns1:InputBins
 ns1:Margins
@@ -1022,7 +1436,9 @@ outputorder
 page-ranges
 psf:IdentityOption:True;psk:PagesPerSheet:1;
 psk:AbsoluteColorimetric
+psk:Application
 psk:AutoSelect
+psk:AutoSheetFeeder
 psk:Automatic
 psk:BindBottom
 psk:BindLeft
@@ -1031,7 +1447,9 @@ psk:BindTop
 psk:Booklet
 psk:Borderless
 psk:BothSheets
+psk:BusinessCard
 psk:BusinessGraphics
+psk:Cassette
 psk:Collated
 psk:Color
 psk:CustomSquare
@@ -1047,10 +1465,14 @@ psk:DocumentSeparatorSheet
 psk:DownloadAsNativeTrueTypeFont
 psk:DownloadAsOutlineFont
 psk:DownloadAsRasterFont
+psk:Draft
 psk:Driver
+psk:DriverConfiguration
 psk:EndSheet
 psk:EnvelopePlain
 psk:FitApplicationMediaSizeToPageImageableSize
+psk:High
+psk:HighResolution
 psk:ISOA2
 psk:ISOA3
 psk:ISOA3 (psk:DisplayName:A3 (297 x 420 mm);psk:MediaSizeHeight:420000;psk:MediaSizeWidth:297000;)
@@ -1081,6 +1503,7 @@ psk:ISOC6Envelope
 psk:ISOC6Envelope (psk:DisplayName:C6 Env;psk:MediaSizeHeight:162000;psk:MediaSizeWidth:114000;)
 psk:ISODLEnvelope
 psk:ISODLEnvelope (psk:DisplayName:DL Env;psk:MediaSizeHeight:220000;psk:MediaSizeWidth:110000;)
+psk:JISB3
 psk:JISB4
 psk:JISB4 (psk:DisplayName:B4 JIS (257 x 364 mm);psk:MediaSizeHeight:364000;psk:MediaSizeWidth:257000;)
 psk:JISB4Rotated
@@ -1109,6 +1532,9 @@ psk:JapanKaku3EnvelopeRotated
 psk:JapanLPhoto
 psk:JapanYou4Envelope
 psk:JapanYou4EnvelopeRotated
+psk:JapanYou6Envelope
+psk:JobBindAllDocuments
+psk:JobBindAllDocumentsGutter
 psk:JobComment
 psk:JobCopiesAllDocuments
 psk:JobDeviceLanguage
@@ -1126,11 +1552,16 @@ psk:LeftEdge
 psk:Manual
 psk:Monochrome
 psk:None
+psk:Normal
 psk:NorthAmerica10x11
+psk:NorthAmerica10x12
 psk:NorthAmerica10x14
 psk:NorthAmerica11x17
 psk:NorthAmerica11x17 (psk:DisplayName:11" x 17";psk:MediaSizeHeight:431800;psk:MediaSizeWidth:279400;)
+psk:NorthAmerica14x17
 psk:NorthAmerica4x6
+psk:NorthAmerica4x8
+psk:NorthAmerica5x7
 psk:NorthAmerica8x10
 psk:NorthAmerica9x11
 psk:NorthAmericaCSheet
@@ -1172,6 +1603,7 @@ psk:NorthAmericaTabloid
 psk:Off
 psk:On
 psk:OneSided
+psk:OtherMetricA3Plus
 psk:OtherMetricA4Plus
 psk:OtherMetricFolio
 psk:OtherMetricInviteEnvelope
@@ -1195,6 +1627,8 @@ psk:PRC9Envelope
 psk:PRC9EnvelopeRotated
 psk:PageBorderless
 psk:PageColorManagement
+psk:PageDestinationColorProfile
+psk:PageDestinationColorProfileURI
 psk:PageDeviceFontSubstitution
 psk:PageICMRenderingIntent
 psk:PageInputBin
@@ -1209,6 +1643,7 @@ psk:PageMediaSizePSWidthOffset
 psk:PageMediaType
 psk:PageOrientation
 psk:PageOutputColor
+psk:PageOutputQuality
 psk:PagePhotoPrintingIntent
 psk:PagePoster
 psk:PageResolution
@@ -1236,6 +1671,7 @@ psk:Portrait
 psk:PostScript (psk:DisplayName:1;psk:LanguageLevel:1;)
 psk:PostScript (psk:DisplayName:2;psk:LanguageLevel:2;)
 psk:PostScript (psk:DisplayName:3;psk:LanguageLevel:3;)
+psk:PrintInvalidSignatures
 psk:PrintInvalidSignaturesWithErrorReport
 psk:RelativeColorimetric
 psk:RenderAsBitmap
@@ -1256,6 +1692,7 @@ psk:StapleTopLeft
 psk:StapleTopRight
 psk:StartSheet
 psk:System
+psk:TShirtTransfer
 psk:Text
 psk:TopEdge
 psk:Transparency
@@ -1263,4 +1700,5 @@ psk:TwoSidedLongEdge
 psk:TwoSidedShortEdge
 psk:Uncollated
 reverse
+sRGB
 Константин Зайцев
