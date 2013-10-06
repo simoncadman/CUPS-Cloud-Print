@@ -13,7 +13,7 @@
 #
 #    You should have received a copy of the GNU General Public License    
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
-import json, urllib, os, mimetypes, base64, mimetools, re, hashlib
+import json, urllib, os, mimetypes, base64, mimetools, re, hashlib, subprocess
 from auth import Auth
 from urlparse import urlparse
 
@@ -376,12 +376,22 @@ class Printer:
         # nolandscape - already rotates
         if optiontext == 'nolandscape':
             # rotate back
-            rotate = -90
+            rotate = 270
     
     if jobtype == 'pdf':
       if not os.path.exists(jobfile):
-	print("ERROR: PDF doesnt exist")
-	return False
+        print("ERROR: PDF doesnt exist")
+        return False
+      if rotate > 0:
+        p = subprocess.Popen(['pdf' + str(rotate), jobfile, '--outfile', jobfile], stdout=subprocess.PIPE)
+        output = p.communicate()[0]
+        result = p.returncode
+        if result != 0:
+            print("ERROR: Failed to rotate PDF")
+            return False
+        if not os.path.exists(jobfile):
+            print("ERROR: PDF doesnt exist")
+            return False
       b64file = self.base64Encode(jobfile)
       if b64file == None: # pragma: no cover 
         print("ERROR: Cannot write to file: " + b64file)

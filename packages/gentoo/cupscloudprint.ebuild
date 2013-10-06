@@ -17,7 +17,8 @@ RDEPEND="!net-print/cups-cloudprint
 net-print/cups
 app-text/ghostscript-gpl
 dev-python/pycups
-dev-python/httplib2"
+dev-python/httplib2
+app-text/pdfjam"
 S=${WORKDIR}/${P}
 
 src_install() {
