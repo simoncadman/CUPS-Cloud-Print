@@ -297,6 +297,13 @@ class Printer:
             option = optionparts[0]
             value = optionparts[1]
             overridecapabilities[option] = value
+        # portrait 
+        if optiontext == 'portrait':
+            overridecapabilities['Orientation'] = 'Portrait'
+            
+        # landscape
+        if optiontext == 'landscape':
+            overridecapabilities['Orientation'] = 'Landscape'
             
     overrideDefaultDefaults = { 'Duplex' : 'None' }
     
@@ -421,12 +428,16 @@ class Printer:
             fixedNameMap['psk:OneSided'] = "None"
             fixedNameMap['psk:TwoSidedShortEdge'] = "DuplexTumble"
             fixedNameMap['psk:TwoSidedLongEdge'] = "DuplexNoTumble"
+          if capabilityName == "psk:PageOrientation":
+            fixedNameMap['psk:Landscape'] = "Landscape"
+            fixedNameMap['psk:Portrait'] = "Portrait"
       else:
           # capability
           fixedNameMap['ns1:Colors']                                 = "ColorModel"
           fixedNameMap['ns1:PrintQualities']                         = "OutputMode"
           fixedNameMap['ns1:InputBins']                              = "InputSlot"
           fixedNameMap['psk:JobDuplexAllDocumentsContiguously']      = "Duplex"
+          fixedNameMap['psk:PageOrientation']                        = "Orientation"
           
       for itemName in fixedNameMap:
         if details['name'] == itemName:

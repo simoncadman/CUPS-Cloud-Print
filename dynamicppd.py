@@ -19,7 +19,7 @@ import sys, os, locale
 
 if len(sys.argv) == 2 and sys.argv[1] == 'version':
     # line below is replaced on commit
-    CCPVersion = "20131005 215654"
+    CCPVersion = "20131006 154219"
     print "CUPS Cloud Print Dynamic PPD Generator Version " + CCPVersion
     sys.exit(0)
 
