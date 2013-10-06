@@ -291,18 +291,19 @@ class Printer:
     cupsprinters = connection.getPrinters()
     capabilities = { "capabilities" : [] }
     overridecapabilities = {}
+    ignorecapabilities = [ 'Orientation' ]
     for optiontext in overrideoptions:
         if '=' in optiontext :
             optionparts = optiontext.split('=')
             option = optionparts[0]
+            if option in ignorecapabilities:
+                continue
+            
             value = optionparts[1]
             overridecapabilities[option] = value
-        # portrait 
-        if optiontext == 'portrait':
-            overridecapabilities['Orientation'] = 'Portrait'
             
         # landscape
-        if optiontext == 'landscape':
+        if optiontext == 'landscape' or optiontext == 'nolandscape':
             overridecapabilities['Orientation'] = 'Landscape'
             
     overrideDefaultDefaults = { 'Duplex' : 'None' }
@@ -363,6 +364,20 @@ class Printer:
     Returns:
       boolean: True = submitted, False = errors.
     """
+    rotate = 0
+    
+    for optiontext in options.split(' '):
+        
+        # landscape
+        if optiontext == 'landscape':
+            # landscape
+            rotate = 90
+            
+        # nolandscape - already rotates
+        if optiontext == 'nolandscape':
+            # rotate back
+            rotate = -90
+    
     if jobtype == 'pdf':
       if not os.path.exists(jobfile):
 	print("ERROR: PDF doesnt exist")
