@@ -21,7 +21,7 @@ from printer import Printer
 
 if len(sys.argv) == 2 and sys.argv[1] == 'version':
     # line below is replaced on commit
-    CCPVersion = "20131006 200957"
+    CCPVersion = "20131008 210502"
     print "CUPS Cloud Print Printer Lister Version " + CCPVersion
     sys.exit(0)
 
@@ -33,4 +33,7 @@ if printers == None:
   sys.exit(1)
 
 for foundprinter in printers:
-  print(foundprinter['name'].encode('ascii', 'replace') + ' - ' + printer.printerNameToUri(foundprinter['account'], foundprinter['name'].encode('ascii', 'replace')) + " - " + foundprinter['account'])
+  printerName = foundprinter['name']
+  if 'displayName' in foundprinter:
+      printerName = foundprinter['displayName']
+  print(printerName.encode('ascii', 'replace') + ' - ' + printer.printerNameToUri(foundprinter['account'], foundprinter['name'].encode('ascii', 'replace')) + " - " + foundprinter['account'])
