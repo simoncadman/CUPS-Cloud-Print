@@ -1,3 +1,15 @@
+2013-10-09 Simon Cadman <src@niftiestsoftware.com>
+
+        * 20131009 :
+          Fix: Adding printers with prefix no longer errors
+          Fix: Ignore duplicate parameters
+          Fix: Landscape printing should now work correctly on all printers
+          Fix: No longer error on adding printers with duplicate capability names,
+          Fix: Override default for when applications assume wrong default values ( eg duplex )
+          Fix: Detect duplex option
+          Change: List cloud printers script now shows display name instead of printer name
+          Change: pdfjam dependency now required
+
 2013-09-14 Simon Cadman <src@niftiestsoftware.com>
 
         * 20130914 :
