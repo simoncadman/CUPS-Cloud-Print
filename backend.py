@@ -20,7 +20,7 @@ progname = 'cloudprint'
 
 if len(sys.argv) == 2 and sys.argv[1] == 'version':
     # line below is replaced on commit
-    CCPVersion = "20131008 210525"
+    CCPVersion = "20131008 223154"
     print "CUPS Cloud Print CUPS Backend Version " + CCPVersion
     sys.exit(0)
 
