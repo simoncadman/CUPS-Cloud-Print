@@ -10,7 +10,7 @@ Vcs-Browser: https://github.com/simoncadman/CUPS-Cloud-Print
 
 Package: cupscloudprint
 Architecture: all
-Depends: cups, python-cups, python-httplib2, pdfjam, texlive-latex-extra
+Depends: cups, python-cups, python-httplib2, imagemagick
 Description: Print via Google Cloud print using CUPS
  Print via Google Cloud print using CUPS, useful when you need to print via a printer which does not have Linux support, but does support Google Cloud Print.
 

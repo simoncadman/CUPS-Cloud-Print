@@ -9,7 +9,7 @@ COMMENT=	Google Cloud Print driver for CUPS
 
 RUN_DEPENDS=	cups:${PORTSDIR}/print/cups\
 		ps2pdf:${PORTSDIR}/print/ghostscript9-nox11\
-		pdfjam:${PORTSDIR}/print/pdfjam\
+		ImageMagick:${PORTSDIR}/graphics/ImageMagick\
 		${PYTHON_SITELIBDIR}/cups.so:${PORTSDIR}/print/py-cups\
 		${PYTHON_SITELIBDIR}/httplib2:${PORTSDIR}/www/py-httplib2
 

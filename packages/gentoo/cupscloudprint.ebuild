@@ -18,7 +18,7 @@ net-print/cups
 app-text/ghostscript-gpl
 dev-python/pycups
 dev-python/httplib2
-app-text/pdfjam"
+media-gfx/imagemagick"
 S=${WORKDIR}/${P}
 
 src_install() {
