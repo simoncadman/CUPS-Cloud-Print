@@ -1,3 +1,8 @@
+2013-10-13 Simon Cadman <src@niftiestsoftware.com>
+
+        * 20131013 :
+          Change: Use imagemagick for rotating PDFs instead of pdfjam due to issues with CentOS and Fedora
+
 2013-10-09 Simon Cadman <src@niftiestsoftware.com>
 
         * 20131009 :

@@ -1,3 +1,9 @@
+cupscloudprint (20131013-1) raring; urgency=low
+
+  * Change: Use imagemagick for rotating PDFs instead of pdfjam due to issues with CentOS and Fedora
+
+ -- simon cadman <src@niftiestsoftware.com>  Sun, 13 Oct 2013 15:39:05 +0000
+
 cupscloudprint (20131009-1) raring; urgency=low
 
   * New: Use display name if available for generating values for ppd
