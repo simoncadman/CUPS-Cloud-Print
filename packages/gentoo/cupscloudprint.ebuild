@@ -3,7 +3,7 @@
 # $Header: $
 
 inherit git-2 eutils
-
+EAPI="2"
 DESCRIPTION="Google Cloud Print"
 HOMEPAGE="https://ccp.niftiestsoftware.com"
 EGIT_REPO_URI="git://github.com/simoncadman/CUPS-Cloud-Print.git"
@@ -18,7 +18,7 @@ net-print/cups
 app-text/ghostscript-gpl
 dev-python/pycups
 dev-python/httplib2
-media-gfx/imagemagick"
+media-gfx/imagemagick[postscript,jpeg,png]"
 S=${WORKDIR}/${P}
 
 src_install() {
