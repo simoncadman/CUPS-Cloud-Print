@@ -103,8 +103,8 @@ class Auth:
         except:
            sys.stderr.write("DEBUG: Cannot alter file permissions\n")
 	return credentials
-      except:
-	print("\nThe code does not seem to be valid, please try again.\n")
+      except Exception as e:
+	print("\nThe code does not seem to be valid ( " + str(e) + " ), please try again.\n")
 	
   AddAccount = staticmethod(AddAccount)
   
