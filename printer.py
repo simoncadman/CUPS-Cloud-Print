@@ -45,6 +45,18 @@ class Printer:
     else:
       self.requestors = [requestors]
 
+  def getCUPSPrintersForAccount(self, account):
+      import cups
+      connection = cups.Connection()
+      cupsprinters = connection.getPrinters()
+      accountPrinters = []
+      for cupsprinter in cupsprinters:
+          id, requestor = self.getPrinterIDByURI(cupsprinters[cupsprinter]['device-uri'])
+          if id != None and requestor != None:
+              if requestor.getAccount() == account:
+                  accountPrinters.append(cupsprinters[cupsprinter])
+      return accountPrinters, connection
+
   def getPrinters(self, fulldetails = False):
     """Fetch a list of printers
 

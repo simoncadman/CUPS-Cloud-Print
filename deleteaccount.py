@@ -17,10 +17,11 @@
 
 import cups, os, json, sys
 from auth import Auth
+from printer import Printer
 
 if len(sys.argv) == 2 and sys.argv[1] == 'version':
     # line below is replaced on commit
-    CCPVersion = "20131013 171837"
+    CCPVersion = "20131017 211222"
     print "CUPS Cloud Print Delete Account Script Version " + CCPVersion
     sys.exit(0)
 
@@ -42,7 +43,21 @@ while True:
     answer = raw_input("Which account to delete (1-" + str(i) + ") ? ")
     if ( answer.isdigit() and int(answer) <= i and int(answer) >= 1 ):
         if ( Auth.DeleteAccount(accounts[int(answer)-1]) == None ):
-            print(accounts[int(answer)-1] + " deleted. Associated printers were not deleted.")
+            print(accounts[int(answer)-1] + " deleted.")
+            deleteprintersanswer = raw_input("Also delete associated printers? ")
+            if deleteprintersanswer.startswith("Y") or deleteprintersanswer.startswith("y"):
+                printer = Printer(requestors)
+                printers, connection = printer.getCUPSPrintersForAccount(accounts[int(answer)-1])
+                if len(printers) == 0:
+                    print "No printers to delete"
+                else:
+                    for cupsPrinter in printers:
+                        print "Deleting " + cupsPrinter['printer-info']
+                        deleteReturnValue = connection.deletePrinter(cupsPrinter['printer-info'])
+                        if deleteReturnValue != None:
+                            print "Error deleting printer: " + str(deleteReturnValue)
+            else:
+                print "Not deleting associated printers"
         else:
             print("Error deleting stored credentials, perhaps /etc/cloudprint.conf is not writable?")
     elif ( answer == "0" ):
