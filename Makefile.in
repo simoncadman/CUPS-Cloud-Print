@@ -12,6 +12,7 @@ install: all
 	mkdir -p ${prefix}/lib/cloudprint-cups/oauth2client
 	mkdir -p ${prefix}/lib/cloudprint-cups/testfiles
 	${INSTALL} ${srcdir}/*.py ${prefix}/lib/cloudprint-cups/
+	${INSTALL} ${srcdir}/full-test.sh ${prefix}/lib/cloudprint-cups/
 	${INSTALL} ${srcdir}/testfiles/* ${prefix}/lib/cloudprint-cups/testfiles/
 	${INSTALL} ${srcdir}/oauth2client/*.py ${prefix}/lib/cloudprint-cups/oauth2client/
 	mkdir -p ${cupsbackend}
