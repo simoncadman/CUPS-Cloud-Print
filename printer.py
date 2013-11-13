@@ -406,7 +406,7 @@ class Printer:
             return False
       b64file = self.base64Encode(jobfile)
       if b64file == None: # pragma: no cover 
-        print("ERROR: Cannot write to file: " + b64file)
+        print("ERROR: Cannot write to file: " + jobfile + ".b64")
         return False
       fdata = self.readFile(b64file)
       os.unlink(b64file)
