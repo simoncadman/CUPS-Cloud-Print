@@ -160,8 +160,13 @@ def test_printers():
         assert isinstance(printerId, unicode)
         assert isinstance(requestor, MockRequestor)
         
+        # get ppd
+        ppdid = 'MFG:GOOGLE;DRV:GCP;CMD:POSTSCRIPT;MDL:'
+        ppds = connection.getPPDs(ppd_device_id=ppdid)
+        printerppdname, printerppd = ppds.popitem()
+        
         # test add printer to cups
-        assert printerItem.addPrinter( printername, uri, connection, 'testppd.ppd') != None
+        assert printerItem.addPrinter( printername, uri, connection, printerppdname) != None
         testprintername = printerItem.sanitizePrinterName(printername)
         
         # test printer actually added to cups
