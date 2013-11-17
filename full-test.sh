@@ -9,7 +9,11 @@ export category="$2"
 export testconfig="$4"
 
 if [[ ! -f /etc/cloudprint.conf ]]; then
-        sudo wget $testconfig -O /etc/cloudprint.conf
+        if [[ "`whoami`" == "root"  ]]; then
+                wget $testconfig -O /etc/cloudprint.conf    
+        else
+                sudo wget $testconfig -O /etc/cloudprint.conf
+        fi
 fi
 
 py.test
