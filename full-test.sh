@@ -23,11 +23,8 @@ if [[ "`whoami`" == "root"  ]]; then
           /etc/init.d/cupsd start
        fi
        
-       hash systemctl
-       if [[ $? == 0 ]]; then
-          # running systemd, run manually if fails
-          systemctl start cups || cupsd
-       fi
+       # start via systemctl if exists
+       hash systemctl && ( systemctl start cups || cupsd )
 fi
 
 py.test
