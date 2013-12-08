@@ -26,9 +26,8 @@ if [[ "`whoami`" == "root"  ]]; then
        hash systemctl
        if [[ $? == 0 ]]; then
           # running systemd
-          systemctl start cups
-
-          if [[ $? != 0  ]] ; then
+          
+          if [[ systemctl start cups ]] ; then
                # run manually if systemctl fails
                cupsd -C /etc/cups/cupsd.conf
           fi
