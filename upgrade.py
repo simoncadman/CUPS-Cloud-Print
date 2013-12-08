@@ -22,7 +22,7 @@ from auth import Auth
 
 if len(sys.argv) == 2 and sys.argv[1] == 'version':
     # line below is replaced on commit
-    CCPVersion = "20131208 150104"
+    CCPVersion = "20131208 153309"
     print "CUPS Cloud Print Upgrade Script Version " + CCPVersion
     sys.exit(0)
     
