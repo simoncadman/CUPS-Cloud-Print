@@ -26,8 +26,8 @@ def test_fileIsPDFSucceeds():
 def test_whichFails():
     assert backend.which('dsaph9oaghd9ahdsadsadsadsadasd') == None
     
-def test_whichSuceeds():
-    assert backend.which('bash') == '/bin/bash'
+def test_whichSucceeds():
+    assert backend.which('bash') in ( '/bin/bash', '/usr/bin/bash' )
 
 def test_backendDescription():
     import re
