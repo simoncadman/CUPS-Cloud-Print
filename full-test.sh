@@ -22,6 +22,12 @@ if [[ "`whoami`" == "root"  ]]; then
           # running gentoo
           /etc/init.d/cupsd start
        fi
+       
+       hash systemctl
+       if [[ $? == 0 ]]; then
+          # running systemd
+          systemctl start cups
+       fi
 fi
 
 py.test
