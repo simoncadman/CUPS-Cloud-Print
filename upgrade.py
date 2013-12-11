@@ -22,11 +22,15 @@ from auth import Auth
 
 if len(sys.argv) == 2 and sys.argv[1] == 'version':
     # line below is replaced on commit
-    CCPVersion = "20131208 175340"
+    CCPVersion = "20131211 114027"
     print "CUPS Cloud Print Upgrade Script Version " + CCPVersion
     sys.exit(0)
-    
-connection = cups.Connection()
+
+try:
+    connection = cups.Connection()
+except Exception, e:
+    sys.stderr.write("Could not connect to CUPS: " + e.message +"\n")
+    sys.exit(0)
 cupsprinters = connection.getPrinters()
 
 if os.path.exists(Auth.config):
