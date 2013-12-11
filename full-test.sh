@@ -25,6 +25,9 @@ if [[ "`whoami`" == "root"  ]]; then
        
        # start via systemctl if exists
        hash systemctl && ( systemctl start cups || cupsd )
+       
+       # start via 'start' if exists
+       hash start && ( start cups || cupsd )
 fi
 
 py.test
