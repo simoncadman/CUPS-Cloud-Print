@@ -27,7 +27,7 @@ def test_whichFails():
     assert backend.which('dsaph9oaghd9ahdsadsadsadsadasd') == None
     
 def test_whichSucceeds():
-    assert backend.which('bash') in ( '/bin/bash', '/usr/bin/bash' )
+    assert backend.which('bash') in ( '/bin/bash', '/usr/bin/bash', '/usr/sbin/bash' )
 
 def test_backendDescription():
     import re
