@@ -30,4 +30,4 @@ if [[ "`whoami`" == "root"  ]]; then
        hash start && ( start cups || cupsd )
 fi
 
-py.test
+py.test2 || py.test
