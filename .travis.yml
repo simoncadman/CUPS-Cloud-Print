@@ -19,3 +19,5 @@ script:
  - py.test --cov .
  - sudo cat /var/log/cups/cloudprint_log /var/log/cups/error_log
  - sudo unlink /usr/share/cups/model/testppd.ppd
+after_success:
+ - curl -d 'githubrepo=$TRAVIS_REPO_SLUG' -d 'commit=$TRAVIS_COMMIT' utils.niftiestsoftware.com/buildpackage/successful-build.php
