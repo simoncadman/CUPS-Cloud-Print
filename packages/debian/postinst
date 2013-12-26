@@ -42,3 +42,5 @@ if [[ -e /etc/cloudprint.conf ]]; then
 fi
 chgrp lp /usr/lib/cloudprint-cups/auth.py
 /usr/lib/cloudprint-cups/upgrade.py
+
+#DEBHELPER#

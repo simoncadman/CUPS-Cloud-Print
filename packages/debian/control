@@ -3,14 +3,13 @@ Section: net
 Priority: extra
 Maintainer: simon cadman <src@niftiestsoftware.com>
 Build-Depends: debhelper (>= 8.0.0), autotools-dev, libcups2-dev
-Standards-Version: 3.9.2
+Standards-Version: 3.9.3
 Homepage: http://ccp.niftiestsoftware.com/
 Vcs-Git: git://github.com/simoncadman/CUPS-Cloud-Print.git
 Vcs-Browser: https://github.com/simoncadman/CUPS-Cloud-Print
 
 Package: cupscloudprint
 Architecture: all
-Depends: cups, python-cups, python-httplib2, imagemagick
+Depends: ${misc:Depends}, cups, python-cups, python-httplib2, imagemagick
 Description: Print via Google Cloud print using CUPS
  Print via Google Cloud print using CUPS, useful when you need to print via a printer which does not have Linux support, but does support Google Cloud Print.
-

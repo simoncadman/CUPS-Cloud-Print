@@ -1,10 +1,10 @@
-cupscloudprint (20131013-1) raring; urgency=low
+cupscloudprint (20131013-1) precise; urgency=low
 
   * Change: Use imagemagick for rotating PDFs instead of pdfjam due to issues with CentOS and Fedora
 
  -- simon cadman <src@niftiestsoftware.com>  Sun, 13 Oct 2013 15:39:05 +0000
 
-cupscloudprint (20131009-1) raring; urgency=low
+cupscloudprint (20131009-1) precise; urgency=low
 
   * New: Use display name if available for generating values for ppd
   * New: Added version param to scripts
@@ -17,7 +17,7 @@ cupscloudprint (20131009-1) raring; urgency=low
 
  -- simon cadman <src@niftiestsoftware.com>  Mon, 08 Sep 2013 22:52:03 +0000
 
-cupscloudprint (20130914-1) raring; urgency=low
+cupscloudprint (20130914-1) precise; urgency=low
 
   * New: Use display name if available for generating values for ppd
   * New: Added version param to scripts
@@ -30,7 +30,7 @@ cupscloudprint (20130914-1) raring; urgency=low
 
  -- simon cadman <src@niftiestsoftware.com>  Sat, 14 Sep 2013 14:16:17 +0000
 
-cupscloudprint (20130718-1) raring; urgency=low
+cupscloudprint (20130718-1) precise; urgency=low
 
   * New: PDF now supplied to CCP via CUPS, increases printing speed.
   * New: Default to A4 paper size in countries that use A4 paper.
@@ -46,19 +46,19 @@ cupscloudprint (20130718-1) raring; urgency=low
         
  -- simon cadman <src@niftiestsoftware.com>  Thu, 18 Jul 2013 16:12:00 +0000
 
-cupscloudprint (20130608-1) raring; urgency=low
+cupscloudprint (20130608-1) precise; urgency=low
 
   * Fix: Parameters with long names should no longer error.
 
  -- simon cadman <src@niftiestsoftware.com>  Sat, 08 Jun 2013 17:02:00 +0000
 
-cupscloudprint (20130604-1) raring; urgency=high
+cupscloudprint (20130604-1) precise; urgency=high
 
   * Fix: Fixed syntax error on adding individual printers.
 
  -- simon cadman <src@niftiestsoftware.com>  Tue, 04 Jun 2013 00:10:00 +0000
 
-cupscloudprint (20130603-1) raring; urgency=low
+cupscloudprint (20130603-1) precise; urgency=low
 
   * New: Added reportissues.py script to assist in debugging issues.
   * Change: On answering no for adding all printers, ask to add individual printers.
@@ -67,26 +67,26 @@ cupscloudprint (20130603-1) raring; urgency=low
 
  -- simon cadman <src@niftiestsoftware.com>  Mon, 03 Jun 2013 21:58:00 +0000
 
-cupscloudprint (20130526-1) raring; urgency=low
+cupscloudprint (20130526-1) precise; urgency=low
 
   * Fix: Strip out colon chars from capability and options in ppd. 
 
  -- simon cadman <src@niftiestsoftware.com>  Sun, 26 May 2013 15:55:00 +0000
 
-cupscloudprint (20130519-1) raring; urgency=low
+cupscloudprint (20130519-1) precise; urgency=low
 
   * Fix: No longer error on capabilities with missing display name.
 
  -- simon cadman <src@niftiestsoftware.com>  Sun, 19 May 2013 11:06:00 +0000
 
-cupscloudprint (20130510-1) raring; urgency=low
+cupscloudprint (20130510-1) precise; urgency=low
 
   * Fix: Deb package installs cloudprint files with correct permissions.
   * Fix: Only update config file permissions when config options changed, not when tokens refreshed.
 
  -- simon cadman <src@niftiestsoftware.com>  Fri, 10 May 2013 22:39:00 +0000
 
-cupscloudprint (20130504-1) raring; urgency=low
+cupscloudprint (20130504-1) precise; urgency=low
 
   * New: Capabilities for printer supplied by Google Cloud Print ( eg Colour, Print tray, etc ) now appear as options in dialogs.
   * New: Script to delete user accounts ( deleteaccount.py )
