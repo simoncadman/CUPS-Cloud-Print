@@ -19,7 +19,7 @@ import sys, os, locale
 
 if len(sys.argv) == 2 and sys.argv[1] == 'version':
     # line below is replaced on commit
-    CCPVersion = "20131227 000528"
+    CCPVersion = "20131228 234702"
     print "CUPS Cloud Print Dynamic PPD Generator Version " + CCPVersion
     sys.exit(0)
 
@@ -70,6 +70,9 @@ elif sys.argv[1] == 'cat':
                     if len(language.split('_')) > 1:
                         if language.split('_')[1] not in lettercountries:
                             defaultpapertype = "A4"
+                
+                if '_' in language and language.split("_")[0] != "en":
+                    language = language.split("_")[0]
                 
                 ppddetails = """*PPD-Adobe: "4.3"
 *%%%% PPD file for Cloud Print with CUPS.

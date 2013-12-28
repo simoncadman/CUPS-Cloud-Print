@@ -19,7 +19,7 @@ import sys, os, subprocess
 
 if len(sys.argv) == 2 and sys.argv[1] == 'version':
     # line below is replaced on commit
-    CCPVersion = "20131227 000528"
+    CCPVersion = "20131228 234702"
     print "CUPS Cloud Print Issue Reporting Script Version " + CCPVersion
     sys.exit(0)
 

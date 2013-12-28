@@ -31,3 +31,6 @@ if [[ "`whoami`" == "root"  ]]; then
 fi
 
 py.test2 || py.test
+LANG="en_GB.UTF-8" ./dynamicppd.py cat "`./dynamicppd.py list | head -n1 | cut -d'"' -f2`" > /tmp/test.ppd ; cupstestppd /tmp/test.ppd
+LANG="en_US.UTF-8" ./dynamicppd.py cat "`./dynamicppd.py list | head -n1 | cut -d'"' -f2`" > /tmp/test.ppd ; cupstestppd /tmp/test.ppd
+LANG="it_IT.UTF-8" ./dynamicppd.py cat "`./dynamicppd.py list | head -n1 | cut -d'"' -f2`" > /tmp/test.ppd ; cupstestppd /tmp/test.ppd
