@@ -21,7 +21,7 @@ from printer import Printer
 
 if len(sys.argv) == 2 and sys.argv[1] == 'version':
     # line below is replaced on commit
-    CCPVersion = "20131229 204516"
+    CCPVersion = "20131229 213506"
     print "CUPS Cloud Print Setup Script Version " + CCPVersion
     sys.exit(0)
 
@@ -155,7 +155,7 @@ for cupsprinter in cupsprinters:
       prunePrinters.append(cupsprinter)
 
 if len( prunePrinters ) > 0 :
-  print "Found " + str(len( prunePrinters )) + " printers which no longer exist on cloud print:")
+  print "Found " + str(len( prunePrinters )) + " printers which no longer exist on cloud print:"
   for printer in prunePrinters:
     print printer
   answer = raw_input("Remove (Y/N)? ")
