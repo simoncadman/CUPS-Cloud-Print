@@ -31,6 +31,15 @@ if [[ "`whoami`" == "root"  ]]; then
 fi
 
 py.test2 || py.test
-LANG="en_GB.UTF-8" ./dynamicppd.py cat "`./dynamicppd.py list | head -n1 | cut -d'"' -f2`" > /tmp/test.ppd ; cupstestppd /tmp/test.ppd
-LANG="en_US.UTF-8" ./dynamicppd.py cat "`./dynamicppd.py list | head -n1 | cut -d'"' -f2`" > /tmp/test.ppd ; cupstestppd /tmp/test.ppd
-LANG="it_IT.UTF-8" ./dynamicppd.py cat "`./dynamicppd.py list | head -n1 | cut -d'"' -f2`" > /tmp/test.ppd ; cupstestppd /tmp/test.ppd
+
+printers="`./dynamicppd.py list | cut -d'"' -f2`"
+langs="en_GB.UTF-8
+en_US.UTF-8
+it_IT.UTF-8"
+
+for printer in $printers; do
+    for lang in $langs; do
+        echo "Testing $printer with $lang"
+        LANG="$lang" ./dynamicppd.py cat "$printer" > /tmp/test.ppd ; cupstestppd /tmp/test.ppd
+    done
+done
