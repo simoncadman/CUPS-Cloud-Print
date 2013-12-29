@@ -15,25 +15,8 @@
 #    You should have received a copy of the GNU General Public License    
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-import sys
-from auth import Auth
-from printer import Printer
+import py_compile, glob
 
-if len(sys.argv) == 2 and sys.argv[1] == 'version':
-    # line below is replaced on commit
-    CCPVersion = "20131229 214214"
-    print "CUPS Cloud Print Printer Lister Version " + CCPVersion
-    sys.exit(0)
-
-requestors, storage = Auth.SetupAuth(True)
-printer = Printer(requestors)
-printers = printer.getPrinters()
-if printers == None:
-  print "No Printers Found"
-  sys.exit(1)
-
-for foundprinter in printers:
-  printerName = foundprinter['name']
-  if 'displayName' in foundprinter:
-      printerName = foundprinter['displayName']
-  print printerName.encode('ascii', 'replace') + ' - ' + printer.printerNameToUri(foundprinter['account'], foundprinter['name'].encode('ascii', 'replace')) + " - " + foundprinter['account']
+def test_syntaxCheck():
+    for pyFile in glob.glob('*.py'):
+        assert py_compile.compile(pyFile, doraise=True) == None
