@@ -68,7 +68,7 @@ class cloudprintrequestor(httplib2.Http):
     try:
     	decodedresponse = json.loads(response)
     except ValueError as e:
-    	print("ERROR: Failed to decode JSON, value was: " + response)
+    	print "ERROR: Failed to decode JSON, value was: " + response
     	raise e
     
     return decodedresponse

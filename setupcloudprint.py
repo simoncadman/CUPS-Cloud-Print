@@ -21,7 +21,7 @@ from printer import Printer
 
 if len(sys.argv) == 2 and sys.argv[1] == 'version':
     # line below is replaced on commit
-    CCPVersion = "20131228 234702"
+    CCPVersion = "20131229 204516"
     print "CUPS Cloud Print Setup Script Version " + CCPVersion
     sys.exit(0)
 
@@ -32,7 +32,7 @@ if os.path.exists(Auth.config):
     data = json.loads(content)
   except:
     # remove old config file
-    print("Deleting old configuration file: " + Auth.config)
+    print "Deleting old configuration file: " + Auth.config
     os.remove(Auth.config)
 
 
@@ -56,13 +56,13 @@ for requestor in requestors:
   printer = Printer(requestor)
   printers = printer.getPrinters()
   if printers == None:
-    print("Sorry, no printers were found on your Google Cloud Print account.")
+    print "Sorry, no printers were found on your Google Cloud Print account."
     continue
   
   answer = raw_input("Add all Google Cloud Print printers to local CUPS install from " + requestor.getAccount() + " (Y/N)? ")
   if not ( answer.startswith("Y") or answer.startswith("y") ):
     answer = 1
-    print("Not adding printers automatically")
+    print "Not adding printers automatically"
     
     while int(answer) != 0:
         i=0
@@ -83,7 +83,7 @@ for requestor in requestors:
                 if ( prefixanswer.startswith("Y") or prefixanswer.startswith("y") ):
                     prefix = raw_input("Prefix ( e.g. GCP- )? ")
                     if prefix == "":
-                        print("Not using prefix")
+                        print "Not using prefix"
                 
                 printername = prefix + ccpprinter['name'].encode('ascii', 'replace')
                 uri = printer.printerNameToUri(ccpprinter['account'], ccpprinter['name'].encode('ascii', 'replace'))
@@ -103,7 +103,7 @@ for requestor in requestors:
   if ( prefixanswer.startswith("Y") or prefixanswer.startswith("y") ):
       prefix = raw_input("Prefix ( e.g. GCP- )? ")
       if prefix == "":
-        print("Not using prefix")
+        print "Not using prefix"
     
   for ccpprinter in printers:
     uri = printer.printerNameToUri(ccpprinter['account'], ccpprinter['name'].encode('ascii', 'replace'))
@@ -134,9 +134,9 @@ for requestor in requestors:
 	addedCount+=1
       
   if addedCount > 0:
-    print("Added " + str(addedCount) + " new printers to CUPS")
+    print "Added " + str(addedCount) + " new printers to CUPS"
   else:
-    print("No new printers to add")
+    print "No new printers to add"
 
 printeruris = []
 printer = Printer(requestors)
@@ -155,13 +155,13 @@ for cupsprinter in cupsprinters:
       prunePrinters.append(cupsprinter)
 
 if len( prunePrinters ) > 0 :
-  print("Found " + str(len( prunePrinters )) + " printers which no longer exist on cloud print:")
+  print "Found " + str(len( prunePrinters )) + " printers which no longer exist on cloud print:")
   for printer in prunePrinters:
-    print(printer)
+    print printer
   answer = raw_input("Remove (Y/N)? ")
   if answer.startswith("Y") or answer.startswith("y"):
     for printer in prunePrinters:
       connection.deletePrinter(printer)
-      print("Deleted",printer)
+      print "Deleted",printer
   else:
-    print("Not removing old printers")
+    print "Not removing old printers"

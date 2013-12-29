@@ -133,10 +133,10 @@ class Printer:
     except Exception , error:
       result = error
     if result == None:
-      print("Added " + printername)
+      print "Added " + printername
       return True
     else:
-      print("Error adding: " + printername,result)
+      print "Error adding: " + printername,result
       return False
       
   def parseURI( self, uristring ):
@@ -215,11 +215,11 @@ class Printer:
       try:
 	s = f.read()
       except IOError, e: # pragma: no cover 
-	print('ERROR: Error reading %s\n%s', pathname, e)
+	print 'ERROR: Error reading %s\n%s', pathname, e
       f.close()
       return s
     except IOError, e: # pragma: no cover 
-      print('ERROR: Error opening %s\n%s', pathname, e)
+      print 'ERROR: Error opening %s\n%s', pathname, e
       return None
 
   def writeFile(self, file_name, data):
@@ -392,32 +392,32 @@ class Printer:
     
     if jobtype == 'pdf':
       if not os.path.exists(jobfile):
-        print("ERROR: PDF doesnt exist")
+        print "ERROR: PDF doesnt exist"
         return False
       if rotate > 0:
         p = subprocess.Popen(['convert', '-density', '300x300', jobfile, '-rotate', str(rotate), jobfile], stdout=subprocess.PIPE)
         output = p.communicate()[0]
         result = p.returncode
         if result != 0:
-            print("ERROR: Failed to rotate PDF")
+            print "ERROR: Failed to rotate PDF"
             return False
         if not os.path.exists(jobfile):
-            print("ERROR: PDF doesnt exist")
+            print "ERROR: PDF doesnt exist"
             return False
       b64file = self.base64Encode(jobfile)
       if b64file == None: # pragma: no cover 
-        print("ERROR: Cannot write to file: " + jobfile + ".b64")
+        print "ERROR: Cannot write to file: " + jobfile + ".b64"
         return False
       fdata = self.readFile(b64file)
       os.unlink(b64file)
       hsid = True
     elif jobtype in ['png', 'jpeg']:
       if not os.path.exists(jobfile):
-        print("ERROR: File doesnt exist")
+        print "ERROR: File doesnt exist"
         return False
       fdata = self.readFile(jobfile)
     else:
-      print("ERROR: Unknown job type")
+      print "ERROR: Unknown job type"
       return False
     
     title = jobname
@@ -436,7 +436,7 @@ class Printer:
       ('contentType', content_type[jobtype]),
       ('capabilities', json.dumps( self.getCapabilities(printerid, printername, options ) ) )
     ]
-    print('DEBUG: Capability headers are: %s', headers[4])
+    print 'DEBUG: Capability headers are: %s', headers[4]
     edata = ""
     if jobtype in ['pdf', 'jpeg', 'png']:
       edata = self.encodeMultiPart(headers, file_type=content_type[jobtype])
@@ -446,11 +446,11 @@ class Printer:
       if responseobj['success'] == True:
 	return True
       else:
-	print('ERROR: Error response from Cloud Print for type %s: %s' % ( jobtype, responseobj['message'] ) )
+	print 'ERROR: Error response from Cloud Print for type %s: %s' % ( jobtype, responseobj['message'] )
 	return False
 	
     except Exception, error_msg: # pragma: no cover
-      print('ERROR: Print job %s failed with %s' % ( jobtype, error_msg ))
+      print 'ERROR: Print job %s failed with %s' % ( jobtype, error_msg )
       return False
 
   def getInternalName ( self, details, internalType, capabilityName = None, existingList = [] ) :

@@ -20,7 +20,7 @@ progname = 'cloudprint'
 
 if len(sys.argv) == 2 and sys.argv[1] == 'version':
     # line below is replaced on commit
-    CCPVersion = "20131228 234702"
+    CCPVersion = "20131229 204516"
     print "CUPS Cloud Print CUPS Backend Version " + CCPVersion
     sys.exit(0)
 
@@ -63,7 +63,7 @@ def getBackendDescription ( ) :
 if __name__ == '__main__': # pragma: no cover 
     
   if len(sys.argv) == 1:
-    print(getBackendDescription())
+    print getBackendDescription()
   
     try:
       libpath = "/usr/local/lib/cloudprint-cups/"
@@ -77,7 +77,7 @@ if __name__ == '__main__': # pragma: no cover
       printers = printer.getPrinters()
       if printers != None:
         for foundprinter in printers:
-	  print("network " + printer.printerNameToUri(foundprinter['account'], foundprinter['name']) + " " + "\"" + foundprinter['name'] + "\" \"Google Cloud Print\"" + " \"MFG:Google;MDL:Cloud Print;DES:GoogleCloudPrint;\"" )
+	  print "network " + printer.printerNameToUri(foundprinter['account'], foundprinter['name']) + " " + "\"" + foundprinter['name'] + "\" \"Google Cloud Print\"" + " \"MFG:Google;MDL:Cloud Print;DES:GoogleCloudPrint;\""
     except Exception as error:
       print error
       pass
@@ -115,7 +115,7 @@ if __name__ == '__main__': # pragma: no cover
       OUT = open (tempFile, 'w')
       
       if OUT == False:
-        print("ERROR: Cannot write " + tempFile)
+        print "ERROR: Cannot write " + tempFile
         sys.exit(1)
 
       for line in sys.stdin:

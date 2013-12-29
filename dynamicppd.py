@@ -19,7 +19,7 @@ import sys, os, locale
 
 if len(sys.argv) == 2 and sys.argv[1] == 'version':
     # line below is replaced on commit
-    CCPVersion = "20131228 234702"
+    CCPVersion = "20131229 204516"
     print "CUPS Cloud Print Dynamic PPD Generator Version " + CCPVersion
     sys.exit(0)
 
@@ -39,7 +39,7 @@ requestors, storage = Auth.SetupAuth(False)
 printer = Printer(requestors)
 printers = printer.getPrinters(True)
 if printers == None:
-    print("ERROR: No Printers Found")
+    print "ERROR: No Printers Found"
     sys.exit(1)
 
 if ( len(sys.argv) < 2 ):
@@ -47,7 +47,7 @@ if ( len(sys.argv) < 2 ):
 
 if sys.argv[1] == 'list':
     for foundprinter in printers:
-        print('"cupscloudprint:' + foundprinter['account'].encode('ascii', 'replace').replace(' ', '-') +':' + foundprinter['name'].encode('ascii', 'replace').replace(' ', '-') + '.ppd" en "Google" "' + foundprinter['name'].encode('ascii', 'replace') + ' (' + foundprinter['account'] + ')" "MFG:GOOGLE;DRV:GCP;CMD:POSTSCRIPT;MDL:' + printer.printerNameToUri( foundprinter['account'], foundprinter['name'] ) +';"')
+        print '"cupscloudprint:' + foundprinter['account'].encode('ascii', 'replace').replace(' ', '-') +':' + foundprinter['name'].encode('ascii', 'replace').replace(' ', '-') + '.ppd" en "Google" "' + foundprinter['name'].encode('ascii', 'replace') + ' (' + foundprinter['account'] + ')" "MFG:GOOGLE;DRV:GCP;CMD:POSTSCRIPT;MDL:' + printer.printerNameToUri( foundprinter['account'], foundprinter['name'] ) +';"'
         
 elif sys.argv[1] == 'cat':
     if len(sys.argv) == 2 or sys.argv[2] == "":
@@ -222,5 +222,5 @@ elif sys.argv[1] == 'cat':
                 sys.exit(0)
                 
         # no printers found
-        print("ERROR: PPD " + ppdname +" Not Found")
+        print "ERROR: PPD " + ppdname +" Not Found"
         sys.exit(1)

@@ -21,29 +21,29 @@ from printer import Printer
 
 if len(sys.argv) == 2 and sys.argv[1] == 'version':
     # line below is replaced on commit
-    CCPVersion = "20131228 234702"
+    CCPVersion = "20131229 204516"
     print "CUPS Cloud Print Delete Account Script Version " + CCPVersion
     sys.exit(0)
 
 while True:
   result = Auth.SetupAuth(False)
   if not result:
-    print("No accounts are currently setup")
+    print "No accounts are currently setup"
     break
   else:
     requestors, storage = result
-    print("You currently have these accounts configured: ")
+    print "You currently have these accounts configured: "
     i=0
     accounts = []
     for requestor in requestors:
         i+=1
         accounts.append(requestor.getAccount())
-        print(str(i) + ") " + requestor.getAccount())
-    print("0) Exit")
+        print str(i) + ") " + requestor.getAccount()
+    print "0) Exit"
     answer = raw_input("Which account to delete (1-" + str(i) + ") ? ")
     if ( answer.isdigit() and int(answer) <= i and int(answer) >= 1 ):
         if ( Auth.DeleteAccount(accounts[int(answer)-1]) == None ):
-            print(accounts[int(answer)-1] + " deleted.")
+            print accounts[int(answer)-1] + " deleted."
             deleteprintersanswer = raw_input("Also delete associated printers? ")
             if deleteprintersanswer.startswith("Y") or deleteprintersanswer.startswith("y"):
                 printer = Printer(requestors)
@@ -59,8 +59,8 @@ while True:
             else:
                 print "Not deleting associated printers"
         else:
-            print("Error deleting stored credentials, perhaps /etc/cloudprint.conf is not writable?")
+            print "Error deleting stored credentials, perhaps /etc/cloudprint.conf is not writable?"
     elif ( answer == "0" ):
         break
     else:
-        print("Invalid response, use '0' to exit")
+        print "Invalid response, use '0' to exit"

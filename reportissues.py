@@ -19,7 +19,7 @@ import sys, os, subprocess
 
 if len(sys.argv) == 2 and sys.argv[1] == 'version':
     # line below is replaced on commit
-    CCPVersion = "20131228 234702"
+    CCPVersion = "20131229 204516"
     print "CUPS Cloud Print Issue Reporting Script Version " + CCPVersion
     sys.exit(0)
 
@@ -35,14 +35,14 @@ requestors, storage = Auth.SetupAuth(False)
 printer = Printer(requestors)
 printers = printer.getPrinters(True)
 if printers == None:
-    print("ERROR: No Printers Found")
+    print "ERROR: No Printers Found"
     sys.exit(1)
 
 for foundprinter in printers:
-    print('"cupscloudprint:' + foundprinter['account'].encode('ascii', 'replace').replace(' ', '-') +':' + foundprinter['name'].encode('ascii', 'replace').replace(' ', '-') + '.ppd" en "Google" "' + foundprinter['name'].encode('ascii', 'replace') + ' (' + foundprinter['account'] + ')" "MFG:GOOGLE;DRV:GCP;CMD:POSTSCRIPT;MDL:' + printer.printerNameToUri( foundprinter['account'], foundprinter['name'] ) +';"')
-    print("")
-    print(foundprinter['fulldetails'])
-    print("\n")
+    print '"cupscloudprint:' + foundprinter['account'].encode('ascii', 'replace').replace(' ', '-') +':' + foundprinter['name'].encode('ascii', 'replace').replace(' ', '-') + '.ppd" en "Google" "' + foundprinter['name'].encode('ascii', 'replace') + ' (' + foundprinter['account'] + ')" "MFG:GOOGLE;DRV:GCP;CMD:POSTSCRIPT;MDL:' + printer.printerNameToUri( foundprinter['account'], foundprinter['name'] ) +';"'
+    print ""
+    print foundprinter['fulldetails']
+    print "\n"
     p = subprocess.Popen([os.path.join(libpath,'dynamicppd.py'), 'cat', 'cupscloudprint:' + foundprinter['account'].encode('ascii', 'replace').replace(' ', '-') +':' + foundprinter['name'].encode('ascii', 'replace').replace(' ', '-') + '.ppd'], stdout=subprocess.PIPE)
     ppddata = p.communicate()[0]
     result = p.returncode
@@ -53,8 +53,8 @@ for foundprinter in printers:
     p = subprocess.Popen(['cupstestppd', '/tmp/.ppdfile'], stdout=subprocess.PIPE)
     testdata = p.communicate()[0]
     result = p.returncode
-    print("Result of cupstestppd was " + str(result))
-    print("".join(testdata))
+    print "Result of cupstestppd was " + str(result)
+    print "".join(testdata)
     if result != 0:
         print "cupstestppd errored: "
         print ppddata

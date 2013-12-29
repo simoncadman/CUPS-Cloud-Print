@@ -21,7 +21,7 @@ from printer import Printer
 
 if len(sys.argv) == 2 and sys.argv[1] == 'version':
     # line below is replaced on commit
-    CCPVersion = "20131228 234702"
+    CCPVersion = "20131229 204516"
     print "CUPS Cloud Print Submit Job Version " + CCPVersion
     sys.exit(0)
     
@@ -35,12 +35,12 @@ printer = Printer(requestors)
 printerid, requestor = printer.getPrinterIDByURI(sys.argv[3])
 printer.requestor = requestor
 if printerid == None:
-  print("ERROR: Printer '" + sys.argv[3] + "' not found")
+  print "ERROR: Printer '" + sys.argv[3] + "' not found"
   sys.exit(1)
 
 if printer.submitJob(printerid, 'pdf', sys.argv[1], sys.argv[2], sys.argv[4], sys.argv[5] ):
-  print("INFO: Successfully printed")
+  print "INFO: Successfully printed"
   sys.exit(0)
 else:
-  print("ERROR: Failed to submit job to cloud print")
+  print "ERROR: Failed to submit job to cloud print"
   sys.exit(1)
