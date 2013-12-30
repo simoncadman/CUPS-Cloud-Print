@@ -19,7 +19,7 @@ import sys, os, locale
 
 if len(sys.argv) == 2 and sys.argv[1] == 'version':
     # line below is replaced on commit
-    CCPVersion = "20131230 174955"
+    CCPVersion = "20131230 175242"
     print "CUPS Cloud Print Dynamic PPD Generator Version " + CCPVersion
     sys.exit(0)
 
@@ -60,13 +60,8 @@ elif sys.argv[1] == 'cat':
             sys.exit(1)
         
         accountName = ppdparts[1]
-        printerPPDName = ppdparts[2].encode('ascii', 'replace').replace('-', ' ')[:-4]
+        printers = printer.getPrinters(True, accountName )
         
-        printers = printer.getPrinters(True, accountName, printerPPDName )
-        if printers == None or len(printers) == 0:
-            # if cant find printer specifically, try just account
-            printers = printer.getPrinters(True, accountName )
-            
         if printers == None or len(printers) == 0:
             # still cant find printer specifically, try all accounts
             printers = printer.getPrinters(True)
