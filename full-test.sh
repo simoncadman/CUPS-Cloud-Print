@@ -40,6 +40,7 @@ it_IT.UTF-8"
 for printer in $printers; do
     for lang in $langs; do
         echo "Testing $printer with $lang"
-        LANG="$lang" ./dynamicppd.py cat "$printer" > /tmp/test.ppd ; cupstestppd /tmp/test.ppd
+        LANG="$lang" ./dynamicppd.py cat "$printer" > /tmp/test.ppd
+        cupstestppd /tmp/test.ppd
     done
 done
