@@ -19,7 +19,7 @@ import sys, os, locale
 
 if len(sys.argv) == 2 and sys.argv[1] == 'version':
     # line below is replaced on commit
-    CCPVersion = "20131229 230733"
+    CCPVersion = "20131230 172259"
     print "CUPS Cloud Print Dynamic PPD Generator Version " + CCPVersion
     sys.exit(0)
 
@@ -37,15 +37,15 @@ def showUsage():
         
 requestors, storage = Auth.SetupAuth(False)
 printer = Printer(requestors)
-printers = printer.getPrinters(True)
-if printers == None:
-    print "ERROR: No Printers Found"
-    sys.exit(1)
 
 if ( len(sys.argv) < 2 ):
     showUsage()
 
 if sys.argv[1] == 'list':
+    printers = printer.getPrinters(True)
+    if printers == None:
+        print "ERROR: No Printers Found"
+        sys.exit(1)
     for foundprinter in printers:
         print '"cupscloudprint:' + foundprinter['account'].encode('ascii', 'replace').replace(' ', '-') +':' + foundprinter['name'].encode('ascii', 'replace').replace(' ', '-') + '.ppd" en "Google" "' + foundprinter['name'].encode('ascii', 'replace') + ' (' + foundprinter['account'] + ')" "MFG:GOOGLE;DRV:GCP;CMD:POSTSCRIPT;MDL:' + printer.printerNameToUri( foundprinter['account'], foundprinter['name'] ) +';"'
         
@@ -54,6 +54,18 @@ elif sys.argv[1] == 'cat':
         showUsage()
     else:
         ppdname = sys.argv[2]
+        ppdparts = ppdname.split(":")
+        if len(ppdparts) < 3:
+            print "ERROR: PPD name is invalid"
+            sys.exit(1)
+        
+        accountName = ppdparts[1]
+        ppdName = ppdparts[2]
+        printers = printer.getPrinters(True, accountName)
+        if printers == None:
+            print "ERROR: No Printers Found"
+            sys.exit(1)
+        
         # find printer
         for foundprinter in printers:
             if ppdname == 'cupscloudprint:' + foundprinter['account'].encode('ascii', 'replace').replace(' ', '-') +':' + foundprinter['name'].encode('ascii', 'replace').replace(' ', '-') + '.ppd':

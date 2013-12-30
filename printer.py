@@ -57,7 +57,7 @@ class Printer:
                   accountPrinters.append(cupsprinters[cupsprinter])
       return accountPrinters, connection
 
-  def getPrinters(self, fulldetails = False):
+  def getPrinters(self, fulldetails = False, accountName=None):
     """Fetch a list of printers
 
     Returns:
@@ -65,6 +65,8 @@ class Printer:
     """
     allprinters = []
     for requestor in self.requestors:
+      if accountName != None and accountName != requestor.getAccount():
+          continue
       responseobj = requestor.doRequest('search?connection_status=ALL&client=webui')
       if 'printers' in responseobj and len(responseobj['printers']) > 0:
 	for printer in responseobj['printers']:
