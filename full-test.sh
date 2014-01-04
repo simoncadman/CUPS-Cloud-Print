@@ -10,9 +10,9 @@ export testconfig="$4"
 
 if [[ ! -f /etc/cloudprint.conf ]]; then
         if [[ "`whoami`" == "root"  ]]; then
-                curl $testconfig -o /etc/cloudprint.conf
+                curl scp $testconfig /etc/cloudprint.conf
         else
-                sudo curl $testconfig -o /etc/cloudprint.conf
+                sudo scp $testconfig /etc/cloudprint.conf
         fi
 fi
 
