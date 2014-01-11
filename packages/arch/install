@@ -1,0 +1,9 @@
+post_upgrade() {
+  echo "Running post upgrade"
+  /usr/share/cloudprint-cups/upgrade.py
+}
+
+post_install() {
+  echo "Running post install"
+  /usr/share/cloudprint-cups/upgrade.py
+}

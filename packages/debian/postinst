@@ -24,7 +24,7 @@ if [[ ! -f /usr/bin/python2 ]]; then
     fi
     
     if [[ $pyversion != "" ]]; then
-        sed -i "1 s/\/usr\/bin\/env python2$/\/usr\/bin\/env $pyversion/" /usr/lib/cloudprint-cups/{backend.py,deleteaccount.py,dynamicppd.py,listcloudprinters.py,reportissues.py,setupcloudprint.py,submitjob.py,upgrade.py}
+        sed -i "1 s/\/usr\/bin\/env python2$/\/usr\/bin\/env $pyversion/" /usr/share/cloudprint-cups/{backend.py,deleteaccount.py,dynamicppd.py,listcloudprinters.py,reportissues.py,setupcloudprint.py,submitjob.py,upgrade.py}
         sed -i "1 s/\/usr\/bin\/env python2$/\/usr\/bin\/env $pyversion/" /usr/lib/cups/backend/cloudprint
         sed -i "1 s/\/usr\/bin\/env python2$/\/usr\/bin\/env $pyversion/" /usr/lib/cups/driver/cupscloudprint
     fi
@@ -40,7 +40,7 @@ chmod 750 /usr/lib/cups/driver/cupscloudprint
 if [[ -e /etc/cloudprint.conf ]]; then
     chgrp lp /etc/cloudprint.conf
 fi
-chgrp lp /usr/lib/cloudprint-cups/auth.py
-/usr/lib/cloudprint-cups/upgrade.py
+chgrp lp /usr/share/cloudprint-cups/auth.py
+/usr/share/cloudprint-cups/upgrade.py
 
 #DEBHELPER#

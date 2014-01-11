@@ -20,7 +20,7 @@ progname = 'cloudprint'
 
 if len(sys.argv) == 2 and sys.argv[1] == 'version':
     # line below is replaced on commit
-    CCPVersion = "20140105 180859"
+    CCPVersion = "20140111 152045"
     print "CUPS Cloud Print CUPS Backend Version " + CCPVersion
     sys.exit(0)
 
@@ -66,9 +66,9 @@ if __name__ == '__main__': # pragma: no cover
     print getBackendDescription()
   
     try:
-      libpath = "/usr/local/lib/cloudprint-cups/"
+      libpath = "/usr/local/share/cloudprint-cups/"
       if not os.path.exists( libpath  ):
-          libpath = "/usr/lib/cloudprint-cups"
+          libpath = "/usr/share/cloudprint-cups"
       sys.path.insert(0, libpath)
       from auth import Auth
       from printer import Printer
@@ -148,9 +148,9 @@ if __name__ == '__main__': # pragma: no cover
       ps2PdfName = "pstopdf"
       convertToPDFParams = [ps2PdfName, printFile, pdfFile]
 
-    submitjobpath = "/usr/lib/cloudprint-cups/" + "submitjob.py"
+    submitjobpath = "/usr/share/cloudprint-cups/" + "submitjob.py"
     if not os.path.exists( submitjobpath  ):
-	submitjobpath = "/usr/local/lib/cloudprint-cups/" + "submitjob.py"
+	submitjobpath = "/usr/local/share/cloudprint-cups/" + "submitjob.py"
 
     if not fileIsPDF( printFile  ):
   	sys.stderr.write( "INFO: Converting print job to PDF\n")

@@ -29,12 +29,12 @@ Follow configuration below.
 CONFIGURATION
 =============
 
-Run /usr/lib/cloudprint-cups/setupcloudprint.py ( or /usr/local/lib/cloudprint-cups/setupcloudprint.py ) and either allow it to add all 
+Run /usr/share/cloudprint-cups/setupcloudprint.py ( or /usr/local/share/cloudprint-cups/setupcloudprint.py ) and either allow it to add all 
 Cloud Print printers at once, or say 'N', and add manually:
 
 Add a new printer ( via http://127.0.0.1:631 or usual interface ) as a 'Google Cloud Print' network printer. Select the 'Make' as Google, and 'Model' as Cloud Print.
 Supply the connection name as a simple URI pointing to the printer you want to setup, you can obtain a list of URIs from 
-/usr/lib/cloudprint-cups/listcloudprinters.py ( or /usr/local/lib/cloudprint-cups/listcloudprinters.py ) :
+/usr/share/cloudprint-cups/listcloudprinters.py ( or /usr/local/share/cloudprint-cups/listcloudprinters.py ) :
   
 Print a test page, to confirm it is working.
 

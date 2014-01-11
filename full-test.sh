@@ -30,6 +30,12 @@ if [[ "`whoami`" == "root"  ]]; then
        hash start && ( start cups || cupsd )
 fi
 
+if [[ "`whoami`" == "root"  ]]; then
+    python -m compileall .
+else
+    sudo python -m compileall .
+fi
+
 py.test2 || py.test
 
 printers="`./dynamicppd.py list | cut -d'"' -f2`"
@@ -44,3 +50,5 @@ for printer in $printers; do
         cupstestppd /tmp/test.ppd
     done
 done
+
+tail /var/log/cups/cloudprint_log

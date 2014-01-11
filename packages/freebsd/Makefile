@@ -26,6 +26,6 @@ USE_GMAKE=	yes
 
 post-install:
 		chgrp cups /etc/cloudprint.conf
-		/usr/local/lib/cloudprint-cups/upgrade.py	
+		/usr/local/share/cloudprint-cups/upgrade.py	
 
 .include <bsd.port.mk>

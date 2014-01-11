@@ -20,11 +20,20 @@ from oauth2client import client
 from oauth2client import multistore_file
 from auth import Auth
 
+try:
+    logfile = open('/var/log/cups/cloudprint_log', 'a')
+except:
+    logfile = sys.stdout
+    logfile.write("Unable to write to log file /var/log/cups/cloudprint_log")
+
+# line below is replaced on commit
+CCPVersion = "20140111 152045"
+
 if len(sys.argv) == 2 and sys.argv[1] == 'version':
-    # line below is replaced on commit
-    CCPVersion = "20140105 180859"
     print "CUPS Cloud Print Upgrade Script Version " + CCPVersion
     sys.exit(0)
+
+logfile.write("Upgrading to " + CCPVersion + "\n")
 
 try:
     connection = cups.Connection()
@@ -43,7 +52,7 @@ if os.path.exists(Auth.config):
     sys.exit(0)
     
 else:
-  sys.stderr.write("\n\nRun: /usr/lib/cloudprint-cups/setupcloudprint.py to setup your Google Credentials and add your printers to CUPS\n\n")
+  sys.stderr.write("\n\nRun: /usr/share/cloudprint-cups/setupcloudprint.py to setup your Google Credentials and add your printers to CUPS\n\n")
   sys.exit(0)
   
 for device in cupsprinters:

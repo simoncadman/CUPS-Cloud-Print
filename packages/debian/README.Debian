@@ -2,7 +2,7 @@ cupscloudprint for Debian
 -------------------------
 
 After installation, run:
-	 sudo /usr/lib/cloudprint-cups/setupcloudprint.py 
+	 sudo /usr/share/cloudprint-cups/setupcloudprint.py 
 To setup your printers.
 
  -- simon cadman <src@niftiestsoftware.com>  Wed, 14 Mar 2012 14:26:15 +0000

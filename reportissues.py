@@ -19,13 +19,13 @@ import sys, os, subprocess
 
 if len(sys.argv) == 2 and sys.argv[1] == 'version':
     # line below is replaced on commit
-    CCPVersion = "20140105 180859"
+    CCPVersion = "20140111 152045"
     print "CUPS Cloud Print Issue Reporting Script Version " + CCPVersion
     sys.exit(0)
 
-libpath = "/usr/local/lib/cloudprint-cups/"
+libpath = "/usr/local/share/cloudprint-cups/"
 if not os.path.exists( libpath  ):
-    libpath = "/usr/lib/cloudprint-cups"
+    libpath = "/usr/share/cloudprint-cups"
 sys.path.insert(0, libpath)
 
 from auth import Auth

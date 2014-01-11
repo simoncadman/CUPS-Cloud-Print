@@ -1,4 +1,5 @@
 prefix = $(DESTDIR)@prefix@
+destprefix = @prefix@
 srcdir = @srcdir@
 INSTALL = @INSTALL@
 cupsdriver = ${DESTDIR}@cupsserverpath@/driver/
@@ -9,24 +10,20 @@ cupsgroup = @cupsgroup@
 all: backend.py
 
 install: all
-	mkdir -p ${prefix}/lib/cloudprint-cups/oauth2client
-	mkdir -p ${prefix}/lib/cloudprint-cups/testfiles
-	${INSTALL} ${srcdir}/*.py ${prefix}/lib/cloudprint-cups/
-	${INSTALL} ${srcdir}/full-test.sh ${prefix}/lib/cloudprint-cups/
-	${INSTALL} -m 644 ${srcdir}/testfiles/* ${prefix}/lib/cloudprint-cups/testfiles/
-	${INSTALL} -m 644 ${srcdir}/oauth2client/*.py ${prefix}/lib/cloudprint-cups/oauth2client/
+	mkdir -p ${prefix}/share/cloudprint-cups/oauth2client
+	mkdir -p ${prefix}/share/cloudprint-cups/testfiles
+	${INSTALL} ${srcdir}/*.py ${prefix}/share/cloudprint-cups/
+	${INSTALL} ${srcdir}/full-test.sh ${prefix}/share/cloudprint-cups/
+	unlink ${prefix}/share/cloudprint-cups/pre-commit.py
+	${INSTALL} -m 644 ${srcdir}/testfiles/* ${prefix}/share/cloudprint-cups/testfiles/
+	${INSTALL} -m 644 ${srcdir}/oauth2client/*.py ${prefix}/share/cloudprint-cups/oauth2client/
 	mkdir -p ${cupsbackend}
 	mkdir -p ${cupsdriver}
 	mkdir -p ${cupsmodel}
-	mkdir -p $(DESTDIR)/var/log/cups/
-	touch $(DESTDIR)/var/log/cups/cloudprint_log
-ifeq ($(NOPERMS),1)
-	${INSTALL} ${srcdir}/backend.py ${cupsbackend}cloudprint
-	${INSTALL} ${srcdir}/dynamicppd.py ${cupsdriver}cupscloudprint
-else
-	${INSTALL} -g `groups root | cut -d' ' -f1` -o root -m 755  ${srcdir}/backend.py ${cupsbackend}cloudprint
-	${INSTALL} -g `groups root | cut -d' ' -f1` -o root -m 755  ${srcdir}/dynamicppd.py ${cupsdriver}cupscloudprint
-	chown root:${cupsgroup} $(DESTDIR)/var/log/cups/cloudprint_log
-	chown -R root:${cupsgroup} ${prefix}/lib/cloudprint-cups/
-	chmod 660 $(DESTDIR)/var/log/cups/cloudprint_log
+	ln -f -s ${destprefix}/share/cloudprint-cups/backend.py ${cupsbackend}cloudprint
+	ln -f -s ${destprefix}/share/cloudprint-cups/dynamicppd.py ${cupsdriver}cupscloudprint
+	${INSTALL} -m 644 ${srcdir}/README.md ${prefix}/share/cloudprint-cups/README.md
+	${INSTALL} -m 644 ${srcdir}/COPYING ${prefix}/share/cloudprint-cups/COPYING
+ifneq ($(NOPERMS),1)
+	chown -R root:${cupsgroup} ${prefix}/share/cloudprint-cups/
 endif
