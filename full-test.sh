@@ -51,4 +51,10 @@ for printer in $printers; do
     done
 done
 
+ccpversion="`./setupcloudprint.py version`"
+osversion="`cat /proc/version`"
+jobname="CCP Test $ccpversion on $osversion at `date`"
+lp /usr/local/share/cloudprint-cups/testfiles/Test\ Page.pdf -d 'GCP-Save_to_Google_Docs' -t "$jobname"
+echo "Submitted job $jobname"
+
 tail /var/log/cups/cloudprint_log
