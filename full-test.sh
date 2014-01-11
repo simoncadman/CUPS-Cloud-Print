@@ -93,8 +93,8 @@ if [[ $testconfig != "" ]]; then
     fi
 fi
 
-if [[ `./listdrivefiles.py "$jobname"` != "133909 11QSOvUX6KZKZVB6nCB3GloLTJQ/MTM4OTQ3ODc0NDQwOA" ]]; then
-    echo "Uploaded file does not match expected etag or size"
+if [[ `./listdrivefiles.py "$jobname"` != "133909" ]]; then
+    echo "Uploaded file does not match expected size"
     exit 1
 fi
 

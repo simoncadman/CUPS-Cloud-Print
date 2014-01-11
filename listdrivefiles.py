@@ -21,7 +21,7 @@ from printer import Printer
 
 if len(sys.argv) == 2 and sys.argv[1] == 'version':
     # line below is replaced on commit
-    CCPVersion = "20140111 233828"
+    CCPVersion = "20140111 234945"
     print "CUPS Cloud Print Printer Drive Lister Version " + CCPVersion
     sys.exit(0)
 
@@ -34,7 +34,7 @@ if files == None:
 
 for drivefile in files:
     if len(sys.argv) == 2 and drivefile['title'] == sys.argv[1] + '.pdf':
-        print drivefile['fileSize'], drivefile['etag'].strip('"')
+        print drivefile['fileSize']
         sys.exit(0)
     elif len(sys.argv) != 2:
         print drivefile['title']
