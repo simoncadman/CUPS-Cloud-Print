@@ -96,6 +96,8 @@ fi
 if [[ `./listdrivefiles.py "$jobname"` != "133909" ]]; then
     echo "Uploaded file does not match expected size"
     exit 1
+else
+    echo "Uploaded file matches expected size"
 fi
 
 tail /var/log/cups/cloudprint_log
