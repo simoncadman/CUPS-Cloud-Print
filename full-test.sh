@@ -58,7 +58,11 @@ pdfpath="/usr/share/cloudprint-cups/testfiles/Test Page.pdf"
 if [[ -e "/usr/local/share/cloudprint-cups/testfiles/Test Page.pdf" ]]; then
     pdfpath="/usr/local/share/cloudprint-cups/testfiles/Test Page.pdf"
 fi
-
+if [[ "`whoami`" == "root"  ]]; then
+    ./setupcloudprint.py unattended
+else
+    sudo ./setupcloudprint.py unattended    
+fi
 lp "$pdfpath" -d 'GCP-Save_to_Google_Docs' -t "$jobname"
 echo "Submitted job $jobname"
 

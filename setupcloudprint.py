@@ -21,9 +21,16 @@ from printer import Printer
 
 if len(sys.argv) == 2 and sys.argv[1] == 'version':
     # line below is replaced on commit
-    CCPVersion = "20140111 205456"
+    CCPVersion = "20140111 211930"
     print "CUPS Cloud Print Setup Script Version " + CCPVersion
     sys.exit(0)
+
+unattended = False
+answer = ""
+
+if len(sys.argv) == 2 and sys.argv[1] == 'unattended':
+    print "Running unattended, setting up all printers"
+    unattended = True
 
 if os.path.exists(Auth.config):
   try:
@@ -35,12 +42,13 @@ if os.path.exists(Auth.config):
     print "Deleting old configuration file: " + Auth.config
     os.remove(Auth.config)
 
-
 while True:
   requestors, storage = Auth.SetupAuth(True)
   print "You currently have these accounts configured: "
   for requestor in requestors:
     print requestor.getAccount()
+  if unattended:
+      break
   answer = raw_input("Add more accounts (Y/N)? ")
   if not ( answer.startswith("Y") or answer.startswith("y") ):
     break
@@ -59,7 +67,11 @@ for requestor in requestors:
     print "Sorry, no printers were found on your Google Cloud Print account."
     continue
   
-  answer = raw_input("Add all Google Cloud Print printers to local CUPS install from " + requestor.getAccount() + " (Y/N)? ")
+  if unattended:
+    answer = "Y"
+  else:
+    answer = raw_input("Add all Google Cloud Print printers to local CUPS install from " + requestor.getAccount() + " (Y/N)? ")
+    
   if not ( answer.startswith("Y") or answer.startswith("y") ):
     answer = 1
     print "Not adding printers automatically"
@@ -99,9 +111,19 @@ for requestor in requestors:
                 print "\nPrinter " + str(answer) + " not found\n"
     continue
   
-  prefixanswer = raw_input("Use a prefix for names of created printers (Y/N)? ")
+  prefixanswer = ""
+  if unattended:
+    prefixanswer = "Y"
+  else:
+    prefixanswer = raw_input("Use a prefix for names of created printers (Y/N)? ")
+    
   if ( prefixanswer.startswith("Y") or prefixanswer.startswith("y") ):
-      prefix = raw_input("Prefix ( e.g. GCP- )? ")
+      prefix = ""
+      if unattended:
+        prefix = "GCP-"
+      else:
+        prefix = raw_input("Prefix ( e.g. GCP- )? ")
+        
       if prefix == "":
         print "Not using prefix"
     
@@ -120,7 +142,7 @@ for requestor in requestors:
       for ccpprinter2 in cupsprinters:
 	if printer.sanitizePrinterName(cupsprinters[ccpprinter2]['printer-info']) == printer.sanitizePrinterName(printername):
 	  foundbyname = True
-      if ( foundbyname ) :
+      if ( foundbyname and not unattended ) :
 	answer = raw_input("Printer " + printer.sanitizePrinterName(printername) + " already exists, supply another name (Y/N)? ")
 	if ( answer.startswith("Y") or answer.startswith("y") ):
 	  printername = raw_input("New printer name? ")
@@ -128,6 +150,9 @@ for requestor in requestors:
 	  answer = raw_input("Overwrite " + printer.sanitizePrinterName(printername) + " with new printer (Y/N)? ")
 	  if ( answer.startswith("N") or answer.startswith("n") ):
 	    printername = ""
+      elif foundbyname and unattended:
+          print "Not adding printer " + printername + ", as already exists"
+          printername = ""
       
       if printername != "":
 	printer.addPrinter(printername, uri, connection)
