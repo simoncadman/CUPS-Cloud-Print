@@ -54,9 +54,9 @@ done
 ccpversion="`./setupcloudprint.py version`"
 osversion="`cat /proc/version`"
 jobname="CCP Test $ccpversion on $osversion at `date`"
-pdfpath="/usr/share/cloudprint-cups/testfiles/Test\ Page.pdf"
-if [[ -e "/usr/local/share/cloudprint-cups/testfiles/Test\ Page.pdf" ]]; then
-    pdfpath="/usr/local/share/cloudprint-cups/testfiles/Test\ Page.pdf"
+pdfpath="/usr/share/cloudprint-cups/testfiles/Test Page.pdf"
+if [[ -e "/usr/local/share/cloudprint-cups/testfiles/Test Page.pdf" ]]; then
+    pdfpath="/usr/local/share/cloudprint-cups/testfiles/Test Page.pdf"
 fi
 
 lp "$pdfpath" -d 'GCP-Save_to_Google_Docs' -t "$jobname"
