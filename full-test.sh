@@ -31,9 +31,9 @@ if [[ "`whoami`" == "root"  ]]; then
 fi
 
 if [[ "`whoami`" == "root"  ]]; then
-    python -m compileall .
+    python2 -m compileall .
 else
-    sudo python -m compileall .
+    sudo python2 -m compileall .
 fi
 
 py.test2 || py.test
