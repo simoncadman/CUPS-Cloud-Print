@@ -22,12 +22,17 @@ from auth import Auth
 
 try:
     logfile = open('/var/log/cups/cloudprint_log', 'a')
+    
+    # fix ownership of log file
+    os.chown('/var/log/cups/cloudprint_log', 0, Auth.GetLPID())
+    os.chmod('/var/log/cups/cloudprint_log', 0660)
+    
 except:
     logfile = sys.stdout
     logfile.write("Unable to write to log file /var/log/cups/cloudprint_log")
 
 # line below is replaced on commit
-CCPVersion = "20140111 214226"
+CCPVersion = "20140111 220539"
 
 if len(sys.argv) == 2 and sys.argv[1] == 'version':
     print "CUPS Cloud Print Upgrade Script Version " + CCPVersion

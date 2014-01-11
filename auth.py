@@ -26,15 +26,6 @@ class Auth:
   config = '/etc/cloudprint.conf'
   
   def GetLPID():
-    """Delete an account from the configuration file
-
-    Args:
-      storage: storage, instance of storage to store credentials in.
-      userid: string, reference for the account
-      
-    Returns:
-      deleted: int , None on failure
-    """
     # try lp first, then cups#
     lpgrp = None
     try:
