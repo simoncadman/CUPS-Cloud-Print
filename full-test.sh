@@ -84,4 +84,18 @@ if [[ $success == 0 ]]; then
     exit 1
 fi
 
+if [[ $testconfig != "" ]]; then
+    # download drive config file so we can check if file exists on drive correctly
+    if [[ "`whoami`" == "root"  ]]; then
+            scp $testconfig.drive /etc/cloudprint.conf
+    else
+            sudo scp $testconfig.drive /etc/cloudprint.conf
+    fi
+fi
+
+if [[ `./listdrivefiles.py "$jobname"` != "133909 11QSOvUX6KZKZVB6nCB3GloLTJQ/MTM4OTQ3ODc0NDQwOA" ]]; then
+    echo "Uploaded file does not match expected etag or size"
+    exit 1
+fi
+
 tail /var/log/cups/cloudprint_log

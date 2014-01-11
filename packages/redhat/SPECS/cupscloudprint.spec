@@ -53,6 +53,7 @@ make install DESTDIR=$RPM_BUILD_ROOT NOPERMS=1
 %attr(755, root, lp) %{_usr}/share/cloudprint-cups/deleteaccount.py
 %attr(755, root, lp) %{_usr}/share/cloudprint-cups/dynamicppd.py
 %attr(755, root, lp) %{_usr}/share/cloudprint-cups/listcloudprinters.py
+%attr(755, root, lp) %{_usr}/share/cloudprint-cups/listdrivefiles.py
 %attr(755, root, lp) %{_usr}/share/cloudprint-cups/full-test.sh
 %attr(755, root, lp) %{_usr}/share/cloudprint-cups/reportissues.py
 %attr(755, root, lp) %{_usr}/share/cloudprint-cups/setupcloudprint.py

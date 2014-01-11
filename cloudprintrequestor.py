@@ -36,7 +36,7 @@ class cloudprintrequestor(httplib2.Http):
     """
     return self.account
   
-  def doRequest ( self, path, headers = None, data = None , boundary = None, testResponse=None ): # pragma: no cover 
+  def doRequest ( self, path, headers = None, data = None , boundary = None, testResponse=None, endpointurl=None ): # pragma: no cover 
     """Sends a request to Google Cloud Print
 
     Args:
@@ -53,6 +53,8 @@ class cloudprintrequestor(httplib2.Http):
     headers['user-agent'] = "CUPS Cloud Print"
     
     url = '%s/%s' % (self.CLOUDPRINT_URL, path)
+    if endpointurl != None:
+        url = '%s/%s' % (endpointurl, path)
     
     # use test response for testing
     if testResponse == None:

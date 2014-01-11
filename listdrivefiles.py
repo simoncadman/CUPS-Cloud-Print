@@ -22,18 +22,19 @@ from printer import Printer
 if len(sys.argv) == 2 and sys.argv[1] == 'version':
     # line below is replaced on commit
     CCPVersion = "20140111 233828"
-    print "CUPS Cloud Print Printer Lister Version " + CCPVersion
+    print "CUPS Cloud Print Printer Drive Lister Version " + CCPVersion
     sys.exit(0)
 
-requestors, storage = Auth.SetupAuth(True)
+requestors, storage = Auth.SetupAuth(True, permissions=['https://www.googleapis.com/auth/cloudprint', 'https://www.googleapis.com/auth/drive.readonly'])
 printer = Printer(requestors)
-printers = printer.getPrinters()
-if printers == None:
-  print "No Printers Found"
+files = printer.getDriveFiles()
+if files == None:
+  print "No Files Found"
   sys.exit(1)
 
-for foundprinter in printers:
-  printerName = foundprinter['name']
-  if 'displayName' in foundprinter:
-      printerName = foundprinter['displayName']
-  print printerName.encode('ascii', 'replace') + ' - ' + printer.printerNameToUri(foundprinter['account'], foundprinter['name'].encode('ascii', 'replace')) + " - " + foundprinter['account']
+for drivefile in files:
+    if len(sys.argv) == 2 and drivefile['title'] == sys.argv[1] + '.pdf':
+        print drivefile['fileSize'], drivefile['etag'].strip('"')
+        sys.exit(0)
+    elif len(sys.argv) != 2:
+        print drivefile['title']

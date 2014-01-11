@@ -459,6 +459,20 @@ class Printer:
       print 'ERROR: Print job %s failed with %s' % ( jobtype, error_msg )
       return False
 
+  def getDriveFiles ( self ):
+      returnValue = []
+      for requestor in self.requestors:
+        responseobj = requestor.doRequest( 'files', endpointurl="https://www.googleapis.com/drive/v2" )
+        if 'error' in responseobj:
+            print "Errored fetching files from drive"
+            pass
+        else:
+            for item in responseobj['items']:
+                returnValue.append( item )
+      if len(returnValue) == 0:
+          return None
+      return returnValue
+      
   def getInternalName ( self, details, internalType, capabilityName = None, existingList = [] ) :
       returnValue = None
       fixedNameMap = {}

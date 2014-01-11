@@ -77,7 +77,7 @@ class Auth:
     while True:
       flow = client.OAuth2WebServerFlow(client_id=Auth.clientid,
 				    client_secret=Auth.clientsecret,
-				    scope='https://www.googleapis.com/auth/cloudprint',
+				    scope=['https://www.googleapis.com/auth/cloudprint'],
 				    user_agent=userid)
       auth_uri = flow.step1_get_authorize_url()
       print "Open this URL, grant access to CUPS Cloud Print, then provide the code displayed : \n\n" + auth_uri + "\n"
@@ -99,7 +99,7 @@ class Auth:
 	
   AddAccount = staticmethod(AddAccount)
   
-  def SetupAuth(interactive=False):
+  def SetupAuth(interactive=False, permissions=['https://www.googleapis.com/auth/cloudprint']):
     """Sets up requestors with authentication tokens
 
     Args:
@@ -128,7 +128,7 @@ class Auth:
 	    Auth.config,
 	    Auth.clientid,
 	    userid,
-	    ['https://www.googleapis.com/auth/cloudprint'])
+	    permissions)
       credentials = storage.get()
 
       if not credentials and interactive: # pragma: no cover
