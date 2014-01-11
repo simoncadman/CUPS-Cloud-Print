@@ -42,7 +42,6 @@ make install DESTDIR=$RPM_BUILD_ROOT NOPERMS=1
 %attr(644, root, lp) %{_usr}/share/cloudprint-cups/test_cloudprintrequestor.py
 %attr(644, root, lp) %{_usr}/share/cloudprint-cups/test_mockrequestor.py
 %attr(644, root, lp) %{_usr}/share/cloudprint-cups/test_printer.py
-%attr(644, root, lp) %{_usr}/share/cloudprint-cups/test_syntax.py
 %attr(644, root, lp) %{_usr}/share/cloudprint-cups/oauth2client/__init__.py
 %attr(644, root, lp) %{_usr}/share/cloudprint-cups/oauth2client/anyjson.py
 %attr(644, root, lp) %{_usr}/share/cloudprint-cups/oauth2client/client.py
