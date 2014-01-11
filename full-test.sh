@@ -66,4 +66,22 @@ fi
 lp "$pdfpath" -d 'GCP-Save_to_Google_Docs' -t "$jobname"
 echo "Submitted job $jobname"
 
+success=0
+for i in {1..30}
+do
+   echo "Waiting for job to complete: $i of 30 tries"
+   jobcount="`lpstat -W not-completed | wc -l`"
+   if [[ $jobcount == 0 ]]; then
+        success=1
+        break
+   fi
+   sleep 1
+done
+
+if [[ $success == 0 ]]; then
+    echo "Job failed to submit in 30 seconds"
+    lpstat -W all
+    exit 1
+fi
+
 tail /var/log/cups/cloudprint_log
