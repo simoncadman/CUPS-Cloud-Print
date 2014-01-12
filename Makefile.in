@@ -20,8 +20,13 @@ install: all
 	mkdir -p ${cupsbackend}
 	mkdir -p ${cupsdriver}
 	mkdir -p ${cupsmodel}
-	ln -f -s ${destprefix}/share/cloudprint-cups/backend.py ${cupsbackend}cloudprint
-	ln -f -s ${destprefix}/share/cloudprint-cups/dynamicppd.py ${cupsdriver}cupscloudprint
+	ifeq ($(NOPERMS),1)
+	   ${INSTALL} ${srcdir}/backend.py ${cupsbackend}cloudprint
+	   ${INSTALL} ${srcdir}/dynamicppd.py ${cupsdriver}cupscloudprint
+	else
+	   ${INSTALL} -g `groups root | cut -d' ' -f1` -o root -m 755  ${srcdir}/backend.py ${cupsbackend}cloudprint
+	   ${INSTALL} -g `groups root | cut -d' ' -f1` -o root -m 755  ${srcdir}/dynamicppd.py ${cupsdriver}cupscloudprint
+	endif
 	${INSTALL} -m 644 ${srcdir}/README.md ${prefix}/share/cloudprint-cups/README.md
 	${INSTALL} -m 644 ${srcdir}/COPYING ${prefix}/share/cloudprint-cups/COPYING
 ifneq ($(NOPERMS),1)
