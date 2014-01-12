@@ -32,7 +32,7 @@ except:
     logfile.write("Unable to write to log file /var/log/cups/cloudprint_log")
 
 # line below is replaced on commit
-CCPVersion = "20140111 235856"
+CCPVersion = "20140112 004450"
 
 if len(sys.argv) == 2 and sys.argv[1] == 'version':
     print "CUPS Cloud Print Upgrade Script Version " + CCPVersion
