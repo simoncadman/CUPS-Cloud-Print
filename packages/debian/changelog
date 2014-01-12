@@ -1,3 +1,12 @@
+cupscloudprint (20140112-1) precise; urgency=low
+
+  * New: Added test script for post-packaging testing
+  * New: Can now delete associated printers when deleting an account
+  * New: When invalid OAuth2 shown, show the error message
+  * Change: Moved files from /usr/lib/ to /usr/share
+
+ -- simon cadman <src@niftiestsoftware.com>  Sun, 12 Jan 2014 15:06:59 +0000
+
 cupscloudprint (20131013-1) precise; urgency=low
 
   * Change: Use imagemagick for rotating PDFs instead of pdfjam due to issues with CentOS and Fedora
