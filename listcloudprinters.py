@@ -15,13 +15,20 @@
 #    You should have received a copy of the GNU General Public License    
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-import sys
+import sys, logging
 from auth import Auth
 from printer import Printer
 
+logpath = '/var/log/cups/cloudprint_log'
+try:
+    logging.basicConfig(filename=logpath,level=logging.INFO)
+except:
+    logging.basicConfig(level=logging.INFO)
+    logging.error("Unable to write to log file "+ logpath)
+
 if len(sys.argv) == 2 and sys.argv[1] == 'version':
     # line below is replaced on commit
-    CCPVersion = "20140126 212108"
+    CCPVersion = "20140126 213803"
     print "CUPS Cloud Print Printer Lister Version " + CCPVersion
     sys.exit(0)
 

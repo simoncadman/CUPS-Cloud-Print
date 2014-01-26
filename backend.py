@@ -20,7 +20,7 @@ progname = 'cloudprint'
 
 if len(sys.argv) == 2 and sys.argv[1] == 'version':
     # line below is replaced on commit
-    CCPVersion = "20140126 212108"
+    CCPVersion = "20140126 213803"
     print "CUPS Cloud Print CUPS Backend Version " + CCPVersion
     sys.exit(0)
 
@@ -170,7 +170,7 @@ if __name__ == '__main__': # pragma: no cover
     output = p.communicate()[0]
     result = p.returncode
     sys.stderr.write(output)
-    logging.info(output)
+    logging.info(output.strip())
     logging.info(pdfFile + " sent to cloud print, deleting")
     if os.path.exists( printFile ):
        os.unlink( printFile )

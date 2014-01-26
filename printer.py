@@ -13,7 +13,7 @@
 #
 #    You should have received a copy of the GNU General Public License    
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
-import json, urllib, os, mimetypes, base64, mimetools, re, hashlib, subprocess
+import json, urllib, os, mimetypes, base64, mimetools, re, hashlib, subprocess, logging
 from auth import Auth
 from urlparse import urlparse
 
@@ -442,7 +442,7 @@ class Printer:
       ('contentType', content_type[jobtype]),
       ('capabilities', json.dumps( self.getCapabilities(printerid, printername, options ) ) )
     ]
-    print 'DEBUG: Capability headers are: %s', headers[4]
+    logging.info('Capability headers are: %s', headers[4])
     edata = ""
     if jobtype in ['pdf', 'jpeg', 'png']:
       edata = self.encodeMultiPart(headers, file_type=content_type[jobtype])
