@@ -37,7 +37,7 @@ else:
     sys.stderr.write("If you are upgrading from version 20131013 or earlier you should be aware that the scripts have moved from /usr/lib/cloudprint-cups to /usr/share/cloudprint-cups\n")
 
 # line below is replaced on commit
-CCPVersion = "20140126 174301"
+CCPVersion = "20140126 180729"
 
 if len(sys.argv) == 2 and sys.argv[1] == 'version':
     print "CUPS Cloud Print Upgrade Script Version " + CCPVersion
@@ -70,13 +70,22 @@ if which('lpadmin') == None:
     sys.stderr.write("lpadmin command not found, you may need to run this script as root\n")
     sys.exit(1)
   
+try:
+    print "Fetching list of available ppds..."
+    allppds = connection.getPPDs()
+    print "List retrieved successfully"
+except Exception, e:
+    sys.stderr.write("Error connecting to CUPS: " + str(e) + "\n")
+    sys.exit(1)
+    
 for device in cupsprinters:
     try:
         if ( cupsprinters[device]["device-uri"].find("cloudprint://") == 0 ):
             print "Updating " + cupsprinters[device]["printer-info"]
             ppdid = 'MFG:GOOGLE;DRV:GCP;CMD:POSTSCRIPT;MDL:' + cupsprinters[device]["device-uri"] + ';'
-            ppds = connection.getPPDs(ppd_device_id=ppdid)
-            printerppdname, printerppd = ppds.popitem()
+            for ppd in allppds:
+                if allppds[ppd]['ppd-device-id'] == ppdid:
+                    printerppdname = ppd
             p = subprocess.Popen(["lpadmin", "-p", cupsprinters[device]["printer-info"], "-m", printerppdname], stdout=subprocess.PIPE)
             output = p.communicate()[0]
             result = p.returncode
