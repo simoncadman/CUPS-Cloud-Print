@@ -142,7 +142,12 @@ class Auth:
       # renew if expired
       requestor = cloudprintrequestor()
       if credentials.access_token_expired: # pragma: no cover 
-	credentials.refresh(requestor)
+        from oauth2client.client import AccessTokenRefreshError
+        try:
+                credentials.refresh(requestor)
+        except AccessTokenRefreshError as e:
+                sys.stderr.write("Failed to renew token (error: "+ str(e)  +"), if you have revoked access to CUPS Cloud Print in your Google Account, please delete /etc/cloudprint.conf and re-run /usr/share/cloudprint-cups/setupcloudprint.py")
+                sys.exit(1)
       
       requestor = credentials.authorize(requestor)
       requestor.setAccount(userid)
