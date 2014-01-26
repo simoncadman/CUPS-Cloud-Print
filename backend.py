@@ -15,12 +15,12 @@
 #    You should have received a copy of the GNU General Public License
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-import sys, os, subprocess, mimetypes
+import sys, os, subprocess, mimetypes, logging
 progname = 'cloudprint'
 
 if len(sys.argv) == 2 and sys.argv[1] == 'version':
     # line below is replaced on commit
-    CCPVersion = "20140126 204837"
+    CCPVersion = "20140126 212108"
     print "CUPS Cloud Print CUPS Backend Version " + CCPVersion
     sys.exit(0)
 
@@ -95,14 +95,14 @@ if __name__ == '__main__': # pragma: no cover
 
   logpath = '/var/log/cups/cloudprint_log'
   try:
-    logfile = open(logpath, 'a')
+    logging.basicConfig(filename=logpath,level=logging.INFO)
   except:
-    logfile = sys.stdout
-    logfile.write("Unable to write to log file " + logpath)
-
+    logging.basicConfig(level=logging.INFO)
+    logging.error("Unable to write to log file "+ logpath)
+  
   if sys.argv[3] == "Set Default Options":
     print "ERROR: Unimplemented command: " + sys.argv[3]
-    logfile.write("ERROR: Unimplemented command: " + sys.argv[3]);
+    logging.error("Unimplemented command: " + sys.argv[3]);
     sys.exit(0)
   else:
     # if no printfile, put stdin to a temp file
@@ -136,11 +136,11 @@ if __name__ == '__main__': # pragma: no cover
       sys.stdout.write("URI must be \"cloudprint:/<cloud printer name>\"!\n")
       sys.exit(255)
   
-    logfile.write("Printing file " + printFile + "\n")
+    logging.info("Printing file " + printFile)
     optionsstring = ""
     for option in sys.argv:
       optionsstring += " '" + option + "'"
-    logfile.write("Device is " + uri + " , printername is " + printername + ", Params are: " + optionsstring + "\n")
+    logging.info("Device is " + uri + " , printername is " + printername + ", Params are: " + optionsstring)
 
     pdfFile = printFile+".pdf"
     ps2PdfName = "ps2pdf"
@@ -156,29 +156,29 @@ if __name__ == '__main__': # pragma: no cover
     if not fileIsPDF( printFile  ):
   	sys.stderr.write( "INFO: Converting print job to PDF\n")
 	subprocess.call(convertToPDFParams)
-	logfile.write("Running " +  submitjobpath  + "\n")
-	logfile.write("Converted to PDF as "+ pdfFile + "\n")
+	logging.info("Running " +  submitjobpath)
+	logging.info("Converted to PDF as "+ pdfFile)
     else:
 	pdfFile = printFile + '.pdf'
 	os.rename(printFile,pdfFile)
-	logfile.write("Using " + pdfFile  + " as is already PDF\n")
+	logging.info("Using " + pdfFile  + " as is already PDF")
 
     sys.stderr.write( "INFO: Sending document to Cloud Print\n")
-    logfile.write("Sending "+ pdfFile + " to cloud\n")
+    logging.info("Sending "+ pdfFile + " to cloud")
     result = 0
     p = subprocess.Popen([submitjobpath, pdfFile, jobTitle, uri, printername, printOptions], stdout=subprocess.PIPE)
     output = p.communicate()[0]
     result = p.returncode
     sys.stderr.write(output)
-    logfile.write(output)
-    logfile.write(pdfFile + " sent to cloud print, deleting\n")
+    logging.info(output)
+    logging.info(pdfFile + " sent to cloud print, deleting")
     if os.path.exists( printFile ):
        os.unlink( printFile )
     sys.stderr.write("INFO: Cleaning up temporary files\n")
-    logfile.write("Deleted "+ printFile + "\n")
+    logging.info("Deleted "+ printFile)
     if os.path.exists( pdfFile ):
        os.unlink( pdfFile )
-    logfile.write("Deleted "+ pdfFile + "\n")
-    logfile.close()
+    logging.info("Deleted "+ pdfFile)
     sys.stderr.write("INFO: Printing Successful\n")
+    logging.info("Completed printing")
     sys.exit(result)
