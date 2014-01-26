@@ -20,15 +20,17 @@ from oauth2client import client
 from oauth2client import multistore_file
 from auth import Auth
 
+logpath = '/var/log/cups/cloudprint_log'
+
 try:
-    logfile = open('/var/log/cups/cloudprint_log', 'a')
+    logfile = open(logpath, 'a')
     
     # fix ownership of log file
-    os.chown('/var/log/cups/cloudprint_log', 0, Auth.GetLPID())
-    os.chmod('/var/log/cups/cloudprint_log', 0660)
+    os.chown(logpath, 0, Auth.GetLPID())
+    os.chmod(logpath, 0660)
 except:
     logfile = sys.stdout
-    logfile.write("Unable to write to log file /var/log/cups/cloudprint_log\n")
+    logfile.write("Unable to write to log file "+ logpath +"\n")
 
     
 if os.path.exists('/usr/local/share/cloudprint-cups'):
@@ -37,7 +39,7 @@ else:
     sys.stderr.write("If you are upgrading from version 20131013 or earlier you should be aware that the scripts have moved from /usr/lib/cloudprint-cups to /usr/share/cloudprint-cups\n")
 
 # line below is replaced on commit
-CCPVersion = "20140126 180729"
+CCPVersion = "20140126 195406"
 
 if len(sys.argv) == 2 and sys.argv[1] == 'version':
     print "CUPS Cloud Print Upgrade Script Version " + CCPVersion

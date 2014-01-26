@@ -20,7 +20,7 @@ progname = 'cloudprint'
 
 if len(sys.argv) == 2 and sys.argv[1] == 'version':
     # line below is replaced on commit
-    CCPVersion = "20140126 180729"
+    CCPVersion = "20140126 195406"
     print "CUPS Cloud Print CUPS Backend Version " + CCPVersion
     sys.exit(0)
 
@@ -93,11 +93,12 @@ if __name__ == '__main__': # pragma: no cover
   else:
     prog, jobID, userName, jobTitle, copies, printOptions = sys.argv
 
+  logpath = '/var/log/cups/cloudprint_log'
   try:
-    logfile = open('/var/log/cups/cloudprint_log', 'a')
+    logfile = open(logpath, 'a')
   except:
     logfile = sys.stdout
-    logfile.write("Unable to write to log file /var/log/cups/cloudprint_log")
+    logfile.write("Unable to write to log file " + logpath)
 
   if sys.argv[3] == "Set Default Options":
     print "ERROR: Unimplemented command: " + sys.argv[3]
