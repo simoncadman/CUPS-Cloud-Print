@@ -15,7 +15,7 @@
 #    You should have received a copy of the GNU General Public License    
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-import sys, cups, subprocess, os, json
+import sys, cups, subprocess, os, json, logging
 from oauth2client import client
 from oauth2client import multistore_file
 from auth import Auth
@@ -23,29 +23,31 @@ from auth import Auth
 logpath = '/var/log/cups/cloudprint_log'
 
 try:
-    logfile = open(logpath, 'a')
+    logging.basicConfig(filename=logpath,level=logging.INFO)
+except:
+    logging.basicConfig(level=logging.INFO)
+    logging.error("Unable to write to log file "+ logpath)
     
+try:
     # fix ownership of log file
     os.chown(logpath, 0, Auth.GetLPID())
     os.chmod(logpath, 0660)
 except:
-    logfile = sys.stdout
-    logfile.write("Unable to write to log file "+ logpath +"\n")
+    logging.warning("Failed to change ownerships and permissions of logfile")
 
-    
 if os.path.exists('/usr/local/share/cloudprint-cups'):
     sys.stderr.write("If you are upgrading from version 20131013 or earlier you should be aware that the scripts have moved from /usr/local/lib/cloudprint-cups to /usr/local/share/cloudprint-cups\n")
 else:
     sys.stderr.write("If you are upgrading from version 20131013 or earlier you should be aware that the scripts have moved from /usr/lib/cloudprint-cups to /usr/share/cloudprint-cups\n")
 
 # line below is replaced on commit
-CCPVersion = "20140126 195406"
+CCPVersion = "20140126 204837"
 
 if len(sys.argv) == 2 and sys.argv[1] == 'version':
     print "CUPS Cloud Print Upgrade Script Version " + CCPVersion
     sys.exit(0)
 
-logfile.write("Upgrading to " + CCPVersion + "\n")
+logging.info("Upgrading to " + CCPVersion)
 
 try:
     connection = cups.Connection()
