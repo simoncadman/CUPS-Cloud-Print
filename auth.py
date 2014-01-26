@@ -89,7 +89,7 @@ class Auth:
 
         # fix permissions
         try:
-           os.chmod(Auth.config, 0640)
+           os.chmod(Auth.config, 0660)
            os.chown(Auth.config, 0, Auth.GetLPID())
         except:
            sys.stderr.write("DEBUG: Cannot alter file permissions\n")
@@ -156,7 +156,7 @@ class Auth:
     # fix permissions
     if modifiedconfig: # pragma: no cover 
       try:
-        os.chmod(Auth.config, 0640)
+        os.chmod(Auth.config, 0660)
         os.chown(Auth.config, 0, Auth.GetLPID())
       except:
         sys.stderr.write("DEBUG: Cannot alter file permissions\n")
