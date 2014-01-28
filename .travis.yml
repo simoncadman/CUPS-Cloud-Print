@@ -11,6 +11,7 @@ before_install:
 install:
  - ./configure
  - sudo gpasswd -a `whoami` lpadmin
+ - sudo gpasswd -a `whoami` lp
  - sudo make install
  - sudo cupsctl --debug-logging
  - sudo cp .coveragerc /usr/local/share/cloudprint-cups/
