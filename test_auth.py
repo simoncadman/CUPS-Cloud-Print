@@ -15,7 +15,7 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 from auth import Auth
-import json, urllib, cups, os
+import json, urllib, cups, os, stat
 from test_mockrequestor import MockRequestor
 from oauth2client import client
 from oauth2client import multistore_file
@@ -44,6 +44,9 @@ def test_setupAuth():
     assert Auth.SetupAuth(False) == False
     assert os.path.exists('/tmp/cloudprint.conf') == True
     
+    # ensure permissions are correct after creating config
+    assert '0660' == oct(os.stat('/tmp/cloudprint.conf')[stat.ST_MODE])[-4:]
+    
     # add dummy details
     storage = multistore_file.get_credential_storage(
         Auth.config,
@@ -55,6 +58,9 @@ def test_setupAuth():
                                'testsecret', 'testtoken', 1,
                                'https://www.googleapis.com/auth/cloudprint', 'testaccount1')
     storage.put(credentials)
+    
+    # ensure permissions are correct after populating config
+    assert '0660' == oct(os.stat('/tmp/cloudprint.conf')[stat.ST_MODE])[-4:]
     
     # re-run to test getting credentials
     requestors, storage = Auth.SetupAuth(False)

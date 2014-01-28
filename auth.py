@@ -118,6 +118,8 @@ class Auth:
       data = json.loads(content)
       for user in data['data']:
         userids.append(str(user['credential']['user_agent']))
+    else:
+      modifiedconfig = True
     
     if len(userids) == 0:
       userids = [ None ]
@@ -137,6 +139,7 @@ class Auth:
 	if userid == None:
 	  userid = credentials.user_agent
       elif not interactive and not credentials:
+        os.chmod(Auth.config, 0660)
 	return False
 	
       # renew if expired
