@@ -46,6 +46,7 @@ def test_setupAuth():
     
     # ensure permissions are correct after creating config
     assert '0660' == oct(os.stat('/tmp/cloudprint.conf')[stat.ST_MODE])[-4:]
+    assert Auth.GetLPID() == os.stat('/tmp/cloudprint.conf').st_gid
     
     # add dummy details
     storage = multistore_file.get_credential_storage(
@@ -61,6 +62,7 @@ def test_setupAuth():
     
     # ensure permissions are correct after populating config
     assert '0660' == oct(os.stat('/tmp/cloudprint.conf')[stat.ST_MODE])[-4:]
+    assert Auth.GetLPID() == os.stat('/tmp/cloudprint.conf').st_gid
     
     # re-run to test getting credentials
     requestors, storage = Auth.SetupAuth(False)

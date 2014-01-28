@@ -30,7 +30,7 @@ except:
     
 try:
     # fix ownership of log file
-    os.chown(logpath, 0, Auth.GetLPID())
+    os.chown(logpath, -1, Auth.GetLPID())
     os.chmod(logpath, 0660)
 except:
     logging.warning("Failed to change ownerships and permissions of logfile")
@@ -41,7 +41,7 @@ else:
     sys.stderr.write("If you are upgrading from version 20131013 or earlier you should be aware that the scripts have moved from /usr/lib/cloudprint-cups to /usr/share/cloudprint-cups\n")
 
 # line below is replaced on commit
-CCPVersion = "20140128 231217"
+CCPVersion = "20140128 232105"
 
 if len(sys.argv) == 2 and sys.argv[1] == 'version':
     print "CUPS Cloud Print Upgrade Script Version " + CCPVersion

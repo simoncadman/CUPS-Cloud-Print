@@ -89,10 +89,16 @@ class Auth:
 
         # fix permissions
         try:
-           os.chmod(Auth.config, 0660)
-           os.chown(Auth.config, 0, Auth.GetLPID())
+            os.chmod(Auth.config, 0660)
         except:
-           sys.stderr.write("DEBUG: Cannot alter file permissions\n")
+            sys.stderr.write("DEBUG: Cannot alter config file permissions\n")
+            pass
+        
+        try:
+            os.chown(Auth.config, -1, Auth.GetLPID())
+        except:
+            sys.stderr.write("DEBUG: Cannot alter config file ownership\n")
+            pass
 	return credentials
       except Exception as e:
 	print "\nThe code does not seem to be valid ( " + str(e) + " ), please try again.\n"
@@ -138,33 +144,39 @@ class Auth:
 	modifiedconfig = True
 	if userid == None:
 	  userid = credentials.user_agent
-      elif not interactive and not credentials:
-        os.chmod(Auth.config, 0660)
-	return False
-	
-      # renew if expired
-      requestor = cloudprintrequestor()
-      if credentials.access_token_expired: # pragma: no cover 
-        from oauth2client.client import AccessTokenRefreshError
-        try:
-                credentials.refresh(requestor)
-        except AccessTokenRefreshError as e:
-                sys.stderr.write("Failed to renew token (error: "+ str(e)  +"), if you have revoked access to CUPS Cloud Print in your Google Account, please delete /etc/cloudprint.conf and re-run /usr/share/cloudprint-cups/setupcloudprint.py")
-                sys.exit(1)
-      
-      requestor = credentials.authorize(requestor)
-      requestor.setAccount(userid)
-      requestors.append(requestor)
-    
+        
+      if credentials:
+        # renew if expired
+        requestor = cloudprintrequestor()
+        if credentials.access_token_expired: # pragma: no cover 
+            from oauth2client.client import AccessTokenRefreshError
+            try:
+                    credentials.refresh(requestor)
+            except AccessTokenRefreshError as e:
+                    sys.stderr.write("Failed to renew token (error: "+ str(e)  +"), if you have revoked access to CUPS Cloud Print in your Google Account, please delete /etc/cloudprint.conf and re-run /usr/share/cloudprint-cups/setupcloudprint.py")
+                    sys.exit(1)
+        
+        requestor = credentials.authorize(requestor)
+        requestor.setAccount(userid)
+        requestors.append(requestor)
+        
     # fix permissions
     if modifiedconfig: # pragma: no cover 
       try:
         os.chmod(Auth.config, 0660)
-        os.chown(Auth.config, 0, Auth.GetLPID())
       except:
-        sys.stderr.write("DEBUG: Cannot alter file permissions\n")
+        sys.stderr.write("DEBUG: Cannot alter config file permissions\n")
+        pass
+    
+      try:
+        os.chown(Auth.config, -1, Auth.GetLPID())
+      except:
+        sys.stderr.write("DEBUG: Cannot alter config file ownership\n")
         pass
 
-    return requestors, storage
+    if not credentials:
+        return False
+    else:
+        return requestors, storage
   
   SetupAuth = staticmethod(SetupAuth)
