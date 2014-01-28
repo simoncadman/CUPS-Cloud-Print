@@ -88,22 +88,34 @@ class Auth:
         storage.put(credentials)
 
         # fix permissions
-        try:
-            os.chmod(Auth.config, 0660)
-        except:
-            sys.stderr.write("DEBUG: Cannot alter config file permissions\n")
-            pass
+        Auth.FixConfigPermissions()
         
-        try:
-            os.chown(Auth.config, -1, Auth.GetLPID())
-        except:
-            sys.stderr.write("DEBUG: Cannot alter config file ownership\n")
-            pass
 	return credentials
       except Exception as e:
 	print "\nThe code does not seem to be valid ( " + str(e) + " ), please try again.\n"
 	
   AddAccount = staticmethod(AddAccount)
+  
+  def FixConfigPermissions():
+    success = True
+    
+    try:
+        os.chmod(Auth.config, 0660)
+    except:
+        success = False
+        sys.stderr.write("DEBUG: Cannot alter config file permissions\n")
+        pass
+    
+    try:
+        os.chown(Auth.config, -1, Auth.GetLPID())
+    except:
+        success = False
+        sys.stderr.write("DEBUG: Cannot alter config file ownership\n")
+        pass
+    
+    return success
+  
+  FixConfigPermissions = staticmethod(FixConfigPermissions)
   
   def SetupAuth(interactive=False, permissions=['https://www.googleapis.com/auth/cloudprint']):
     """Sets up requestors with authentication tokens
@@ -161,18 +173,8 @@ class Auth:
         requestors.append(requestor)
         
     # fix permissions
-    if modifiedconfig: # pragma: no cover 
-      try:
-        os.chmod(Auth.config, 0660)
-      except:
-        sys.stderr.write("DEBUG: Cannot alter config file permissions\n")
-        pass
-    
-      try:
-        os.chown(Auth.config, -1, Auth.GetLPID())
-      except:
-        sys.stderr.write("DEBUG: Cannot alter config file ownership\n")
-        pass
+    if modifiedconfig:
+      Auth.FixConfigPermissions()
 
     if not credentials:
         return False

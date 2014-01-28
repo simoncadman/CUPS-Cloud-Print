@@ -33,20 +33,32 @@ def setup_function(function):
     
     Auth.config = '/tmp/cloudprint.conf'
 
-
 def teardown_function(function):
-    if os.path.exists('/tmp/cloudprint.conf'):
-        os.unlink('/tmp/cloudprint.conf')
+    if os.path.exists(Auth.config):
+        os.unlink(Auth.config)
+
+def test_fixConfigPermissions():
+    configfile = open(Auth.config, "w")
+    configfile.close()
+    
+    os.chmod(Auth.config, 0000)
+    assert '0000' == oct(os.stat(Auth.config)[stat.ST_MODE])[-4:]
+    assert Auth.GetLPID() != os.stat(Auth.config).st_gid
+    
+    assert True == Auth.FixConfigPermissions()
+    
+    assert '0660' == oct(os.stat(Auth.config)[stat.ST_MODE])[-4:]
+    assert Auth.GetLPID() == os.stat(Auth.config).st_gid
 
 def test_setupAuth():
     # create initial file
-    assert os.path.exists('/tmp/cloudprint.conf') == False
+    assert os.path.exists(Auth.config) == False
     assert Auth.SetupAuth(False) == False
-    assert os.path.exists('/tmp/cloudprint.conf') == True
+    assert os.path.exists(Auth.config) == True
     
     # ensure permissions are correct after creating config
-    assert '0660' == oct(os.stat('/tmp/cloudprint.conf')[stat.ST_MODE])[-4:]
-    assert Auth.GetLPID() == os.stat('/tmp/cloudprint.conf').st_gid
+    assert '0660' == oct(os.stat(Auth.config)[stat.ST_MODE])[-4:]
+    assert Auth.GetLPID() == os.stat(Auth.config).st_gid
     
     # add dummy details
     storage = multistore_file.get_credential_storage(
@@ -61,8 +73,8 @@ def test_setupAuth():
     storage.put(credentials)
     
     # ensure permissions are correct after populating config
-    assert '0660' == oct(os.stat('/tmp/cloudprint.conf')[stat.ST_MODE])[-4:]
-    assert Auth.GetLPID() == os.stat('/tmp/cloudprint.conf').st_gid
+    assert '0660' == oct(os.stat(Auth.config)[stat.ST_MODE])[-4:]
+    assert Auth.GetLPID() == os.stat(Auth.config).st_gid
     
     # re-run to test getting credentials
     requestors, storage = Auth.SetupAuth(False)
