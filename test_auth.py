@@ -15,7 +15,7 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 from auth import Auth
-import json, urllib, cups, os, stat
+import json, urllib, cups, os, stat, grp, pytest
 from test_mockrequestor import MockRequestor
 from oauth2client import client
 from oauth2client import multistore_file
@@ -43,13 +43,19 @@ def test_fixConfigPermissions():
     
     os.chmod(Auth.config, 0000)
     assert '0000' == oct(os.stat(Auth.config)[stat.ST_MODE])[-4:]
-    assert Auth.GetLPID() != os.stat(Auth.config).st_gid
-    
-    assert True == Auth.FixConfigPermissions()
-    
+    assert True == Auth.FixConfigPermissions()[0]
     assert '0660' == oct(os.stat(Auth.config)[stat.ST_MODE])[-4:]
-    assert Auth.GetLPID() == os.stat(Auth.config).st_gid
 
+@pytest.mark.skipif( grp.getgrnam('lp').gr_gid not in ( os.getgroups() ) and os.getuid() != 0 ,
+                    reason="will only pass if running user part of lp group or root")
+def test_fixConfigOwnerships():
+    configfile = open(Auth.config, "w")
+    configfile.close()
+    
+    assert Auth.GetLPID() != os.stat(Auth.config).st_gid
+    assert True == Auth.FixConfigPermissions()[1]
+    assert Auth.GetLPID() == os.stat(Auth.config).st_gid
+    
 def test_setupAuth():
     # create initial file
     assert os.path.exists(Auth.config) == False
@@ -58,7 +64,6 @@ def test_setupAuth():
     
     # ensure permissions are correct after creating config
     assert '0660' == oct(os.stat(Auth.config)[stat.ST_MODE])[-4:]
-    assert Auth.GetLPID() == os.stat(Auth.config).st_gid
     
     # add dummy details
     storage = multistore_file.get_credential_storage(
@@ -74,12 +79,34 @@ def test_setupAuth():
     
     # ensure permissions are correct after populating config
     assert '0660' == oct(os.stat(Auth.config)[stat.ST_MODE])[-4:]
-    assert Auth.GetLPID() == os.stat(Auth.config).st_gid
     
     # re-run to test getting credentials
     requestors, storage = Auth.SetupAuth(False)
     assert requestors != None
     assert storage != None
+
+@pytest.mark.skipif( grp.getgrnam('lp').gr_gid not in ( os.getgroups() ) and os.getuid() != 0 ,
+                    reason="will only pass if running user part of lp group or root")
+def test_setupAuthOwnership():
+    assert Auth.SetupAuth(False) == False
+    
+    # ensure ownership is correct after creating config
+    assert Auth.GetLPID() == os.stat(Auth.config).st_gid
+    
+    # add dummy details
+    storage = multistore_file.get_credential_storage(
+        Auth.config,
+        Auth.clientid,
+        'testuseraccount',
+        ['https://www.googleapis.com/auth/cloudprint'])
+    
+    credentials = client.OAuth2Credentials('test', Auth.clientid,
+                               'testsecret', 'testtoken', 1,
+                               'https://www.googleapis.com/auth/cloudprint', 'testaccount1')
+    storage.put(credentials)
+    
+    # ensure ownership is correct after populating config
+    assert Auth.GetLPID() == os.stat(Auth.config).st_gid
     
 def test_getLPID():
     assert int(Auth.GetLPID()) > 0

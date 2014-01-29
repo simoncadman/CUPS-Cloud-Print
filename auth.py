@@ -97,23 +97,24 @@ class Auth:
   AddAccount = staticmethod(AddAccount)
   
   def FixConfigPermissions():
-    success = True
+    filePermissions = True
+    fileOwnerships = True
     
     try:
         os.chmod(Auth.config, 0660)
     except:
-        success = False
+        filePermissions = False
         sys.stderr.write("DEBUG: Cannot alter config file permissions\n")
         pass
     
     try:
         os.chown(Auth.config, -1, Auth.GetLPID())
     except:
-        success = False
+        fileOwnerships = False
         sys.stderr.write("DEBUG: Cannot alter config file ownership\n")
         pass
     
-    return success
+    return filePermissions, fileOwnerships
   
   FixConfigPermissions = staticmethod(FixConfigPermissions)
   
