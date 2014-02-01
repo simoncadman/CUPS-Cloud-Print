@@ -26,6 +26,5 @@ src_install() {
 }
 
 pkg_postinst() {
-        chgrp lp /etc/cloudprint.conf
 	/usr/share/cloudprint-cups/upgrade.py
 }
