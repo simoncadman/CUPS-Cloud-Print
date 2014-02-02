@@ -3,10 +3,5 @@
 
 # Uncomment this to turn on verbose mode.
 #export DH_VERBOSE=1
-
-dh_install:
-	cd /usr/share/cloudprint-cups/
-	python2 -m compileall -q -f .
-	
 %:
 	dh $@
