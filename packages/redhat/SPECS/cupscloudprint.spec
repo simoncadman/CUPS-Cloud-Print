@@ -27,6 +27,8 @@ make %{?_smp_mflags}
 %install
 rm -rf $RPM_BUILD_ROOT
 make install DESTDIR=$RPM_BUILD_ROOT NOPERMS=1
+cd "$RPM_BUILD_ROOT"
+python2 -m compileall -q -f .
 
 %post
 %{_usr}/share/cloudprint-cups/upgrade.py
