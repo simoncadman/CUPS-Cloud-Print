@@ -27,6 +27,8 @@ build() {
 package() {
   cd "$srcdir/$pkgname-$pkgver"
   make DESTDIR="$pkgdir/" install
+  cd "$pkgdir/"
+  python2 -m compileall -q -f .
 }
 
 # vim:set ts=2 sw=2 et:
