@@ -34,6 +34,7 @@ python2 -m compileall -q -f .
 %{_usr}/share/cloudprint-cups/upgrade.py
 
 %files
+%dir %{_usr}/share/cloudprint-cups/
 %dir %{_usr}/share/cloudprint-cups/oauth2client
 %dir %{_usr}/share/cloudprint-cups/testfiles
 %docdir %{_usr}/share/cloudprint-cups/testfiles
