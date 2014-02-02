@@ -20,7 +20,7 @@ progname = 'cloudprint'
 
 if len(sys.argv) == 2 and sys.argv[1] == 'version':
     # line below is replaced on commit
-    CCPVersion = "20140202 021728"
+    CCPVersion = "20140202 151329"
     print "CUPS Cloud Print CUPS Backend Version " + CCPVersion
     sys.exit(0)
 
@@ -62,19 +62,21 @@ def getBackendDescription ( ) :
 
 if __name__ == '__main__': # pragma: no cover 
     
+  libpath = "/usr/local/share/cloudprint-cups/"
+  if not os.path.exists( libpath  ):
+    libpath = "/usr/share/cloudprint-cups"
+  sys.path.insert(0, libpath)
+  
+  from auth import Auth
+  from printer import Printer
+  requestors, storage = Auth.SetupAuth(False)
+  printer = Printer(requestors)
+  printers = printer.getPrinters()
+    
   if len(sys.argv) == 1:
     print getBackendDescription()
-  
+    
     try:
-      libpath = "/usr/local/share/cloudprint-cups/"
-      if not os.path.exists( libpath  ):
-          libpath = "/usr/share/cloudprint-cups"
-      sys.path.insert(0, libpath)
-      from auth import Auth
-      from printer import Printer
-      requestors, storage = Auth.SetupAuth(False)
-      printer = Printer(requestors)
-      printers = printer.getPrinters()
       if printers != None:
         for foundprinter in printers:
 	  print "network " + printer.printerNameToUri(foundprinter['account'], foundprinter['name']) + " " + "\"" + foundprinter['name'] + "\" \"Google Cloud Print\"" + " \"MFG:Google;MDL:Cloud Print;DES:GoogleCloudPrint;\""
@@ -149,14 +151,9 @@ if __name__ == '__main__': # pragma: no cover
       ps2PdfName = "pstopdf"
       convertToPDFParams = [ps2PdfName, printFile, pdfFile]
 
-    submitjobpath = "/usr/share/cloudprint-cups/" + "submitjob.py"
-    if not os.path.exists( submitjobpath  ):
-	submitjobpath = "/usr/local/share/cloudprint-cups/" + "submitjob.py"
-
     if not fileIsPDF( printFile  ):
   	sys.stderr.write( "INFO: Converting print job to PDF\n")
 	subprocess.call(convertToPDFParams)
-	logging.info("Running " +  submitjobpath)
 	logging.info("Converted to PDF as "+ pdfFile)
     else:
 	pdfFile = printFile + '.pdf'
@@ -165,12 +162,21 @@ if __name__ == '__main__': # pragma: no cover
 
     sys.stderr.write( "INFO: Sending document to Cloud Print\n")
     logging.info("Sending "+ pdfFile + " to cloud")
+    
     result = 0
-    p = subprocess.Popen([submitjobpath, pdfFile, jobTitle, uri, printername, printOptions], stdout=subprocess.PIPE)
-    output = p.communicate()[0]
-    result = p.returncode
-    sys.stderr.write(output)
-    logging.info(output.strip())
+    printerid, requestor = printer.getPrinterIDByURI(uri)
+    printer.requestor = requestor
+    if printerid == None:
+        print "ERROR: Printer '" + uri + "' not found"
+        result = 1
+    else:
+        if printer.submitJob(printerid, 'pdf', pdfFile, jobTitle, printername, printOptions ):
+            print "INFO: Successfully printed"
+            result = 0
+        else:
+            print "ERROR: Failed to submit job to cloud print"
+            result = 1
+    
     logging.info(pdfFile + " sent to cloud print, deleting")
     if os.path.exists( printFile ):
        os.unlink( printFile )
@@ -179,6 +185,10 @@ if __name__ == '__main__': # pragma: no cover
     if os.path.exists( pdfFile ):
        os.unlink( pdfFile )
     logging.info("Deleted "+ pdfFile)
-    sys.stderr.write("INFO: Printing Successful\n")
-    logging.info("Completed printing")
+    if result != 0:
+        sys.stderr.write("INFO: Printing Failed\n")
+        logging.info("Failed printing")
+    else:
+        sys.stderr.write("INFO: Printing Successful\n")
+        logging.info("Completed printing")
     sys.exit(result)

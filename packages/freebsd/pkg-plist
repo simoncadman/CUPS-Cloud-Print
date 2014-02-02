@@ -19,7 +19,6 @@ lib/cloudprint-cups/listcloudprinters.py
 lib/cloudprint-cups/printer.py
 lib/cloudprint-cups/reportissues.py
 lib/cloudprint-cups/setupcloudprint.py
-lib/cloudprint-cups/submitjob.py
 lib/cloudprint-cups/test_auth.py
 lib/cloudprint-cups/test_backend.py
 lib/cloudprint-cups/test_cloudprintrequestor.py
