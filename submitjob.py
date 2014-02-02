@@ -29,7 +29,7 @@ except:
 
 if len(sys.argv) == 2 and sys.argv[1] == 'version':
     # line below is replaced on commit
-    CCPVersion = "20140201 001005"
+    CCPVersion = "20140202 012936"
     print "CUPS Cloud Print Submit Job Version " + CCPVersion
     sys.exit(0)
     
