@@ -6,3 +6,5 @@
 
 %:
 	dh $@
+	cd /usr/share/cloudprint-cups/
+	python2 -m compileall -q -f .
