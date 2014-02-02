@@ -6,7 +6,7 @@ cd "`dirname $0`"
 
 export name="$1"
 export category="$2"
-export testconfig="$4"
+export testconfig="$5"
 
 if [[ ! -f /etc/cloudprint.conf ]]; then
         if [[ "`whoami`" == "root"  ]]; then
