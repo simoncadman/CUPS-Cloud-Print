@@ -35,6 +35,7 @@ python2 -m compileall -q -f .
 
 %files
 %dir %{_usr}/share/cloudprint-cups/oauth2client
+%dir %{_usr}/share/cloudprint-cups/testfiles
 %docdir %{_usr}/share/cloudprint-cups/testfiles
 %{_usr}/%{_lib}/cups/backend/cloudprint
 %{_usr}/%{_lib}/cups/driver/cupscloudprint
