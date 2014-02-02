@@ -34,6 +34,8 @@ python2 -m compileall -q -f .
 %{_usr}/share/cloudprint-cups/upgrade.py
 
 %files
+%dir %{_usr}/share/cloudprint-cups/oauth2client
+%docdir %{_usr}/share/cloudprint-cups/testfiles
 %{_usr}/%{_lib}/cups/backend/cloudprint
 %{_usr}/%{_lib}/cups/driver/cupscloudprint
 %attr(644, root, lp) %{_usr}/share/cloudprint-cups/auth.py
@@ -66,10 +68,8 @@ python2 -m compileall -q -f .
 %attr(644, root, lp) %{_usr}/share/cloudprint-cups/*.pyc
 %attr(644, root, lp) %{_usr}/share/cloudprint-cups/*.pyo
 %attr(644, root, lp) %{_usr}/share/cloudprint-cups/testfiles/*
-
 %doc %{_usr}/share/cloudprint-cups/COPYING
 %doc %{_usr}/share/cloudprint-cups/README.md
-%docdir %{_usr}/share/cloudprint-cups/testfiles
 
 %changelog
 * Sun Jan 12 2014  <src@niftiestsoftware.com> 20140112-1
