@@ -36,7 +36,11 @@ else
     sudo python2 -m compileall .
 fi
 
+export PYTHONDONTWRITEBYTECODE=1
+
 py.test2 || py.test
+
+export PYTHONDONTWRITEBYTECODE=0
 
 printers="`./dynamicppd.py list | cut -d'"' -f2`"
 langs="en_GB.UTF-8

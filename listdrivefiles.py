@@ -21,7 +21,7 @@ from printer import Printer
 
 if len(sys.argv) == 2 and sys.argv[1] == 'version':
     # line below is replaced on commit
-    CCPVersion = "20140202 171150"
+    CCPVersion = "20140202 182948"
     print "CUPS Cloud Print Printer Drive Lister Version " + CCPVersion
     sys.exit(0)
 
