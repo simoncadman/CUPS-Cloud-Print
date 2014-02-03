@@ -74,7 +74,7 @@ python2 -m compileall -q -f .
 %doc %{_usr}/share/cloudprint-cups/README.md
 
 %changelog
-* Sun Jan 12 2014  <src@niftiestsoftware.com> 20140112-1
+* Sun Jan 12 2014  <src@niftiestsoftware.com> (20140112-1)
 - New: Added test script for post-packaging testing
 - New: Can now delete associated printers when deleting an account
 - New: When invalid OAuth2 shown, show the error message
