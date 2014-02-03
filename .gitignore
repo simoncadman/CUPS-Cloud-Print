@@ -1,3 +1,5 @@
 *.pyc
 cloudprint.ppd
 test-capabilities.serial
+.coverage
+htmlcov
