@@ -41,7 +41,7 @@ else:
     sys.stderr.write("If you are upgrading from version 20131013 or earlier you should be aware that the scripts have moved from /usr/lib/cloudprint-cups to /usr/share/cloudprint-cups\n")
 
 # line below is replaced on commit
-CCPVersion = "20140203 212134"
+CCPVersion = "20140203 212709"
 
 if len(sys.argv) == 2 and sys.argv[1] == 'version':
     print "CUPS Cloud Print Upgrade Script Version " + CCPVersion
@@ -68,7 +68,7 @@ if os.path.exists(Auth.config):
     sys.exit(0)
     
 else:
-  sys.stderr.write("\n\nRun: /usr/share/cloudprint-cups/setupcloudprint.py to setup your Google Credentials and add your printers to CUPS\n\n")
+  sys.stderr.write("\nRun: /usr/share/cloudprint-cups/setupcloudprint.py to setup your Google Credentials and add your printers to CUPS\n\n")
   sys.exit(0)
   
 from backend import which
@@ -89,12 +89,16 @@ for device in cupsprinters:
         if ( cupsprinters[device]["device-uri"].find("cloudprint://") == 0 ):
             print "Updating " + cupsprinters[device]["printer-info"]
             ppdid = 'MFG:GOOGLE;DRV:GCP;CMD:POSTSCRIPT;MDL:' + cupsprinters[device]["device-uri"] + ';'
+            printerppdname = None
             for ppd in allppds:
                 if allppds[ppd]['ppd-device-id'] == ppdid:
                     printerppdname = ppd
-            p = subprocess.Popen(["lpadmin", "-p", cupsprinters[device]["printer-info"], "-m", printerppdname], stdout=subprocess.PIPE)
-            output = p.communicate()[0]
-            result = p.returncode
-            sys.stderr.write(output)
+            if printerppdname != None:
+                p = subprocess.Popen(["lpadmin", "-p", cupsprinters[device]["printer-info"], "-m", printerppdname], stdout=subprocess.PIPE)
+                output = p.communicate()[0]
+                result = p.returncode
+                sys.stderr.write(output)
+            else:
+                print cupsprinters[device]["printer-info"] + " not found"
     except Exception, e:
         sys.stderr.write("Error connecting to CUPS: " + str(e) + "\n")
