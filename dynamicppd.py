@@ -19,7 +19,7 @@ import sys, os, locale, logging
 
 if len(sys.argv) == 2 and sys.argv[1] == 'version':
     # line below is replaced on commit
-    CCPVersion = "20140202 225942"
+    CCPVersion = "20140203 212134"
     print "CUPS Cloud Print Dynamic PPD Generator Version " + CCPVersion
     sys.exit(0)
 
@@ -43,6 +43,11 @@ def showUsage():
     sys.exit(1)
         
 requestors, storage = Auth.SetupAuth(False)
+if requestors == False:
+    sys.stderr.write("ERROR: config is invalid or missing\n")
+    logging.error("backend tried to run with invalid config");
+    sys.exit(1)
+
 printer = Printer(requestors)
 
 if ( len(sys.argv) < 2 ):

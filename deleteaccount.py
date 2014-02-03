@@ -21,7 +21,7 @@ from printer import Printer
 
 if len(sys.argv) == 2 and sys.argv[1] == 'version':
     # line below is replaced on commit
-    CCPVersion = "20140202 225942"
+    CCPVersion = "20140203 212134"
     print "CUPS Cloud Print Delete Account Script Version " + CCPVersion
     sys.exit(0)
 
@@ -33,12 +33,12 @@ except:
     logging.error("Unable to write to log file "+ logpath)
 
 while True:
-  result = Auth.SetupAuth(False)
+  result, storage = Auth.SetupAuth(False)
   if not result:
     print "No accounts are currently setup"
     break
   else:
-    requestors, storage = result
+    requestors = result
     print "You currently have these accounts configured: "
     i=0
     accounts = []

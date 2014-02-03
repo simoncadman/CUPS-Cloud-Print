@@ -178,7 +178,7 @@ class Auth:
       Auth.FixConfigPermissions()
 
     if not credentials:
-        return False
+        return False, False
     else:
         return requestors, storage
   

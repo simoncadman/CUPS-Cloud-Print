@@ -19,7 +19,7 @@ import sys, os, subprocess, logging
 
 if len(sys.argv) == 2 and sys.argv[1] == 'version':
     # line below is replaced on commit
-    CCPVersion = "20140202 225942"
+    CCPVersion = "20140203 212134"
     print "CUPS Cloud Print Issue Reporting Script Version " + CCPVersion
     sys.exit(0)
 
@@ -38,7 +38,7 @@ sys.path.insert(0, libpath)
 from auth import Auth
 from printer import Printer
 
-requestors, storage = Auth.SetupAuth(False)
+requestors, storage = Auth.SetupAuth(True)
 printer = Printer(requestors)
 printers = printer.getPrinters(True)
 if printers == None:

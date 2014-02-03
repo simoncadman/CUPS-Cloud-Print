@@ -20,7 +20,7 @@ progname = 'cloudprint'
 
 if len(sys.argv) == 2 and sys.argv[1] == 'version':
     # line below is replaced on commit
-    CCPVersion = "20140202 225942"
+    CCPVersion = "20140203 212134"
     print "CUPS Cloud Print CUPS Backend Version " + CCPVersion
     sys.exit(0)
 
@@ -62,6 +62,13 @@ def getBackendDescription ( ) :
 
 if __name__ == '__main__': # pragma: no cover 
     
+  logpath = '/var/log/cups/cloudprint_log'
+  try:
+    logging.basicConfig(filename=logpath,level=logging.INFO)
+  except:
+    logging.basicConfig(level=logging.INFO)
+    logging.error("Unable to write to log file "+ logpath)
+  
   libpath = "/usr/local/share/cloudprint-cups/"
   if not os.path.exists( libpath  ):
     libpath = "/usr/share/cloudprint-cups"
@@ -70,6 +77,10 @@ if __name__ == '__main__': # pragma: no cover
   from auth import Auth
   from printer import Printer
   requestors, storage = Auth.SetupAuth(False)
+  if requestors == False:
+      sys.stderr.write("ERROR: config is invalid or missing\n")
+      logging.error("backend tried to run with invalid config");
+      sys.exit(1)
   printer = Printer(requestors)
   printers = printer.getPrinters()
     
@@ -95,13 +106,6 @@ if __name__ == '__main__': # pragma: no cover
   else:
     prog, jobID, userName, jobTitle, copies, printOptions = sys.argv
 
-  logpath = '/var/log/cups/cloudprint_log'
-  try:
-    logging.basicConfig(filename=logpath,level=logging.INFO)
-  except:
-    logging.basicConfig(level=logging.INFO)
-    logging.error("Unable to write to log file "+ logpath)
-  
   if sys.argv[3] == "Set Default Options":
     print "ERROR: Unimplemented command: " + sys.argv[3]
     logging.error("Unimplemented command: " + sys.argv[3]);
