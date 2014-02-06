@@ -166,7 +166,7 @@ class Auth:
             try:
                     credentials.refresh(requestor)
             except AccessTokenRefreshError as e:
-                    sys.stderr.write("Failed to renew token (error: "+ str(e)  +"), if you have revoked access to CUPS Cloud Print in your Google Account, please delete /etc/cloudprint.conf and re-run /usr/share/cloudprint-cups/setupcloudprint.py")
+                    sys.stderr.write("Failed to renew token (error: "+ str(e)  +"), if you have revoked access to CUPS Cloud Print in your Google Account, please delete /etc/cloudprint.conf and re-run /usr/share/cloudprint-cups/setupcloudprint.py\n")
                     sys.exit(1)
         
         requestor = credentials.authorize(requestor)
