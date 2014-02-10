@@ -25,7 +25,7 @@ S=${WORKDIR}/${P}
 src_install() {
        einstall DESTDIR="${D}" install
        cd "${D}"
-       $(PYTHON) -m compileall -q -f .
+       python2 -m compileall -q -f .
 }
 
 pkg_postinst() {
