@@ -15,7 +15,7 @@ cupscloudprint (20140210-1) precise; urgency=low
 
  -- simon cadman <src@niftiestsoftware.com>  Mon, 10 Feb 2014 21:13:49 +0000
 
- cupscloudprint (20140112-1) precise; urgency=low
+cupscloudprint (20140112-1) precise; urgency=low
 
   * New: Added test script for post-packaging testing
   * New: Can now delete associated printers when deleting an account
