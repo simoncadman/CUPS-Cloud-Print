@@ -13,7 +13,7 @@ install=install
 source=()
 md5sums=()
 _gitroot="git://github.com/simoncadman/CUPS-Cloud-Print.git"
-_gitversion="617d73d8c44cea605e37a5898e4ea030ac5d9c9d"
+_gitversion="7328f8252c35106c6a689f12c0bb5efb36e23b25"
 
 
 build() {
