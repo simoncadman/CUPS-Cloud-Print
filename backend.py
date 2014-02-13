@@ -20,7 +20,7 @@ progname = 'cloudprint'
 
 if len(sys.argv) == 2 and sys.argv[1] == 'version':
     # line below is replaced on commit
-    CCPVersion = "20140210 233852"
+    CCPVersion = "20140213 223139"
     print "CUPS Cloud Print CUPS Backend Version " + CCPVersion
     sys.exit(0)
 
@@ -90,7 +90,7 @@ if __name__ == '__main__': # pragma: no cover
     try:
       if printers != None:
         for foundprinter in printers:
-	  print "network " + printer.printerNameToUri(foundprinter['account'], foundprinter['name']) + " " + "\"" + foundprinter['name'] + "\" \"Google Cloud Print\"" + " \"MFG:Google;MDL:Cloud Print;DES:GoogleCloudPrint;\""
+          print "network " + printer.printerNameToUri(foundprinter['account'], foundprinter['name']) + " " + "\"" + foundprinter['name'] + "\" \"Google Cloud Print\"" + " \"MFG:Google;MDL:Cloud Print;DES:GoogleCloudPrint;\""
     except Exception as error:
       print error
       pass
@@ -116,7 +116,7 @@ if __name__ == '__main__': # pragma: no cover
     if printFile == None:
       tmpDir = os.getenv('TMPDIR')
       if not tmpDir:
-	    tmpDir = "/tmp"
+            tmpDir = "/tmp"
       tempFile = tmpDir + '/' + jobID + '-' + userName + '-cupsjob-' + str(os.getpid())
       
       OUT = open (tempFile, 'w')
@@ -156,13 +156,13 @@ if __name__ == '__main__': # pragma: no cover
       convertToPDFParams = [ps2PdfName, printFile, pdfFile]
 
     if not fileIsPDF( printFile  ):
-  	sys.stderr.write( "INFO: Converting print job to PDF\n")
-	subprocess.call(convertToPDFParams)
-	logging.info("Converted to PDF as "+ pdfFile)
+        sys.stderr.write( "INFO: Converting print job to PDF\n")
+        subprocess.call(convertToPDFParams)
+        logging.info("Converted to PDF as "+ pdfFile)
     else:
-	pdfFile = printFile + '.pdf'
-	os.rename(printFile,pdfFile)
-	logging.info("Using " + pdfFile  + " as is already PDF")
+        pdfFile = printFile + '.pdf'
+        os.rename(printFile,pdfFile)
+        logging.info("Using " + pdfFile  + " as is already PDF")
 
     sys.stderr.write( "INFO: Sending document to Cloud Print\n")
     logging.info("Sending "+ pdfFile + " to cloud")

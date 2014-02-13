@@ -21,7 +21,7 @@ from printer import Printer
 
 if len(sys.argv) == 2 and sys.argv[1] == 'version':
     # line below is replaced on commit
-    CCPVersion = "20140210 233852"
+    CCPVersion = "20140213 223139"
     print "CUPS Cloud Print Setup Script Version " + CCPVersion
     sys.exit(0)
 
@@ -138,7 +138,7 @@ for requestor in requestors:
     found = False
     for cupsprinter in cupsprinters:
       if cupsprinters[cupsprinter]['device-uri'] == uri:
-	found = True
+        found = True
     
     if found == False:
       printername = prefix + ccpprinter['name']
@@ -146,23 +146,23 @@ for requestor in requestors:
       # check if printer name already exists
       foundbyname = False
       for ccpprinter2 in cupsprinters:
-	if printer.sanitizePrinterName(cupsprinters[ccpprinter2]['printer-info']) == printer.sanitizePrinterName(printername):
-	  foundbyname = True
+        if printer.sanitizePrinterName(cupsprinters[ccpprinter2]['printer-info']) == printer.sanitizePrinterName(printername):
+          foundbyname = True
       if ( foundbyname and not unattended ) :
-	answer = raw_input("Printer " + printer.sanitizePrinterName(printername) + " already exists, supply another name (Y/N)? ")
-	if ( answer.startswith("Y") or answer.startswith("y") ):
-	  printername = raw_input("New printer name? ")
-	else:
-	  answer = raw_input("Overwrite " + printer.sanitizePrinterName(printername) + " with new printer (Y/N)? ")
-	  if ( answer.startswith("N") or answer.startswith("n") ):
-	    printername = ""
+        answer = raw_input("Printer " + printer.sanitizePrinterName(printername) + " already exists, supply another name (Y/N)? ")
+        if ( answer.startswith("Y") or answer.startswith("y") ):
+          printername = raw_input("New printer name? ")
+        else:
+          answer = raw_input("Overwrite " + printer.sanitizePrinterName(printername) + " with new printer (Y/N)? ")
+          if ( answer.startswith("N") or answer.startswith("n") ):
+            printername = ""
       elif foundbyname and unattended:
           print "Not adding printer " + printername + ", as already exists"
           printername = ""
       
       if printername != "":
-	printer.addPrinter(printername, uri, connection)
-	addedCount+=1
+        printer.addPrinter(printername, uri, connection)
+        addedCount+=1
       
   if addedCount > 0:
     print "Added " + str(addedCount) + " new printers to CUPS"

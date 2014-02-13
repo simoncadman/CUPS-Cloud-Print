@@ -73,15 +73,15 @@ class Printer:
         responseobj = requestor.doRequest('search?connection_status=ALL&client=webui&q=' + urllib.quote(printerName) )
         
       if 'printers' in responseobj and len(responseobj['printers']) > 0:
-	for printer in responseobj['printers']:
-	  printer['account'] = requestor.getAccount()
-	  
-	  # fetch all details - search doesnt return all capabilities
-	  if fulldetails:
+        for printer in responseobj['printers']:
+          printer['account'] = requestor.getAccount()
+          
+          # fetch all details - search doesnt return all capabilities
+          if fulldetails:
             self.requestor = requestor
             details = self.getPrinterDetails( printer['id'] )
             printer['fulldetails'] = details['printers'][0]
-	  allprinters.append(printer)
+          allprinters.append(printer)
     return allprinters
   
   def sanitizeText(self, text):
@@ -168,7 +168,7 @@ class Printer:
     """
     for requestor in self.requestors:
       if requestor.getAccount() == account:
-	return requestor
+        return requestor
       
   def getPrinterIDByURI(self, uri):
     """Gets printer id and requestor by printer
@@ -183,13 +183,13 @@ class Printer:
     # find requestor based on account
     requestor = self.findRequestorForAccount(urllib.unquote(account))
     if requestor == None:
-    	return None, None 
+        return None, None 
     responseobj = requestor.doRequest('search?connection_status=ALL&client=webui&q=%s' % (printername))
     printername = urllib.unquote(printername)
     if 'printers' in responseobj and len(responseobj['printers']) > 0:
       for printerdetail in responseobj['printers']:
-	if printername == printerdetail['name']:
-	  return printerdetail['id'], requestor
+        if printername == printerdetail['name']:
+          return printerdetail['id'], requestor
     else:
       return None, None
 
@@ -219,9 +219,9 @@ class Printer:
     try:
       f = open(pathname, 'rb')
       try:
-	s = f.read()
+        s = f.read()
       except IOError, e: # pragma: no cover 
-	print 'ERROR: Error reading %s\n%s', pathname, e
+        print 'ERROR: Error reading %s\n%s', pathname, e
       f.close()
       return s
     except IOError, e: # pragma: no cover 
@@ -242,9 +242,9 @@ class Printer:
     try:
       f = open(file_name, 'wb')
       try:
-	f.write(data)
+        f.write(data)
       except IOError, e: # pragma: no cover 
-	status = False
+        status = False
       f.close()
     except IOError, e: # pragma: no cover 
       status = False
@@ -278,17 +278,17 @@ class Printer:
       """Encodes list of parameters for HTTP multipart format.
 
       Args:
-	fields: list of tuples containing name and value of parameters.
-	file_type: string if file type different than application/xml.
+        fields: list of tuples containing name and value of parameters.
+        file_type: string if file type different than application/xml.
       Returns:
-	A string to be sent as data for the HTTP post request.
+        A string to be sent as data for the HTTP post request.
       """
       lines = []
       for (key, value) in fields:
-	lines.append('--' + self.BOUNDARY)
-	lines.append('Content-Disposition: form-data; name="%s"' % key)
-	lines.append('')  # blank line
-	lines.append(str(value))
+        lines.append('--' + self.BOUNDARY)
+        lines.append('Content-Disposition: form-data; name="%s"' % key)
+        lines.append('')  # blank line
+        lines.append(str(value))
       lines.append('--' + self.BOUNDARY + '--')
       lines.append('')  # blank line
       return self.CRLF.join(lines)
@@ -428,13 +428,13 @@ class Printer:
     
     title = jobname
     content = {'pdf': fdata,
-	      'jpeg': jobfile,
-	      'png': jobfile,
-	      }
+               'jpeg': jobfile,
+               'png': jobfile,
+              }
     content_type = {'pdf': 'dataUrl',
-		    'jpeg': 'image/jpeg',
-		    'png': 'image/png',
-		  }
+                    'jpeg': 'image/jpeg',
+                    'png': 'image/png',
+                   }
     headers = [
       ('printerid', printerid),
       ('title', title),
@@ -450,11 +450,11 @@ class Printer:
     responseobj = self.requestor.doRequest( 'submit', None, edata, self.BOUNDARY )
     try:
       if responseobj['success'] == True:
-	return True
+        return True
       else:
-	print 'ERROR: Error response from Cloud Print for type %s: %s' % ( jobtype, responseobj['message'] )
-	return False
-	
+        print 'ERROR: Error response from Cloud Print for type %s: %s' % ( jobtype, responseobj['message'] )
+        return False
+        
     except Exception, error_msg: # pragma: no cover
       print 'ERROR: Print job %s failed with %s' % ( jobtype, error_msg )
       return False

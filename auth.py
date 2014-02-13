@@ -76,9 +76,9 @@ class Auth:
     
     while True:
       flow = client.OAuth2WebServerFlow(client_id=Auth.clientid,
-				    client_secret=Auth.clientsecret,
-				    scope=['https://www.googleapis.com/auth/cloudprint'],
-				    user_agent=userid)
+                                    client_secret=Auth.clientsecret,
+                                    scope=['https://www.googleapis.com/auth/cloudprint'],
+                                    user_agent=userid)
       auth_uri = flow.step1_get_authorize_url()
       print "Open this URL, grant access to CUPS Cloud Print, then provide the code displayed : \n\n" + auth_uri + "\n"
       code = raw_input('Code from Google: ')
@@ -90,10 +90,10 @@ class Auth:
         # fix permissions
         Auth.FixConfigPermissions()
         
-	return credentials
+        return credentials
       except Exception as e:
-	print "\nThe code does not seem to be valid ( " + str(e) + " ), please try again.\n"
-	
+        print "\nThe code does not seem to be valid ( " + str(e) + " ), please try again.\n"
+        
   AddAccount = staticmethod(AddAccount)
   
   def FixConfigPermissions():
@@ -146,17 +146,17 @@ class Auth:
     requestors = []
     for userid in userids:
       storage = multistore_file.get_credential_storage(
-	    Auth.config,
-	    Auth.clientid,
-	    userid,
-	    permissions)
+            Auth.config,
+            Auth.clientid,
+            userid,
+            permissions)
       credentials = storage.get()
 
       if not credentials and interactive: # pragma: no cover
-	credentials = Auth.AddAccount(storage, userid)
-	modifiedconfig = True
-	if userid == None:
-	  userid = credentials.user_agent
+        credentials = Auth.AddAccount(storage, userid)
+        modifiedconfig = True
+        if userid == None:
+          userid = credentials.user_agent
         
       if credentials:
         # renew if expired
