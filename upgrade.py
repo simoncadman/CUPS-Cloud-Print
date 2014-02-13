@@ -43,7 +43,7 @@ if __name__ == '__main__': # pragma: no cover
         sys.stderr.write("If you are upgrading from version 20131013 or earlier you should be aware that the scripts have moved from /usr/lib/cloudprint-cups to /usr/share/cloudprint-cups\n")
 
     # line below is replaced on commit
-    CCPVersion = "20140213 231214"
+    CCPVersion = "20140213 232212"
 
     if len(sys.argv) == 2 and sys.argv[1] == 'version':
         print "CUPS Cloud Print Upgrade Script Version " + CCPVersion
@@ -73,8 +73,8 @@ if __name__ == '__main__': # pragma: no cover
         sys.stderr.write("\nRun: /usr/share/cloudprint-cups/setupcloudprint.py to setup your Google Credentials and add your printers to CUPS\n\n")
         sys.exit(0)
 
-    from backend import which
-    if which('lpadmin') == None:
+    from ccputils import Utils
+    if Utils.which('lpadmin') == None:
         sys.stderr.write("lpadmin command not found, you may need to run this script as root\n")
         sys.exit(1)
 

@@ -15,48 +15,15 @@
 #    You should have received a copy of the GNU General Public License
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-import sys, os, subprocess, mimetypes, logging
-    
-def fileIsPDF ( filename ) :
-    """Check if a file is or isnt a PDF
-
-    Args:
-      filename: string, name of the file to check
-    Returns:
-      boolean: True = is a PDF, False = not a PDF.
-    """
-    result = 0
-    p = subprocess.Popen(["file", filename], stdout=subprocess.PIPE)
-    output = p.communicate()[0]
-    result = p.returncode
-    if result != 0:
-        return False
-    else:
-        return "PDF document" in output
-
-def which(program):
-    import os
-    def is_exe(fpath):
-        return os.path.exists(fpath) and os.access(fpath, os.X_OK)
-
-    fpath, fname = os.path.split(program)
-    if fpath:
-        if is_exe(program):
-            return program
-    else:
-        for path in os.environ["PATH"].split(os.pathsep):
-            exe_file = os.path.join(path, program)
-            if is_exe(exe_file):
-                return exe_file
-    return None
-
 if __name__ == '__main__': # pragma: no cover
+    import sys, os, subprocess, mimetypes, logging
+    from ccputils import Utils
 
     progname = 'cloudprint'
 
     if len(sys.argv) == 2 and sys.argv[1] == 'version':
         # line below is replaced on commit
-        CCPVersion = "20140213 231214"
+        CCPVersion = "20140213 232212"
         print "CUPS Cloud Print CUPS Backend Version " + CCPVersion
         sys.exit(0)
 
@@ -149,11 +116,11 @@ if __name__ == '__main__': # pragma: no cover
         pdfFile = printFile+".pdf"
         ps2PdfName = "ps2pdf"
         convertToPDFParams = [ps2PdfName, "-dPDFSETTINGS=/printer", printFile, pdfFile]
-        if which(ps2PdfName) == None:
+        if Utils.which(ps2PdfName) == None:
             ps2PdfName = "pstopdf"
             convertToPDFParams = [ps2PdfName, printFile, pdfFile]
 
-        if not fileIsPDF( printFile  ):
+        if not Utils.fileIsPDF( printFile  ):
             sys.stderr.write( "INFO: Converting print job to PDF\n")
             subprocess.call(convertToPDFParams)
             logging.info("Converted to PDF as "+ pdfFile)

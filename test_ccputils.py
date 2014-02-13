@@ -14,16 +14,16 @@
 #    You should have received a copy of the GNU General Public License
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-import backend
+from ccputils import Utils
 
 def test_fileIsPDFFails():
-    assert backend.fileIsPDF('testfiles/NotPdf.txt') == False
+    assert Utils.fileIsPDF('testfiles/NotPdf.txt') == False
 
 def test_fileIsPDFSucceeds():
-    assert backend.fileIsPDF('testfiles/Test Page.pdf') == True
+    assert Utils.fileIsPDF('testfiles/Test Page.pdf') == True
 
 def test_whichFails():
-    assert backend.which('dsaph9oaghd9ahdsadsadsadsadasd') == None
+    assert Utils.which('dsaph9oaghd9ahdsadsadsadsadasd') == None
 
 def test_whichSucceeds():
-    assert backend.which('bash') in ( '/bin/bash', '/usr/bin/bash', '/usr/sbin/bash' )
+    assert Utils.which('bash') in ( '/bin/bash', '/usr/bin/bash', '/usr/sbin/bash' )
