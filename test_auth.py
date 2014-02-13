@@ -1,4 +1,4 @@
-#    CUPS Cloudprint - Print via Google Cloud Print                          
+#    CUPS Cloudprint - Print via Google Cloud Print
 #    Copyright (C) 2011 Simon Cadman
 #
 #    This program is free software: you can redistribute it and/or modify
@@ -11,7 +11,7 @@
 #    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 #    GNU General Public License for more details.
 #
-#    You should have received a copy of the GNU General Public License    
+#    You should have received a copy of the GNU General Public License
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 from auth import Auth
@@ -24,13 +24,13 @@ def setup_function(function):
     # setup mock requestors
     global requestors
     requestors = []
-    
+
     # account without special chars
     mockRequestorInstance1 = MockRequestor()
     mockRequestorInstance1.setAccount('testaccount1')
     mockRequestorInstance1.printers = []
     requestors.append(mockRequestorInstance1)
-    
+
     Auth.config = '/tmp/cloudprint.conf'
 
 def teardown_function(function):
@@ -40,7 +40,7 @@ def teardown_function(function):
 def test_fixConfigPermissions():
     configfile = open(Auth.config, "w")
     configfile.close()
-    
+
     os.chmod(Auth.config, 0000)
     assert '0000' == oct(os.stat(Auth.config)[stat.ST_MODE])[-4:]
     assert True == Auth.FixConfigPermissions()[0]
@@ -51,35 +51,35 @@ def test_fixConfigPermissions():
 def test_fixConfigOwnerships():
     configfile = open(Auth.config, "w")
     configfile.close()
-    
+
     assert Auth.GetLPID() != os.stat(Auth.config).st_gid
     assert True == Auth.FixConfigPermissions()[1]
     assert Auth.GetLPID() == os.stat(Auth.config).st_gid
-    
+
 def test_setupAuth():
     # create initial file
     assert os.path.exists(Auth.config) == False
     assert Auth.SetupAuth(False) == (False, False)
     assert os.path.exists(Auth.config) == True
-    
+
     # ensure permissions are correct after creating config
     assert '0660' == oct(os.stat(Auth.config)[stat.ST_MODE])[-4:]
-    
+
     # add dummy details
     storage = multistore_file.get_credential_storage(
         Auth.config,
         Auth.clientid,
         'testuseraccount',
         ['https://www.googleapis.com/auth/cloudprint'])
-    
+
     credentials = client.OAuth2Credentials('test', Auth.clientid,
                                'testsecret', 'testtoken', 1,
                                'https://www.googleapis.com/auth/cloudprint', 'testaccount1')
     storage.put(credentials)
-    
+
     # ensure permissions are correct after populating config
     assert '0660' == oct(os.stat(Auth.config)[stat.ST_MODE])[-4:]
-    
+
     # re-run to test getting credentials
     requestors, storage = Auth.SetupAuth(False)
     assert requestors != None
@@ -89,25 +89,25 @@ def test_setupAuth():
                     reason="will only pass if running user part of lp group or root")
 def test_setupAuthOwnership():
     assert Auth.SetupAuth(False) == (False, False)
-    
+
     # ensure ownership is correct after creating config
     assert Auth.GetLPID() == os.stat(Auth.config).st_gid
-    
+
     # add dummy details
     storage = multistore_file.get_credential_storage(
         Auth.config,
         Auth.clientid,
         'testuseraccount',
         ['https://www.googleapis.com/auth/cloudprint'])
-    
+
     credentials = client.OAuth2Credentials('test', Auth.clientid,
                                'testsecret', 'testtoken', 1,
                                'https://www.googleapis.com/auth/cloudprint', 'testaccount1')
     storage.put(credentials)
-    
+
     # ensure ownership is correct after populating config
     assert Auth.GetLPID() == os.stat(Auth.config).st_gid
-    
+
 def test_getLPID():
     assert int(Auth.GetLPID()) > 0
     assert Auth.GetLPID() != None

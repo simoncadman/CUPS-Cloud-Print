@@ -1,5 +1,5 @@
 #! /usr/bin/env python2
-#    CUPS Cloudprint - Print via Google Cloud Print                          
+#    CUPS Cloudprint - Print via Google Cloud Print
 #    Copyright (C) 2013 Simon Cadman
 #
 #    This program is free software: you can redistribute it and/or modify
@@ -12,7 +12,7 @@
 #    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 #    GNU General Public License for more details.
 #
-#    You should have received a copy of the GNU General Public License    
+#    You should have received a copy of the GNU General Public License
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import fileinput, re, sys, glob, subprocess
@@ -26,17 +26,17 @@ files = glob.glob('*.py')
 for file in files:
     replaceLine = False
     for line in fileinput.input(file, inplace=1):
-        
+
         if replaceLine:
             line = re.sub(searchRegex, replaceValue, line)
-        
+
         if '# line below is replaced on commit' in line:
             replaceLine = True
         else:
             replaceLine = False
-            
+
         sys.stdout.write(line)
-        
+
     p = subprocess.Popen(["git", "add", file], stdout=subprocess.PIPE)
     output = p.communicate()[0]
     result = p.returncode

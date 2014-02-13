@@ -1,4 +1,4 @@
-#    CUPS Cloudprint - Print via Google Cloud Print                          
+#    CUPS Cloudprint - Print via Google Cloud Print
 #    Copyright (C) 2011 Simon Cadman
 #
 #    This program is free software: you can redistribute it and/or modify
@@ -11,7 +11,7 @@
 #    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 #    GNU General Public License for more details.
 #
-#    You should have received a copy of the GNU General Public License    
+#    You should have received a copy of the GNU General Public License
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import json, pytest
@@ -22,11 +22,11 @@ global requestor
 def setup_function(function):
     global requestor
     requestor = cloudprintrequestor()
-    
+
 def test_requestor():
     requestor.setAccount('testdetails')
     assert requestor.getAccount() == 'testdetails'
-    
+
 def test_request():
     assert requestor.doRequest(path="/test",testResponse=json.dumps("randomstring1233")) == "randomstring1233"
     with pytest.raises(ValueError):

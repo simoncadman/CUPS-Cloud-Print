@@ -1,5 +1,5 @@
 #! /usr/bin/env python2
-#    CUPS Cloudprint - Print via Google Cloud Print                          
+#    CUPS Cloudprint - Print via Google Cloud Print
 #    Copyright (C) 2013 Simon Cadman
 #
 #    This program is free software: you can redistribute it and/or modify
@@ -12,14 +12,14 @@
 #    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 #    GNU General Public License for more details.
 #
-#    You should have received a copy of the GNU General Public License    
+#    You should have received a copy of the GNU General Public License
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import sys, os, subprocess, logging
 
 if len(sys.argv) == 2 and sys.argv[1] == 'version':
     # line below is replaced on commit
-    CCPVersion = "20140213 223139"
+    CCPVersion = "20140213 224141"
     print "CUPS Cloud Print Issue Reporting Script Version " + CCPVersion
     sys.exit(0)
 
@@ -56,7 +56,7 @@ for foundprinter in printers:
     tempfile = open('/tmp/.ppdfile', 'w')
     tempfile.write(ppddata)
     tempfile.close()
-    
+
     p = subprocess.Popen(['cupstestppd', '/tmp/.ppdfile'], stdout=subprocess.PIPE)
     testdata = p.communicate()[0]
     result = p.returncode
@@ -66,6 +66,5 @@ for foundprinter in printers:
         print "cupstestppd errored: "
         print ppddata
         print "\n"
-    
+
     os.unlink('/tmp/.ppdfile')
-    

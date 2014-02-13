@@ -1,4 +1,4 @@
-#    CUPS Cloudprint - Print via Google Cloud Print                          
+#    CUPS Cloudprint - Print via Google Cloud Print
 #    Copyright (C) 2011 Simon Cadman
 #
 #    This program is free software: you can redistribute it and/or modify
@@ -11,15 +11,15 @@
 #    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 #    GNU General Public License for more details.
 #
-#    You should have received a copy of the GNU General Public License    
+#    You should have received a copy of the GNU General Public License
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 import json, urllib
 
 class MockRequestor:
-    
+
     account = None
     printers = []
-    
+
     def setAccount ( self, account ):
         """Sets the account name
 
@@ -27,7 +27,7 @@ class MockRequestor:
         filename: string, name of the account
         """
         self.account = account
-    
+
     def getAccount ( self ):
         """Gets the account name
 
@@ -35,18 +35,18 @@ class MockRequestor:
         string: Account name.
         """
         return self.account
-    
+
     def mockSearch ( self, path, headers, data , boundary ) :
         result = { 'printers' : self.printers }
         return json.dumps( result )
-        
+
     def mockSubmit ( self, path, headers, data , boundary ) :
         if 'FAIL PAGE' in data:
             result = { 'success' : False, 'message' : 'FAIL PAGE was in message' }
         else:
             result = { 'success' : True }
         return json.dumps( result )
-    
+
     def mockPrinter ( self, path, headers, data , boundary ) :
         printername = path.split('=')[1]
         foundPrinter = None
@@ -54,13 +54,13 @@ class MockRequestor:
             if printer['id'] == printername:
                 foundPrinter = printer
                 break
-        
+
         if foundPrinter == None:
             return json.dumps(None)
-        
+
         result = { 'printers' : [foundPrinter] }
         return json.dumps( result )
-    
+
     def doRequest ( self, path, headers = None, data = None , boundary = None ):
         if ( path.startswith('search?') ) :
             return json.loads(self.mockSearch(path, headers, data, boundary))

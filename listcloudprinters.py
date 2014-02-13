@@ -1,5 +1,5 @@
 #! /usr/bin/env python2
-#    CUPS Cloudprint - Print via Google Cloud Print                          
+#    CUPS Cloudprint - Print via Google Cloud Print
 #    Copyright (C) 2011 Simon Cadman
 #
 #    This program is free software: you can redistribute it and/or modify
@@ -12,7 +12,7 @@
 #    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 #    GNU General Public License for more details.
 #
-#    You should have received a copy of the GNU General Public License    
+#    You should have received a copy of the GNU General Public License
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import sys, logging
@@ -28,7 +28,7 @@ except:
 
 if len(sys.argv) == 2 and sys.argv[1] == 'version':
     # line below is replaced on commit
-    CCPVersion = "20140213 223139"
+    CCPVersion = "20140213 224141"
     print "CUPS Cloud Print Printer Lister Version " + CCPVersion
     sys.exit(0)
 
@@ -36,11 +36,11 @@ requestors, storage = Auth.SetupAuth(True)
 printer = Printer(requestors)
 printers = printer.getPrinters()
 if printers == None:
-  print "No Printers Found"
-  sys.exit(1)
+    print "No Printers Found"
+    sys.exit(1)
 
 for foundprinter in printers:
-  printerName = foundprinter['name']
-  if 'displayName' in foundprinter:
-      printerName = foundprinter['displayName']
-  print printerName.encode('ascii', 'replace') + ' - ' + printer.printerNameToUri(foundprinter['account'], foundprinter['name'].encode('ascii', 'replace')) + " - " + foundprinter['account']
+    printerName = foundprinter['name']
+    if 'displayName' in foundprinter:
+        printerName = foundprinter['displayName']
+    print printerName.encode('ascii', 'replace') + ' - ' + printer.printerNameToUri(foundprinter['account'], foundprinter['name'].encode('ascii', 'replace')) + " - " + foundprinter['account']

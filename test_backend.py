@@ -1,4 +1,4 @@
-#    CUPS Cloudprint - Print via Google Cloud Print                          
+#    CUPS Cloudprint - Print via Google Cloud Print
 #    Copyright (C) 2011 Simon Cadman
 #
 #    This program is free software: you can redistribute it and/or modify
@@ -11,20 +11,20 @@
 #    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 #    GNU General Public License for more details.
 #
-#    You should have received a copy of the GNU General Public License    
+#    You should have received a copy of the GNU General Public License
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import backend
 
 def test_fileIsPDFFails():
     assert backend.fileIsPDF('testfiles/NotPdf.txt') == False
-    
+
 def test_fileIsPDFSucceeds():
     assert backend.fileIsPDF('testfiles/Test Page.pdf') == True
-    
+
 def test_whichFails():
     assert backend.which('dsaph9oaghd9ahdsadsadsadsadasd') == None
-    
+
 def test_whichSucceeds():
     assert backend.which('bash') in ( '/bin/bash', '/usr/bin/bash', '/usr/sbin/bash' )
 

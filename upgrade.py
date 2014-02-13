@@ -1,5 +1,5 @@
 #! /usr/bin/env python2
-#    CUPS Cloudprint - Print via Google Cloud Print                          
+#    CUPS Cloudprint - Print via Google Cloud Print
 #    Copyright (C) 2011 Simon Cadman
 #
 #    This program is free software: you can redistribute it and/or modify
@@ -12,7 +12,7 @@
 #    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 #    GNU General Public License for more details.
 #
-#    You should have received a copy of the GNU General Public License    
+#    You should have received a copy of the GNU General Public License
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import sys, cups, subprocess, os, json, logging
@@ -27,7 +27,7 @@ try:
 except:
     logging.basicConfig(level=logging.INFO)
     logging.error("Unable to write to log file "+ logpath)
-    
+
 try:
     # fix ownership of log file
     os.chown(logpath, -1, Auth.GetLPID())
@@ -41,7 +41,7 @@ else:
     sys.stderr.write("If you are upgrading from version 20131013 or earlier you should be aware that the scripts have moved from /usr/lib/cloudprint-cups to /usr/share/cloudprint-cups\n")
 
 # line below is replaced on commit
-CCPVersion = "20140213 223139"
+CCPVersion = "20140213 224141"
 
 if len(sys.argv) == 2 and sys.argv[1] == 'version':
     print "CUPS Cloud Print Upgrade Script Version " + CCPVersion
@@ -57,25 +57,25 @@ except Exception, e:
 cupsprinters = connection.getPrinters()
 
 if os.path.exists(Auth.config):
-  Auth.FixConfigPermissions()
-  
-  try:
-    content_file = open(Auth.config, 'r')
-    content = content_file.read()
-    data = json.loads(content)
-  except Exception, e:
-    sys.stderr.write("Unable to read config file: " + e.message +"\n\n")
-    sys.exit(0)
-    
+    Auth.FixConfigPermissions()
+
+    try:
+        content_file = open(Auth.config, 'r')
+        content = content_file.read()
+        data = json.loads(content)
+    except Exception, e:
+        sys.stderr.write("Unable to read config file: " + e.message +"\n\n")
+        sys.exit(0)
+
 else:
-  sys.stderr.write("\nRun: /usr/share/cloudprint-cups/setupcloudprint.py to setup your Google Credentials and add your printers to CUPS\n\n")
-  sys.exit(0)
-  
+    sys.stderr.write("\nRun: /usr/share/cloudprint-cups/setupcloudprint.py to setup your Google Credentials and add your printers to CUPS\n\n")
+    sys.exit(0)
+
 from backend import which
 if which('lpadmin') == None:
     sys.stderr.write("lpadmin command not found, you may need to run this script as root\n")
     sys.exit(1)
-  
+
 try:
     print "Fetching list of available ppds..."
     allppds = connection.getPPDs()
@@ -83,7 +83,7 @@ try:
 except Exception, e:
     sys.stderr.write("Error connecting to CUPS: " + str(e) + "\n")
     sys.exit(1)
-    
+
 for device in cupsprinters:
     try:
         if ( cupsprinters[device]["device-uri"].find("cloudprint://") == 0 ):
