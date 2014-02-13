@@ -15,56 +15,58 @@
 #    You should have received a copy of the GNU General Public License
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-import sys, os, subprocess, logging
+if __name__ == '__main__': # pragma: no cover
 
-if len(sys.argv) == 2 and sys.argv[1] == 'version':
-    # line below is replaced on commit
-    CCPVersion = "20140213 224141"
-    print "CUPS Cloud Print Issue Reporting Script Version " + CCPVersion
-    sys.exit(0)
+    import sys, os, subprocess, logging
 
-logpath = '/var/log/cups/cloudprint_log'
-try:
-    logging.basicConfig(filename=logpath,level=logging.INFO)
-except:
-    logging.basicConfig(level=logging.INFO)
-    logging.error("Unable to write to log file "+ logpath)
+    if len(sys.argv) == 2 and sys.argv[1] == 'version':
+        # line below is replaced on commit
+        CCPVersion = "20140213 225205"
+        print "CUPS Cloud Print Issue Reporting Script Version " + CCPVersion
+        sys.exit(0)
 
-libpath = "/usr/local/share/cloudprint-cups/"
-if not os.path.exists( libpath  ):
-    libpath = "/usr/share/cloudprint-cups"
-sys.path.insert(0, libpath)
+    logpath = '/var/log/cups/cloudprint_log'
+    try:
+        logging.basicConfig(filename=logpath,level=logging.INFO)
+    except:
+        logging.basicConfig(level=logging.INFO)
+        logging.error("Unable to write to log file "+ logpath)
 
-from auth import Auth
-from printer import Printer
+    libpath = "/usr/local/share/cloudprint-cups/"
+    if not os.path.exists( libpath  ):
+        libpath = "/usr/share/cloudprint-cups"
+    sys.path.insert(0, libpath)
 
-requestors, storage = Auth.SetupAuth(True)
-printer = Printer(requestors)
-printers = printer.getPrinters(True)
-if printers == None:
-    print "ERROR: No Printers Found"
-    sys.exit(1)
+    from auth import Auth
+    from printer import Printer
 
-for foundprinter in printers:
-    print '"cupscloudprint:' + foundprinter['account'].encode('ascii', 'replace').replace(' ', '-') +':' + foundprinter['name'].encode('ascii', 'replace').replace(' ', '-') + '.ppd" en "Google" "' + foundprinter['name'].encode('ascii', 'replace') + ' (' + foundprinter['account'] + ')" "MFG:GOOGLE;DRV:GCP;CMD:POSTSCRIPT;MDL:' + printer.printerNameToUri( foundprinter['account'], foundprinter['name'] ) +';"'
-    print ""
-    print foundprinter['fulldetails']
-    print "\n"
-    p = subprocess.Popen([os.path.join(libpath,'dynamicppd.py'), 'cat', 'cupscloudprint:' + foundprinter['account'].encode('ascii', 'replace').replace(' ', '-') +':' + foundprinter['name'].encode('ascii', 'replace').replace(' ', '-') + '.ppd'], stdout=subprocess.PIPE)
-    ppddata = p.communicate()[0]
-    result = p.returncode
-    tempfile = open('/tmp/.ppdfile', 'w')
-    tempfile.write(ppddata)
-    tempfile.close()
+    requestors, storage = Auth.SetupAuth(True)
+    printer = Printer(requestors)
+    printers = printer.getPrinters(True)
+    if printers == None:
+        print "ERROR: No Printers Found"
+        sys.exit(1)
 
-    p = subprocess.Popen(['cupstestppd', '/tmp/.ppdfile'], stdout=subprocess.PIPE)
-    testdata = p.communicate()[0]
-    result = p.returncode
-    print "Result of cupstestppd was " + str(result)
-    print "".join(testdata)
-    if result != 0:
-        print "cupstestppd errored: "
-        print ppddata
+    for foundprinter in printers:
+        print '"cupscloudprint:' + foundprinter['account'].encode('ascii', 'replace').replace(' ', '-') +':' + foundprinter['name'].encode('ascii', 'replace').replace(' ', '-') + '.ppd" en "Google" "' + foundprinter['name'].encode('ascii', 'replace') + ' (' + foundprinter['account'] + ')" "MFG:GOOGLE;DRV:GCP;CMD:POSTSCRIPT;MDL:' + printer.printerNameToUri( foundprinter['account'], foundprinter['name'] ) +';"'
+        print ""
+        print foundprinter['fulldetails']
         print "\n"
+        p = subprocess.Popen([os.path.join(libpath,'dynamicppd.py'), 'cat', 'cupscloudprint:' + foundprinter['account'].encode('ascii', 'replace').replace(' ', '-') +':' + foundprinter['name'].encode('ascii', 'replace').replace(' ', '-') + '.ppd'], stdout=subprocess.PIPE)
+        ppddata = p.communicate()[0]
+        result = p.returncode
+        tempfile = open('/tmp/.ppdfile', 'w')
+        tempfile.write(ppddata)
+        tempfile.close()
 
-    os.unlink('/tmp/.ppdfile')
+        p = subprocess.Popen(['cupstestppd', '/tmp/.ppdfile'], stdout=subprocess.PIPE)
+        testdata = p.communicate()[0]
+        result = p.returncode
+        print "Result of cupstestppd was " + str(result)
+        print "".join(testdata)
+        if result != 0:
+            print "cupstestppd errored: "
+            print ppddata
+            print "\n"
+
+        os.unlink('/tmp/.ppdfile')

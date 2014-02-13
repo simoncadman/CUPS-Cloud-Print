@@ -15,33 +15,34 @@
 #    You should have received a copy of the GNU General Public License
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-import sys, logging
-from auth import Auth
-from printer import Printer
+if __name__ == '__main__': # pragma: no cover
+    import sys, logging
+    from auth import Auth
+    from printer import Printer
 
-if len(sys.argv) == 2 and sys.argv[1] == 'version':
-    # line below is replaced on commit
-    CCPVersion = "20140213 224141"
-    print "CUPS Cloud Print Printer Drive Lister Version " + CCPVersion
-    sys.exit(0)
-
-logpath = '/var/log/cups/cloudprint_log'
-try:
-    logging.basicConfig(filename=logpath,level=logging.INFO)
-except:
-    logging.basicConfig(level=logging.INFO)
-    logging.error("Unable to write to log file "+ logpath)
-
-requestors, storage = Auth.SetupAuth(True, permissions=['https://www.googleapis.com/auth/cloudprint', 'https://www.googleapis.com/auth/drive.readonly'])
-printer = Printer(requestors)
-files = printer.getDriveFiles()
-if files == None:
-    print "No Files Found"
-    sys.exit(1)
-
-for drivefile in files:
-    if len(sys.argv) == 2 and drivefile['title'] == sys.argv[1] + '.pdf':
-        print drivefile['fileSize']
+    if len(sys.argv) == 2 and sys.argv[1] == 'version':
+        # line below is replaced on commit
+        CCPVersion = "20140213 225205"
+        print "CUPS Cloud Print Printer Drive Lister Version " + CCPVersion
         sys.exit(0)
-    elif len(sys.argv) != 2:
-        print drivefile['title']
+
+    logpath = '/var/log/cups/cloudprint_log'
+    try:
+        logging.basicConfig(filename=logpath,level=logging.INFO)
+    except:
+        logging.basicConfig(level=logging.INFO)
+        logging.error("Unable to write to log file "+ logpath)
+
+    requestors, storage = Auth.SetupAuth(True, permissions=['https://www.googleapis.com/auth/cloudprint', 'https://www.googleapis.com/auth/drive.readonly'])
+    printer = Printer(requestors)
+    files = printer.getDriveFiles()
+    if files == None:
+        print "No Files Found"
+        sys.exit(1)
+
+    for drivefile in files:
+        if len(sys.argv) == 2 and drivefile['title'] == sys.argv[1] + '.pdf':
+            print drivefile['fileSize']
+            sys.exit(0)
+        elif len(sys.argv) != 2:
+            print drivefile['title']

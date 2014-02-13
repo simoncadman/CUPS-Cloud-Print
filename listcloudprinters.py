@@ -15,32 +15,34 @@
 #    You should have received a copy of the GNU General Public License
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-import sys, logging
-from auth import Auth
-from printer import Printer
+if __name__ == '__main__': # pragma: no cover
 
-logpath = '/var/log/cups/cloudprint_log'
-try:
-    logging.basicConfig(filename=logpath,level=logging.INFO)
-except:
-    logging.basicConfig(level=logging.INFO)
-    logging.error("Unable to write to log file "+ logpath)
+    import sys, logging
+    from auth import Auth
+    from printer import Printer
 
-if len(sys.argv) == 2 and sys.argv[1] == 'version':
-    # line below is replaced on commit
-    CCPVersion = "20140213 224141"
-    print "CUPS Cloud Print Printer Lister Version " + CCPVersion
-    sys.exit(0)
+    logpath = '/var/log/cups/cloudprint_log'
+    try:
+        logging.basicConfig(filename=logpath,level=logging.INFO)
+    except:
+        logging.basicConfig(level=logging.INFO)
+        logging.error("Unable to write to log file "+ logpath)
 
-requestors, storage = Auth.SetupAuth(True)
-printer = Printer(requestors)
-printers = printer.getPrinters()
-if printers == None:
-    print "No Printers Found"
-    sys.exit(1)
+    if len(sys.argv) == 2 and sys.argv[1] == 'version':
+        # line below is replaced on commit
+        CCPVersion = "20140213 225205"
+        print "CUPS Cloud Print Printer Lister Version " + CCPVersion
+        sys.exit(0)
 
-for foundprinter in printers:
-    printerName = foundprinter['name']
-    if 'displayName' in foundprinter:
-        printerName = foundprinter['displayName']
-    print printerName.encode('ascii', 'replace') + ' - ' + printer.printerNameToUri(foundprinter['account'], foundprinter['name'].encode('ascii', 'replace')) + " - " + foundprinter['account']
+    requestors, storage = Auth.SetupAuth(True)
+    printer = Printer(requestors)
+    printers = printer.getPrinters()
+    if printers == None:
+        print "No Printers Found"
+        sys.exit(1)
+
+    for foundprinter in printers:
+        printerName = foundprinter['name']
+        if 'displayName' in foundprinter:
+            printerName = foundprinter['displayName']
+        print printerName.encode('ascii', 'replace') + ' - ' + printer.printerNameToUri(foundprinter['account'], foundprinter['name'].encode('ascii', 'replace')) + " - " + foundprinter['account']
