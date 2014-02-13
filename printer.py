@@ -536,3 +536,6 @@ class Printer:
         # TODO: need to error if limit hit, or run out of chars allowed etc
 
         return returnValue
+
+    def getBackendDescription ( self ) :
+        return "network cloudprint \"Unknown\" \"Google Cloud Print\""

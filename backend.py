@@ -50,16 +50,13 @@ def which(program):
                 return exe_file
     return None
 
-def getBackendDescription ( ) :
-    return "network cloudprint \"Unknown\" \"Google Cloud Print\""
-
 if __name__ == '__main__': # pragma: no cover
 
     progname = 'cloudprint'
 
     if len(sys.argv) == 2 and sys.argv[1] == 'version':
         # line below is replaced on commit
-        CCPVersion = "20140213 230625"
+        CCPVersion = "20140213 231214"
         print "CUPS Cloud Print CUPS Backend Version " + CCPVersion
         sys.exit(0)
 
@@ -86,7 +83,7 @@ if __name__ == '__main__': # pragma: no cover
     printers = printer.getPrinters()
 
     if len(sys.argv) == 1:
-        print getBackendDescription()
+        print printer.getBackendDescription()
 
         try:
             if printers != None:

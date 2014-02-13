@@ -203,3 +203,12 @@ def test_printers():
 
         # delete test printer
         connection.deletePrinter( testprintername )
+
+def test_backendDescription():
+    global printerItem
+    import re
+    backendtest = re.compile("^\w+ \w+ \"\w+\" \".+\"$")
+    description = printerItem.getBackendDescription()
+    assert isinstance(description, str)
+    assert description.startswith('network')
+    assert backendtest.match(description) != None
