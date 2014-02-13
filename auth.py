@@ -42,7 +42,7 @@ class Auth:
 
     GetLPID = staticmethod(GetLPID)
 
-    def DeleteAccount(userid=None): # pragma: no cover
+    def DeleteAccount(userid=None):
         """Delete an account from the configuration file
 
         Args:
@@ -61,7 +61,7 @@ class Auth:
 
     DeleteAccount = staticmethod(DeleteAccount)
 
-    def AddAccount(storage, userid=None): # pragma: no cover
+    def AddAccount(storage, userid=None):
         """Adds an account to the configuration file
 
         Args:
@@ -152,7 +152,7 @@ class Auth:
                   permissions)
             credentials = storage.get()
 
-            if not credentials and interactive: # pragma: no cover
+            if not credentials and interactive:
                 credentials = Auth.AddAccount(storage, userid)
                 modifiedconfig = True
                 if userid == None:
@@ -161,7 +161,7 @@ class Auth:
             if credentials:
                 # renew if expired
                 requestor = cloudprintrequestor()
-                if credentials.access_token_expired: # pragma: no cover
+                if credentials.access_token_expired:
                     from oauth2client.client import AccessTokenRefreshError
                     try:
                         credentials.refresh(requestor)

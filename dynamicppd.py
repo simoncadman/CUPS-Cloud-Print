@@ -20,7 +20,7 @@ if __name__ == '__main__': # pragma: no cover
 
     if len(sys.argv) == 2 and sys.argv[1] == 'version':
         # line below is replaced on commit
-        CCPVersion = "20140213 225205"
+        CCPVersion = "20140213 230625"
         print "CUPS Cloud Print Dynamic PPD Generator Version " + CCPVersion
         sys.exit(0)
 
@@ -158,7 +158,7 @@ if __name__ == '__main__': # pragma: no cover
 *PaperDimension Letter.Fullbleed/US Letter: "612 792"
 *PaperDimension Legal.Fullbleed/US Legal: "612 1008"
 *PaperDimension A4.Fullbleed/A4: "595 842"
-    """
+"""
                     if len(sys.argv) > 3 and sys.argv[3] == "testmode" and os.path.exists('test-capabilities.serial'):
                         with file("test-capabilities.serial") as f:
                             import ast

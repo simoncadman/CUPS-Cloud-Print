@@ -36,17 +36,17 @@ def fileIsPDF ( filename ) :
 
 def which(program):
     import os
-    def is_exe(fpath): # pragma: no cover
+    def is_exe(fpath):
         return os.path.exists(fpath) and os.access(fpath, os.X_OK)
 
     fpath, fname = os.path.split(program)
     if fpath:
-        if is_exe(program): # pragma: no cover
+        if is_exe(program):
             return program
     else:
         for path in os.environ["PATH"].split(os.pathsep):
             exe_file = os.path.join(path, program)
-            if is_exe(exe_file): # pragma: no cover
+            if is_exe(exe_file):
                 return exe_file
     return None
 
@@ -59,7 +59,7 @@ if __name__ == '__main__': # pragma: no cover
 
     if len(sys.argv) == 2 and sys.argv[1] == 'version':
         # line below is replaced on commit
-        CCPVersion = "20140213 225205"
+        CCPVersion = "20140213 230625"
         print "CUPS Cloud Print CUPS Backend Version " + CCPVersion
         sys.exit(0)
 

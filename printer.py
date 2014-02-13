@@ -126,7 +126,7 @@ class Printer:
         printername = self.sanitizePrinterName(printername)
         result = None
         try:
-            if ppd == None: # pragma: no cover
+            if ppd == None:
                 ppdid = 'MFG:GOOGLE;DRV:GCP;CMD:POSTSCRIPT;MDL:' + uri + ';'
                 ppds = connection.getPPDs(ppd_device_id=ppdid)
                 printerppdname, printerppd = ppds.popitem()
@@ -220,11 +220,11 @@ class Printer:
             f = open(pathname, 'rb')
             try:
                 s = f.read()
-            except IOError, e: # pragma: no cover
+            except IOError, e:
                 print 'ERROR: Error reading %s\n%s', pathname, e
             f.close()
             return s
-        except IOError, e: # pragma: no cover
+        except IOError, e:
             print 'ERROR: Error opening %s\n%s', pathname, e
             return None
 
@@ -243,10 +243,10 @@ class Printer:
             f = open(file_name, 'wb')
             try:
                 f.write(data)
-            except IOError, e: # pragma: no cover
+            except IOError, e:
                 status = False
             f.close()
-        except IOError, e: # pragma: no cover
+        except IOError, e:
             status = False
 
         return status
@@ -272,7 +272,7 @@ class Printer:
         if self.writeFile(b64_pathname, b64data):
             return b64_pathname
         else:
-            return None # pragma: no cover
+            return None
 
     def encodeMultiPart(self, fields, file_type='application/xml'):
         """Encodes list of parameters for HTTP multipart format.
@@ -411,7 +411,7 @@ class Printer:
                     print "ERROR: PDF doesnt exist"
                     return False
             b64file = self.base64Encode(jobfile)
-            if b64file == None: # pragma: no cover
+            if b64file == None:
                 print "ERROR: Cannot write to file: " + jobfile + ".b64"
                 return False
             fdata = self.readFile(b64file)
@@ -455,7 +455,7 @@ class Printer:
                 print 'ERROR: Error response from Cloud Print for type %s: %s' % ( jobtype, responseobj['message'] )
                 return False
 
-        except Exception, error_msg: # pragma: no cover
+        except Exception, error_msg:
             print 'ERROR: Print job %s failed with %s' % ( jobtype, error_msg )
             return False
 
