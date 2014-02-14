@@ -27,7 +27,7 @@ class Utils:
         boolean: True = is a PDF, False = not a PDF.
         """
         result = 0
-        p = subprocess.Popen(["file", filename], stdout=subprocess.PIPE)
+        p = subprocess.Popen(["file", filename.lstrip('-')], stdout=subprocess.PIPE)
         output = p.communicate()[0]
         result = p.returncode
         if result != 0:

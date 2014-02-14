@@ -21,7 +21,7 @@ if __name__ == '__main__': # pragma: no cover
 
     if len(sys.argv) == 2 and sys.argv[1] == 'version':
         # line below is replaced on commit
-        CCPVersion = "20140214 001602"
+        CCPVersion = "20140214 003448"
         print "CUPS Cloud Print Issue Reporting Script Version " + CCPVersion
         sys.exit(0)
 
@@ -52,7 +52,7 @@ if __name__ == '__main__': # pragma: no cover
         print ""
         print foundprinter['fulldetails']
         print "\n"
-        p = subprocess.Popen([os.path.join(libpath,'dynamicppd.py'), 'cat', 'cupscloudprint:' + foundprinter['account'].encode('ascii', 'replace').replace(' ', '-') +':' + foundprinter['name'].encode('ascii', 'replace').replace(' ', '-') + '.ppd'], stdout=subprocess.PIPE)
+        p = subprocess.Popen([os.path.join(libpath,'dynamicppd.py'), 'cat', ('cupscloudprint:' + foundprinter['account'].encode('ascii', 'replace').replace(' ', '-') +':' + foundprinter['name'].encode('ascii', 'replace').replace(' ', '-') + '.ppd').lstrip('-')], stdout=subprocess.PIPE)
         ppddata = p.communicate()[0]
         result = p.returncode
         tempfile = open('/tmp/.ppdfile', 'w')

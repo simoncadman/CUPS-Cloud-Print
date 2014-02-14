@@ -39,7 +39,7 @@ if __name__ == '__main__': # pragma: no cover
 
             sys.stdout.write(line)
 
-        p = subprocess.Popen(["git", "add", file], stdout=subprocess.PIPE)
+        p = subprocess.Popen(["git", "add", file.lstrip('-')], stdout=subprocess.PIPE)
         output = p.communicate()[0]
         result = p.returncode
         if result != 0:

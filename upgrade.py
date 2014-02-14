@@ -43,7 +43,7 @@ if __name__ == '__main__': # pragma: no cover
         sys.stderr.write("If you are upgrading from version 20131013 or earlier you should be aware that the scripts have moved from /usr/lib/cloudprint-cups to /usr/share/cloudprint-cups\n")
 
     # line below is replaced on commit
-    CCPVersion = "20140214 001602"
+    CCPVersion = "20140214 003448"
 
     if len(sys.argv) == 2 and sys.argv[1] == 'version':
         print "CUPS Cloud Print Upgrade Script Version " + CCPVersion
@@ -96,7 +96,7 @@ if __name__ == '__main__': # pragma: no cover
                     if allppds[ppd]['ppd-device-id'] == ppdid:
                         printerppdname = ppd
                 if printerppdname != None:
-                    p = subprocess.Popen(["lpadmin", "-p", cupsprinters[device]["printer-info"], "-m", printerppdname], stdout=subprocess.PIPE)
+                    p = subprocess.Popen(["lpadmin", "-p", cupsprinters[device]["printer-info"].lstrip('-'), "-m", printerppdname.lstrip('-')], stdout=subprocess.PIPE)
                     output = p.communicate()[0]
                     result = p.returncode
                     sys.stderr.write(output)
