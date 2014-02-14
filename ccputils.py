@@ -14,7 +14,7 @@
 #    You should have received a copy of the GNU General Public License
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-import subprocess
+import subprocess, os
 
 class Utils:
 
@@ -37,20 +37,16 @@ class Utils:
 
     fileIsPDF = staticmethod(fileIsPDF)
     
-    def which(program):
-        import os
-        def is_exe(fpath):
-            return os.path.exists(fpath) and os.access(fpath, os.X_OK)
+    def is_exe(fpath):
+        return os.path.exists(fpath) and os.access(fpath, os.X_OK)
 
-        fpath, fname = os.path.split(program)
-        if fpath:
-            if is_exe(program):
-                return program
-        else:
-            for path in os.environ["PATH"].split(os.pathsep):
-                exe_file = os.path.join(path, program)
-                if is_exe(exe_file):
-                    return exe_file
+    is_exe = staticmethod(is_exe)
+    
+    def which(program):
+        for path in os.environ["PATH"].split(os.pathsep):
+            exe_file = os.path.join(path, program)
+            if Utils.is_exe(exe_file):
+                return exe_file
         return None
     
     which = staticmethod(which)

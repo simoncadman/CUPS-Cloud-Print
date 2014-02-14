@@ -15,6 +15,7 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 from ccputils import Utils
+import os
 
 def test_fileIsPDFFails():
     assert Utils.fileIsPDF('testfiles/NotPdf.txt') == False
@@ -22,8 +23,21 @@ def test_fileIsPDFFails():
 def test_fileIsPDFSucceeds():
     assert Utils.fileIsPDF('testfiles/Test Page.pdf') == True
 
+def test_fileIsPDFErrors():
+    assert Utils.fileIsPDF("") == False
+
 def test_whichFails():
     assert Utils.which('dsaph9oaghd9ahdsadsadsadsadasd') == None
 
 def test_whichSucceeds():
     assert Utils.which('bash') in ( '/bin/bash', '/usr/bin/bash', '/usr/sbin/bash' )
+
+def test_isExeSucceeds():
+    if os.path.exists('/usr/bin/sh'):
+        assert Utils.is_exe( "/usr/bin/sh" ) == True
+    else:
+        assert Utils.is_exe( "/bin/sh" ) == True
+
+def test_isExeFails():
+    assert Utils.is_exe( "/dev/null" ) == False
+    
