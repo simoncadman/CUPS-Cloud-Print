@@ -24,7 +24,7 @@ def test_fileIsPDFSucceeds():
     assert Utils.fileIsPDF('testfiles/Test Page.pdf') == True
 
 def test_fileIsPDFErrors():
-    assert Utils.fileIsPDF("") == False
+    assert Utils.fileIsPDF("-dsadsa") == False
 
 def test_whichFails():
     assert Utils.which('dsaph9oaghd9ahdsadsadsadsadasd') == None

@@ -20,7 +20,7 @@ if __name__ == '__main__': # pragma: no cover
 
     if len(sys.argv) == 2 and sys.argv[1] == 'version':
         # line below is replaced on commit
-        CCPVersion = "20140214 000713"
+        CCPVersion = "20140214 001602"
         print "CUPS Cloud Print Dynamic PPD Generator Version " + CCPVersion
         sys.exit(0)
 
