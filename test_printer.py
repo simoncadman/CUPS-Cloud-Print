@@ -51,6 +51,42 @@ def teardown_function(function):
     global requestors
     requestors = None
 
+def test_getCUPSPrintersForAccount():
+    global printerItem, requestors
+    
+    foundprinters, connection = printerItem.getCUPSPrintersForAccount(requestors[1].getAccount())
+    assert foundprinters == []
+    assert isinstance(connection, cups.Connection)
+    
+    # total printer
+    totalPrinters = 0
+    for requestor in requestors:
+        totalPrinters+=len(requestor.printers)
+
+    fullprinters = printerItem.getPrinters(True)
+
+    printers = printerItem.getPrinters()
+    assert len(printers) == totalPrinters
+    printer = printers[0]
+    uri = printerItem.printerNameToUri(requestors[1].getAccount(), printer['name'])
+    printername, account = printerItem.parseURI(uri)
+    printerId, requestor = printerItem.getPrinterIDByURI(uri)
+
+    # get ppd
+    ppdid = 'MFG:GOOGLE;DRV:GCP;CMD:POSTSCRIPT;MDL:'
+    ppds = connection.getPPDs(ppd_device_id=ppdid)
+    printerppdname, printerppd = ppds.popitem()
+
+    # test add printer to cups
+    assert printerItem.addPrinter( printername, uri, connection, printerppdname) != None
+    foundprinters, newconnection = printerItem.getCUPSPrintersForAccount(requestors[1].getAccount())
+    # delete test printer
+    connection.deletePrinter( printerItem.sanitizePrinterName(printername) )
+    
+    assert isinstance(foundprinters, list)
+    assert len(foundprinters) == 1
+    assert isinstance(connection, cups.Connection)
+
 def test_instantiate():
     global requestors, printerItem
     # verify adding single requestor works
