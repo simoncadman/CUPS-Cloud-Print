@@ -14,10 +14,25 @@
 #    You should have received a copy of the GNU General Public License
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-import subprocess, os
+import subprocess, os, logging
 
 class Utils:
+    
+    logpath = '/var/log/cups/cloudprint_log'
 
+    def setupLogging(logpath=None):
+        if logpath == None:
+            logpath = Utils.logpath
+        try:
+            logging.basicConfig(filename=logpath,level=logging.INFO)
+        except:
+            logging.basicConfig(level=logging.INFO)
+            logging.error("Unable to write to log file "+ logpath)
+            return False
+        return True
+
+    setupLogging = staticmethod(setupLogging)
+    
     def fileIsPDF ( filename ) :
         """Check if a file is or isnt a PDF
 

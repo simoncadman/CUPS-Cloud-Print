@@ -15,7 +15,11 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 from ccputils import Utils
-import os
+import os, logging
+
+def test_setupLogging():
+    assert Utils.setupLogging() == True
+    logging.error('test_setupLogging error test')
 
 def test_fileIsPDFFails():
     assert Utils.fileIsPDF('testfiles/NotPdf.txt') == False
