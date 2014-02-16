@@ -57,6 +57,8 @@ def test_fixConfigOwnerships():
     assert Auth.GetLPID() == os.stat(Auth.config).st_gid
 
 def test_setupAuth():
+    testUserName = 'testaccount1'
+    
     # create initial file
     assert os.path.exists(Auth.config) == False
     assert Auth.SetupAuth(False) == (False, False)
@@ -74,7 +76,7 @@ def test_setupAuth():
 
     credentials = client.OAuth2Credentials('test', Auth.clientid,
                                'testsecret', 'testtoken', 1,
-                               'https://www.googleapis.com/auth/cloudprint', 'testaccount1')
+                               'https://www.googleapis.com/auth/cloudprint', testUserName)
     storage.put(credentials)
 
     # ensure permissions are correct after populating config
@@ -84,6 +86,12 @@ def test_setupAuth():
     requestors, storage = Auth.SetupAuth(False)
     assert requestors != None
     assert storage != None
+    
+    # check deleting account
+    assert Auth.DeleteAccount(testUserName) == None
+    requestors, storage = Auth.SetupAuth(False)
+    assert requestors == False
+    assert storage == False
 
 @pytest.mark.skipif( grp.getgrnam('lp').gr_gid not in ( os.getgroups() ) and os.getuid() != 0 ,
                     reason="will only pass if running user part of lp group or root")
