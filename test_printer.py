@@ -99,6 +99,40 @@ def test_instantiate():
     assert printerItem.requestors == requestors
     assert len(printerItem.requestors) == len(requestors)
 
+def test_getCapabilities():
+    global printerItem, requestors
+    foundprinters, connection = printerItem.getCUPSPrintersForAccount(requestors[1].getAccount())
+    
+    # total printer
+    totalPrinters = 0
+    for requestor in requestors:
+        totalPrinters+=len(requestor.printers)
+
+    fullprinters = printerItem.getPrinters(True)
+
+    printers = printerItem.getPrinters()
+    printer = printers[0]
+    uri = printerItem.printerNameToUri(requestors[1].getAccount(), printer['name'])
+    printername, account = printerItem.parseURI(uri)
+    printerId, requestor = printerItem.getPrinterIDByURI(uri)
+
+    # get ppd
+    ppdid = 'MFG:GOOGLE;DRV:GCP;CMD:POSTSCRIPT;MDL:'
+    ppds = connection.getPPDs(ppd_device_id=ppdid)
+    printerppdname, printerppd = ppds.popitem()
+
+    # add test printer to cups
+    assert printerItem.addPrinter( printername, uri, connection, printerppdname) != None
+    foundprinters, newconnection = printerItem.getCUPSPrintersForAccount(requestors[1].getAccount())
+    
+    emptyoptions = printerItem.getCapabilities( printerId, printerItem.sanitizePrinterName(printername), "" )
+    assert isinstance(emptyoptions, dict)
+    assert isinstance(emptyoptions['capabilities'], list)
+    assert len(emptyoptions['capabilities']) == 0
+    
+    # delete test printer
+    connection.deletePrinter( printerItem.sanitizePrinterName(printername) )
+
 def test_GetPrinterIDByURIFails (  ):
     global printerItem, requestors
 
