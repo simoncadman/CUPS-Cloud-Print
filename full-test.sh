@@ -57,18 +57,21 @@ done
 
 ccpversion="`./setupcloudprint.py version`"
 osversion="`cat /proc/version`"
-jobname="CCP Test $ccpversion on $osversion at `date`"
-pdfpath="/usr/share/cloudprint-cups/testfiles/Test Page.pdf"
-if [[ -e "/usr/local/share/cloudprint-cups/testfiles/Test Page.pdf" ]]; then
-    pdfpath="/usr/local/share/cloudprint-cups/testfiles/Test Page.pdf"
-fi
+
 if [[ "`whoami`" == "root"  ]]; then
     ./setupcloudprint.py unattended
 else
     sudo ./setupcloudprint.py unattended    
 fi
-lp "$pdfpath" -d 'GCP-Save_to_Google_Docs' -t "$jobname"
-echo "Submitted job $jobname"
+
+# try pdf
+pdfjobname="PDF CCP Test $ccpversion on $osversion at `date`"
+printfilepath="/usr/share/cloudprint-cups/testfiles/Test Page.pdf"
+if [[ -e "/usr/local/share/cloudprint-cups/testfiles/Test Page.pdf" ]]; then
+    printfilepath="/usr/local/share/cloudprint-cups/testfiles/Test Page.pdf"
+fi
+lp "$printfilepath" -d 'GCP-Save_to_Google_Docs' -t "$pdfjobname"
+echo "Submitted job $pdfjobname"
 
 success=0
 for i in {1..30}
@@ -83,7 +86,35 @@ do
 done
 
 if [[ $success == 0 ]]; then
-    echo "Job failed to submit in 30 seconds"
+    echo "PDF Job failed to submit in 30 seconds"
+    lpstat -W all
+    exit 1
+fi
+
+# try postscript file
+psjobname="Postscript CCP Test $ccpversion on $osversion at `date`"
+printfilepath="/usr/share/cloudprint-cups/testfiles/Test Page.ps"
+if [[ -e "/usr/local/share/cloudprint-cups/testfiles/Test Page.ps" ]]; then
+    printfilepath="/usr/local/share/cloudprint-cups/testfiles/Test Page.ps"
+fi
+
+lp "$printfilepath" -d 'GCP-Save_to_Google_Docs' -t "$psjobname"
+echo "Submitted job $psjobname"
+
+success=0
+for i in {1..30}
+do
+   echo "Waiting for job to complete: $i of 30 tries"
+   jobcount="`lpstat -W not-completed | wc -l`"
+   if [[ $jobcount == 0 ]]; then
+        success=1
+        break
+   fi
+   sleep 1
+done
+
+if [[ $success == 0 ]]; then
+    echo "Postscript Job failed to submit in 30 seconds"
     lpstat -W all
     exit 1
 fi
@@ -97,11 +128,18 @@ if [[ $testconfig != "" ]]; then
     fi
 fi
 
-if [[ `./listdrivefiles.py "$jobname"` -lt 100000 ]]; then
-    echo "Uploaded file does not match expected size"
+if [[ `./listdrivefiles.py "$pdfjobname"` -lt 100000 ]]; then
+    echo "Uploaded pdf file does not match expected size"
     exit 1
 else
-    echo "Uploaded file matches expected size"
+    echo "Uploaded pdf file matches expected size"
+fi
+
+if [[ `./listdrivefiles.py "$psjobname"` -lt 100000 ]]; then
+    echo "Uploaded ps file does not match expected size"
+    exit 1
+else
+    echo "Uploaded ps file matches expected size"
 fi
 
 tail /var/log/cups/cloudprint_log
