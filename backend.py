@@ -22,7 +22,7 @@ if __name__ == '__main__': # pragma: no cover
 
     if len(sys.argv) == 2 and sys.argv[1] == 'version':
         # line below is replaced on commit
-        CCPVersion = "20140218 222412"
+        CCPVersion = "20140218 222928"
         print "CUPS Cloud Print CUPS Backend Version " + CCPVersion
         sys.exit(0)
 
@@ -120,44 +120,51 @@ if __name__ == '__main__': # pragma: no cover
             ps2PdfName = "pstopdf"
             convertToPDFParams = [ps2PdfName, printFile, pdfFile]
 
+        result = 0
+        
         if not Utils.fileIsPDF( printFile  ):
             sys.stderr.write( "INFO: Converting print job to PDF\n")
-            subprocess.call(convertToPDFParams)
-            logging.info("Converted to PDF as "+ pdfFile)
+            if ( subprocess.call(convertToPDFParams) != 0 ):
+                sys.stderr.write( "ERROR: Failed to convert file to pdf\n")
+                result = 1
+            else:
+                logging.info("Converted to PDF as "+ pdfFile)
         else:
             pdfFile = printFile + '.pdf'
             os.rename(printFile,pdfFile)
             logging.info("Using " + pdfFile  + " as is already PDF")
+            
+        if result == 0:
+            sys.stderr.write( "INFO: Sending document to Cloud Print\n")
+            logging.info("Sending "+ pdfFile + " to cloud")
 
-        sys.stderr.write( "INFO: Sending document to Cloud Print\n")
-        logging.info("Sending "+ pdfFile + " to cloud")
-
-        result = 0
-        printerid, requestor = printer.getPrinterIDByURI(uri)
-        printer.requestor = requestor
-        if printerid == None:
-            print "ERROR: Printer '" + uri + "' not found"
-            result = 1
-        else:
-            if printer.submitJob(printerid, 'pdf', pdfFile, jobTitle, printername, printOptions ):
-                print "INFO: Successfully printed"
-                result = 0
-            else:
-                print "ERROR: Failed to submit job to cloud print"
+            printerid, requestor = printer.getPrinterIDByURI(uri)
+            printer.requestor = requestor
+            if printerid == None:
+                print "ERROR: Printer '" + uri + "' not found"
                 result = 1
+            else:
+                if printer.submitJob(printerid, 'pdf', pdfFile, jobTitle, printername, printOptions ):
+                    print "INFO: Successfully printed"
+                    result = 0
+                else:
+                    print "ERROR: Failed to submit job to cloud print"
+                    result = 1
 
-        logging.info(pdfFile + " sent to cloud print, deleting")
-        if os.path.exists( printFile ):
-            os.unlink( printFile )
-        sys.stderr.write("INFO: Cleaning up temporary files\n")
-        logging.info("Deleted "+ printFile)
-        if os.path.exists( pdfFile ):
-            os.unlink( pdfFile )
-        logging.info("Deleted "+ pdfFile)
-        if result != 0:
-            sys.stderr.write("INFO: Printing Failed\n")
-            logging.info("Failed printing")
+            logging.info(pdfFile + " sent to cloud print, deleting")
+            if os.path.exists( printFile ):
+                os.unlink( printFile )
+            sys.stderr.write("INFO: Cleaning up temporary files\n")
+            logging.info("Deleted "+ printFile)
+            if os.path.exists( pdfFile ):
+                os.unlink( pdfFile )
+            logging.info("Deleted "+ pdfFile)
+            if result != 0:
+                sys.stderr.write("INFO: Printing Failed\n")
+                logging.info("Failed printing")
+            else:
+                sys.stderr.write("INFO: Printing Successful\n")
+                logging.info("Completed printing")
+            sys.exit(result)
         else:
-            sys.stderr.write("INFO: Printing Successful\n")
-            logging.info("Completed printing")
-        sys.exit(result)
+            sys.exit(result)
