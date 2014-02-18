@@ -44,7 +44,7 @@ python2 -m compileall -q -f .
 %attr(644, root, lp) %{_usr}/share/cloudprint-cups/cloudprintrequestor.py
 %attr(644, root, lp) %{_usr}/share/cloudprint-cups/printer.py
 %attr(644, root, lp) %{_usr}/share/cloudprint-cups/test_auth.py
-%attr(644, root, lp) %{_usr}/share/cloudprint-cups/test_backend.py
+%attr(644, root, lp) %{_usr}/share/cloudprint-cups/test_ccputils.py
 %attr(644, root, lp) %{_usr}/share/cloudprint-cups/test_cloudprintrequestor.py
 %attr(644, root, lp) %{_usr}/share/cloudprint-cups/test_mockrequestor.py
 %attr(644, root, lp) %{_usr}/share/cloudprint-cups/test_printer.py
@@ -56,6 +56,7 @@ python2 -m compileall -q -f .
 %attr(644, root, lp) %{_usr}/share/cloudprint-cups/oauth2client/locked_file.py
 %attr(644, root, lp) %{_usr}/share/cloudprint-cups/oauth2client/multistore_file.py
 %attr(755, root, lp) %{_usr}/share/cloudprint-cups/backend.py
+%attr(755, root, lp) %{_usr}/share/cloudprint-cups/ccputils.py
 %attr(755, root, lp) %{_usr}/share/cloudprint-cups/deleteaccount.py
 %attr(755, root, lp) %{_usr}/share/cloudprint-cups/dynamicppd.py
 %attr(755, root, lp) %{_usr}/share/cloudprint-cups/listcloudprinters.py
