@@ -22,7 +22,7 @@ if __name__ == '__main__': # pragma: no cover
 
     if len(sys.argv) == 2 and sys.argv[1] == 'version':
         # line below is replaced on commit
-        CCPVersion = "20140217 234048"
+        CCPVersion = "20140218 222412"
         print "CUPS Cloud Print CUPS Backend Version " + CCPVersion
         sys.exit(0)
 
@@ -115,7 +115,7 @@ if __name__ == '__main__': # pragma: no cover
 
         pdfFile = printFile+".pdf"
         ps2PdfName = "ps2pdf"
-        convertToPDFParams = [ps2PdfName, "-dPDFSETTINGS=/printer", printFile, pdfFile]
+        convertToPDFParams = [ps2PdfName, "-dPDFSETTINGS=/printer", "-dUseCIEColor", printFile, pdfFile]
         if Utils.which(ps2PdfName) == None:
             ps2PdfName = "pstopdf"
             convertToPDFParams = [ps2PdfName, printFile, pdfFile]
