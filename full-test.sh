@@ -113,6 +113,28 @@ do
    sleep 1
 done
 
+# try postscript from adobe reader
+psreaderjobname="Postscript CCP Test $ccpversion on $osversion at `date`"
+printfilepath="/usr/share/cloudprint-cups/testfiles/Test Page reader.ps"
+if [[ -e "/usr/local/share/cloudprint-cups/testfiles/Test Page reader.ps" ]]; then
+    printfilepath="/usr/local/share/cloudprint-cups/testfiles/Test Page reader.ps"
+fi
+
+lp "$printfilepath" -d 'GCP-Save_to_Google_Docs' -t "$psreaderjobname"
+echo "Submitted job $psreaderjobname"
+
+success=0
+for i in {1..30}
+do
+   echo "Waiting for job to complete: $i of 30 tries"
+   jobcount="`lpstat -W not-completed | wc -l`"
+   if [[ $jobcount == 0 ]]; then
+        success=1
+        break
+   fi
+   sleep 1
+done
+
 if [[ $success == 0 ]]; then
     echo "Postscript Job failed to submit in 30 seconds"
     lpstat -W all
@@ -140,6 +162,13 @@ if [[ `./listdrivefiles.py "$psjobname"` -lt 100000 ]]; then
     exit 1
 else
     echo "Uploaded ps file matches expected size"
+fi
+
+if [[ `./listdrivefiles.py "$psreaderjobname"` -lt 100000 ]]; then
+    echo "Uploaded ps reader file does not match expected size"
+    exit 1
+else
+    echo "Uploaded ps reader file matches expected size"
 fi
 
 tail /var/log/cups/cloudprint_log
