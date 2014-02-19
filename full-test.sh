@@ -114,7 +114,7 @@ do
 done
 
 # try postscript from adobe reader
-psreaderjobname="Postscript CCP Test $ccpversion on $osversion at `date`"
+psreaderjobname="Reader Postscript CCP Test $ccpversion on $osversion at `date`"
 printfilepath="/usr/share/cloudprint-cups/testfiles/Test Page reader.ps"
 if [[ -e "/usr/local/share/cloudprint-cups/testfiles/Test Page reader.ps" ]]; then
     printfilepath="/usr/local/share/cloudprint-cups/testfiles/Test Page reader.ps"
