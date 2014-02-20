@@ -45,6 +45,8 @@ codecoveragepercent="$codecoverage*100 | bc | cut -d'.' -f1"
 if [[ $codecoveragepercent -lt 75 ]]; then
     echo "Code coverage is only $codecoveragepercent , aborting"
     exit 1
+else
+    echo "Code coverage is $codecoveragepercent , continuing"
 fi
 
 unlink .coverage
