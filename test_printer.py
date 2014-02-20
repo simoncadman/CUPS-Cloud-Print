@@ -178,6 +178,14 @@ def test_internalName():
         assert ' ' not in printerItem.getInternalName( internalTest, 'capability' )
         assert len(printerItem.getInternalName( internalTest, 'capability' )) <= 30
         assert len(printerItem.getInternalName( internalTest, 'capability' )) >= 1
+        
+    for internalTest in internalCapabilityTests:
+        for capabilityName in ["psk:JobDuplexAllDocumentsContiguously", "other", "psk:PageOrientation"]:
+            assert printerItem.getInternalName( internalTest, 'option', capabilityName ) not in printerItem.reservedCapabilityWords
+            assert ':' not in printerItem.getInternalName( internalTest, 'option', capabilityName )
+            assert ' ' not in printerItem.getInternalName( internalTest, 'option' )
+            assert len(printerItem.getInternalName( internalTest, 'option', capabilityName )) <= 30
+            assert len(printerItem.getInternalName( internalTest, 'option', capabilityName )) >= 1
 
 def test_printers():
     global printerItem, requestors
