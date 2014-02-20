@@ -20,7 +20,7 @@ class Utils:
     
     logpath = '/var/log/cups/cloudprint_log'
 
-    def setupLogging(logpath=None):
+    def SetupLogging(logpath=None):
         if logpath == None:
             logpath = Utils.logpath
         try:
@@ -31,7 +31,7 @@ class Utils:
             return False
         return True
 
-    setupLogging = staticmethod(setupLogging)
+    SetupLogging = staticmethod(SetupLogging)
     
     def fileIsPDF ( filename ) :
         """Check if a file is or isnt a PDF

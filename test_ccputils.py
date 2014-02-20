@@ -17,9 +17,9 @@
 from ccputils import Utils
 import os, logging
 
-def test_setupLogging():
+def test_SetupLogging():
     testLogFile = '/tmp/testccp.log'
-    assert Utils.setupLogging(testLogFile) == True
+    assert Utils.SetupLogging(testLogFile) == True
     logging.error('test_setupLogging error test')
     assert os.path.exists(testLogFile) == True
     os.unlink(testLogFile)

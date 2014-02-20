@@ -22,23 +22,18 @@ if __name__ == '__main__': # pragma: no cover
     from oauth2client import multistore_file
     from auth import Auth
 
-    logpath = '/var/log/cups/cloudprint_log'
-
-    try:
-        logging.basicConfig(filename=logpath,level=logging.INFO)
-    except:
-        logging.basicConfig(level=logging.INFO)
-        logging.error("Unable to write to log file "+ logpath)
-
+    from ccputils import Utils
+    Utils.SetupLogging()
+    
     try:
         # fix ownership of log file
-        os.chown(logpath, -1, Auth.GetLPID())
-        os.chmod(logpath, 0660)
+        os.chown(Utils.logpath, -1, Auth.GetLPID())
+        os.chmod(Utils.logpath, 0660)
     except:
         logging.warning("Failed to change ownerships and permissions of logfile")
 
     # line below is replaced on commit
-    CCPVersion = "20140220 133158"
+    CCPVersion = "20140220 142018"
 
     if len(sys.argv) == 2 and sys.argv[1] == 'version':
         print "CUPS Cloud Print Upgrade Script Version " + CCPVersion

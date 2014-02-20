@@ -21,16 +21,9 @@ if __name__ == '__main__': # pragma: no cover
 
     if len(sys.argv) == 2 and sys.argv[1] == 'version':
         # line below is replaced on commit
-        CCPVersion = "20140220 133158"
+        CCPVersion = "20140220 142018"
         print "CUPS Cloud Print Issue Reporting Script Version " + CCPVersion
         sys.exit(0)
-
-    logpath = '/var/log/cups/cloudprint_log'
-    try:
-        logging.basicConfig(filename=logpath,level=logging.INFO)
-    except:
-        logging.basicConfig(level=logging.INFO)
-        logging.error("Unable to write to log file "+ logpath)
 
     libpath = "/usr/local/share/cloudprint-cups/"
     if not os.path.exists( libpath  ):
@@ -39,7 +32,9 @@ if __name__ == '__main__': # pragma: no cover
 
     from auth import Auth
     from printer import Printer
-
+    from ccputils import Utils
+    Utils.SetupLogging()
+    
     requestors, storage = Auth.SetupAuth(True)
     printer = Printer(requestors)
     printers = printer.getPrinters(True)
