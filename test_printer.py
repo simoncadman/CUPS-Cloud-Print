@@ -268,6 +268,10 @@ def test_printers():
         assert printerItem.submitJob(printerId, 'pdf', 'testfiles/Test Page.pdf', 'Test Page', testprintername ) == True
         assert printerItem.submitJob(printerId, 'pdf', 'testfiles/Test Page Doesnt Exist.pdf', 'Test Page', testprintername ) == False
 
+        # test submitting job with no name
+        assert printerItem.submitJob(printerId, 'pdf', 'testfiles/Test Page.pdf', '', testprintername ) == True
+        assert printerItem.submitJob(printerId, 'pdf', 'testfiles/Test Page Doesnt Exist.pdf', '', testprintername ) == False
+
         # png
         assert printerItem.submitJob(printerId, 'png', 'testfiles/Test Page.png', 'Test Page', testprintername ) == True
         assert printerItem.submitJob(printerId, 'png', 'testfiles/Test Page Doesnt Exist.png', 'Test Page', testprintername ) == False

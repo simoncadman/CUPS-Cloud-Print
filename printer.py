@@ -427,6 +427,9 @@ class Printer:
             return False
 
         title = jobname
+        if jobname == "":
+           jobname = "Untitled page" 
+        
         content = {'pdf': fdata,
                    'jpeg': jobfile,
                    'png': jobfile,
