@@ -56,7 +56,6 @@ for printer in $printers; do
 done
 
 ccpversion="`./setupcloudprint.py version`"
-osversion="`cat /proc/version`"
 
 if [[ "`whoami`" == "root"  ]]; then
     ./setupcloudprint.py unattended
@@ -65,7 +64,7 @@ else
 fi
 
 # try pdf
-pdfjobname="PDF CCP Test $ccpversion on $osversion at `date`"
+pdfjobname="PDF CCP Test $ccpversion at `date`"
 printfilepath="/usr/share/cloudprint-cups/testfiles/Test Page.pdf"
 if [[ -e "/usr/local/share/cloudprint-cups/testfiles/Test Page.pdf" ]]; then
     printfilepath="/usr/local/share/cloudprint-cups/testfiles/Test Page.pdf"
@@ -92,7 +91,7 @@ if [[ $success == 0 ]]; then
 fi
 
 # try postscript file
-psjobname="Postscript CCP Test $ccpversion on $osversion at `date`"
+psjobname="Postscript CCP Test $ccpversion at `date`"
 printfilepath="/usr/share/cloudprint-cups/testfiles/Test Page.ps"
 if [[ -e "/usr/local/share/cloudprint-cups/testfiles/Test Page.ps" ]]; then
     printfilepath="/usr/local/share/cloudprint-cups/testfiles/Test Page.ps"
@@ -114,7 +113,7 @@ do
 done
 
 # try postscript from adobe reader
-psreaderjobname="Reader Postscript CCP Test $ccpversion on $osversion at `date`"
+psreaderjobname="Reader Postscript CCP Test $ccpversion at `date`"
 printfilepath="/usr/share/cloudprint-cups/testfiles/Test Page reader.ps"
 if [[ -e "/usr/local/share/cloudprint-cups/testfiles/Test Page reader.ps" ]]; then
     printfilepath="/usr/local/share/cloudprint-cups/testfiles/Test Page reader.ps"
