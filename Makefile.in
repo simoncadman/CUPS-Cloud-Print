@@ -12,6 +12,7 @@ all: backend.py
 install: all
 	mkdir -p ${prefix}/share/cloudprint-cups/oauth2client
 	mkdir -p ${prefix}/share/cloudprint-cups/testfiles
+	${INSTALL} ${srcdir}/.coveragerc ${prefix}/share/cloudprint-cups/
 	${INSTALL} ${srcdir}/*.py ${prefix}/share/cloudprint-cups/
 	${INSTALL} ${srcdir}/full-test.sh ${prefix}/share/cloudprint-cups/
 	${INSTALL} ${srcdir}/remove-test.sh ${prefix}/share/cloudprint-cups/

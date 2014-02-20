@@ -40,6 +40,7 @@ python2 -m compileall -q -f .
 %docdir %{_usr}/share/cloudprint-cups/testfiles
 %{_usr}/%{_lib}/cups/backend/cloudprint
 %{_usr}/%{_lib}/cups/driver/cupscloudprint
+%attr(644, root, lp) %{_usr}/share/cloudprint-cups/.coveragerc
 %attr(644, root, lp) %{_usr}/share/cloudprint-cups/auth.py
 %attr(644, root, lp) %{_usr}/share/cloudprint-cups/cloudprintrequestor.py
 %attr(644, root, lp) %{_usr}/share/cloudprint-cups/printer.py
