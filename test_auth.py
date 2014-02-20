@@ -45,6 +45,11 @@ def test_fixConfigPermissions():
     assert '0000' == oct(os.stat(Auth.config)[stat.ST_MODE])[-4:]
     assert True == Auth.FixConfigPermissions()[0]
     assert '0660' == oct(os.stat(Auth.config)[stat.ST_MODE])[-4:]
+    
+    origconfig = Auth.config
+    Auth.config = '/tmp/filethatdoesntexist'
+    assert (False, False) == Auth.FixConfigPermissions()
+    Auth.config = origconfig
 
 @pytest.mark.skipif( grp.getgrnam('lp').gr_gid not in ( os.getgroups() ) and os.getuid() != 0 ,
                     reason="will only pass if running user part of lp group or root")
