@@ -21,15 +21,18 @@ class Utils:
     logpath = '/var/log/cups/cloudprint_log'
 
     def SetupLogging(logpath=None):
+        returnValue = True
+        logformat = "%(asctime)s|%(levelname)s|%(message)s"
+        dateformat = "%Y-%m-%d %H:%M:%S"
         if logpath == None:
             logpath = Utils.logpath
         try:
-            logging.basicConfig(filename=logpath,level=logging.INFO)
+            logging.basicConfig(filename=logpath,level=logging.INFO,format=logformat,datefmt=dateformat)
         except:
-            logging.basicConfig(level=logging.INFO)
+            logging.basicConfig(level=logging.INFO,format=logformat,datefmt=dateformat)
             logging.error("Unable to write to log file "+ logpath)
-            return False
-        return True
+            returnValue = False
+        return returnValue
 
     SetupLogging = staticmethod(SetupLogging)
     
