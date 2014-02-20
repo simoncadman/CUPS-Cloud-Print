@@ -44,6 +44,7 @@ codecoverage=`fgrep "<coverage" coverage.xml | grep -Po 'line-rate="(.*?)"' | cu
 codecoveragepercent="`echo $codecoverage*100 | bc | cut -d'.' -f1`"
 if [[ $codecoveragepercent -lt 75 ]]; then
     echo "Code coverage is only $codecoveragepercent , aborting"
+    cat coverage.xml
     exit 1
 else
     echo "Code coverage is $codecoveragepercent , continuing"
