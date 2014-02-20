@@ -47,6 +47,9 @@ if [[ $codecoveragepercent -lt 75 ]]; then
     exit 1
 fi
 
+unlink .coverage
+unlink coverage.xml
+
 export PYTHONDONTWRITEBYTECODE=0
 
 printers="`./dynamicppd.py list | cut -d'"' -f2`"
