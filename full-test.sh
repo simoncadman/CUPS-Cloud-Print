@@ -38,7 +38,14 @@ fi
 
 export PYTHONDONTWRITEBYTECODE=1
 
-py.test2 || py.test
+py.test2 -rxs --cov-report xml  --cov . || py.test -rxs --cov-report xml  --cov .
+
+codecoverage=`fgrep "<coverage" coverage.xml | grep -Po 'line-rate="(.*?)"' | cut -d'"' -f2`
+codecoveragepercent="$codecoverage*100 | bc | cut -d'.' -f1"
+if [[ $codecoveragepercent -lt 75 ]]; then
+    echo "Code coverage is only $codecoveragepercent , aborting"
+    exit 1
+fi
 
 export PYTHONDONTWRITEBYTECODE=0
 
