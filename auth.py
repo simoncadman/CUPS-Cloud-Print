@@ -25,14 +25,14 @@ class Auth:
     clientsecret = 'MzTBsY4xlrD_lxkmwFbBrvBv'
     config = '/etc/cloudprint.conf'
 
-    def GetLPID():
+    def GetLPID(default='lp', alternative='cups'):
         # try lp first, then cups#
         lpgrp = None
         try:
-            lpgrp = grp.getgrnam('lp')
+            lpgrp = grp.getgrnam(default)
         except:
             try:
-                lpgrp = grp.getgrnam('cups')
+                lpgrp = grp.getgrnam(alternative)
             except:
                 pass
         if lpgrp == None:

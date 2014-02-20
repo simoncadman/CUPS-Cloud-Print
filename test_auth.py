@@ -119,3 +119,16 @@ def test_setupAuthOwnership():
 def test_getLPID():
     assert int(Auth.GetLPID()) > 0
     assert Auth.GetLPID() != None
+    
+    import grp
+    
+    workingPrintGroupName = 'lp'
+    try:
+        grp.getgrnam(workingPrintGroupName)
+    except:
+        workingPrintGroupName = 'cups'
+        pass
+    
+    assert Auth.GetLPID('brokendefault', 'brokenalternative') == None
+    assert int(Auth.GetLPID('brokendefault', workingPrintGroupName)) > 0
+    assert Auth.GetLPID('brokendefault', workingPrintGroupName) != None
