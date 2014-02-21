@@ -87,7 +87,7 @@ class Printer:
     def sanitizeText(self, text):
         return text.replace('/','-').replace(':','_').replace(';','_').replace(' ','_').encode('utf8', 'ignore')
 
-    def printerNameToUri( self, account, printer ) :
+    def printerNameToUri( self, account, printer, printerid=None ) :
         """Generates a URI for the Cloud Print Printer
 
         Args:
@@ -97,7 +97,10 @@ class Printer:
         Returns:
           string: URI for the printer
         """
-        return self.PROTOCOL + urllib.quote(printer) + "/" + urllib.quote(account)
+        if printerid == None:
+            return self.PROTOCOL + urllib.quote(printer) + "/" + urllib.quote(account)
+        else:
+            return self.PROTOCOL + urllib.quote(printer) + "/" + urllib.quote(account) + "/" + urllib.quote(printerid)
 
 
     def sanitizePrinterName ( self, name ) :

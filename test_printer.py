@@ -233,6 +233,12 @@ def test_printers():
         assert len(printer['id']) > 0
 
         # test encoding and decoding printer details to/from uri
+        uritest = re.compile("cloudprint://(.*)/" + urllib.quote( printer['account'] ) + "/" + urllib.quote( printer['id']) )
+        uri = printerItem.printerNameToUri(printer['account'], printer['name'], printer['id'])
+        assert isinstance(uri, unicode)
+        assert len(uri) > 0
+        assert uritest.match(uri) != None
+        
         uritest = re.compile("cloudprint://(.*)/" + urllib.quote( printer['account'] ))
         uri = printerItem.printerNameToUri(printer['account'], printer['name'])
         assert isinstance(uri, str)

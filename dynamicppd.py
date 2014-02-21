@@ -20,7 +20,7 @@ if __name__ == '__main__': # pragma: no cover
 
     if len(sys.argv) == 2 and sys.argv[1] == 'version':
         # line below is replaced on commit
-        CCPVersion = "20140221 003044"
+        CCPVersion = "20140221 004624"
         print "CUPS Cloud Print Dynamic PPD Generator Version " + CCPVersion
         sys.exit(0)
 
@@ -55,7 +55,7 @@ if __name__ == '__main__': # pragma: no cover
             print "ERROR: No Printers Found"
             sys.exit(1)
         for foundprinter in printers:
-            print '"cupscloudprint:' + foundprinter['account'].encode('ascii', 'replace').replace(' ', '-') +':' + foundprinter['name'].encode('ascii', 'replace').replace(' ', '-') + '.ppd" en "Google" "' + foundprinter['name'].encode('ascii', 'replace') + ' (' + foundprinter['account'] + ')" "MFG:GOOGLE;DRV:GCP;CMD:POSTSCRIPT;MDL:' + printer.printerNameToUri( foundprinter['account'], foundprinter['name'] ) +';"'
+            print '"cupscloudprint:' + foundprinter['account'].encode('ascii', 'replace').replace(' ', '-') +':' + foundprinter['name'].encode('ascii', 'replace').replace(' ', '-') + '.ppd" en "Google" "' + foundprinter['name'].encode('ascii', 'replace') + ' (' + foundprinter['account'] + ')" "MFG:GOOGLE;DRV:GCP;CMD:POSTSCRIPT;MDL:' + printer.printerNameToUri( foundprinter['account'], foundprinter['name'], foundprinter['id'] ) +';"'
 
     elif sys.argv[1] == 'cat':
         if len(sys.argv) == 2 or sys.argv[2] == "":
@@ -122,7 +122,7 @@ if __name__ == '__main__': # pragma: no cover
 *LandscapeOrientation: Minus90
 *TTRasterizer: Type42
 *% Driver-defined attributes...
-*1284DeviceID: "MFG:GOOGLE;DRV:GCP;CMD:POSTSCRIPT;MDL:""" + printer.printerNameToUri( foundprinter['account'], foundprinter['name'] ) + """;"
+*1284DeviceID: "MFG:GOOGLE;DRV:GCP;CMD:POSTSCRIPT;MDL:""" + printer.printerNameToUri( foundprinter['account'], foundprinter['name'], foundprinter['id'] ) + """;"
 *OpenUI *PageSize/Media Size: PickOne
 *""" + language + """.Translation PageSize/Media Size: ""
 *OrderDependency: 10 AnySetup *PageSize
