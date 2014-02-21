@@ -245,10 +245,14 @@ def test_printers():
         assert isinstance(account, str)
         assert urllib.unquote(account) == printer['account']
 
+        printerId, requestor = printerItem.getPrinterIDByURI(uri + "/testprinterid")
+        assert printerId == "testprinterid"
+        assert isinstance(requestor, MockRequestor)
+
         printerId, requestor = printerItem.getPrinterIDByURI(uri)
         assert isinstance(printerId, unicode)
         assert isinstance(requestor, MockRequestor)
-
+        
         # get ppd
         ppdid = 'MFG:GOOGLE;DRV:GCP;CMD:POSTSCRIPT;MDL:'
         ppds = connection.getPPDs(ppd_device_id=ppdid)

@@ -189,6 +189,10 @@ class Printer:
         requestor = self.findRequestorForAccount(urllib.unquote(account))
         if requestor == None:
             return None, None
+        
+        if printerid != None:
+            return printerid, requestor
+        
         responseobj = requestor.doRequest('search?connection_status=ALL&client=webui&q=%s' % (printername))
         printername = urllib.unquote(printername)
         if 'printers' in responseobj and len(responseobj['printers']) > 0:
