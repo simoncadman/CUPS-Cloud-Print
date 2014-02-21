@@ -98,9 +98,9 @@ class Printer:
           string: URI for the printer
         """
         if printerid == None:
-            return self.PROTOCOL + urllib.quote(printer) + "/" + urllib.quote(account)
+            return self.PROTOCOL + urllib.quote(printer.encode('ascii', 'replace')) + "/" + urllib.quote(account.encode('ascii', 'replace'))
         else:
-            return self.PROTOCOL + urllib.quote(printer) + "/" + urllib.quote(account) + "/" + urllib.quote(printerid)
+            return self.PROTOCOL + urllib.quote(printer.encode('ascii', 'replace')) + "/" + urllib.quote(account.encode('ascii', 'replace')) + "/" + urllib.quote(printerid.encode('ascii', 'replace'))
 
 
     def sanitizePrinterName ( self, name ) :

@@ -33,7 +33,7 @@ if __name__ == '__main__': # pragma: no cover
         logging.warning("Failed to change ownerships and permissions of logfile")
 
     # line below is replaced on commit
-    CCPVersion = "20140221 182927"
+    CCPVersion = "20140221 192004"
 
     if len(sys.argv) == 2 and sys.argv[1] == 'version':
         print "CUPS Cloud Print Upgrade Script Version " + CCPVersion
