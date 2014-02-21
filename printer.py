@@ -156,7 +156,12 @@ class Printer:
           string: account name
         """
         uri = urlparse(uristring)
-        return uri.netloc, uri.path.lstrip('/')
+        pathparts = uri.path.split('/')
+        accountName = pathparts[1]
+        printerId = None
+        if len(pathparts) > 2:
+            printerId = pathparts[2]
+        return uri.netloc, accountName, printerId
 
     def findRequestorForAccount(self, account):
         """Searches the requestors in the printer object for the requestor for a specific account
@@ -179,7 +184,7 @@ class Printer:
           printer id: Single requestor object for the account, or None if no account found
           requestor: Single requestor object for the account
         """
-        printername, account = self.parseURI(uri)
+        printername, account, printerid = self.parseURI(uri)
         # find requestor based on account
         requestor = self.findRequestorForAccount(urllib.unquote(account))
         if requestor == None:

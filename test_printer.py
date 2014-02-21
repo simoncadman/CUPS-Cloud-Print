@@ -51,6 +51,18 @@ def teardown_function(function):
     global requestors
     requestors = None
 
+def test_parseURI():
+    global printerItem, requestors
+    printername, account, printerid = printerItem.parseURI("cloudprint://Save%20to%20Google%20Docs/testaccount")
+    assert printername == "Save%20to%20Google%20Docs"
+    assert account == "testaccount"
+    assert printerid == None
+    
+    printername, account, printerid = printerItem.parseURI("cloudprint://Save%20to%20Google%20Docs/testaccount/testid")
+    assert printername == "Save%20to%20Google%20Docs"
+    assert account == "testaccount"
+    assert printerid == "testid"
+
 def test_getCUPSPrintersForAccount():
     global printerItem, requestors
     
@@ -69,7 +81,7 @@ def test_getCUPSPrintersForAccount():
     assert len(printers) == totalPrinters
     printer = printers[0]
     uri = printerItem.printerNameToUri(requestors[1].getAccount(), printer['name'])
-    printername, account = printerItem.parseURI(uri)
+    printername, account, printerid = printerItem.parseURI(uri)
     printerId, requestor = printerItem.getPrinterIDByURI(uri)
 
     # get ppd
@@ -113,7 +125,7 @@ def test_getCapabilities():
     printers = printerItem.getPrinters()
     printer = printers[0]
     uri = printerItem.printerNameToUri(requestors[1].getAccount(), printer['name'])
-    printername, account = printerItem.parseURI(uri)
+    printername, account, printerid = printerItem.parseURI(uri)
     printerId, requestor = printerItem.getPrinterIDByURI(uri)
 
     # get ppd
@@ -227,7 +239,7 @@ def test_printers():
         assert len(uri) > 0
         assert uritest.match(uri) != None
 
-        printername, account = printerItem.parseURI(uri)
+        printername, account, printerid = printerItem.parseURI(uri)
         assert isinstance(printername, str)
         assert urllib.unquote(printername) == printer['name']
         assert isinstance(account, str)
