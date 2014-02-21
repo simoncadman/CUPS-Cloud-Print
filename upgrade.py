@@ -35,13 +35,13 @@ if __name__ == '__main__': # pragma: no cover
 
     requestors, storage = Auth.SetupAuth(False)
     if requestors == False:
-        sys.stderr.write("ERROR: config is invalid or missing\n")
-        logging.error("backend tried to run with invalid config");
-        sys.exit(1)
+        sys.stderr.write("Config is invalid or missing\n")
+        logging.error("Upgrade tried to run with invalid config");
+        sys.exit(0)
     printerItem = Printer(requestors)
         
     # line below is replaced on commit
-    CCPVersion = "20140221 220925"
+    CCPVersion = "20140221 221443"
 
     if len(sys.argv) == 2 and sys.argv[1] == 'version':
         print "CUPS Cloud Print Upgrade Script Version " + CCPVersion
