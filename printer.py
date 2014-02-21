@@ -40,10 +40,11 @@ class Printer:
         Args:
           requestors: list or cloudprintrequestor instance, A list of requestors, or a single requestor to use for all Cloud Print requests.
         """
-        if isinstance(requestors, list):
-            self.requestors = requestors
-        else:
-            self.requestors = [requestors]
+        if requestors != None:
+            if isinstance(requestors, list):
+                self.requestors = requestors
+            else:
+                self.requestors = [requestors]
 
     def getCUPSPrintersForAccount(self, account):
         import cups

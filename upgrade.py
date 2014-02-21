@@ -17,12 +17,13 @@
 
 if __name__ == '__main__': # pragma: no cover
     
-    import sys, cups, subprocess, os, json, logging
+    import sys, cups, subprocess, os, json, logging, urllib
     from oauth2client import client
     from oauth2client import multistore_file
     from auth import Auth
 
     from ccputils import Utils
+    from printer import Printer
     Utils.SetupLogging()
     
     try:
@@ -32,8 +33,15 @@ if __name__ == '__main__': # pragma: no cover
     except:
         logging.warning("Failed to change ownerships and permissions of logfile")
 
+    requestors, storage = Auth.SetupAuth(False)
+    if requestors == False:
+        sys.stderr.write("ERROR: config is invalid or missing\n")
+        logging.error("backend tried to run with invalid config");
+        sys.exit(1)
+    printerItem = Printer(requestors)
+        
     # line below is replaced on commit
-    CCPVersion = "20140221 192004"
+    CCPVersion = "20140221 220925"
 
     if len(sys.argv) == 2 and sys.argv[1] == 'version':
         print "CUPS Cloud Print Upgrade Script Version " + CCPVersion
@@ -79,8 +87,27 @@ if __name__ == '__main__': # pragma: no cover
     for device in cupsprinters:
         try:
             if ( cupsprinters[device]["device-uri"].find("cloudprint://") == 0 ):
-                print "Updating " + cupsprinters[device]["printer-info"]
+                printername, account, printerid = printerItem.parseURI(cupsprinters[device]["device-uri"])
+                if printerid == None:
+                    # update with new uri
+                    print "Updating " + cupsprinters[device]["printer-info"], "with new id uri format"
+                    printerid, requestor = printerItem.getPrinterIDByURI(cupsprinters[device]["device-uri"])
+                    if printerid != None:
+                        newDeviceURI = printerItem.printerNameToUri(urllib.unquote(account), urllib.unquote(printername), printerid)
+                        cupsprinters[device]["device-uri"] = newDeviceURI
+                        p = subprocess.Popen(["lpadmin", "-p", cupsprinters[device]["printer-info"].lstrip('-'), "-v", newDeviceURI], stdout=subprocess.PIPE)
+                        output = p.communicate()[0]
+                        result = p.returncode
+                        sys.stderr.write(output)
+                    else:
+                        print cupsprinters[device]["printer-info"], "not found, you should delete and re-add this printer"
+                        continue
+                else:  
+                    print "Updating " + cupsprinters[device]["printer-info"]
+                    
                 ppdid = 'MFG:GOOGLE;DRV:GCP;CMD:POSTSCRIPT;MDL:' + cupsprinters[device]["device-uri"] + ';'
+                    
+                # just needs updating
                 printerppdname = None
                 for ppd in allppds:
                     if allppds[ppd]['ppd-device-id'] == ppdid:
@@ -91,6 +118,6 @@ if __name__ == '__main__': # pragma: no cover
                     result = p.returncode
                     sys.stderr.write(output)
                 else:
-                    print cupsprinters[device]["printer-info"] + " not found"
+                    print cupsprinters[device]["printer-info"], "not found, you should delete and re-add this printer"
         except Exception, e:
             sys.stderr.write("Error connecting to CUPS: " + str(e) + "\n")

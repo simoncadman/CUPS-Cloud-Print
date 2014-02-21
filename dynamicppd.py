@@ -20,7 +20,7 @@ if __name__ == '__main__': # pragma: no cover
 
     if len(sys.argv) == 2 and sys.argv[1] == 'version':
         # line below is replaced on commit
-        CCPVersion = "20140221 192004"
+        CCPVersion = "20140221 220925"
         print "CUPS Cloud Print Dynamic PPD Generator Version " + CCPVersion
         sys.exit(0)
 
@@ -55,7 +55,7 @@ if __name__ == '__main__': # pragma: no cover
             print "ERROR: No Printers Found"
             sys.exit(1)
         for foundprinter in printers:
-            print '"cupscloudprint:' + foundprinter['account'].encode('ascii', 'replace').replace(' ', '-') +':' + foundprinter['name'].encode('ascii', 'replace').replace(' ', '-') + '.ppd" en "Google" "' + foundprinter['name'].encode('ascii', 'replace') + ' (' + foundprinter['account'] + ')" "MFG:GOOGLE;DRV:GCP;CMD:POSTSCRIPT;MDL:' + printer.printerNameToUri( foundprinter['account'], foundprinter['name'], foundprinter['id'] ) +';"'
+            print '"cupscloudprint:' + foundprinter['account'].encode('ascii', 'replace').replace(' ', '-') +':' + foundprinter['name'].encode('ascii', 'replace').replace(' ', '-') + '-' + foundprinter['id'].encode('ascii', 'replace').replace(' ', '-') + '.ppd" en "Google" "' + foundprinter['name'].encode('ascii', 'replace') + ' (' + foundprinter['account'] + ')" "MFG:GOOGLE;DRV:GCP;CMD:POSTSCRIPT;MDL:' + printer.printerNameToUri( foundprinter['account'], foundprinter['name'], foundprinter['id'] ) +';"'
 
     elif sys.argv[1] == 'cat':
         if len(sys.argv) == 2 or sys.argv[2] == "":
@@ -80,7 +80,7 @@ if __name__ == '__main__': # pragma: no cover
 
             # find printer
             for foundprinter in printers:
-                if ppdname == 'cupscloudprint:' + foundprinter['account'].encode('ascii', 'replace').replace(' ', '-') +':' + foundprinter['name'].encode('ascii', 'replace').replace(' ', '-') + '.ppd':
+                if ppdname == 'cupscloudprint:' + foundprinter['account'].encode('ascii', 'replace').replace(' ', '-') +':' + foundprinter['name'].encode('ascii', 'replace').replace(' ', '-') + '-' + foundprinter['id'].encode('ascii', 'replace').replace(' ', '-') + '.ppd':
                     capabilities = []
                     # generate and output ppd
                     language = "en"
