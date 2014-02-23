@@ -26,6 +26,11 @@ if __name__ == '__main__': # pragma: no cover
     from printer import Printer
     Utils.SetupLogging()
     
+    if not os.path.exists("/etc/cloudprint.conf"):
+        sys.stderr.write("Config is invalid or missing, not running on fresh install\n")
+        logging.error("Upgrade tried to run on fresh install");
+        sys.exit(0)
+    
     requestors, storage = Auth.SetupAuth(False)
     if requestors == False:
         sys.stderr.write("Config is invalid or missing\n")
@@ -34,7 +39,7 @@ if __name__ == '__main__': # pragma: no cover
     printerItem = Printer(requestors)
         
     # line below is replaced on commit
-    CCPVersion = "20140223 200749"
+    CCPVersion = "20140223 203304"
 
     if len(sys.argv) == 2 and sys.argv[1] == 'version':
         print "CUPS Cloud Print Upgrade Script Version " + CCPVersion
