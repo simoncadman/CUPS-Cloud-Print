@@ -1082,13 +1082,13 @@ class OAuth2WebServerFlow(Flow):
       if 'id_token' in d:
         d['id_token'] = _extract_id_token(d['id_token'])
 
-      logger.info('Successfully retrieved access token: %s' % content)
+      logger.debug('Successfully retrieved access token: %s' % content)
       return OAuth2Credentials(access_token, self.client_id,
                                self.client_secret, refresh_token, token_expiry,
                                self.token_uri, self.user_agent,
                                id_token=d.get('id_token', None))
     else:
-      logger.info('Failed to retrieve access token: %s' % content)
+      logger.debug('Failed to retrieve access token: %s' % content)
       error_msg = 'Invalid response %s.' % resp['status']
       try:
         d = simplejson.loads(content)
