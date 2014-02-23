@@ -21,7 +21,9 @@ Clone the git repo:
 git clone git://github.com/simoncadman/CUPS-Cloud-Print.git
 
 cd CUPS-Cloud-Print/
+
 ./configure
+
 make install
 
 Follow configuration below.
