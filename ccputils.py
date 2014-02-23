@@ -100,7 +100,7 @@ class Utils:
     def GetLPID(default='lp', alternative='cups', useFiles=True):
         if useFiles:
             # check files in order
-            for cupsConfigFile in [ '/etc/cups/ppd', '/usr/local/etc/cups/ppd' ]:
+            for cupsConfigFile in [ '/var/log/cups/access_log', '/etc/cups/ppd', '/usr/local/etc/cups/ppd' ]:
                 if os.path.exists(cupsConfigFile):
                     return os.stat(cupsConfigFile).st_gid 
         
