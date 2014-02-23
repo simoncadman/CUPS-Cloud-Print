@@ -440,8 +440,8 @@ class Printer:
             return False
 
         title = jobname
-        if jobname == "":
-           jobname = "Untitled page" 
+        if title == "":
+           title = "Untitled page" 
         
         content = {'pdf': fdata,
                    'jpeg': jobfile,
