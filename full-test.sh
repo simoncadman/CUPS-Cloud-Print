@@ -42,7 +42,17 @@ ls -al /var/log/cups/
 
 export PYTHONDONTWRITEBYTECODE=1
 
+set +e
 py.test2 -rxs --cov-report xml  --cov . || py.test -rxs --cov-report xml  --cov .
+testresult=$?
+ls -al /var/log/cups
+cat /var/log/cups/cloudprint_log
+set -e
+
+if [[ $testresult != 0 ]]; then
+    echo "Exited due to unit test errors"
+    exit 1
+fi
 
 codecoverage=`fgrep "<coverage" coverage.xml | grep -Po 'line-rate="(.*?)"' | cut -d'"' -f2`
 codecoveragepercent="`echo $codecoverage*100 | bc | cut -d'.' -f1`"
