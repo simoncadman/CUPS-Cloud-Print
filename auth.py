@@ -14,33 +14,17 @@
 #    You should have received a copy of the GNU General Public License
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-import json, os, grp, sys, grp
+import json, os, sys
 from oauth2client import client
 from oauth2client import multistore_file
 from cloudprintrequestor import cloudprintrequestor
+from ccputils import Utils
 
 class Auth:
 
     clientid = "843805314553.apps.googleusercontent.com"
     clientsecret = 'MzTBsY4xlrD_lxkmwFbBrvBv'
     config = '/etc/cloudprint.conf'
-
-    def GetLPID(default='lp', alternative='cups'):
-        # try lp first, then cups#
-        lpgrp = None
-        try:
-            lpgrp = grp.getgrnam(default)
-        except:
-            try:
-                lpgrp = grp.getgrnam(alternative)
-            except:
-                pass
-        if lpgrp == None:
-            return None
-        else:
-            return lpgrp.gr_gid
-
-    GetLPID = staticmethod(GetLPID)
 
     def DeleteAccount(userid=None):
         """Delete an account from the configuration file
@@ -88,40 +72,13 @@ class Auth:
                 storage.put(credentials)
 
                 # fix permissions
-                Auth.FixFilePermissions(Auth.config)
+                Utils.FixFilePermissions(Auth.config)
 
                 return credentials
             except Exception as e:
                 print "\nThe code does not seem to be valid ( " + str(e) + " ), please try again.\n"
 
     AddAccount = staticmethod(AddAccount)
-
-    def FixFilePermissions(filename):
-        filePermissions = True
-        fileOwnerships = True
-        currentStat = None
-        if os.path.exists(filename):
-            currentStat = os.stat(filename)
-
-        if currentStat == None or currentStat.st_mode != 0100660:
-            try:
-                os.chmod(filename, 0100660)
-            except:
-                filePermissions = False
-                sys.stderr.write("DEBUG: Cannot alter "+ filename +" file permissions\n")
-                pass
-            
-        if currentStat == None or currentStat.st_gid != Auth.GetLPID():  
-            try:
-                os.chown(filename, -1, Auth.GetLPID())
-            except:
-                fileOwnerships = False
-                sys.stderr.write("DEBUG: Cannot alter "+ filename +" file ownership\n")
-                pass
-            
-        return filePermissions, fileOwnerships
-
-    FixFilePermissions = staticmethod(FixFilePermissions)
 
     def SetupAuth(interactive=False, permissions=['https://www.googleapis.com/auth/cloudprint']):
         """Sets up requestors with authentication tokens
@@ -180,7 +137,7 @@ class Auth:
 
         # fix permissions
         if modifiedconfig:
-            Auth.FixFilePermissions(Auth.config)
+            Utils.FixFilePermissions(Auth.config)
 
         if not credentials:
             return False, False

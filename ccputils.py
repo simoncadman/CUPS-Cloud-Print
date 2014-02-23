@@ -14,12 +14,38 @@
 #    You should have received a copy of the GNU General Public License
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-import subprocess, os, logging
-from auth import Auth
+import subprocess, os, logging, sys, grp
 
 class Utils:
     
     logpath = '/var/log/cups/cloudprint_log'
+
+    def FixFilePermissions(filename):
+        filePermissions = True
+        fileOwnerships = True
+        currentStat = None
+        if os.path.exists(filename):
+            currentStat = os.stat(filename)
+
+        if currentStat == None or currentStat.st_mode != 0100660:
+            try:
+                os.chmod(filename, 0100660)
+            except:
+                filePermissions = False
+                sys.stderr.write("DEBUG: Cannot alter "+ filename +" file permissions\n")
+                pass
+            
+        if currentStat == None or currentStat.st_gid != Utils.GetLPID():  
+            try:
+                os.chown(filename, -1, Utils.GetLPID())
+            except:
+                fileOwnerships = False
+                sys.stderr.write("DEBUG: Cannot alter "+ filename +" file ownership\n")
+                pass
+            
+        return filePermissions, fileOwnerships
+
+    FixFilePermissions = staticmethod(FixFilePermissions)
 
     def SetupLogging(logpath=None):
         returnValue = True
@@ -29,7 +55,7 @@ class Utils:
             logpath = Utils.logpath
         try:
             logging.basicConfig(filename=logpath,level=logging.INFO,format=logformat,datefmt=dateformat)
-            Auth.FixFilePermissions(logpath)
+            Utils.FixFilePermissions(logpath)
         except:
             logging.basicConfig(level=logging.INFO,format=logformat,datefmt=dateformat)
             logging.error("Unable to write to log file "+ logpath)
@@ -70,3 +96,20 @@ class Utils:
         return None
     
     which = staticmethod(which)
+    
+    def GetLPID(default='lp', alternative='cups'):
+        # try lp first, then cups#
+        lpgrp = None
+        try:
+            lpgrp = grp.getgrnam(default)
+        except:
+            try:
+                lpgrp = grp.getgrnam(alternative)
+            except:
+                pass
+        if lpgrp == None:
+            return None
+        else:
+            return lpgrp.gr_gid
+
+    GetLPID = staticmethod(GetLPID)

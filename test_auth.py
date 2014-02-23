@@ -19,6 +19,7 @@ import json, urllib, cups, os, stat, grp, pytest
 from test_mockrequestor import MockRequestor
 from oauth2client import client
 from oauth2client import multistore_file
+from ccputils import Utils
 
 def setup_function(function):
     # setup mock requestors
@@ -43,12 +44,12 @@ def test_fixConfigPermissions():
 
     os.chmod(Auth.config, 0000)
     assert '0000' == oct(os.stat(Auth.config)[stat.ST_MODE])[-4:]
-    assert True == Auth.FixFilePermissions(Auth.config)[0]
+    assert True == Utils.FixFilePermissions(Auth.config)[0]
     assert '0660' == oct(os.stat(Auth.config)[stat.ST_MODE])[-4:]
     
     origconfig = Auth.config
     Auth.config = '/tmp/filethatdoesntexist'
-    assert (False, False) == Auth.FixFilePermissions(Auth.config)
+    assert (False, False) == Utils.FixFilePermissions(Auth.config)
     Auth.config = origconfig
 
 @pytest.mark.skipif( grp.getgrnam('lp').gr_gid not in ( os.getgroups() ) and os.getuid() != 0 ,
@@ -57,9 +58,9 @@ def test_fixConfigOwnerships():
     configfile = open(Auth.config, "w")
     configfile.close()
 
-    assert Auth.GetLPID() != os.stat(Auth.config).st_gid
-    assert True == Auth.FixFilePermissions(Auth.config)[1]
-    assert Auth.GetLPID() == os.stat(Auth.config).st_gid
+    assert Utils.GetLPID() != os.stat(Auth.config).st_gid
+    assert True == Utils.FixFilePermissions(Auth.config)[1]
+    assert Utils.GetLPID() == os.stat(Auth.config).st_gid
 
 def test_setupAuth():
     testUserName = 'testaccount1'
@@ -104,7 +105,7 @@ def test_setupAuthOwnership():
     assert Auth.SetupAuth(False) == (False, False)
 
     # ensure ownership is correct after creating config
-    assert Auth.GetLPID() == os.stat(Auth.config).st_gid
+    assert Utils.GetLPID() == os.stat(Auth.config).st_gid
 
     # add dummy details
     storage = multistore_file.get_credential_storage(
@@ -119,11 +120,11 @@ def test_setupAuthOwnership():
     storage.put(credentials)
 
     # ensure ownership is correct after populating config
-    assert Auth.GetLPID() == os.stat(Auth.config).st_gid
+    assert Utils.GetLPID() == os.stat(Auth.config).st_gid
 
 def test_getLPID():
-    assert int(Auth.GetLPID()) > 0
-    assert Auth.GetLPID() != None
+    assert int(Utils.GetLPID()) > 0
+    assert Utils.GetLPID() != None
     
     import grp
     
@@ -134,6 +135,6 @@ def test_getLPID():
         workingPrintGroupName = 'cups'
         pass
     
-    assert Auth.GetLPID('brokendefault', 'brokenalternative') == None
-    assert int(Auth.GetLPID('brokendefault', workingPrintGroupName)) > 0
-    assert Auth.GetLPID('brokendefault', workingPrintGroupName) != None
+    assert Utils.GetLPID('brokendefault', 'brokenalternative') == None
+    assert int(Utils.GetLPID('brokendefault', workingPrintGroupName)) > 0
+    assert Utils.GetLPID('brokendefault', workingPrintGroupName) != None

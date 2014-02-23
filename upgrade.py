@@ -28,7 +28,7 @@ if __name__ == '__main__': # pragma: no cover
     
     try:
         # fix ownership of log file
-        os.chown(Utils.logpath, -1, Auth.GetLPID())
+        os.chown(Utils.logpath, -1, Utils.GetLPID())
         os.chmod(Utils.logpath, 0660)
     except:
         logging.warning("Failed to change ownerships and permissions of logfile")
@@ -41,7 +41,7 @@ if __name__ == '__main__': # pragma: no cover
     printerItem = Printer(requestors)
         
     # line below is replaced on commit
-    CCPVersion = "20140223 140758"
+    CCPVersion = "20140223 142157"
 
     if len(sys.argv) == 2 and sys.argv[1] == 'version':
         print "CUPS Cloud Print Upgrade Script Version " + CCPVersion
@@ -57,7 +57,7 @@ if __name__ == '__main__': # pragma: no cover
     cupsprinters = connection.getPrinters()
 
     if os.path.exists(Auth.config):
-        Auth.FixFilePermissions(Auth.config)
+        Utils.FixFilePermissions(Auth.config)
 
         try:
             content_file = open(Auth.config, 'r')
