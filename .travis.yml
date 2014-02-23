@@ -23,6 +23,7 @@ script:
  - sudo ./upgrade.py
  - sudo python -m compileall .
  - py.test -rxs --cov .
+ - ls -al /tmp/
  - sudo cat /var/log/cups/cloudprint_log /var/log/cups/error_log
  - sudo unlink /usr/share/cups/model/testppd.ppd
 after_success:

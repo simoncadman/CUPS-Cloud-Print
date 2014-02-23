@@ -112,7 +112,9 @@ class Utils:
             for cupsConfigFile in [ '/var/log/cups/access_log', '/etc/cups/ppd', '/usr/local/etc/cups/ppd' ]:
                 if os.path.exists(cupsConfigFile):
                     if os.stat(cupsConfigFile).st_gid not in blacklistedGroupIds:
-                        return os.stat(cupsConfigFile).st_gid 
+                        return os.stat(cupsConfigFile).st_gid
+                    else:
+                        logging.debug("Group " + group + " excluded as blacklisted" )
         
         # try lp first, then cups
         lpgrp = None
