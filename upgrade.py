@@ -26,13 +26,6 @@ if __name__ == '__main__': # pragma: no cover
     from printer import Printer
     Utils.SetupLogging()
     
-    try:
-        # fix ownership of log file
-        os.chown(Utils.logpath, -1, Utils.GetLPID())
-        os.chmod(Utils.logpath, 0660)
-    except:
-        logging.warning("Failed to change ownerships and permissions of logfile")
-
     requestors, storage = Auth.SetupAuth(False)
     if requestors == False:
         sys.stderr.write("Config is invalid or missing\n")
@@ -41,7 +34,7 @@ if __name__ == '__main__': # pragma: no cover
     printerItem = Printer(requestors)
         
     # line below is replaced on commit
-    CCPVersion = "20140223 144543"
+    CCPVersion = "20140223 145058"
 
     if len(sys.argv) == 2 and sys.argv[1] == 'version':
         print "CUPS Cloud Print Upgrade Script Version " + CCPVersion
