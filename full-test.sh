@@ -17,6 +17,8 @@ if [[ ! -f /etc/cloudprint.conf ]]; then
 fi
 
 if [[ "`whoami`" == "root"  ]]; then
+       sed -i 's/LogLevel warn/LogLevel debug/g' /etc/cups/cupsd.conf 
+       
        # ensure cups running
        if [[ -f /etc/init.d/cupsd ]]; then
           # running gentoo
@@ -47,6 +49,7 @@ py.test2 -rxs --cov-report xml  --cov . || py.test -rxs --cov-report xml  --cov 
 testresult=$?
 ls -al /var/log/cups
 cat /var/log/cups/cloudprint_log
+cat /var/log/cups/error_log
 ls -al /etc/cloudprint.conf
 set -e
 
