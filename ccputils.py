@@ -15,6 +15,7 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import subprocess, os, logging
+from auth import Auth
 
 class Utils:
     
@@ -28,6 +29,7 @@ class Utils:
             logpath = Utils.logpath
         try:
             logging.basicConfig(filename=logpath,level=logging.INFO,format=logformat,datefmt=dateformat)
+            Auth.FixFilePermissions(logpath)
         except:
             logging.basicConfig(level=logging.INFO,format=logformat,datefmt=dateformat)
             logging.error("Unable to write to log file "+ logpath)

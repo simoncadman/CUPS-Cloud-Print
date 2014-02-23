@@ -99,21 +99,26 @@ class Auth:
     def FixFilePermissions(filename):
         filePermissions = True
         fileOwnerships = True
+        currentStat = None
+        if os.path.exists(filename):
+            currentStat = os.stat(filename)
 
-        try:
-            os.chmod(filename, 0660)
-        except:
-            filePermissions = False
-            sys.stderr.write("DEBUG: Cannot alter "+ filename +" file permissions\n")
-            pass
-
-        try:
-            os.chown(filename, -1, Auth.GetLPID())
-        except:
-            fileOwnerships = False
-            sys.stderr.write("DEBUG: Cannot alter "+ filename +" file ownership\n")
-            pass
-
+        if currentStat == None or currentStat.st_mode != 0100660:
+            try:
+                os.chmod(filename, 0100660)
+            except:
+                filePermissions = False
+                sys.stderr.write("DEBUG: Cannot alter "+ filename +" file permissions\n")
+                pass
+            
+        if currentStat == None or currentStat.st_gid != Auth.GetLPID():  
+            try:
+                os.chown(filename, -1, Auth.GetLPID())
+            except:
+                fileOwnerships = False
+                sys.stderr.write("DEBUG: Cannot alter "+ filename +" file ownership\n")
+                pass
+            
         return filePermissions, fileOwnerships
 
     FixFilePermissions = staticmethod(FixFilePermissions)
