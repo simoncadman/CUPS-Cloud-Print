@@ -43,12 +43,12 @@ def test_fixConfigPermissions():
 
     os.chmod(Auth.config, 0000)
     assert '0000' == oct(os.stat(Auth.config)[stat.ST_MODE])[-4:]
-    assert True == Auth.FixConfigPermissions()[0]
+    assert True == Auth.FixFilePermissions(Auth.config)[0]
     assert '0660' == oct(os.stat(Auth.config)[stat.ST_MODE])[-4:]
     
     origconfig = Auth.config
     Auth.config = '/tmp/filethatdoesntexist'
-    assert (False, False) == Auth.FixConfigPermissions()
+    assert (False, False) == Auth.FixFilePermissions(Auth.config)
     Auth.config = origconfig
 
 @pytest.mark.skipif( grp.getgrnam('lp').gr_gid not in ( os.getgroups() ) and os.getuid() != 0 ,
@@ -58,7 +58,7 @@ def test_fixConfigOwnerships():
     configfile.close()
 
     assert Auth.GetLPID() != os.stat(Auth.config).st_gid
-    assert True == Auth.FixConfigPermissions()[1]
+    assert True == Auth.FixFilePermissions(Auth.config)[1]
     assert Auth.GetLPID() == os.stat(Auth.config).st_gid
 
 def test_setupAuth():

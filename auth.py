@@ -88,7 +88,7 @@ class Auth:
                 storage.put(credentials)
 
                 # fix permissions
-                Auth.FixConfigPermissions()
+                Auth.FixFilePermissions(Auth.config)
 
                 return credentials
             except Exception as e:
@@ -96,27 +96,27 @@ class Auth:
 
     AddAccount = staticmethod(AddAccount)
 
-    def FixConfigPermissions():
+    def FixFilePermissions(filename):
         filePermissions = True
         fileOwnerships = True
 
         try:
-            os.chmod(Auth.config, 0660)
+            os.chmod(filename, 0660)
         except:
             filePermissions = False
-            sys.stderr.write("DEBUG: Cannot alter config file permissions\n")
+            sys.stderr.write("DEBUG: Cannot alter "+ filename +" file permissions\n")
             pass
 
         try:
-            os.chown(Auth.config, -1, Auth.GetLPID())
+            os.chown(filename, -1, Auth.GetLPID())
         except:
             fileOwnerships = False
-            sys.stderr.write("DEBUG: Cannot alter config file ownership\n")
+            sys.stderr.write("DEBUG: Cannot alter "+ filename +" file ownership\n")
             pass
 
         return filePermissions, fileOwnerships
 
-    FixConfigPermissions = staticmethod(FixConfigPermissions)
+    FixFilePermissions = staticmethod(FixFilePermissions)
 
     def SetupAuth(interactive=False, permissions=['https://www.googleapis.com/auth/cloudprint']):
         """Sets up requestors with authentication tokens
@@ -175,7 +175,7 @@ class Auth:
 
         # fix permissions
         if modifiedconfig:
-            Auth.FixConfigPermissions()
+            Auth.FixFilePermissions(Auth.config)
 
         if not credentials:
             return False, False

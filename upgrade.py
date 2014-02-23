@@ -41,7 +41,7 @@ if __name__ == '__main__': # pragma: no cover
     printerItem = Printer(requestors)
         
     # line below is replaced on commit
-    CCPVersion = "20140223 120955"
+    CCPVersion = "20140223 130930"
 
     if len(sys.argv) == 2 and sys.argv[1] == 'version':
         print "CUPS Cloud Print Upgrade Script Version " + CCPVersion
@@ -57,7 +57,7 @@ if __name__ == '__main__': # pragma: no cover
     cupsprinters = connection.getPrinters()
 
     if os.path.exists(Auth.config):
-        Auth.FixConfigPermissions()
+        Auth.FixFilePermissions(Auth.config)
 
         try:
             content_file = open(Auth.config, 'r')
