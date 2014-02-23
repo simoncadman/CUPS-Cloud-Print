@@ -36,6 +36,10 @@ else
     sudo python2 -m compileall .
 fi
 
+echo "Permissions of config and logs:"
+ls -al /etc/cloudprint.conf
+ls -al /var/log/cups/
+
 export PYTHONDONTWRITEBYTECODE=1
 
 py.test2 -rxs --cov-report xml  --cov . || py.test -rxs --cov-report xml  --cov .
