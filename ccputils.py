@@ -98,11 +98,21 @@ class Utils:
     which = staticmethod(which)
     
     def GetLPID(default='lp', alternative='cups', useFiles=True):
+        blacklistedGroups = [ 'adm', 'wheel', 'root' ]
+        blacklistedGroupIds = []
+        for group in blacklistedGroups:
+            try:
+                blacklistedGroupIds.append( grp.getgrnam(group).gr_gid )
+            except:
+                logging.debug("Group " + group + " not found" )
+                pass
+        
         if useFiles:
             # check files in order
             for cupsConfigFile in [ '/var/log/cups/access_log', '/etc/cups/ppd', '/usr/local/etc/cups/ppd' ]:
                 if os.path.exists(cupsConfigFile):
-                    return os.stat(cupsConfigFile).st_gid 
+                    if os.stat(cupsConfigFile).st_gid not in blacklistedGroupIds:
+                        return os.stat(cupsConfigFile).st_gid 
         
         # try lp first, then cups
         lpgrp = None
