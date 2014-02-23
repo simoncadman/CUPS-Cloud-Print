@@ -10,9 +10,9 @@ export testconfig="$5"
 
 if [[ ! -f /etc/cloudprint.conf ]]; then
         if [[ "`whoami`" == "root"  ]]; then
-                scp $testconfig /etc/cloudprint.conf
+                scp -v $testconfig /etc/cloudprint.conf
         else
-                sudo scp $testconfig /etc/cloudprint.conf
+                sudo scp -v $testconfig /etc/cloudprint.conf
         fi
 fi
 
@@ -51,6 +51,7 @@ ls -al /var/log/cups
 cat /var/log/cups/cloudprint_log
 cat /var/log/cups/error_log
 ls -al /etc/cloudprint.conf
+cat /etc/cloudprint.conf
 set -e
 
 if [[ $testresult != 0 ]]; then
