@@ -104,7 +104,6 @@ class Utils:
             try:
                 blacklistedGroupIds.append( grp.getgrnam(group).gr_gid )
             except:
-                logging.debug("Group " + group + " not found" )
                 pass
         
         if useFiles:
@@ -113,8 +112,6 @@ class Utils:
                 if os.path.exists(cupsConfigFile):
                     if os.stat(cupsConfigFile).st_gid not in blacklistedGroupIds:
                         return os.stat(cupsConfigFile).st_gid
-                    else:
-                        logging.debug("Group " + group + " excluded as blacklisted" )
         
         # try lp first, then cups
         lpgrp = None
