@@ -122,19 +122,3 @@ def test_setupAuthOwnership():
     # ensure ownership is correct after populating config
     assert Utils.GetLPID() == os.stat(Auth.config).st_gid
 
-def test_getLPID():
-    assert int(Utils.GetLPID()) > 0
-    assert Utils.GetLPID() != None
-    
-    import grp
-    
-    workingPrintGroupName = 'lp'
-    try:
-        grp.getgrnam(workingPrintGroupName)
-    except:
-        workingPrintGroupName = 'cups'
-        pass
-    
-    assert Utils.GetLPID('brokendefault', 'brokenalternative') == None
-    assert int(Utils.GetLPID('brokendefault', workingPrintGroupName)) > 0
-    assert Utils.GetLPID('brokendefault', workingPrintGroupName) != None

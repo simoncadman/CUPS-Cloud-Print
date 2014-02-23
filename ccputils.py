@@ -97,8 +97,14 @@ class Utils:
     
     which = staticmethod(which)
     
-    def GetLPID(default='lp', alternative='cups'):
-        # try lp first, then cups#
+    def GetLPID(default='lp', alternative='cups', useFiles=True):
+        if useFiles:
+            # check files in order
+            for cupsConfigFile in [ '/etc/cups/cupsd.conf', '/usr/local/etc/cups/cupsd.conf' ]:
+                if os.path.exists('/etc/cups/cupsd.conf'):
+                    return os.stat('/etc/cups/cupsd.conf').st_gid 
+        
+        # try lp first, then cups
         lpgrp = None
         try:
             lpgrp = grp.getgrnam(default)

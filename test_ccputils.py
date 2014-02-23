@@ -48,3 +48,20 @@ def test_isExeSucceeds():
 def test_isExeFails():
     assert Utils.is_exe( "/dev/null" ) == False
     
+
+def test_getLPID():
+    assert int(Utils.GetLPID()) > 0
+    assert Utils.GetLPID() != None
+    
+    import grp
+    
+    workingPrintGroupName = 'lp'
+    try:
+        grp.getgrnam(workingPrintGroupName)
+    except:
+        workingPrintGroupName = 'cups'
+        pass
+    
+    assert Utils.GetLPID('brokendefault', 'brokenalternative', False) == None
+    assert int(Utils.GetLPID('brokendefault', workingPrintGroupName, False)) > 0
+    assert Utils.GetLPID('brokendefault', workingPrintGroupName, False) != None
