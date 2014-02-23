@@ -47,6 +47,7 @@ py.test2 -rxs --cov-report xml  --cov . || py.test -rxs --cov-report xml  --cov 
 testresult=$?
 ls -al /var/log/cups
 cat /var/log/cups/cloudprint_log
+ls -al /etc/cloudprint.conf
 set -e
 
 if [[ $testresult != 0 ]]; then
