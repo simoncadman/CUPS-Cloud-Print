@@ -28,7 +28,7 @@ if __name__ == '__main__': # pragma: no cover
     
     if not os.path.exists("/etc/cloudprint.conf"):
         sys.stderr.write("Config is invalid or missing, not running on fresh install\n")
-        logging.error("Upgrade tried to run on fresh install");
+        logging.warning("Upgrade tried to run on fresh install");
         sys.exit(0)
     
     requestors, storage = Auth.SetupAuth(False)
