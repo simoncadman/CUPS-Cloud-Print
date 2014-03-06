@@ -76,6 +76,20 @@ python2 -m compileall -q -f .
 %doc %{_usr}/share/cloudprint-cups/README.md
 
 %changelog
+* Fri Mar 07 2014  <src@niftiestsoftware.com> (20140307-1)
+- New: Show better error message if printer ppd not found
+- Fix: Use python logging facility instead of writing to log files directly, fixes No handlers could be found for logger error
+- Fix: Upgrade script now faster with multiple printers, now only gets list of PPDs once and filters for each printer
+- Fix: Show better error if renewing OAUTH2 token fails
+- Fix: Explicitely define dirs in rpm files list, ensures will be removed correctly on uninstall
+- Fix: Deb package now deletes old pyc files on uninstall/upgrade
+- Fix: Config file permissions now fixed to allow updating of access token when printing
+- Fix: Compile python code on rpm install to ensure old files are removed on uninstall
+- Fix: Compile python code on arch install to ensure old files are removed on uninstall
+- Fix: Compile python code on Gentoo install to ensure old files are removed on uninstall
+- Change: Merged submitjob.py script into backend script
+- Change: Error out immediately if lpadmin command not in path on upgrade
+
 * Mon Feb 10 2014  <src@niftiestsoftware.com> (20140210-1)
 - New: Show better error message if printer ppd not found
 - Fix: Use python logging facility instead of writing to log files directly, fixes No handlers could be found for logger error
