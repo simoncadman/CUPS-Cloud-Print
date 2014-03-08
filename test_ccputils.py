@@ -17,24 +17,26 @@
 from ccputils import Utils
 import os, logging
 
+def teardown_function(function):
+    logging.shutdown()
+    reload(logging)
+
 def test_SetupLogging():
     testLogFile = '/tmp/testccp.log'
+    assert os.path.exists(testLogFile) == False
     assert Utils.SetupLogging(testLogFile) == True
     logging.error('test_setupLogging error test')
     assert os.path.exists(testLogFile) == True
     os.unlink(testLogFile)
-    logging.shutdown()
-    reload(logging)
     
 def test_SetupLoggingDefault():
     testLogFile = '/tmp/testccp.log'
+    assert os.path.exists(testLogFile) == False
     Utils.logpath = testLogFile
     assert Utils.SetupLogging() == True
     logging.error('test_setupLogging error test')
     assert os.path.exists(testLogFile) == True
     os.unlink(testLogFile)
-    logging.shutdown()
-    reload(logging)
 
 def test_fileIsPDFFails():
     assert Utils.fileIsPDF('testfiles/NotPdf.txt') == False
