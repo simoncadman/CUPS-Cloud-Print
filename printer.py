@@ -88,7 +88,7 @@ class Printer:
     def sanitizeText(self, text):
         return text.replace('/','-').replace(':','_').replace(';','_').replace(' ','_').encode('utf8', 'ignore')
 
-    def printerNameToUri( self, account, printer, printerid=None ) :
+    def printerNameToUri( self, account, printerid ) :
         """Generates a URI for the Cloud Print Printer
 
         Args:
@@ -98,10 +98,7 @@ class Printer:
         Returns:
           string: URI for the printer
         """
-        if printerid == None:
-            return self.PROTOCOL + urllib.quote(printer.encode('ascii', 'replace')) + "/" + urllib.quote(account.encode('ascii', 'replace'))
-        else:
-            return self.PROTOCOL + urllib.quote(printer.encode('ascii', 'replace')) + "/" + urllib.quote(account.encode('ascii', 'replace')) + "/" + urllib.quote(printerid.encode('ascii', 'replace'))
+        return self.PROTOCOL + urllib.quote(account.encode('ascii', 'replace')) + "/" + urllib.quote(printerid.encode('ascii', 'replace'))
 
 
     def sanitizePrinterName ( self, name ) :
@@ -161,11 +158,8 @@ class Printer:
         """
         uri = urlparse(uristring)
         pathparts = uri.path.split('/')
-        accountName = pathparts[1]
-        printerId = None
-        if len(pathparts) > 2:
-            printerId = pathparts[2]
-        return uri.netloc, accountName, printerId
+        printerId = pathparts[1]
+        return uri.netloc, printerId
 
     def findRequestorForAccount(self, account):
         """Searches the requestors in the printer object for the requestor for a specific account
@@ -188,7 +182,7 @@ class Printer:
           printer id: Single requestor object for the account, or None if no account found
           requestor: Single requestor object for the account
         """
-        printername, account, printerid = self.parseURI(uri)
+        account, printerid = self.parseURI(uri)
         # find requestor based on account
         requestor = self.findRequestorForAccount(urllib.unquote(account))
         if requestor == None:
@@ -196,13 +190,6 @@ class Printer:
         
         if printerid != None:
             return printerid, requestor
-        
-        responseobj = requestor.doRequest('search?connection_status=ALL&client=webui&q=%s' % (printername))
-        printername = urllib.unquote(printername)
-        if 'printers' in responseobj and len(responseobj['printers']) > 0:
-            for printerdetail in responseobj['printers']:
-                if printername == printerdetail['name']:
-                    return printerdetail['id'], requestor
         else:
             return None, None
 

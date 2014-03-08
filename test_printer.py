@@ -53,14 +53,8 @@ def teardown_function(function):
 
 def test_parseURI():
     global printerItem, requestors
-    printername, account, printerid = printerItem.parseURI("cloudprint://Save%20to%20Google%20Docs/testaccount")
-    assert printername == "Save%20to%20Google%20Docs"
-    assert account == "testaccount"
-    assert printerid == None
-    
-    printername, account, printerid = printerItem.parseURI("cloudprint://Save%20to%20Google%20Docs/testaccount/testid")
-    assert printername == "Save%20to%20Google%20Docs"
-    assert account == "testaccount"
+    account, printerid = printerItem.parseURI("cloudprint://testaccount2%40gmail.com/testid")
+    assert account == "testaccount2%40gmail.com"
     assert printerid == "testid"
 
 def test_getCUPSPrintersForAccount():
@@ -80,8 +74,8 @@ def test_getCUPSPrintersForAccount():
     printers = printerItem.getPrinters()
     assert len(printers) == totalPrinters
     printer = printers[0]
-    uri = printerItem.printerNameToUri(requestors[1].getAccount(), printer['name'])
-    printername, account, printerid = printerItem.parseURI(uri)
+    uri = printerItem.printerNameToUri(requestors[1].getAccount(), printer['id'])
+    account, printerid = printerItem.parseURI(uri)
     printerId, requestor = printerItem.getPrinterIDByURI(uri)
 
     # get ppd
@@ -90,10 +84,10 @@ def test_getCUPSPrintersForAccount():
     printerppdname, printerppd = ppds.popitem()
 
     # test add printer to cups
-    assert printerItem.addPrinter( printername, uri, connection, printerppdname) != None
+    assert printerItem.addPrinter( printer['name'], uri, connection, printerppdname) != None
     foundprinters, newconnection = printerItem.getCUPSPrintersForAccount(requestors[1].getAccount())
     # delete test printer
-    connection.deletePrinter( printerItem.sanitizePrinterName(printername) )
+    connection.deletePrinter( printerItem.sanitizePrinterName(printer['name']) )
     
     assert isinstance(foundprinters, list)
     assert len(foundprinters) == 1
@@ -124,8 +118,8 @@ def test_getCapabilities():
 
     printers = printerItem.getPrinters()
     printer = printers[0]
-    uri = printerItem.printerNameToUri(requestors[1].getAccount(), printer['name'])
-    printername, account, printerid = printerItem.parseURI(uri)
+    uri = printerItem.printerNameToUri(requestors[1].getAccount(), printer['id'])
+    account, printerid = printerItem.parseURI(uri)
     printerId, requestor = printerItem.getPrinterIDByURI(uri)
 
     # get ppd
@@ -134,16 +128,16 @@ def test_getCapabilities():
     printerppdname, printerppd = ppds.popitem()
 
     # add test printer to cups
-    assert printerItem.addPrinter( printername, uri, connection, printerppdname) != None
+    assert printerItem.addPrinter( printer['name'], uri, connection, printerppdname) != None
     foundprinters, newconnection = printerItem.getCUPSPrintersForAccount(requestors[1].getAccount())
     
-    emptyoptions = printerItem.getCapabilities( printerId, printerItem.sanitizePrinterName(printername), "" )
+    emptyoptions = printerItem.getCapabilities( printerId, printerItem.sanitizePrinterName(printer['name']), "" )
     assert isinstance(emptyoptions, dict)
     assert isinstance(emptyoptions['capabilities'], list)
     assert len(emptyoptions['capabilities']) == 0
     
     # delete test printer
-    connection.deletePrinter( printerItem.sanitizePrinterName(printername) )
+    connection.deletePrinter( printerItem.sanitizePrinterName(printer['name']) )
 
 def test_GetPrinterIDByURIFails (  ):
     global printerItem, requestors
@@ -233,30 +227,18 @@ def test_printers():
         assert len(printer['id']) > 0
 
         # test encoding and decoding printer details to/from uri
-        uritest = re.compile("cloudprint://(.*)/" + urllib.quote( printer['account'] ) + "/" + urllib.quote( printer['id']) )
-        uri = printerItem.printerNameToUri(printer['account'], printer['name'], printer['id'])
+        uritest = re.compile("cloudprint://(.*)/" + urllib.quote( printer['id']) )
+        uri = printerItem.printerNameToUri(printer['account'], printer['id'])
         assert isinstance(uri, str) or isinstance(uri, unicode)
         assert len(uri) > 0
         assert uritest.match(uri) != None
         
-        uritest = re.compile("cloudprint://(.*)/" + urllib.quote( printer['account'] ))
-        uri = printerItem.printerNameToUri(printer['account'], printer['name'])
-        assert isinstance(uri, str)
-        assert len(uri) > 0
-        assert uritest.match(uri) != None
-
-        printername, account, printerid = printerItem.parseURI(uri)
-        assert isinstance(printername, str)
-        assert urllib.unquote(printername) == printer['name']
+        account, printerid = printerItem.parseURI(uri)
         assert isinstance(account, str)
         assert urllib.unquote(account) == printer['account']
 
-        printerId, requestor = printerItem.getPrinterIDByURI(uri + "/testprinterid")
-        assert printerId == "testprinterid"
-        assert isinstance(requestor, MockRequestor)
-
         printerId, requestor = printerItem.getPrinterIDByURI(uri)
-        assert isinstance(printerId, unicode)
+        assert isinstance(printerId, str)
         assert isinstance(requestor, MockRequestor)
         
         # get ppd
@@ -265,8 +247,8 @@ def test_printers():
         printerppdname, printerppd = ppds.popitem()
 
         # test add printer to cups
-        assert printerItem.addPrinter( printername, uri, connection, printerppdname) != None
-        testprintername = printerItem.sanitizePrinterName(printername)
+        assert printerItem.addPrinter( printer['name'], uri, connection, printerppdname) != None
+        testprintername = printerItem.sanitizePrinterName(printer['name'])
 
         # test printer actually added to cups
         cupsPrinters = connection.getPrinters()

@@ -39,7 +39,7 @@ if __name__ == '__main__': # pragma: no cover
     printerItem = Printer(requestors)
         
     # line below is replaced on commit
-    CCPVersion = "20140223 234321"
+    CCPVersion = "20140308 012527"
 
     if len(sys.argv) == 2 and sys.argv[1] == 'version':
         print "CUPS Cloud Print Upgrade Script Version " + CCPVersion
@@ -85,13 +85,13 @@ if __name__ == '__main__': # pragma: no cover
     for device in cupsprinters:
         try:
             if ( cupsprinters[device]["device-uri"].find("cloudprint://") == 0 ):
-                printername, account, printerid = printerItem.parseURI(cupsprinters[device]["device-uri"])
+                account, printerid = printerItem.parseURI(cupsprinters[device]["device-uri"])
                 if printerid == None:
                     # update with new uri
                     print "Updating " + cupsprinters[device]["printer-info"], "with new id uri format"
                     printerid, requestor = printerItem.getPrinterIDByURI(cupsprinters[device]["device-uri"])
                     if printerid != None:
-                        newDeviceURI = printerItem.printerNameToUri(urllib.unquote(account), urllib.unquote(printername), printerid)
+                        newDeviceURI = printerItem.printerNameToUri(urllib.unquote(account), printerid)
                         cupsprinters[device]["device-uri"] = newDeviceURI
                         p = subprocess.Popen(["lpadmin", "-p", cupsprinters[device]["printer-info"].lstrip('-'), "-v", newDeviceURI], stdout=subprocess.PIPE)
                         output = p.communicate()[0]

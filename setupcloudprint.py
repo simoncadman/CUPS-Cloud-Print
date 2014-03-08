@@ -22,7 +22,7 @@ if __name__ == '__main__': # pragma: no cover
 
     if len(sys.argv) == 2 and sys.argv[1] == 'version':
         # line below is replaced on commit
-        CCPVersion = "20140223 234321"
+        CCPVersion = "20140308 012527"
         print "CUPS Cloud Print Setup Script Version " + CCPVersion
         sys.exit(0)
 
@@ -101,7 +101,7 @@ if __name__ == '__main__': # pragma: no cover
                                 print "Not using prefix"
 
                         printername = prefix + ccpprinter['name'].encode('ascii', 'replace')
-                        uri = printer.printerNameToUri(ccpprinter['account'], ccpprinter['name'], ccpprinter['id'])
+                        uri = printer.printerNameToUri(ccpprinter['account'], ccpprinter['id'])
                         found = False
                         for cupsprinter in cupsprinters:
                             if cupsprinters[cupsprinter]['device-uri'] == uri:
@@ -131,7 +131,7 @@ if __name__ == '__main__': # pragma: no cover
                 print "Not using prefix"
 
         for ccpprinter in printers:
-            uri = printer.printerNameToUri(ccpprinter['account'], ccpprinter['name'], ccpprinter['id'])
+            uri = printer.printerNameToUri(ccpprinter['account'], ccpprinter['id'])
             found = False
             for cupsprinter in cupsprinters:
                 if cupsprinters[cupsprinter]['device-uri'] == uri:
@@ -171,7 +171,7 @@ if __name__ == '__main__': # pragma: no cover
     printer = Printer(requestors)
     printers = printer.getPrinters()
     for foundprinter in printers:
-        printeruris.append(printer.printerNameToUri(foundprinter['account'], foundprinter['name'], foundprinter['id']))
+        printeruris.append(printer.printerNameToUri(foundprinter['account'], foundprinter['id']))
 
     # check for printers to prune
     prunePrinters = []

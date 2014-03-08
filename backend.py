@@ -22,7 +22,7 @@ if __name__ == '__main__': # pragma: no cover
 
     if len(sys.argv) == 2 and sys.argv[1] == 'version':
         # line below is replaced on commit
-        CCPVersion = "20140223 234321"
+        CCPVersion = "20140308 012527"
         print "CUPS Cloud Print CUPS Backend Version " + CCPVersion
         sys.exit(0)
 
@@ -51,7 +51,7 @@ if __name__ == '__main__': # pragma: no cover
         try:
             if printers != None:
                 for foundprinter in printers:
-                    print "network " + printer.printerNameToUri(foundprinter['account'], foundprinter['name'], foundprinter['id']) + " " + "\"" + foundprinter['name'] + "\" \"Google Cloud Print\"" + " \"MFG:Google;MDL:Cloud Print;DES:GoogleCloudPrint;\""
+                    print "network " + printer.printerNameToUri(foundprinter['account'], foundprinter['id']) + " " + "\"" + foundprinter['name'] + "\" \"Google Cloud Print\"" + " \"MFG:Google;MDL:Cloud Print;DES:GoogleCloudPrint;\""
         except Exception as error:
             print error
             pass

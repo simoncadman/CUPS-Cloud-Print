@@ -26,7 +26,7 @@ if __name__ == '__main__': # pragma: no cover
 
     if len(sys.argv) == 2 and sys.argv[1] == 'version':
         # line below is replaced on commit
-        CCPVersion = "20140223 234321"
+        CCPVersion = "20140308 012527"
         print "CUPS Cloud Print Printer Lister Version " + CCPVersion
         sys.exit(0)
 
@@ -41,4 +41,4 @@ if __name__ == '__main__': # pragma: no cover
         printerName = foundprinter['name']
         if 'displayName' in foundprinter:
             printerName = foundprinter['displayName']
-        print printerName.encode('ascii', 'replace') + ' - ' + printer.printerNameToUri(foundprinter['account'], foundprinter['name'], foundprinter['id']) + " - " + foundprinter['account']
+        print printerName.encode('ascii', 'replace') + ' - ' + printer.printerNameToUri(foundprinter['account'], foundprinter['id']) + " - " + foundprinter['account']
