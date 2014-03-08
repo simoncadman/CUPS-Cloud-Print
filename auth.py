@@ -45,7 +45,7 @@ class Auth:
 
     DeleteAccount = staticmethod(DeleteAccount)
 
-    def AddAccount(storage, userid=None):
+    def AddAccount(storage, userid=None, permissions=['https://www.googleapis.com/auth/cloudprint']):
         """Adds an account to the configuration file
 
         Args:
@@ -61,7 +61,7 @@ class Auth:
         while True:
             flow = client.OAuth2WebServerFlow(client_id=Auth.clientid,
                                           client_secret=Auth.clientsecret,
-                                          scope=['https://www.googleapis.com/auth/cloudprint'],
+                                          scope=permissions,
                                           user_agent=userid)
             auth_uri = flow.step1_get_authorize_url()
             print "Open this URL, grant access to CUPS Cloud Print, then provide the code displayed : \n\n" + auth_uri + "\n"
@@ -115,7 +115,7 @@ class Auth:
             credentials = storage.get()
 
             if not credentials and interactive:
-                credentials = Auth.AddAccount(storage, userid)
+                credentials = Auth.AddAccount(storage, userid, permissions)
                 modifiedconfig = True
                 if userid == None:
                     userid = credentials.user_agent
