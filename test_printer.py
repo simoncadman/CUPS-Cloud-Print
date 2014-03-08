@@ -57,6 +57,18 @@ def test_parseURI():
     assert account == "testaccount2%40gmail.com"
     assert printerid == "testid"
 
+def test_parseLegacyURI():
+    global printerItem, requestors
+    account, printername, printerid = printerItem.parseLegacyURI("cloudprint://testaccount2%40gmail.com/printername/testid")
+    assert account == "testaccount2%40gmail.com"
+    assert printername == "printername"
+    assert printerid == "testid"
+    
+    account, printername, printerid = printerItem.parseLegacyURI("cloudprint://testaccount2%40gmail.com/printername")
+    assert account == "testaccount2%40gmail.com"
+    assert printername == "printername"
+    assert printerid == None
+
 def test_getCUPSPrintersForAccount():
     global printerItem, requestors
     

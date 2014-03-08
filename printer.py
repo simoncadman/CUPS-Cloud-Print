@@ -153,14 +153,33 @@ class Printer:
           uristring: string, uri of the Cloud Print device
 
         Returns:
-          string: google cloud print printer name
           string: account name
+          string: google cloud print printer id
         """
         uri = urlparse(uristring)
         pathparts = uri.path.split('/')
         printerId = pathparts[1]
         return uri.netloc, printerId
 
+    def parseLegacyURI( self, uristring ):
+        """Parses previous CUPS Cloud Print URIs, only used for upgrades
+
+        Args:
+          uristring: string, uri of the Cloud Print device
+
+        Returns:
+          string: account name
+          string: google cloud print printer name
+          string: google cloud print printer id
+        """
+        uri = urlparse(uristring)
+        pathparts = uri.path.split('/')
+        accountName = pathparts[1]
+        printerId = None
+        if len(pathparts) > 2:
+            printerId = pathparts[2]
+        return uri.netloc, accountName, printerId
+    
     def findRequestorForAccount(self, account):
         """Searches the requestors in the printer object for the requestor for a specific account
 

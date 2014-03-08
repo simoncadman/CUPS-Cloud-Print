@@ -39,7 +39,7 @@ if __name__ == '__main__': # pragma: no cover
     printerItem = Printer(requestors)
         
     # line below is replaced on commit
-    CCPVersion = "20140308 012527"
+    CCPVersion = "20140308 014605"
 
     if len(sys.argv) == 2 and sys.argv[1] == 'version':
         print "CUPS Cloud Print Upgrade Script Version " + CCPVersion
@@ -85,10 +85,11 @@ if __name__ == '__main__': # pragma: no cover
     for device in cupsprinters:
         try:
             if ( cupsprinters[device]["device-uri"].find("cloudprint://") == 0 ):
-                account, printerid = printerItem.parseURI(cupsprinters[device]["device-uri"])
-                if printerid == None:
+                account, printername, printerid = printerItem.parseLegacyURI(cupsprinters[device]["device-uri"])
+                if printerid == None or printername != None:
                     # update with new uri
                     print "Updating " + cupsprinters[device]["printer-info"], "with new id uri format"
+                    print cupsprinters[device]["device-uri"]
                     printerid, requestor = printerItem.getPrinterIDByURI(cupsprinters[device]["device-uri"])
                     if printerid != None:
                         newDeviceURI = printerItem.printerNameToUri(urllib.unquote(account), printerid)
@@ -98,7 +99,7 @@ if __name__ == '__main__': # pragma: no cover
                         result = p.returncode
                         sys.stderr.write(output)
                     else:
-                        print cupsprinters[device]["printer-info"], "not found, you should delete and re-add this printer"
+                        print cupsprinters[device]["printer-info"], " not found, you should delete and re-add this printer"
                         continue
                 else:  
                     print "Updating " + cupsprinters[device]["printer-info"]
