@@ -1,6 +1,6 @@
 cupscloudprint (20140308-1) precise; urgency=high
 
-   * Fix: Use shorter URI format to workaround issue on older distros having a short max length on printer URIs
+  * Fix: Use shorter URI format to workaround issue on older distros having a short max length on printer URIs
 
  -- simon cadman <src@niftiestsoftware.com>  Sat, 08 Mar 2014 13:08:59 +0000
 
