@@ -76,6 +76,9 @@ python2 -m compileall -q -f .
 %doc %{_usr}/share/cloudprint-cups/README.md
 
 %changelog
+* Sat Mar 08 2014 Simon Cadman <src@niftiestsoftware.com> (20140308-1)
+- Fix: Use shorter URI format to workaround issue on older distros having a short max length on printer URIs
+
 * Fri Mar 07 2014 Simon Cadman <src@niftiestsoftware.com> (20140307-1)
 - New: Show better error message if printer ppd not found
 - Fix: Use python logging facility instead of writing to log files directly, fixes No handlers could be found for logger error
