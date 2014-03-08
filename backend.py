@@ -32,7 +32,7 @@ if __name__ == '__main__': # pragma: no cover
     Utils.SetupLogging()
     
     # line below is replaced on commit
-    CCPVersion = "20140308 192138"
+    CCPVersion = "20140308 200341"
     Utils.ShowVersion(CCPVersion)
     
     requestors, storage = Auth.SetupAuth(False)
@@ -49,7 +49,7 @@ if __name__ == '__main__': # pragma: no cover
         try:
             if printers != None:
                 for foundprinter in printers:
-                    print "network " + printer.printerNameToUri(foundprinter['account'], foundprinter['id']) + " " + "\"" + foundprinter['name'] + "\" \"Google Cloud Print\"" + " \"MFG:Google;MDL:Cloud Print;DES:GoogleCloudPrint;\""
+                    print printer.getBackendDescriptionForPrinter( foundprinter )
         except Exception as error:
             print error
             pass

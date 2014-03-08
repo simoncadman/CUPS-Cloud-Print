@@ -334,3 +334,7 @@ def test_getListDescription():
     global printerItem
     assert printerItem.getListDescription( { 'name' : 'Save to Google Drive', 'account' : 'test', 'id' : '__google__docs' } ) == 'Save to Google Drive - cloudprint://test/__google__docs - test'
     assert printerItem.getListDescription( { 'name' : 'Save to Google Drive', 'displayName' : 'Save to Google Drive 2', 'account' : 'test', 'id' : '__google__docs' } ) == 'Save to Google Drive 2 - cloudprint://test/__google__docs - test'
+    
+def test_():
+    global printerItem
+    assert printerItem.getBackendDescriptionForPrinter( { 'name' : 'Save to Google Docs', 'account' : 'test', 'id' : '__google__docs' } ) == 'network cloudprint://test/__google__docs "Save to Google Docs" "Google Cloud Print" "MFG:Google;MDL:Cloud Print;DES:GoogleCloudPrint;"'
