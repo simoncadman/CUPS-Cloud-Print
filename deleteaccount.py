@@ -24,7 +24,7 @@ if __name__ == '__main__': # pragma: no cover
     Utils.SetupLogging()
     
     # line below is replaced on commit
-    CCPVersion = "20140308 185038"
+    CCPVersion = "20140308 192138"
     Utils.ShowVersion(CCPVersion)
     
     while True:

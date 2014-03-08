@@ -329,3 +329,8 @@ def test_backendDescription():
     assert isinstance(description, str)
     assert description.startswith('network')
     assert backendtest.match(description) != None
+
+def test_getListDescription():
+    global printerItem
+    assert printerItem.getListDescription( { 'name' : 'Save to Google Drive', 'account' : 'test', 'id' : '__google__docs' } ) == 'Save to Google Drive - cloudprint://test/__google__docs - test'
+    assert printerItem.getListDescription( { 'name' : 'Save to Google Drive', 'displayName' : 'Save to Google Drive 2', 'account' : 'test', 'id' : '__google__docs' } ) == 'Save to Google Drive 2 - cloudprint://test/__google__docs - test'

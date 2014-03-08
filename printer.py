@@ -599,3 +599,9 @@ class Printer:
 
     def getBackendDescription ( self ) :
         return "network cloudprint \"Unknown\" \"Google Cloud Print\""
+
+    def getListDescription ( self, foundprinter ):
+        printerName = foundprinter['name']
+        if 'displayName' in foundprinter:
+            printerName = foundprinter['displayName']
+        return printerName.encode('ascii', 'replace') + ' - ' + self.printerNameToUri(foundprinter['account'], foundprinter['id']) + " - " + foundprinter['account']

@@ -24,7 +24,7 @@ if __name__ == '__main__': # pragma: no cover
     Utils.SetupLogging()
     
     # line below is replaced on commit
-    CCPVersion = "20140308 185038"
+    CCPVersion = "20140308 192138"
     Utils.ShowVersion(CCPVersion)
 
     requestors, storage = Auth.SetupAuth(True)
@@ -35,7 +35,4 @@ if __name__ == '__main__': # pragma: no cover
         sys.exit(1)
 
     for foundprinter in printers:
-        printerName = foundprinter['name']
-        if 'displayName' in foundprinter:
-            printerName = foundprinter['displayName']
-        print printerName.encode('ascii', 'replace') + ' - ' + printer.printerNameToUri(foundprinter['account'], foundprinter['id']) + " - " + foundprinter['account']
+        print printer.getListDescription(foundprinter)
