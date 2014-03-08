@@ -15,7 +15,7 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 from auth import Auth
-import json, urllib, cups, os, stat, grp, pytest
+import json, urllib, cups, os, stat, grp, pytest, logging
 from test_mockrequestor import MockRequestor
 from oauth2client import client
 from oauth2client import multistore_file
@@ -37,6 +37,8 @@ def setup_function(function):
 def teardown_function(function):
     if os.path.exists(Auth.config):
         os.unlink(Auth.config)
+    logging.shutdown()
+    reload(logging)
 
 def test_fixConfigPermissions():
     configfile = open(Auth.config, "w")

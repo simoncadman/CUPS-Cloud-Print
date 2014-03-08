@@ -14,10 +14,14 @@
 #    You should have received a copy of the GNU General Public License
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-import json, pytest
+import json, pytest, logging
 from cloudprintrequestor import cloudprintrequestor
 
 global requestor
+
+def teardown_function(function):
+    logging.shutdown()
+    reload(logging)
 
 def setup_function(function):
     global requestor

@@ -22,7 +22,7 @@ script:
  - sudo chmod o+rw testfiles
  - sudo ./upgrade.py
  - sudo python -m compileall .
- - py.test -rxs --cov . test_ccputils.py
+ - py.test -rxs --cov .
  - ls -al /tmp/
  - sudo cat /var/log/cups/cloudprint_log /var/log/cups/error_log
  - sudo unlink /usr/share/cups/model/testppd.ppd

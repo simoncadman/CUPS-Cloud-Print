@@ -16,7 +16,7 @@
 
 from printer import Printer
 from test_mockrequestor import MockRequestor
-import cups, urllib
+import cups, urllib, logging
 
 global requestors, printerItem
 
@@ -50,6 +50,8 @@ def setup_function(function):
 def teardown_function(function):
     global requestors
     requestors = None
+    logging.shutdown()
+    reload(logging)
 
 def test_parseURI():
     global printerItem, requestors
