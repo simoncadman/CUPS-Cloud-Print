@@ -145,3 +145,11 @@ class Auth:
             return requestors, storage
 
     SetupAuth = staticmethod(SetupAuth)
+
+    def GetAccountNames ( requestors ):
+        requestorAccounts = []
+        for requestor in requestors:
+            requestorAccounts.append(requestor.getAccount())
+        return requestorAccounts
+    
+    GetAccountNames = staticmethod(GetAccountNames)

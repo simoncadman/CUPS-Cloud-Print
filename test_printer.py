@@ -59,15 +59,32 @@ def test_parseURI():
 
 def test_parseLegacyURI():
     global printerItem, requestors
-    account, printername, printerid = printerItem.parseLegacyURI("cloudprint://testaccount2%40gmail.com/printername/testid")
-    assert account == "testaccount2%40gmail.com"
+    
+    # 20140210 format
+    account, printername, printerid, formatid = printerItem.parseLegacyURI("cloudprint://printername/testaccount2%40gmail.com/", requestors)
+    assert formatid == printerItem.URIFormat20140210
+    assert account == "testaccount2@gmail.com"
+    assert printername == "printername"
+    assert printerid == None
+    
+    # 20140307 format
+    account, printername, printerid, formatid = printerItem.parseLegacyURI("cloudprint://printername/testaccount2%40gmail.com/testid", requestors)
+    assert formatid == printerItem.URIFormat20140307
+    assert account == "testaccount2@gmail.com"
     assert printername == "printername"
     assert printerid == "testid"
     
-    account, printername, printerid = printerItem.parseLegacyURI("cloudprint://testaccount2%40gmail.com/printername")
-    assert account == "testaccount2%40gmail.com"
-    assert printername == "printername"
-    assert printerid == None
+    # 20140308+ format
+    account, printername, printerid, formatid = printerItem.parseLegacyURI("cloudprint://testaccount2%40gmail.com/testid", requestors)
+    assert formatid == printerItem.URIFormatLatest
+    assert account == "testaccount2@gmail.com"
+    assert printerid == "testid"
+    assert printername == None
+    
+    printerid, requestor = printerItem.getPrinterIDByDetails( "testaccount2@gmail.com", "printername", "testid" )
+    assert printerid == "testid"
+    assert isinstance(requestor, MockRequestor)
+    assert requestor.getAccount() == 'testaccount2@gmail.com'
 
 def test_getCUPSPrintersForAccount():
     global printerItem, requestors

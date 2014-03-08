@@ -39,7 +39,7 @@ if __name__ == '__main__': # pragma: no cover
     printerItem = Printer(requestors)
         
     # line below is replaced on commit
-    CCPVersion = "20140308 014605"
+    CCPVersion = "20140308 130447"
 
     if len(sys.argv) == 2 and sys.argv[1] == 'version':
         print "CUPS Cloud Print Upgrade Script Version " + CCPVersion
@@ -85,12 +85,11 @@ if __name__ == '__main__': # pragma: no cover
     for device in cupsprinters:
         try:
             if ( cupsprinters[device]["device-uri"].find("cloudprint://") == 0 ):
-                account, printername, printerid = printerItem.parseLegacyURI(cupsprinters[device]["device-uri"])
-                if printerid == None or printername != None:
-                    # update with new uri
+                account, printername, printerid, formatid = printerItem.parseLegacyURI(cupsprinters[device]["device-uri"], requestors)
+                if formatid != Printer.URIFormatLatest:
+                    # not latest format, needs upgrading
                     print "Updating " + cupsprinters[device]["printer-info"], "with new id uri format"
-                    print cupsprinters[device]["device-uri"]
-                    printerid, requestor = printerItem.getPrinterIDByURI(cupsprinters[device]["device-uri"])
+                    printerid, requestor = printerItem.getPrinterIDByDetails(account, printername, printerid)
                     if printerid != None:
                         newDeviceURI = printerItem.printerNameToUri(urllib.unquote(account), printerid)
                         cupsprinters[device]["device-uri"] = newDeviceURI
@@ -105,7 +104,7 @@ if __name__ == '__main__': # pragma: no cover
                     print "Updating " + cupsprinters[device]["printer-info"]
                     
                 ppdid = 'MFG:GOOGLE;DRV:GCP;CMD:POSTSCRIPT;MDL:' + cupsprinters[device]["device-uri"] + ';'
-                    
+                
                 # just needs updating
                 printerppdname = None
                 for ppd in allppds:

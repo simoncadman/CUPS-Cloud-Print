@@ -33,6 +33,9 @@ class Printer:
                                'Throughput', 'UIConstraints', 'VariablePaperSize', 'Version', 'Color', 'Background',
                                'Stamp', 'DestinationColorProfile'
                               ]
+    URIFormatLatest = 1
+    URIFormat20140307 = 2
+    URIFormat20140210 = 3
 
     def __init__( self, requestors ):
         """Create an instance of Printer, with authorised requestor
@@ -161,7 +164,7 @@ class Printer:
         printerId = pathparts[1]
         return uri.netloc, printerId
 
-    def parseLegacyURI( self, uristring ):
+    def parseLegacyURI( self, uristring, requestors ):
         """Parses previous CUPS Cloud Print URIs, only used for upgrades
 
         Args:
@@ -171,14 +174,30 @@ class Printer:
           string: account name
           string: google cloud print printer name
           string: google cloud print printer id
+          int: format id
         """
-        uri = urlparse(uristring)
-        pathparts = uri.path.split('/')
-        accountName = pathparts[1]
+        printerName = None
+        accountName = None
         printerId = None
-        if len(pathparts) > 2:
-            printerId = pathparts[2]
-        return uri.netloc, accountName, printerId
+        uri = urlparse(uristring)
+        pathparts = uri.path.strip('/').split('/')
+        if len(pathparts) == 2:
+            formatId = Printer.URIFormat20140307
+            printerId = urllib.unquote(pathparts[1])
+            accountName = urllib.unquote(pathparts[0])
+            printerName = urllib.unquote(uri.netloc)
+        else:
+            if urllib.unquote(uri.netloc) not in Auth.GetAccountNames(requestors):
+               formatId = Printer.URIFormat20140210
+               printerName = urllib.unquote(uri.netloc)
+               accountName = urllib.unquote(pathparts[0])
+            else:
+               formatId = Printer.URIFormatLatest
+               printerId = urllib.unquote(pathparts[0])
+               printerName = None
+               accountName = urllib.unquote(uri.netloc)
+                
+        return accountName, printerName, printerId, formatId
     
     def findRequestorForAccount(self, account):
         """Searches the requestors in the printer object for the requestor for a specific account
@@ -212,6 +231,25 @@ class Printer:
         else:
             return None, None
 
+    def getPrinterIDByDetails(self, account, printername, printerid):
+        """Gets printer id and requestor by printer
+
+        Args:
+          uri: string, printer uri
+        Return:
+          printer id: Single requestor object for the account, or None if no account found
+          requestor: Single requestor object for the account
+        """
+        # find requestor based on account
+        requestor = self.findRequestorForAccount(urllib.unquote(account))
+        if requestor == None:
+            return None, None
+        
+        if printerid != None:
+            return printerid, requestor
+        else:
+            return None, None
+        
     def getPrinterDetails(self, printerid):
         """Gets details about printer from Google
 
