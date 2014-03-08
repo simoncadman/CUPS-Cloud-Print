@@ -20,12 +20,6 @@ if __name__ == '__main__': # pragma: no cover
 
     progname = 'cloudprint'
 
-    if len(sys.argv) == 2 and sys.argv[1] == 'version':
-        # line below is replaced on commit
-        CCPVersion = "20140308 180306"
-        print "CUPS Cloud Print CUPS Backend Version " + CCPVersion
-        sys.exit(0)
-
     libpath = "/usr/local/share/cloudprint-cups/"
     if not os.path.exists( libpath  ):
         libpath = "/usr/share/cloudprint-cups"
@@ -36,6 +30,10 @@ if __name__ == '__main__': # pragma: no cover
     from ccputils import Utils
     
     Utils.SetupLogging()
+    
+    # line below is replaced on commit
+    CCPVersion = "20140308 185038"
+    Utils.ShowVersion(CCPVersion)
     
     requestors, storage = Auth.SetupAuth(False)
     if requestors == False:

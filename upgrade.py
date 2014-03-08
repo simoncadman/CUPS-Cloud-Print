@@ -21,10 +21,13 @@ if __name__ == '__main__': # pragma: no cover
     from oauth2client import client
     from oauth2client import multistore_file
     from auth import Auth
-
     from ccputils import Utils
     from printer import Printer
     Utils.SetupLogging()
+    
+    # line below is replaced on commit
+    CCPVersion = "20140308 185038"
+    Utils.ShowVersion(CCPVersion)
     
     if not os.path.exists("/etc/cloudprint.conf"):
         sys.stderr.write("Config is invalid or missing, not running on fresh install\n")
@@ -37,14 +40,7 @@ if __name__ == '__main__': # pragma: no cover
         logging.error("Upgrade tried to run with invalid config");
         sys.exit(0)
     printerItem = Printer(requestors)
-        
-    # line below is replaced on commit
-    CCPVersion = "20140308 180306"
-
-    if len(sys.argv) == 2 and sys.argv[1] == 'version':
-        print "CUPS Cloud Print Upgrade Script Version " + CCPVersion
-        sys.exit(0)
-
+    
     logging.info("Upgrading to " + CCPVersion)
 
     try:

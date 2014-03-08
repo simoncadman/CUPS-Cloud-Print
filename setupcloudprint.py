@@ -19,15 +19,12 @@ if __name__ == '__main__': # pragma: no cover
     import cups, os, json, sys, logging
     from auth import Auth
     from printer import Printer
-
-    if len(sys.argv) == 2 and sys.argv[1] == 'version':
-        # line below is replaced on commit
-        CCPVersion = "20140308 180306"
-        print "CUPS Cloud Print Setup Script Version " + CCPVersion
-        sys.exit(0)
-
     from ccputils import Utils
     Utils.SetupLogging()
+    
+    # line below is replaced on commit
+    CCPVersion = "20140308 185038"
+    Utils.ShowVersion(CCPVersion)
     
     unattended = False
     answer = ""

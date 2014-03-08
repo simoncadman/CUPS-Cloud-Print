@@ -130,3 +130,11 @@ class Utils:
             return lpgrp.gr_gid
 
     GetLPID = staticmethod(GetLPID)
+
+    def ShowVersion(CCPVersion):
+        if len(sys.argv) == 2 and sys.argv[1] == 'version':
+            print "CUPS Cloud Print Delete Account Script Version " + CCPVersion
+            sys.exit(0)
+        return False
+    
+    ShowVersion = staticmethod(ShowVersion)

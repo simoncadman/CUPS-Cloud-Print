@@ -21,14 +21,11 @@ if __name__ == '__main__': # pragma: no cover
     from auth import Auth
     from printer import Printer
     from ccputils import Utils
-
     Utils.SetupLogging()
-
-    if len(sys.argv) == 2 and sys.argv[1] == 'version':
-        # line below is replaced on commit
-        CCPVersion = "20140308 180306"
-        print "CUPS Cloud Print Printer Lister Version " + CCPVersion
-        sys.exit(0)
+    
+    # line below is replaced on commit
+    CCPVersion = "20140308 185038"
+    Utils.ShowVersion(CCPVersion)
 
     requestors, storage = Auth.SetupAuth(True)
     printer = Printer(requestors)

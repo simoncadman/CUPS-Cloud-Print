@@ -15,7 +15,7 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 from ccputils import Utils
-import os, logging
+import os, logging, sys, pytest
 
 def teardown_function(function):
     logging.shutdown()
@@ -85,3 +85,9 @@ def test_getLPID():
     assert Utils.GetLPID('brokendefault', 'brokenalternative', False) == None
     assert int(Utils.GetLPID('brokendefault', workingPrintGroupName, False)) > 0
     assert Utils.GetLPID('brokendefault', workingPrintGroupName, False) != None
+    
+def test_showVersion():
+    assert Utils.ShowVersion("12345") == False
+    sys.argv = ['testfile', 'version']
+    with pytest.raises(SystemExit):
+        Utils.ShowVersion("12345")
