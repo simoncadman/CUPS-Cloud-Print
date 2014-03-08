@@ -38,6 +38,12 @@ def test_SetupLoggingDefault():
     assert os.path.exists(testLogFile) == True
     os.unlink(testLogFile)
 
+def test_SetupLoggingFails():
+    testLogFile = '/tmp/dirthatdoesntexist/testccp.log'
+    assert os.path.exists(testLogFile) == False
+    assert Utils.SetupLogging(testLogFile) == False
+    assert os.path.exists(testLogFile) == False
+    
 def test_fileIsPDFFails():
     assert Utils.fileIsPDF('testfiles/NotPdf.txt') == False
 
