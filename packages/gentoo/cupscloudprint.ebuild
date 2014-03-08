@@ -7,7 +7,7 @@ inherit git-2 python eutils
 DESCRIPTION="Google Cloud Print"
 HOMEPAGE="https://ccp.niftiestsoftware.com"
 EGIT_REPO_URI="git://github.com/simoncadman/CUPS-Cloud-Print.git"
-EGIT_COMMIT="1e4104db5ac167350e083c6eaf773b3f354596ad"
+EGIT_COMMIT="5a110d7f73a507750aa2cb12f7ac7341781a13a1"
 LICENSE="GPL-3"
 PYTHON_DEPEND="2"
 SLOT="0"
