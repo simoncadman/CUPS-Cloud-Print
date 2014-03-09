@@ -88,7 +88,7 @@ def test_getLPID():
     assert Utils.GetLPID('brokendefault', workingPrintGroupName, False) != None
     
     # test blacklist works
-    assert Utils.GetLPID(workingPrintGroupName, 'brokenalternative', True, [ workingPrintGroupName, 'brokendefault' ], True) == None
+    assert Utils.GetLPID(workingPrintGroupName, 'brokenalternative', True, [ workingPrintGroupName, 'brokendefault', 'adm', 'wheel', 'root' ], True) == None
     
 def test_showVersion():
     assert Utils.ShowVersion("12345") == False
