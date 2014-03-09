@@ -1,2 +1,2 @@
 [run]
-omit = oauth2client/*,testing/test_*,backend.py,deleteaccount.py,dynamicppd.py,listcloudprinters.py,listdrivefiles.py,pre-commit.py,reportissues.py,setupcloudprint.py,upgrade.py
+omit = oauth2client/*,testing/test_*,backend.py,deleteaccount.py,dynamicppd.py,listcloudprinters.py,listdrivefiles.py,pre-commit.py,reportissues.py,refreshtokens.py,setupcloudprint.py,upgrade.py
