@@ -15,11 +15,11 @@ install:
  - sudo make install
  - sudo cupsctl --debug-logging
  - sudo cp .coveragerc /usr/local/share/cloudprint-cups/
- - sudo cp testfiles/testppd.ppd  /usr/share/cups/model/testppd.ppd
+ - sudo cp testing/testfiles/testppd.ppd  /usr/share/cups/model/testppd.ppd
 script:
  - cd /usr/local/share/cloudprint-cups/
  - sudo chmod 777 .
- - sudo chmod o+rw testfiles
+ - sudo chmod o+rw testing/testfiles
  - sudo ./upgrade.py
  - sudo python -m compileall .
  - py.test -rxs --cov .
