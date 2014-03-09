@@ -17,6 +17,8 @@
 
 if __name__ == '__main__': # pragma: no cover
     import sys, logging
+    sys.path.insert(0, "..")
+
     from auth import Auth
     from printer import Printer
     from ccputils import Utils
