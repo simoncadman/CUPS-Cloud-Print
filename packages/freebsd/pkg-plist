@@ -5,11 +5,16 @@ lib/cloudprint-cups/oauth2client/clientsecrets.py
 lib/cloudprint-cups/oauth2client/crypt.py
 lib/cloudprint-cups/oauth2client/locked_file.py
 lib/cloudprint-cups/oauth2client/multistore_file.py
-lib/cloudprint-cups/testfiles/NotPdf.txt
-lib/cloudprint-cups/testfiles/Test Page.pdf
-lib/cloudprint-cups/testfiles/Test Page.png
-lib/cloudprint-cups/testfiles/testppd.ppd
-lib/cloudprint-cups/testfiles/capabilitylist
+lib/cloudprint-cups/testing/testfiles/NotPdf.txt
+lib/cloudprint-cups/testing/testfiles/Test Page.pdf
+lib/cloudprint-cups/testing/testfiles/Test Page.png
+lib/cloudprint-cups/testing/testfiles/testppd.ppd
+lib/cloudprint-cups/testing/testfiles/capabilitylist
+lib/cloudprint-cups/testing/test_auth.py
+lib/cloudprint-cups/testing/test_backend.py
+lib/cloudprint-cups/testing/test_cloudprintrequestor.py
+lib/cloudprint-cups/testing/test_mockrequestor.py
+lib/cloudprint-cups/testing/test_printer.py
 lib/cloudprint-cups/auth.py
 lib/cloudprint-cups/backend.py
 lib/cloudprint-cups/cloudprintrequestor.py
@@ -19,11 +24,6 @@ lib/cloudprint-cups/listcloudprinters.py
 lib/cloudprint-cups/printer.py
 lib/cloudprint-cups/reportissues.py
 lib/cloudprint-cups/setupcloudprint.py
-lib/cloudprint-cups/test_auth.py
-lib/cloudprint-cups/test_backend.py
-lib/cloudprint-cups/test_cloudprintrequestor.py
-lib/cloudprint-cups/test_mockrequestor.py
-lib/cloudprint-cups/test_printer.py
 lib/cloudprint-cups/upgrade.py
 @dirrm lib/cloudprint-cups/testfiles
 @dirrm lib/cloudprint-cups/oauth2client

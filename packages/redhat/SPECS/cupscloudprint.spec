@@ -71,7 +71,7 @@ python2 -m compileall -q -f .
 %attr(644, root, lp) %{_usr}/share/cloudprint-cups/oauth2client/*.pyo
 %attr(644, root, lp) %{_usr}/share/cloudprint-cups/*.pyc
 %attr(644, root, lp) %{_usr}/share/cloudprint-cups/*.pyo
-%attr(644, root, lp) %{_usr}/share/cloudprint-cups/testfiles/*
+%attr(644, root, lp) %{_usr}/share/cloudprint-cups/testing/*
 %doc %{_usr}/share/cloudprint-cups/COPYING
 %doc %{_usr}/share/cloudprint-cups/README.md
 

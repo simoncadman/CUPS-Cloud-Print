@@ -13,9 +13,10 @@
 #
 #    You should have received a copy of the GNU General Public License
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+import os, logging, sys, pytest
+sys.path.insert(0, ".")
 
 from ccputils import Utils
-import os, logging, sys, pytest
 
 def teardown_function(function):
     logging.shutdown()
@@ -45,10 +46,10 @@ def test_SetupLoggingFails():
     assert os.path.exists(testLogFile) == False
     
 def test_fileIsPDFFails():
-    assert Utils.fileIsPDF('testfiles/NotPdf.txt') == False
+    assert Utils.fileIsPDF('testing/testfiles/NotPdf.txt') == False
 
 def test_fileIsPDFSucceeds():
-    assert Utils.fileIsPDF('testfiles/Test Page.pdf') == True
+    assert Utils.fileIsPDF('testing/testfiles/Test Page.pdf') == True
 
 def test_fileIsPDFErrors():
     assert Utils.fileIsPDF("-dsadsa") == False

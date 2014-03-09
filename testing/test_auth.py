@@ -13,14 +13,14 @@
 #
 #    You should have received a copy of the GNU General Public License
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+import json, urllib, cups, os, stat, grp, pytest, logging, sys
+sys.path.insert(0, ".")
 
 from auth import Auth
-import json, urllib, cups, os, stat, grp, pytest, logging
 from test_mockrequestor import MockRequestor
 from oauth2client import client
 from oauth2client import multistore_file
 from ccputils import Utils
-
 def setup_function(function):
     # setup mock requestors
     global requestors

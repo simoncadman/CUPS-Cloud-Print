@@ -13,10 +13,11 @@
 #
 #    You should have received a copy of the GNU General Public License
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+import cups, urllib, logging, sys
+sys.path.insert(0, ".")
 
 from printer import Printer
 from test_mockrequestor import MockRequestor
-import cups, urllib, logging
 
 global requestors, printerItem
 
@@ -206,7 +207,7 @@ def test_internalName():
     #    internalCapabilityTests.append( { 'name' : word } )
 
     # load test file and try all those
-    for filelineno, line in enumerate(open('testfiles/capabilitylist')):
+    for filelineno, line in enumerate(open('testing/testfiles/capabilitylist')):
         internalCapabilityTests.append( { 'name' : line.decode("utf-8") } )
 
     for internalTest in internalCapabilityTests:
@@ -300,23 +301,23 @@ def test_printers():
         assert isinstance(printerdetails['printers'][0]['capabilities'], list)
 
         # test submitting job
-        assert printerItem.submitJob(printerId, 'pdf', 'testfiles/Test Page.pdf', 'Test Page', testprintername ) == True
-        assert printerItem.submitJob(printerId, 'pdf', 'testfiles/Test Page Doesnt Exist.pdf', 'Test Page', testprintername ) == False
+        assert printerItem.submitJob(printerId, 'pdf', 'testing/testfiles/Test Page.pdf', 'Test Page', testprintername ) == True
+        assert printerItem.submitJob(printerId, 'pdf', 'testing/testfiles/Test Page Doesnt Exist.pdf', 'Test Page', testprintername ) == False
 
         # test submitting job with no name
-        assert printerItem.submitJob(printerId, 'pdf', 'testfiles/Test Page.pdf', '', testprintername ) == True
-        assert printerItem.submitJob(printerId, 'pdf', 'testfiles/Test Page Doesnt Exist.pdf', '', testprintername ) == False
+        assert printerItem.submitJob(printerId, 'pdf', 'testing/testfiles/Test Page.pdf', '', testprintername ) == True
+        assert printerItem.submitJob(printerId, 'pdf', 'testing/testfiles/Test Page Doesnt Exist.pdf', '', testprintername ) == False
 
         # png
-        assert printerItem.submitJob(printerId, 'png', 'testfiles/Test Page.png', 'Test Page', testprintername ) == True
-        assert printerItem.submitJob(printerId, 'png', 'testfiles/Test Page Doesnt Exist.png', 'Test Page', testprintername ) == False
+        assert printerItem.submitJob(printerId, 'png', 'testing/testfiles/Test Page.png', 'Test Page', testprintername ) == True
+        assert printerItem.submitJob(printerId, 'png', 'testing/testfiles/Test Page Doesnt Exist.png', 'Test Page', testprintername ) == False
 
         # ps
-        assert printerItem.submitJob(printerId, 'ps', 'testfiles/Test Page.ps', 'Test Page', testprintername ) == False
-        assert printerItem.submitJob(printerId, 'ps', 'testfiles/Test Page Doesnt Exist.ps', 'Test Page', testprintername ) == False
+        assert printerItem.submitJob(printerId, 'ps', 'testing/testfiles/Test Page.ps', 'Test Page', testprintername ) == False
+        assert printerItem.submitJob(printerId, 'ps', 'testing/testfiles/Test Page Doesnt Exist.ps', 'Test Page', testprintername ) == False
 
         # test failure of print job
-        assert printerItem.submitJob(printerId, 'pdf', 'testfiles/Test Page.pdf', 'FAIL PAGE', testprintername ) == False
+        assert printerItem.submitJob(printerId, 'pdf', 'testing/testfiles/Test Page.pdf', 'FAIL PAGE', testprintername ) == False
 
         # delete test printer
         connection.deletePrinter( testprintername )
