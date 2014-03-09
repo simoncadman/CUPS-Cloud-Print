@@ -29,7 +29,7 @@ if __name__ == '__main__': # pragma: no cover
     Utils.SetupLogging()
     
     # line below is replaced on commit
-    CCPVersion = "20140309 224208"
+    CCPVersion = "20140309 224508"
     Utils.ShowVersion(CCPVersion)
     
     def showUsage():

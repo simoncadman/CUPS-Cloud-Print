@@ -24,15 +24,7 @@ if __name__ == '__main__': # pragma: no cover
     Utils.SetupLogging()
     
     # line below is replaced on commit
-    CCPVersion = "20140309 224208"
+    CCPVersion = "20140309 224508"
     Utils.ShowVersion(CCPVersion)
 
-    requestors, storage = Auth.SetupAuth(True)
-    printer = Printer(requestors)
-    printers = printer.getPrinters()
-    if printers == None:
-        print "No Printers Found"
-        sys.exit(1)
-
-    for foundprinter in printers:
-        print printer.getListDescription(foundprinter)
+    requestors, storage = Auth.SetupAuth(False)
