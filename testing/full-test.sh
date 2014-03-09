@@ -186,25 +186,25 @@ if [[ $testconfig != "" ]]; then
     fi
 fi
 
-if [[ `./listdrivefiles.py "$pdfjobname"` -lt 100000 ]]; then
+if [[ `./testing/listdrivefiles.py "$pdfjobname"` -lt 100000 ]]; then
     echo "Uploaded pdf file does not match expected size:"
-    ./listdrivefiles.py "$pdfjobname"
+    ./testing/listdrivefiles.py "$pdfjobname"
     exit 1
 else
     echo "Uploaded pdf file matches expected size"
 fi
 
-if [[ `./listdrivefiles.py "$psjobname"` -lt 100000 ]]; then
+if [[ `./testing/listdrivefiles.py "$psjobname"` -lt 100000 ]]; then
     echo "Uploaded ps file does not match expected size:"
-    ./listdrivefiles.py "$psjobname"
+    ./testing/listdrivefiles.py "$psjobname"
     exit 1
 else
     echo "Uploaded ps file matches expected size"
 fi
 
-if [[ `./listdrivefiles.py "$psreaderjobname"` -lt 100000 ]]; then
+if [[ `./testing/listdrivefiles.py "$psreaderjobname"` -lt 100000 ]]; then
     echo "Uploaded ps reader file does not match expected size:"
-    ./listdrivefiles.py "$psreaderjobname"
+    ./testing/listdrivefiles.py "$psreaderjobname"
     exit 1
 else
     echo "Uploaded ps reader file matches expected size"
