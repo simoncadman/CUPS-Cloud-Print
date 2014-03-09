@@ -97,8 +97,7 @@ class Utils:
     
     which = staticmethod(which)
     
-    def GetLPID(default='lp', alternative='cups', useFiles=True):
-        blacklistedGroups = [ 'adm', 'wheel', 'root' ]
+    def GetLPID(default='lp', alternative='cups', useFiles=True, blacklistedGroups=[ 'adm', 'wheel', 'root' ], useFilesOnly=False ):
         blacklistedGroupIds = []
         for group in blacklistedGroups:
             try:
@@ -114,6 +113,9 @@ class Utils:
                         return os.stat(cupsConfigFile).st_gid
                     else:
                         logging.debug("Group " + group + " excluded as blacklisted" )
+        
+        if useFilesOnly:
+             return None
         
         # try lp first, then cups
         lpgrp = None

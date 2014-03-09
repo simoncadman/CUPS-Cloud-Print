@@ -87,6 +87,9 @@ def test_getLPID():
     assert int(Utils.GetLPID('brokendefault', workingPrintGroupName, False)) > 0
     assert Utils.GetLPID('brokendefault', workingPrintGroupName, False) != None
     
+    # test blacklist works
+    assert Utils.GetLPID(workingPrintGroupName, 'brokenalternative', True, [ workingPrintGroupName, 'brokendefault' ], True) == None
+    
 def test_showVersion():
     assert Utils.ShowVersion("12345") == False
     sys.argv = ['testfile', 'version']
