@@ -1,6 +1,6 @@
 #! /usr/bin/env python2
 #    CUPS Cloudprint - Print via Google Cloud Print
-#    Copyright (C) 2011 Simon Cadman
+#    Copyright (C) 2014 Simon Cadman
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU General Public License as published by
