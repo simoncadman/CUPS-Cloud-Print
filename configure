@@ -586,6 +586,7 @@ PACKAGE_URL=''
 
 ac_subst_vars='LTLIBOBJS
 LIBOBJS
+ulpgroupexists
 cupsgroupexists
 lpgroupexists
 cupsdatapath
@@ -1862,7 +1863,14 @@ if test "${cupsgroup}" = ""; then
 		cupsgroupexists=`grep -w -c cups /etc/group`
 
 		if test "${cupsgroupexists}" = "0"; then
-			as_fn_error $? "cannot identify cups group, specify with --cupsgroup=something" "$LINENO" 5
+			ulpgroupexists=`grep -w -c _lp /etc/group`
+
+			if test "${ulpgroupexists}" = "0"; then
+				as_fn_error $? "cannot identify cups group, specify with --cupsgroup=something" "$LINENO" 5
+			else
+				cupsgroup="_lp"
+
+			fi
 		else
 			cupsgroup="cups"
 

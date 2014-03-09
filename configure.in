@@ -20,7 +20,12 @@ if test "${cupsgroup}" = ""; then
 	if test "${lpgroupexists}" = "0"; then
 		AC_SUBST(cupsgroupexists, [`grep -w -c cups /etc/group`])
 		if test "${cupsgroupexists}" = "0"; then
-			AC_MSG_ERROR([cannot identify cups group, specify with --cupsgroup=something])
+			AC_SUBST(ulpgroupexists, [`grep -w -c _lp /etc/group`])
+			if test "${ulpgroupexists}" = "0"; then
+				AC_MSG_ERROR([cannot identify cups group, specify with --cupsgroup=something])
+			else
+				AC_SUBST(cupsgroup, "_lp")
+			fi
 		else
 			AC_SUBST(cupsgroup, "cups")
 		fi
