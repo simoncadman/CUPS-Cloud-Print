@@ -36,3 +36,7 @@ def test_request():
     assert requestor.doRequest(path="/test",testResponse=json.dumps("randomstring1233")) == "randomstring1233"
     with pytest.raises(ValueError):
         assert requestor.doRequest(path="/test",testResponse="")
+        
+    assert requestor.doRequest(path="/test",testResponse=json.dumps("randomstring1233"), endpointurl=requestor.CLOUDPRINT_URL) == "randomstring1233"
+    with pytest.raises(ValueError):
+        assert requestor.doRequest(path="/test",testResponse="", endpointurl=requestor.CLOUDPRINT_URL)
