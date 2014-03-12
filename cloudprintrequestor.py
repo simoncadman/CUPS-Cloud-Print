@@ -57,7 +57,7 @@ class cloudprintrequestor(httplib2.Http):
             url = '%s/%s' % (endpointurl, path)
 
         # use test response for testing
-        if testResponse == None:
+        if testResponse == None: # pragma: no cover
             if data == None:
                 headers, response = self.request(url, "GET", headers=headers)
             else:
