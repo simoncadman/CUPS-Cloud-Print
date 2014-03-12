@@ -29,7 +29,7 @@ if __name__ == '__main__': # pragma: no cover
     Utils.SetupLogging()
     
     # line below is replaced on commit
-    CCPVersion = "20140312 233858"
+    CCPVersion = "20140312 234124"
     Utils.ShowVersion(CCPVersion)
     
     requestors, storage = Auth.SetupAuth(True)
