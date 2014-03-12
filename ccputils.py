@@ -151,11 +151,7 @@ class Utils:
         """
         try:
             f = open(pathname, 'rb')
-            try:
-                s = f.read()
-            except IOError, e:
-                print 'ERROR: Error reading %s\n%s', pathname, e
-            f.close()
+            s = f.read()
             return s
         except IOError, e:
             print 'ERROR: Error opening %s\n%s', pathname, e
@@ -176,10 +172,7 @@ class Utils:
 
         try:
             f = open(file_name, 'wb')
-            try:
-                f.write(data)
-            except IOError, e:
-                status = False
+            f.write(data)
             f.close()
         except IOError, e:
             status = False
@@ -201,6 +194,8 @@ class Utils:
         b64_pathname = pathname + '.b64'
         file_type = mimetypes.guess_type(pathname)[0] or 'application/octet-stream'
         data = Utils.ReadFile(pathname)
+        if data == None:
+            return None
 
         # Convert binary data to base64 encoded data.
         header = 'data:%s;base64,' % file_type

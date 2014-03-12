@@ -95,3 +95,27 @@ def test_showVersion():
     sys.argv = ['testfile', 'version']
     with pytest.raises(SystemExit):
         Utils.ShowVersion("12345")
+        
+def test_readFile():
+    Utils.WriteFile('/tmp/testfile', 'data')
+    assert Utils.ReadFile('/tmp/testfile') == 'data'
+    assert Utils.ReadFile('/tmp/filethatdoesntexist') == None
+    os.unlink('/tmp/testfile')
+    
+def test_writeFile():
+    Utils.WriteFile('/tmp/testfile', 'data') == True
+    Utils.WriteFile('/tmp/testfile/dsadsaasd', 'data') == False
+    os.unlink('/tmp/testfile')
+    
+def test_base64encode():
+    Utils.WriteFile('/tmp/testfile', 'data') == True
+    assert Utils.Base64Encode('/tmp/testfile') == '/tmp/testfile.b64'
+    assert Utils.ReadFile('/tmp/testfile.b64') == 'data:application/octet-stream;base64,ZGF0YQ=='
+    os.unlink('/tmp/testfile.b64')
+    
+    os.mkdir('/tmp/testfile.b64')
+    assert Utils.Base64Encode('/tmp/testfile') == None
+    os.unlink('/tmp/testfile')
+    os.rmdir('/tmp/testfile.b64')
+    
+    assert Utils.Base64Encode('/tmp/testfile/dsiahdisa') == None
