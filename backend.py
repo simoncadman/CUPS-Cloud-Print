@@ -32,7 +32,7 @@ if __name__ == '__main__': # pragma: no cover
     Utils.SetupLogging()
     
     # line below is replaced on commit
-    CCPVersion = "20140312 234124"
+    CCPVersion = "20140312 234529"
     Utils.ShowVersion(CCPVersion)
     
     requestors, storage = Auth.SetupAuth(False)
@@ -98,7 +98,7 @@ if __name__ == '__main__': # pragma: no cover
         uri = os.getenv('DEVICE_URI')
         printername = os.getenv('PRINTER')
         if uri == None:
-            sys.stdout.write("URI must be \"cloudprint:/<cloud printer name>\"!\n")
+            sys.stdout.write("URI must be \"cloudprint://<account name>/<cloud printer id>\"!\n")
             sys.exit(255)
 
         logging.info("Printing file " + printFile)
