@@ -101,6 +101,11 @@ def test_getCUPSPrintersForAccount():
     for requestor in requestors:
         totalPrinters+=len(requestor.printers)
 
+    fullprintersforaccount = printerItem.getPrinters(True, requestors[1].getAccount())
+    assert len(fullprintersforaccount) == len(requestors[1].printers)
+    assert 'fulldetails' in fullprintersforaccount[0]
+    assert len(fullprintersforaccount[0]['fulldetails']) > 0
+
     fullprinters = printerItem.getPrinters(True)
     assert len(fullprinters) == totalPrinters
     assert 'fulldetails' in fullprinters[0]
