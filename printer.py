@@ -13,9 +13,10 @@
 #
 #    You should have received a copy of the GNU General Public License
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
-import json, urllib, os, mimetypes, base64, mimetools, re, hashlib, subprocess, logging
+import json, urllib, os, mimetools, re, hashlib, subprocess, logging
 from auth import Auth
 from urlparse import urlparse
+from ccputils import Utils
 
 class Printer:
     BOUNDARY = mimetools.choose_boundary()
@@ -263,72 +264,6 @@ class Printer:
             printerdetails = self.cachedPrinterDetails[printerid]
         return printerdetails
 
-    def readFile(self, pathname):
-        """Read contents of a file and return content.
-
-        Args:
-          pathname: string, (path)name of file.
-        Returns:
-          string: contents of file.
-        """
-        try:
-            f = open(pathname, 'rb')
-            try:
-                s = f.read()
-            except IOError, e:
-                print 'ERROR: Error reading %s\n%s', pathname, e
-            f.close()
-            return s
-        except IOError, e:
-            print 'ERROR: Error opening %s\n%s', pathname, e
-            return None
-
-    def writeFile(self, file_name, data):
-        """Write contents of data to a file_name.
-
-        Args:
-          file_name: string, (path)name of file.
-          data: string, contents to write to file.
-        Returns:
-          boolean: True = success, False = errors.
-        """
-        status = True
-
-        try:
-            f = open(file_name, 'wb')
-            try:
-                f.write(data)
-            except IOError, e:
-                status = False
-            f.close()
-        except IOError, e:
-            status = False
-
-        return status
-
-    def base64Encode(self, pathname):
-        """Convert a file to a base64 encoded file.
-
-        Args:
-          pathname: path name of file to base64 encode..
-        Returns:
-          string, name of base64 encoded file.
-        For more info on data urls, see:
-          http://en.wikipedia.org/wiki/Data_URI_scheme
-        """
-        b64_pathname = pathname + '.b64'
-        file_type = mimetypes.guess_type(pathname)[0] or 'application/octet-stream'
-        data = self.readFile(pathname)
-
-        # Convert binary data to base64 encoded data.
-        header = 'data:%s;base64,' % file_type
-        b64data = header + base64.b64encode(data)
-
-        if self.writeFile(b64_pathname, b64data):
-            return b64_pathname
-        else:
-            return None
-
     def encodeMultiPart(self, fields, file_type='application/xml'):
         """Encodes list of parameters for HTTP multipart format.
 
@@ -465,18 +400,18 @@ class Printer:
                 if not os.path.exists(jobfile):
                     print "ERROR: PDF doesnt exist"
                     return False
-            b64file = self.base64Encode(jobfile)
+            b64file = Utils.Base64Encode(jobfile)
             if b64file == None:
                 print "ERROR: Cannot write to file: " + jobfile + ".b64"
                 return False
-            fdata = self.readFile(b64file)
+            fdata = Utils.ReadFile(b64file)
             os.unlink(b64file)
             hsid = True
         elif jobtype in ['png', 'jpeg']:
             if not os.path.exists(jobfile):
                 print "ERROR: File doesnt exist"
                 return False
-            fdata = self.readFile(jobfile)
+            fdata = Utils.ReadFile(jobfile)
         else:
             print "ERROR: Unknown job type"
             return False

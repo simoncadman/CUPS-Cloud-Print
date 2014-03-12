@@ -14,7 +14,7 @@
 #    You should have received a copy of the GNU General Public License
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-import subprocess, os, logging, sys, grp
+import subprocess, os, logging, sys, grp, mimetypes, base64
 
 class Utils:
     
@@ -140,3 +140,75 @@ class Utils:
         return False
     
     ShowVersion = staticmethod(ShowVersion)
+    
+    def ReadFile(pathname):
+        """Read contents of a file and return content.
+
+        Args:
+          pathname: string, (path)name of file.
+        Returns:
+          string: contents of file.
+        """
+        try:
+            f = open(pathname, 'rb')
+            try:
+                s = f.read()
+            except IOError, e:
+                print 'ERROR: Error reading %s\n%s', pathname, e
+            f.close()
+            return s
+        except IOError, e:
+            print 'ERROR: Error opening %s\n%s', pathname, e
+            return None
+    
+    ReadFile = staticmethod(ReadFile)
+
+    def WriteFile(file_name, data):
+        """Write contents of data to a file_name.
+
+        Args:
+          file_name: string, (path)name of file.
+          data: string, contents to write to file.
+        Returns:
+          boolean: True = success, False = errors.
+        """
+        status = True
+
+        try:
+            f = open(file_name, 'wb')
+            try:
+                f.write(data)
+            except IOError, e:
+                status = False
+            f.close()
+        except IOError, e:
+            status = False
+
+        return status
+
+    WriteFile = staticmethod(WriteFile)
+
+    def Base64Encode(pathname):
+        """Convert a file to a base64 encoded file.
+
+        Args:
+          pathname: path name of file to base64 encode..
+        Returns:
+          string, name of base64 encoded file.
+        For more info on data urls, see:
+          http://en.wikipedia.org/wiki/Data_URI_scheme
+        """
+        b64_pathname = pathname + '.b64'
+        file_type = mimetypes.guess_type(pathname)[0] or 'application/octet-stream'
+        data = Utils.ReadFile(pathname)
+
+        # Convert binary data to base64 encoded data.
+        header = 'data:%s;base64,' % file_type
+        b64data = header + base64.b64encode(data)
+
+        if Utils.WriteFile(b64_pathname, b64data):
+            return b64_pathname
+        else:
+            return None
+
+    Base64Encode = staticmethod(Base64Encode)
