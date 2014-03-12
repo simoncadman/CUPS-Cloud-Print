@@ -32,7 +32,7 @@ if __name__ == '__main__': # pragma: no cover
     Utils.SetupLogging()
     
     # line below is replaced on commit
-    CCPVersion = "20140312 234529"
+    CCPVersion = "20140312 235242"
     Utils.ShowVersion(CCPVersion)
     
     requestors, storage = Auth.SetupAuth(False)
@@ -51,7 +51,8 @@ if __name__ == '__main__': # pragma: no cover
                 for foundprinter in printers:
                     print printer.getBackendDescriptionForPrinter( foundprinter )
         except Exception as error:
-            print error
+            sys.stderr.write( "ERROR: " + error )
+            logging.error(error);
             pass
         sys.exit(0)
 
