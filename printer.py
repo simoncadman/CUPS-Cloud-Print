@@ -304,7 +304,7 @@ class Printer:
 
         return overridecapabilities
 
-    def getCapabilitiesArray ( self, attrs, gcpid, overridecapabilities ) :
+    def getCapabilitiesArray ( self, attrs, printercapabilities, overridecapabilities ) :
         capabilities = { "capabilities" : [] }
         for attr in attrs:
             if attr.name.startswith('Default'):
@@ -313,11 +313,9 @@ class Printer:
                 hashname = attr.name.replace('Default', '')
 
                 # find item name from hashes
-                details = self.getPrinterDetails( gcpid )
-                fulldetails = details['printers'][0]
                 gcpoption = None
                 addedCapabilities = []
-                for capability in fulldetails['capabilities']:
+                for capability in printercapabilities:
                     if hashname == self.getInternalName(capability, 'capability'):
                         gcpname = capability['name']
                         for option in capability['options']:
@@ -359,13 +357,16 @@ class Printer:
         cupsprinters = connection.getPrinters()
         overridecapabilities = self.getOverrideCapabilities(overrideoptionsstring)
         overrideDefaultDefaults = { 'Duplex' : 'None' }
+        
+        details = self.getPrinterDetails( gcpid )
+        fulldetails = details['printers'][0]
 
         for capability in overrideDefaultDefaults:
             if capability not in overridecapabilities:
                 overridecapabilities[capability] = overrideDefaultDefaults[capability]
 
         attrs = cups.PPD(connection.getPPD(cupsprintername)).attributes
-        return self.getCapabilitiesArray(attrs, gcpid, overridecapabilities)
+        return self.getCapabilitiesArray(attrs, fulldetails['capabilities'], overridecapabilities)
 
     def submitJob(self, printerid, jobtype, jobfile, jobname, printername, options="" ):
         """Submit a job to printerid with content of dataUrl.
