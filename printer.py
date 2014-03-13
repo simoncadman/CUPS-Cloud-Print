@@ -304,28 +304,8 @@ class Printer:
 
         return overridecapabilities
 
-    def getCapabilities ( self, gcpid, cupsprintername, overrideoptionsstring ) :
-        """Gets capabilities of printer and maps them against list
-
-        Args:
-          gcpid: printer id from google
-          cupsprintername: name of the printer in cups
-          overrideoptionsstring: override for print job
-        Returns:
-          List of capabilities
-        """
-        import cups
-        connection = cups.Connection()
-        cupsprinters = connection.getPrinters()
+    def getCapabilitiesArray ( self, attrs, gcpid, overridecapabilities ) :
         capabilities = { "capabilities" : [] }
-        overridecapabilities = self.getOverrideCapabilities(overrideoptionsstring)
-        overrideDefaultDefaults = { 'Duplex' : 'None' }
-
-        for capability in overrideDefaultDefaults:
-            if capability not in overridecapabilities:
-                overridecapabilities[capability] = overrideDefaultDefaults[capability]
-
-        attrs = cups.PPD(connection.getPPD(cupsprintername)).attributes
         for attr in attrs:
             if attr.name.startswith('Default'):
                 # gcp setting, reverse back to GCP capability
@@ -363,6 +343,29 @@ class Printer:
                 if gcpname != None and gcpoption != None:
                     capabilities['capabilities'].append( { 'type' : 'Feature', 'name' : gcpname, 'options' : [ { 'name' : gcpoption } ] } )
         return capabilities
+
+    def getCapabilities ( self, gcpid, cupsprintername, overrideoptionsstring ) :
+        """Gets capabilities of printer and maps them against list
+
+        Args:
+          gcpid: printer id from google
+          cupsprintername: name of the printer in cups
+          overrideoptionsstring: override for print job
+        Returns:
+          List of capabilities
+        """
+        import cups
+        connection = cups.Connection()
+        cupsprinters = connection.getPrinters()
+        overridecapabilities = self.getOverrideCapabilities(overrideoptionsstring)
+        overrideDefaultDefaults = { 'Duplex' : 'None' }
+
+        for capability in overrideDefaultDefaults:
+            if capability not in overridecapabilities:
+                overridecapabilities[capability] = overrideDefaultDefaults[capability]
+
+        attrs = cups.PPD(connection.getPPD(cupsprintername)).attributes
+        return self.getCapabilitiesArray(attrs, gcpid, overridecapabilities)
 
     def submitJob(self, printerid, jobtype, jobfile, jobname, printername, options="" ):
         """Submit a job to printerid with content of dataUrl.
