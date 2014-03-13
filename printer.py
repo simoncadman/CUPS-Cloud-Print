@@ -283,22 +283,10 @@ class Printer:
         lines.append('')  # blank line
         return self.CRLF.join(lines)
 
-    def getCapabilities ( self, gcpid, cupsprintername, overrideoptionsstring ) :
-        """Gets capabilities of printer and maps them against list
-
-        Args:
-          gcpid: printer id from google
-          cupsprintername: name of the printer in cups
-          overrideoptionsstring: override for print job
-        Returns:
-          List of capabilities
-        """
+    def getOverrideCapabilities ( self, overrideoptionsstring ):
         overrideoptions = overrideoptionsstring.split(' ')
-        import cups
-        connection = cups.Connection()
-        cupsprinters = connection.getPrinters()
-        capabilities = { "capabilities" : [] }
         overridecapabilities = {}
+        
         ignorecapabilities = [ 'Orientation' ]
         for optiontext in overrideoptions:
             if '=' in optiontext :
@@ -314,6 +302,23 @@ class Printer:
             if optiontext == 'landscape' or optiontext == 'nolandscape':
                 overridecapabilities['Orientation'] = 'Landscape'
 
+        return overridecapabilities
+
+    def getCapabilities ( self, gcpid, cupsprintername, overrideoptionsstring ) :
+        """Gets capabilities of printer and maps them against list
+
+        Args:
+          gcpid: printer id from google
+          cupsprintername: name of the printer in cups
+          overrideoptionsstring: override for print job
+        Returns:
+          List of capabilities
+        """
+        import cups
+        connection = cups.Connection()
+        cupsprinters = connection.getPrinters()
+        capabilities = { "capabilities" : [] }
+        overridecapabilities = self.getOverrideCapabilities(overrideoptionsstring)
         overrideDefaultDefaults = { 'Duplex' : 'None' }
 
         for capability in overrideDefaultDefaults:

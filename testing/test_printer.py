@@ -145,6 +145,15 @@ def test_instantiate():
     assert printerItem.requestors == requestors
     assert len(printerItem.requestors) == len(requestors)
 
+def test_getOverrideCapabilities():
+    global printerItem, requestors
+    assert printerItem.getOverrideCapabilities("") == {}
+    assert printerItem.getOverrideCapabilities("landscape") == {'Orientation': 'Landscape'}
+    assert printerItem.getOverrideCapabilities("nolandscape") == {'Orientation': 'Landscape'}
+    assert printerItem.getOverrideCapabilities("test=one") == {'test': 'one'}
+    assert printerItem.getOverrideCapabilities("test=one anothertest=two") == {'test': 'one', 'anothertest' : 'two'}
+    assert printerItem.getOverrideCapabilities("test=one anothertest=two Orientation=yes") == {'test': 'one', 'anothertest' : 'two'}
+
 def test_getCapabilities():
     global printerItem, requestors
     foundprinters, connection = printerItem.getCUPSPrintersForAccount(requestors[1].getAccount())
