@@ -304,7 +304,7 @@ class Printer:
 
         return overridecapabilities
 
-    def getCapabilitiesArray ( self, attrs, printercapabilities, overridecapabilities ) :
+    def getCapabilitiesDict ( self, attrs, printercapabilities, overridecapabilities ) :
         capabilities = { "capabilities" : [] }
         for attr in attrs:
             if attr.name.startswith('Default'):
@@ -366,7 +366,7 @@ class Printer:
                 overridecapabilities[capability] = overrideDefaultDefaults[capability]
 
         attrs = cups.PPD(connection.getPPD(cupsprintername)).attributes
-        return self.getCapabilitiesArray(attrs, fulldetails['capabilities'], overridecapabilities)
+        return self.getCapabilitiesDict(attrs, fulldetails['capabilities'], overridecapabilities)
 
     def submitJob(self, printerid, jobtype, jobfile, jobname, printername, options="" ):
         """Submit a job to printerid with content of dataUrl.
