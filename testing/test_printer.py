@@ -335,6 +335,10 @@ def test_printers():
         # test submitting job
         assert printerItem.submitJob(printerId, 'pdf', 'testing/testfiles/Test Page.pdf', 'Test Page', testprintername ) == True
         assert printerItem.submitJob(printerId, 'pdf', 'testing/testfiles/Test Page Doesnt Exist.pdf', 'Test Page', testprintername ) == False
+        
+        # test submitting job with rotate
+        assert printerItem.submitJob(printerId, 'pdf', 'testing/testfiles/Test Page.pdf', 'Test Page', testprintername, "landscape" ) == True
+        assert printerItem.submitJob(printerId, 'pdf', 'testing/testfiles/Test Page.pdf', 'Test Page', testprintername, "nolandscape" ) == True
 
         # test submitting job with no name
         assert printerItem.submitJob(printerId, 'pdf', 'testing/testfiles/Test Page.pdf', '', testprintername ) == True
