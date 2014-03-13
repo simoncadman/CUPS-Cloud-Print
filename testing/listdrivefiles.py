@@ -29,8 +29,7 @@ if __name__ == '__main__': # pragma: no cover
     Utils.ShowVersion(CCPVersion)
     
     requestors, storage = Auth.SetupAuth(True, permissions=['https://www.googleapis.com/auth/cloudprint', 'https://www.googleapis.com/auth/drive.readonly'])
-    printer = Printer(requestors)
-    files = printer.getDriveFiles()
+    files = Utils.GetDriveFiles(requestors)
     if files == None:
         print "No Files Found"
         sys.exit(1)
