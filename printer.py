@@ -307,10 +307,10 @@ class Printer:
     def getCapabilitiesDict ( self, attrs, printercapabilities, overridecapabilities ) :
         capabilities = { "capabilities" : [] }
         for attr in attrs:
-            if attr.name.startswith('Default'):
+            if attr['name'].startswith('Default'):
                 # gcp setting, reverse back to GCP capability
                 gcpname = None
-                hashname = attr.name.replace('Default', '')
+                hashname = attr['name'].replace('Default', '')
 
                 # find item name from hashes
                 gcpoption = None
@@ -321,12 +321,12 @@ class Printer:
                         for option in capability['options']:
                             internalCapability = self.getInternalName(option, 'option', gcpname, addedCapabilities)
                             addedCapabilities.append(internalCapability)
-                            if attr.value == internalCapability:
+                            if attr['value'] == internalCapability:
                                 gcpoption = option['name']
                                 break
                         addedOptions = []
                         for overridecapability in overridecapabilities:
-                            if 'Default' + overridecapability == attr.name:
+                            if 'Default' + overridecapability == attr['name']:
                                 selectedoption = overridecapabilities[overridecapability]
                                 for option in capability['options']:
                                     internalOption = self.getInternalName(option, 'option', gcpname, addedOptions)
@@ -341,6 +341,12 @@ class Printer:
                 if gcpname != None and gcpoption != None:
                     capabilities['capabilities'].append( { 'type' : 'Feature', 'name' : gcpname, 'options' : [ { 'name' : gcpoption } ] } )
         return capabilities
+
+    def attrListToArray ( self, attrs ) :
+        attrArray = []
+        for attr in attrs:
+            attrArray.append( { 'name' : attr.name, 'value' : attr.value } )
+        return attrArray
 
     def getCapabilities ( self, gcpid, cupsprintername, overrideoptionsstring ) :
         """Gets capabilities of printer and maps them against list
@@ -360,13 +366,13 @@ class Printer:
         
         details = self.getPrinterDetails( gcpid )
         fulldetails = details['printers'][0]
-
         for capability in overrideDefaultDefaults:
             if capability not in overridecapabilities:
                 overridecapabilities[capability] = overrideDefaultDefaults[capability]
 
         attrs = cups.PPD(connection.getPPD(cupsprintername)).attributes
-        return self.getCapabilitiesDict(attrs, fulldetails['capabilities'], overridecapabilities)
+        attrArray = self.attrListToArray(attrs)
+        return self.getCapabilitiesDict(attrArray, fulldetails['capabilities'], overridecapabilities)
 
     def submitJob(self, printerid, jobtype, jobfile, jobname, printername, options="" ):
         """Submit a job to printerid with content of dataUrl.

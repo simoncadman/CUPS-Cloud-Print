@@ -188,6 +188,11 @@ def test_getCapabilities():
     # delete test printer
     connection.deletePrinter( printerItem.sanitizePrinterName(printer['name']) )
 
+def test_GetCapabilitiesDict (  ) :
+    global printerItem, requestors
+    assert printerItem.getCapabilitiesDict( {}, {}, {} ) == { "capabilities" : [] }
+    assert printerItem.getCapabilitiesDict( [ { 'name' : 'test', 'value' : 'test2' } ], {}, {} ) == { "capabilities" : [] }
+
 def test_GetPrinterIDByURIFails (  ):
     global printerItem, requestors
 
