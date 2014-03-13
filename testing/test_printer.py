@@ -191,7 +191,17 @@ def test_getCapabilities():
 def test_GetCapabilitiesDict (  ) :
     global printerItem, requestors
     assert printerItem.getCapabilitiesDict( {}, {}, {} ) == { "capabilities" : [] }
-    assert printerItem.getCapabilitiesDict( [ { 'name' : 'test', 'value' : 'test2' } ], {}, {} ) == { "capabilities" : [] }
+    assert printerItem.getCapabilitiesDict( [{ 'name' : 'test' }], {}, {} ) == { "capabilities" : [] }
+    assert printerItem.getCapabilitiesDict( [{ 'name' : 'Default' + 'test', 'value' : 'test' }], 
+                                            [ { 'name' : printerItem.getInternalName({ 'name' : "test" }, 'capability'), 
+                                                'value' : printerItem.getInternalName( { 'name' : "test123" }, 
+                                                'option', printerItem.getInternalName({ 'name' : "Defaulttest" }, 'capability'), []),
+                                                'options' : [ { 'name' : 'test' }, { 'name' : 'test2' } ] } ], {} ) == {'capabilities': [{'name': 'test', 'options': [{'name': 'test'}], 'type': 'Feature'}]}
+    assert printerItem.getCapabilitiesDict( [{ 'name' : 'Default' + 'test', 'value' : 'test' }], 
+                                            [ { 'name' : printerItem.getInternalName({ 'name' : "test" }, 'capability'), 
+                                                'value' : printerItem.getInternalName( { 'name' : "test123" }, 
+                                                'option', printerItem.getInternalName({ 'name' : "Defaulttest" }, 'capability'), []),
+                                                'options' : [ { 'name' : 'test' }, { 'name' : 'test2' } ] } ], { 'test' : 'test2' } ) == {'capabilities': [{'name': 'test', 'options': [{'name': 'test2'}], 'type': 'Feature'}]}
 
 def test_GetPrinterIDByURIFails (  ):
     global printerItem, requestors
