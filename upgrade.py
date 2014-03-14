@@ -26,7 +26,7 @@ if __name__ == '__main__': # pragma: no cover
     Utils.SetupLogging()
     
     # line below is replaced on commit
-    CCPVersion = "20140314 222130"
+    CCPVersion = "20140314 222522"
     Utils.ShowVersion(CCPVersion)
     
     if not os.path.exists("/etc/cloudprint.conf"):

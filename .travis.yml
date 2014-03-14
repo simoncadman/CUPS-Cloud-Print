@@ -16,7 +16,6 @@ install:
  - sudo cupsctl --debug-logging
  - sudo cp .coveragerc /usr/local/share/cloudprint-cups/
  - sudo cp testing/testfiles/testppd.ppd  /usr/share/cups/model/testppd.ppd
- - convert -density 300x300 "testing/testfiles/Test Page.pdf" -rotate 90 /tmp/testout.pdf
 script:
  - cd /usr/local/share/cloudprint-cups/
  - sudo chmod 777 .
