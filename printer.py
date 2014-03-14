@@ -406,7 +406,7 @@ class Printer:
                 print "ERROR: PDF doesnt exist"
                 return False
             if rotate > 0:
-                p = subprocess.Popen(['convert', '-density', '300x300', jobfile.lstrip('-'), '-rotate', str(rotate), jobfile.lstrip('-'), '2>&1'], stdout=subprocess.PIPE)
+                p = subprocess.Popen(['convert', '-density', '300x300', jobfile.lstrip('-'), '-rotate', str(rotate), jobfile.lstrip('-')], stdout=subprocess.PIPE)
                 output = p.communicate()[0]
                 result = p.returncode
                 if result != 0:
