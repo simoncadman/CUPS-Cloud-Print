@@ -6,7 +6,7 @@ virtualenv:
   system_site_packages: true
 before_install:
  - sudo apt-get update -qq
- - sudo apt-get install -qq debhelper autotools-dev cups-ppdc libcups2-dev cups python-cups python-httplib2 imagemagick
+ - sudo apt-get install -qq debhelper autotools-dev cups-ppdc libcups2-dev cups python-cups python-httplib2 imagemagick ghostscript
  - pip install httplib2 pycups pytest-cov --use-mirrors
 install:
  - ./configure
@@ -16,6 +16,7 @@ install:
  - sudo cupsctl --debug-logging
  - sudo cp .coveragerc /usr/local/share/cloudprint-cups/
  - sudo cp testing/testfiles/testppd.ppd  /usr/share/cups/model/testppd.ppd
+ - convert -list configure
 script:
  - cd /usr/local/share/cloudprint-cups/
  - sudo chmod 777 .
