@@ -411,7 +411,8 @@ class Printer:
                 result = p.returncode
                 if result != 0:
                     print "ERROR: Failed to rotate PDF"
-                    logging.error("Failed to rotate pdf: " + output)
+                    logging.error("Failed to rotate pdf: " + str(['convert', '-density', '300x300', jobfile.lstrip('-'), '-rotate', str(rotate), jobfile.lstrip('-')]))
+                    logging.error(output)
                     return False
                 if not os.path.exists(jobfile):
                     print "ERROR: PDF doesnt exist"
