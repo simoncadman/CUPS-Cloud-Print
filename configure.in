@@ -22,7 +22,7 @@ if test "${cupsgroup}" = ""; then
 		if test "${cupsgroupexists}" = "0"; then
 			AC_SUBST(ulpgroupexists, [`grep -w -c _lp /etc/group`])
 			if test "${ulpgroupexists}" = "0"; then
-				AC_MSG_ERROR([cannot identify cups group, specify with --cupsgroup=something])
+				AC_MSG_ERROR([cannot identify cups group, specify with 'cupsgroup' environmental variable])
 			else
 				AC_SUBST(cupsgroup, "_lp")
 			fi
