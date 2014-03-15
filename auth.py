@@ -129,7 +129,7 @@ class Auth:
                         credentials.refresh(requestor)
                     except AccessTokenRefreshError as e:
                         if not interactive:
-                                sys.stderr.write("Failed to renew token (error: "+ str(e)  +"), please re-run /usr/share/cloudprint-cups/setupcloudprint.py\n")
+                                sys.stderr.write("ERROR: Failed to renew token (error: "+ str(e)  +"), please re-run /usr/share/cloudprint-cups/setupcloudprint.py\n")
                                 sys.exit(1)
                         else:
                                 sys.stderr.write("Failed to renew token (error: "+ str(e)  +"), authentication needs to be setup again:\n")
