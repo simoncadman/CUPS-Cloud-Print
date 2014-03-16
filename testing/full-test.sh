@@ -14,7 +14,8 @@ export category="$2"
 export testconfig="$5"
 
 if [[ ! -f /etc/cron.daily/cupscloudprint ]]; then
-        echo "Crontab entry in /etc/cron.daily/cupscloudprint is missing"
+        echo "Crontab entry in /etc/cron.daily/cupscloudprint is missing:"
+        ls -al /etc/cron.daily/
         exit 1
 fi
 

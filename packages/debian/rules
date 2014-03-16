@@ -4,4 +4,5 @@
 # Uncomment this to turn on verbose mode.
 export DH_VERBOSE=1
 %:
+	dh_installcron
 	dh $@
