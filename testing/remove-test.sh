@@ -28,4 +28,10 @@ if [[ -e "$cupsdir/driver/cupscloudprint" ]]; then
     returnval=1
 fi
 
+if [[ -e "/etc/cron.daily/cupscloudprint" ]]; then
+    echo "/etc/cron.daily/cupscloudprint file already exists: "
+    ls -alR /etc/cron.daily/cupscloudprint
+    returnval=1
+fi
+
 exit $returnval
