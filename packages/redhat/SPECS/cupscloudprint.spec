@@ -67,6 +67,7 @@ python2 -m compileall -q -f .
 %attr(644, root, lp) %{_usr}/share/cloudprint-cups/testing/*
 %attr(755, root, lp) %{_usr}/share/cloudprint-cups/testing/*.sh
 %attr(755, root, lp) %{_usr}/share/cloudprint-cups/testing/testfiles
+%attr(644, root, lp) %{_usr}/share/cloudprint-cups/testing/testfiles/*
 %attr(755, root, lp) %{_usr}/share/cloudprint-cups/testing/listdrivefiles.py
 %doc %{_usr}/share/cloudprint-cups/COPYING
 %doc %{_usr}/share/cloudprint-cups/README.md
