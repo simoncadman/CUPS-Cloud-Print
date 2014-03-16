@@ -43,7 +43,13 @@ else
     sudo python2 -m compileall .
 fi
 
-echo "Permissions of config and logs:"
+echo "Permissions of config and logs before upgrade:"
+ls -al /etc/cloudprint.conf
+ls -al /var/log/cups/
+
+./upgrade.py
+
+echo "Permissions of config and logs after upgrade:"
 ls -al /etc/cloudprint.conf
 ls -al /var/log/cups/
 
@@ -91,8 +97,6 @@ for printer in $printers; do
         cupstestppd /tmp/test.ppd
     done
 done
-
-./upgrade.py
 
 ccpversion="`./setupcloudprint.py version`"
 
