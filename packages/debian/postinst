@@ -1,4 +1,4 @@
-#! /bin/bash
+#! /bin/bash -e
 
 # if python2 symlink doesnt exist, change to /usr/bin/env python2.7 or /usr/bin/env python2.6
 if [[ ! -f /usr/bin/python2 ]]; then
