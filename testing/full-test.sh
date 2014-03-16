@@ -92,6 +92,8 @@ for printer in $printers; do
     done
 done
 
+./upgrade.py
+
 ccpversion="`./setupcloudprint.py version`"
 
 if [[ "`whoami`" == "root"  ]]; then
