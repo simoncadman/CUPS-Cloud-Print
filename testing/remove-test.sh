@@ -4,7 +4,7 @@ set -e
 returnval=0
 
 if [[ -d '/usr/share/cloudprint-cups/' ]]; then
-    echo "/usr/share/cloudprint-cups/ dir already exists: "
+    echo "/usr/share/cloudprint-cups/ dir still exists: "
     ls -alR /usr/share/cloudprint-cups/
     returnval=1
 fi
@@ -17,19 +17,19 @@ fi
 
 
 if [[ -e "$cupsdir/backend/cloudprint" ]]; then
-    echo "$cupsdir/backend/cloudprint file already exists: "
+    echo "$cupsdir/backend/cloudprint file still exists: "
     ls -alR $cupsdir/backend/cloudprint
     returnval=1
 fi
 
 if [[ -e "$cupsdir/driver/cupscloudprint" ]]; then
-    echo "$cupsdir/driver/cupscloudprint file already exists: "
+    echo "$cupsdir/driver/cupscloudprint file still exists: "
     ls -alR $cupsdir/driver/cupscloudprint
     returnval=1
 fi
 
 if [[ -e "/etc/cron.daily/cupscloudprint" ]]; then
-    echo "/etc/cron.daily/cupscloudprint file already exists: "
+    echo "/etc/cron.daily/cupscloudprint file still exists: "
     ls -alR /etc/cron.daily/cupscloudprint
     returnval=1
 fi
