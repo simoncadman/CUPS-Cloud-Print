@@ -51,8 +51,8 @@ python2 -m compileall -q -f .
 %attr(644, root, lp) %{_usr}/share/cloudprint-cups/oauth2client/crypt.py
 %attr(644, root, lp) %{_usr}/share/cloudprint-cups/oauth2client/locked_file.py
 %attr(644, root, lp) %{_usr}/share/cloudprint-cups/oauth2client/multistore_file.py
+%attr(644, root, lp) %{_usr}/share/cloudprint-cups/ccputils.py
 %attr(755, root, lp) %{_usr}/share/cloudprint-cups/backend.py
-%attr(755, root, lp) %{_usr}/share/cloudprint-cups/ccputils.py
 %attr(755, root, lp) %{_usr}/share/cloudprint-cups/deleteaccount.py
 %attr(755, root, lp) %{_usr}/share/cloudprint-cups/dynamicppd.py
 %attr(755, root, lp) %{_usr}/share/cloudprint-cups/listcloudprinters.py
