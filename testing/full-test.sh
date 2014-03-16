@@ -2,7 +2,7 @@
 
 set -e
 
-cd "`dirname $0`"
+cd "`dirname $0`/../"
 
 if [[ $1 == "" ]]; then
     echo "This script is designed to be ran when creating packages, it shouldn't normally be ran by end users"
