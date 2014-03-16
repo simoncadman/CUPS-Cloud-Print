@@ -17,6 +17,7 @@ install: all
 	unlink ${prefix}/share/cloudprint-cups/pre-commit.py
 	${INSTALL} -m 755 ${srcdir}/testing/*.sh ${prefix}/share/cloudprint-cups/testing/
 	${INSTALL} -m 644 ${srcdir}/testing/*.py ${prefix}/share/cloudprint-cups/testing/
+	${INSTALL} -m 755 ${srcdir}/testing/listdrivefiles.py ${prefix}/share/cloudprint-cups/testing/
 	${INSTALL} -m 644 ${srcdir}/testing/testfiles/* ${prefix}/share/cloudprint-cups/testing/testfiles/
 	${INSTALL} -m 644 ${srcdir}/oauth2client/*.py ${prefix}/share/cloudprint-cups/oauth2client/
 	mkdir -p ${cupsbackend}
