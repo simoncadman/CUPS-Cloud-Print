@@ -23,24 +23,29 @@ if __name__ == '__main__': # pragma: no cover
     searchRegex = 'CCPVersion = "(\d)+ (\d){6}"'
     replaceValue = 'CCPVersion = "' + datetime.utcnow().strftime('%Y%m%d %H%M%S') + '"'
 
-    files = glob.glob('*.py')
-
+    p = subprocess.Popen(["git", "diff", "--cached", "--name-only"], stdout=subprocess.PIPE)
+    output = p.communicate()[0]
+    result = p.returncode
+    if result != 0:
+        sys.exit(result)
+    files = output.split("\n")
     for file in files:
-        replaceLine = False
-        for line in fileinput.input(file, inplace=1):
+        if len(file) > 0:
+            replaceLine = False
+            for line in fileinput.input(file, inplace=1):
 
-            if replaceLine:
-                line = re.sub(searchRegex, replaceValue, line)
+                if replaceLine:
+                    line = re.sub(searchRegex, replaceValue, line)
 
-            if '# line below is replaced on commit' in line:
-                replaceLine = True
-            else:
-                replaceLine = False
+                if '# line below is replaced on commit' in line:
+                    replaceLine = True
+                else:
+                    replaceLine = False
 
-            sys.stdout.write(line)
+                sys.stdout.write(line)
 
-        p = subprocess.Popen(["git", "add", file.lstrip('-')], stdout=subprocess.PIPE)
-        output = p.communicate()[0]
-        result = p.returncode
-        if result != 0:
-            sys.exit(result)
+            p = subprocess.Popen(["git", "add", file.lstrip('-')], stdout=subprocess.PIPE)
+            output = p.communicate()[0]
+            result = p.returncode
+            if result != 0:
+                sys.exit(result)
