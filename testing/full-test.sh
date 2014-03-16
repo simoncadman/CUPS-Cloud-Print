@@ -13,6 +13,11 @@ export name="$1"
 export category="$2"
 export testconfig="$5"
 
+if [[ ! -f /etc/cron.d/cupscloudprint ]]; then
+        echo "Crontab entry in /etc/cron.daily/cupscloudprint is missing"
+        exit 1
+fi
+
 if [[ ! -f /etc/cloudprint.conf ]]; then
         if [[ "`whoami`" == "root"  ]]; then
                 scp -v $testconfig /etc/cloudprint.conf

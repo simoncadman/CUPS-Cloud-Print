@@ -26,6 +26,10 @@ src_install() {
        einstall DESTDIR="${D}" install
        cd "${D}"
        python2 -m compileall -q -f .
+       
+       insinto /etc/cron.daily
+       newins "${D}"/cron.daily/cupscloudprint cupscloudprint
+       fperms 0755 /etc/cron.daily/cupscloudprint
 }
 
 pkg_postinst() {
