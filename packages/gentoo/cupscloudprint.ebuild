@@ -28,7 +28,7 @@ src_install() {
        python2 -m compileall -q -f .
        
        insinto /etc/cron.daily
-       newins "${D}"/cron.daily/cupscloudprint cupscloudprint
+       newins "${S}"/cron.daily/cupscloudprint cupscloudprint
        fperms 0755 /etc/cron.daily/cupscloudprint
 }
 
