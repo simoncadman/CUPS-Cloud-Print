@@ -102,9 +102,9 @@ fi
 
 # try pdf
 pdfjobname="PDF CCP Test $ccpversion at `date`"
-printfilepath="/usr/share/cloudprint-cups/testfiles/Test Page.pdf"
-if [[ -e "/usr/local/share/cloudprint-cups/testfiles/Test Page.pdf" ]]; then
-    printfilepath="/usr/local/share/cloudprint-cups/testfiles/Test Page.pdf"
+printfilepath="/usr/share/cloudprint-cups/testing/testfiles/Test Page.pdf"
+if [[ -e "/usr/local/share/cloudprint-cups/testing/testfiles/Test Page.pdf" ]]; then
+    printfilepath="/usr/local/share/cloudprint-cups/testing/testfiles/Test Page.pdf"
 fi
 lp "$printfilepath" -d 'GCP-Save_to_Google_Docs' -t "$pdfjobname"
 echo "Submitted job $pdfjobname"
@@ -129,9 +129,9 @@ fi
 
 # try postscript file
 psjobname="Postscript CCP Test $ccpversion at `date`"
-printfilepath="/usr/share/cloudprint-cups/testfiles/Test Page.ps"
-if [[ -e "/usr/local/share/cloudprint-cups/testfiles/Test Page.ps" ]]; then
-    printfilepath="/usr/local/share/cloudprint-cups/testfiles/Test Page.ps"
+printfilepath="/usr/share/cloudprint-cups/testing/testfiles/Test Page.ps"
+if [[ -e "/usr/local/share/cloudprint-cups/testing/testfiles/Test Page.ps" ]]; then
+    printfilepath="/usr/local/share/cloudprint-cups/testing/testfiles/Test Page.ps"
 fi
 
 lp "$printfilepath" -d 'GCP-Save_to_Google_Docs' -t "$psjobname"
@@ -151,9 +151,9 @@ done
 
 # try postscript from adobe reader
 psreaderjobname="Reader Postscript CCP Test $ccpversion at `date`"
-printfilepath="/usr/share/cloudprint-cups/testfiles/Test Page reader.ps"
-if [[ -e "/usr/local/share/cloudprint-cups/testfiles/Test Page reader.ps" ]]; then
-    printfilepath="/usr/local/share/cloudprint-cups/testfiles/Test Page reader.ps"
+printfilepath="/usr/share/cloudprint-cups/testing/testfiles/Test Page reader.ps"
+if [[ -e "/usr/local/share/cloudprint-cups/testing/testfiles/Test Page reader.ps" ]]; then
+    printfilepath="/usr/local/share/cloudprint-cups/testing/testfiles/Test Page reader.ps"
 fi
 
 lp "$printfilepath" -d 'GCP-Save_to_Google_Docs' -t "$psreaderjobname"
