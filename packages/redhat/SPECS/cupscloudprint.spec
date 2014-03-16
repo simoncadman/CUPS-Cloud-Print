@@ -36,8 +36,9 @@ python2 -m compileall -q -f .
 %files
 %dir %{_usr}/share/cloudprint-cups/
 %dir %{_usr}/share/cloudprint-cups/oauth2client
-%dir %{_usr}/share/cloudprint-cups/testfiles
-%docdir %{_usr}/share/cloudprint-cups/testfiles
+%dir %{_usr}/share/cloudprint-cups/testing
+%dir %{_usr}/share/cloudprint-cups/testing/testfiles
+%docdir %{_usr}/share/cloudprint-cups/testing/testfiles
 %{_usr}/%{_lib}/cups/backend/cloudprint
 %{_usr}/%{_lib}/cups/driver/cupscloudprint
 %attr(644, root, lp) %{_usr}/share/cloudprint-cups/.coveragerc
