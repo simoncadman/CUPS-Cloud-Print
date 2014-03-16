@@ -31,21 +31,27 @@ if __name__ == '__main__': # pragma: no cover
     files = output.split("\n")
     for file in files:
         if len(file) > 0:
-            replaceLine = False
-            for line in fileinput.input(file, inplace=1):
+            testfile = open( file, "r" )
+            fileNeedsUpdating = False
+            for line in testfile:
+                 if '# line below is replaced on commit' in line:
+                     fileNeedsUpdating = True
+                     break
+            testfile.close()
+            
+            if fileNeedsUpdating:
+                replaceLine = False
+                for line in fileinput.input(file, inplace=1):
+                    if replaceLine:
+                        line = re.sub(searchRegex, replaceValue, line)
+                    if '# line below is replaced on commit' in line:
+                        replaceLine = True
+                    else:
+                        replaceLine = False
+                    sys.stdout.write(line)
 
-                if replaceLine:
-                    line = re.sub(searchRegex, replaceValue, line)
-
-                if '# line below is replaced on commit' in line:
-                    replaceLine = True
-                else:
-                    replaceLine = False
-
-                sys.stdout.write(line)
-
-            p = subprocess.Popen(["git", "add", file.lstrip('-')], stdout=subprocess.PIPE)
-            output = p.communicate()[0]
-            result = p.returncode
-            if result != 0:
-                sys.exit(result)
+                p = subprocess.Popen(["git", "add", file.lstrip('-')], stdout=subprocess.PIPE)
+                output = p.communicate()[0]
+                result = p.returncode
+                if result != 0:
+                        sys.exit(result)
