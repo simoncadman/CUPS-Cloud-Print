@@ -29,6 +29,7 @@ package() {
   make DESTDIR="$pkgdir/" install
   cd "$pkgdir/"
   python2 -m compileall -q -f .
+  install -Dm744 "$srcdir/cron.daily/cupscloudprint" "$pkgdir/etc/cron.daily/cupscloudprint"
 }
 
 # vim:set ts=2 sw=2 et:
