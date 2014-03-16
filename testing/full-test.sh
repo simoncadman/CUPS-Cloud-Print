@@ -13,7 +13,7 @@ export name="$1"
 export category="$2"
 export testconfig="$5"
 
-if [[ ! -f /etc/cron.d/cupscloudprint ]]; then
+if [[ ! -f /etc/cron.daily/cupscloudprint ]]; then
         echo "Crontab entry in /etc/cron.daily/cupscloudprint is missing"
         exit 1
 fi
@@ -57,6 +57,8 @@ ls -al /var/log/cups/
 echo "Permissions of config and logs after upgrade:"
 ls -al /etc/cloudprint.conf
 ls -al /var/log/cups/
+
+/etc/cron.daily/cupscloudprint
 
 export PYTHONDONTWRITEBYTECODE=1
 
