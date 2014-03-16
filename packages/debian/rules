@@ -5,4 +5,3 @@
 export DH_VERBOSE=1
 %:
 	dh $@
-	unlink $(DEB_DESTDIR)/COPYING
