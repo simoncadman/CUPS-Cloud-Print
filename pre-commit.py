@@ -17,7 +17,7 @@
 
 if __name__ == '__main__': # pragma: no cover
 
-    import fileinput, re, sys, glob, subprocess
+    import fileinput, re, sys, glob, subprocess, os
     from datetime import datetime
 
     searchRegex = 'CCPVersion = "(\d)+ (\d){6}"'
@@ -30,7 +30,7 @@ if __name__ == '__main__': # pragma: no cover
         sys.exit(result)
     files = output.split("\n")
     for file in files:
-        if len(file) > 0:
+        if len(file) > 0 and os.path.exists(file):
             testfile = open( file, "r" )
             fileNeedsUpdating = False
             for line in testfile:
