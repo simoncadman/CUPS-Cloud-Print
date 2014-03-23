@@ -36,7 +36,7 @@ if __name__ == '__main__':  # pragma: no cover
     Utils.SetupLogging()
 
     # line below is replaced on commit
-    CCPVersion = "20140323 134450"
+    CCPVersion = "20140323 142516"
     Utils.ShowVersion(CCPVersion)
 
     requestors, storage = Auth.SetupAuth(False)
@@ -67,7 +67,8 @@ if __name__ == '__main__':  # pragma: no cover
 
     printFile = None
     if len(sys.argv) == 7:
-        prog, jobID, userName, jobTitle, copies, printOptions, printFile = sys.argv
+        prog, jobID, userName, jobTitle, copies,
+        printOptions, printFile = sys.argv
     else:
         prog, jobID, userName, jobTitle, copies, printOptions = sys.argv
 
@@ -105,8 +106,9 @@ if __name__ == '__main__':  # pragma: no cover
         uri = os.getenv('DEVICE_URI')
         printername = os.getenv('PRINTER')
         if uri is None:
-            sys.stdout.write(
-                "URI must be \"cloudprint://<account name>/<cloud printer id>\"!\n")
+            message = "URI must be \"cloudprint://"
+            message += "<account name>/<cloud printer id>\"!\n"
+            sys.stdout.write(message)
             sys.exit(255)
 
         logging.info("Printing file " + printFile)
@@ -148,7 +150,8 @@ if __name__ == '__main__':  # pragma: no cover
                 print "ERROR: Printer '" + uri + "' not found"
                 result = 1
             else:
-                if printer.submitJob(printerid, 'pdf', pdfFile, jobTitle, printername, printOptions):
+                if printer.submitJob(printerid, 'pdf', pdfFile,
+                                     jobTitle, printername, printOptions):
                     print "INFO: Successfully printed"
                     result = 0
                 else:
