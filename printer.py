@@ -511,7 +511,7 @@ class Printer:
         responseobj = self.requestor.doRequest(
             'submit', None, edata, self.BOUNDARY)
         try:
-            if responseobj['success'] == True:
+            if responseobj['success']:
                 return True
             else:
                 print 'ERROR: Error response from Cloud Print for type %s: %s' % (jobtype, responseobj['message'])

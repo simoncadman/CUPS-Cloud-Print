@@ -32,7 +32,7 @@ if __name__ == '__main__':  # pragma: no cover
     Utils.SetupLogging()
 
     # line below is replaced on commit
-    CCPVersion = "20140323 134450"
+    CCPVersion = "20140323 140328"
     Utils.ShowVersion(CCPVersion)
 
     def showUsage():
@@ -44,7 +44,7 @@ if __name__ == '__main__':  # pragma: no cover
         sys.exit(1)
 
     requestors, storage = Auth.SetupAuth(False)
-    if requestors == False:
+    if not requestors:
         sys.stderr.write("ERROR: config is invalid or missing\n")
         logging.error("backend tried to run with invalid config")
         sys.exit(1)
@@ -135,7 +135,7 @@ if __name__ == '__main__':  # pragma: no cover
 *LandscapeOrientation: Minus90
 *TTRasterizer: Type42
 *% Driver-defined attributes...
-*1284DeviceID: "MFG:GOOGLE;DRV:GCP;CMD:POSTSCRIPT;MDL:""" + printer.printerNameToUri( foundprinter['account'], foundprinter['id'] ) + """;"
+*1284DeviceID: "MFG:GOOGLE;DRV:GCP;CMD:POSTSCRIPT;MDL:""" + printer.printerNameToUri(foundprinter['account'], foundprinter['id']) + """;"
 *OpenUI *PageSize/Media Size: PickOne
 *""" + language + """.Translation PageSize/Media Size: ""
 *OrderDependency: 10 AnySetup *PageSize
@@ -229,7 +229,7 @@ if __name__ == '__main__':  # pragma: no cover
                                         capability['name'],
                                         addedOptions)
                                     addedOptions.append(internalOptionName)
-                                    if 'default' in option and option['default'] == True:
+                                    if 'default' in option and option['default']:
                                         ppddetails += '*Default' + internalcapabilityName + \
                                             ': ' + internalOptionName + "\n"
                                     ppddetails += '*' + internalcapabilityName + ' ' + \

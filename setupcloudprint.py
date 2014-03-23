@@ -85,7 +85,7 @@ if __name__ == '__main__':  # pragma: no cover
     Utils.SetupLogging()
 
     # line below is replaced on commit
-    CCPVersion = "20140323 134450"
+    CCPVersion = "20140323 140328"
     Utils.ShowVersion(CCPVersion)
 
     unattended = False
@@ -172,7 +172,7 @@ if __name__ == '__main__':  # pragma: no cover
                         for cupsprinter in cupsprinters:
                             if cupsprinters[cupsprinter]['device-uri'] == uri:
                                 found = True
-                        if found == True:
+                        if found:
                             print "\nPrinter with " + printername + " already exists\n"
                         else:
                             printer.addPrinter(printername, uri, connection)
@@ -206,7 +206,7 @@ if __name__ == '__main__':  # pragma: no cover
                 if cupsprinters[cupsprinter]['device-uri'] == uri:
                     found = True
 
-            if found == False:
+            if not found:
                 printername = prefix + ccpprinter['name']
 
                 # check if printer name already exists
