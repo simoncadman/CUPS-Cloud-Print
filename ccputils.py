@@ -121,7 +121,8 @@ class Utils:
     which = staticmethod(which)
 
     def GetLPID(default='lp', alternative='cups', useFiles=True,
-                blacklistedGroups=['adm', 'wheel', 'root'], useFilesOnly=False):
+                blacklistedGroups=['adm', 'wheel', 'root'],
+                useFilesOnly=False):
         blacklistedGroupIds = []
         for group in blacklistedGroups:
             try:
@@ -131,10 +132,13 @@ class Utils:
 
         if useFiles:
             # check files in order
-            for cupsConfigFile in ['/var/log/cups/access_log', '/etc/cups/ppd', '/usr/local/etc/cups/ppd']:
+            for cupsConfigFile in ['/var/log/cups/access_log',
+                                   '/etc/cups/ppd',
+                                   '/usr/local/etc/cups/ppd']:
                 if os.path.exists(cupsConfigFile):
-                    if os.stat(cupsConfigFile).st_gid not in blacklistedGroupIds:
-                        return os.stat(cupsConfigFile).st_gid
+                    configGid = os.stat(cupsConfigFile).st_gid
+                    if configGid not in blacklistedGroupIds:
+                        return configGid
                     else:
                         logging.debug(
                             "Group " +
