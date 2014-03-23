@@ -69,7 +69,10 @@ class Auth:
                                               scope=permissions,
                                               user_agent=userid)
             auth_uri = flow.step1_get_authorize_url()
-            print "Open this URL, grant access to CUPS Cloud Print, then provide the code displayed : \n\n" + auth_uri + "\n"
+            message = "Open this URL, grant access to CUPS Cloud Print,"
+            message += "then provide the code displayed : \n\n"
+            message += auth_uri + "\n"
+            print message
             code = raw_input('Code from Google: ')
             try:
                 print ""
@@ -81,7 +84,9 @@ class Auth:
 
                 return credentials
             except Exception as e:
-                print "\nThe code does not seem to be valid ( " + str(e) + " ), please try again.\n"
+                message = "\nThe code does not seem to be valid ( "
+                message += str(e) + " ), please try again.\n"
+                print message
 
     AddAccount = staticmethod(AddAccount)
 
@@ -90,10 +95,12 @@ class Auth:
         """Sets up requestors with authentication tokens
 
         Args:
-          interactive: boolean, when set to true can prompt user, otherwise returns False if authentication fails
+          interactive: boolean, when set to true can prompt user, otherwise
+                       returns False if authentication fails
 
         Returns:
-          requestor, storage: Authenticated requestors and an instance of storage
+          requestor, storage: Authenticated requestors and an instance
+                              of storage
         """
         modifiedconfig = False
 
@@ -136,12 +143,21 @@ class Auth:
                         credentials.refresh(requestor)
                     except AccessTokenRefreshError as e:
                         if not interactive:
-                                sys.stderr.write(
-                                    "ERROR: Failed to renew token (error: " + str(e) + "), please re-run /usr/share/cloudprint-cups/setupcloudprint.py\n")
+                                message = "ERROR: Failed to renew token "
+                                message += "(error: "
+                                message += str(e)
+                                message += "), "
+                                message += "please re-run "
+                                message += "/usr/share/cloudprint-cups/"
+                                message += "setupcloudprint.py\n"
+                                sys.stderr.write(message)
                                 sys.exit(1)
                         else:
-                                sys.stderr.write(
-                                    "Failed to renew token (error: " + str(e) + "), authentication needs to be setup again:\n")
+                                message = "Failed to renew token (error: "
+                                message += str(e) + "), "
+                                message += "authentication needs to be "
+                                message += "setup again:\n"
+                                sys.stderr.write(message)
                                 Auth.AddAccount(storage, userid)
                                 credentials = storage.get()
 
