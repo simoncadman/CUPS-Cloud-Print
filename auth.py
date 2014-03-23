@@ -14,11 +14,14 @@
 #    You should have received a copy of the GNU General Public License
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-import json, os, sys
+import json
+import os
+import sys
 from oauth2client import client
 from oauth2client import multistore_file
 from cloudprintrequestor import cloudprintrequestor
 from ccputils import Utils
+
 
 class Auth:
 
@@ -37,15 +40,16 @@ class Auth:
           deleted: boolean , true on success
         """
         storage = multistore_file.get_credential_storage(
-                Auth.config,
-                Auth.clientid,
-                userid,
-                ['https://www.googleapis.com/auth/cloudprint'])
+            Auth.config,
+            Auth.clientid,
+            userid,
+            ['https://www.googleapis.com/auth/cloudprint'])
         return storage.delete()
 
     DeleteAccount = staticmethod(DeleteAccount)
 
-    def AddAccount(storage, userid=None, permissions=['https://www.googleapis.com/auth/cloudprint']):
+    def AddAccount(storage, userid=None,
+                   permissions=['https://www.googleapis.com/auth/cloudprint']):
         """Adds an account to the configuration file
 
         Args:
@@ -55,14 +59,15 @@ class Auth:
         Returns:
           credentials: A credentials instance with the account details
         """
-        if userid == None:
-            userid = raw_input("Name for this user account ( eg something@gmail.com )? ")
+        if userid is None:
+            userid = raw_input(
+                "Name for this user account ( eg something@gmail.com )? ")
 
         while True:
             flow = client.OAuth2WebServerFlow(client_id=Auth.clientid,
-                                          client_secret=Auth.clientsecret,
-                                          scope=permissions,
-                                          user_agent=userid)
+                                              client_secret=Auth.clientsecret,
+                                              scope=permissions,
+                                              user_agent=userid)
             auth_uri = flow.step1_get_authorize_url()
             print "Open this URL, grant access to CUPS Cloud Print, then provide the code displayed : \n\n" + auth_uri + "\n"
             code = raw_input('Code from Google: ')
@@ -80,7 +85,8 @@ class Auth:
 
     AddAccount = staticmethod(AddAccount)
 
-    def SetupAuth(interactive=False, permissions=['https://www.googleapis.com/auth/cloudprint']):
+    def SetupAuth(interactive=False,
+                  permissions=['https://www.googleapis.com/auth/cloudprint']):
         """Sets up requestors with authentication tokens
 
         Args:
@@ -91,9 +97,10 @@ class Auth:
         """
         modifiedconfig = False
 
-        # parse config file and extract useragents, which we use for account names
+        # parse config file and extract useragents, which we use for account
+        # names
         userids = []
-        if os.path.exists( Auth.config ):
+        if os.path.exists(Auth.config):
             content_file = open(Auth.config, 'r')
             content = content_file.read()
             data = json.loads(content)
@@ -103,21 +110,21 @@ class Auth:
             modifiedconfig = True
 
         if len(userids) == 0:
-            userids = [ None ]
+            userids = [None]
 
         requestors = []
         for userid in userids:
             storage = multistore_file.get_credential_storage(
-                  Auth.config,
-                  Auth.clientid,
-                  userid,
-                  permissions)
+                Auth.config,
+                Auth.clientid,
+                userid,
+                permissions)
             credentials = storage.get()
 
             if not credentials and interactive:
                 credentials = Auth.AddAccount(storage, userid, permissions)
                 modifiedconfig = True
-                if userid == None:
+                if userid is None:
                     userid = credentials.user_agent
 
             if credentials:
@@ -129,11 +136,13 @@ class Auth:
                         credentials.refresh(requestor)
                     except AccessTokenRefreshError as e:
                         if not interactive:
-                                sys.stderr.write("ERROR: Failed to renew token (error: "+ str(e)  +"), please re-run /usr/share/cloudprint-cups/setupcloudprint.py\n")
+                                sys.stderr.write(
+                                    "ERROR: Failed to renew token (error: " + str(e) + "), please re-run /usr/share/cloudprint-cups/setupcloudprint.py\n")
                                 sys.exit(1)
                         else:
-                                sys.stderr.write("Failed to renew token (error: "+ str(e)  +"), authentication needs to be setup again:\n")
-                                Auth.AddAccount( storage, userid )
+                                sys.stderr.write(
+                                    "Failed to renew token (error: " + str(e) + "), authentication needs to be setup again:\n")
+                                Auth.AddAccount(storage, userid)
                                 credentials = storage.get()
 
                 requestor = credentials.authorize(requestor)
@@ -151,10 +160,10 @@ class Auth:
 
     SetupAuth = staticmethod(SetupAuth)
 
-    def GetAccountNames ( requestors ):
+    def GetAccountNames(requestors):
         requestorAccounts = []
         for requestor in requestors:
             requestorAccounts.append(requestor.getAccount())
         return requestorAccounts
-    
+
     GetAccountNames = staticmethod(GetAccountNames)

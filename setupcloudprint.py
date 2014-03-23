@@ -15,6 +15,7 @@
 #    You should have received a copy of the GNU General Public License
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+
 def getWindowSize():
     """Gets window height and width.
 
@@ -36,6 +37,7 @@ def getWindowSize():
         return height, width
     return None
 
+
 def printPrinters(printers):
     """Prints display name of printers.
 
@@ -55,10 +57,12 @@ def printPrinters(printers):
             print printer_name
     else:
         window_width = window_size[1]
-        max_name_length = max((len(printer_name) for printer_name in printer_names))
+        max_name_length = max((len(printer_name)
+                              for printer_name in printer_names))
         # How many columns fit in the window, with one space between columns?
         column_quantity = max(1, (window_width + 1) / (max_name_length + 1))
-        row_quantity = int(math.ceil(len(printer_names) / float(column_quantity)))
+        row_quantity = int(
+            math.ceil(len(printer_names) / float(column_quantity)))
 
         for row_i in xrange(row_quantity):
             row_printers = []
@@ -66,15 +70,22 @@ def printPrinters(printers):
                 row_printers.append(printer_name.ljust(max_name_length))
             print ' '.join(row_printers)
 
-if __name__ == '__main__': # pragma: no cover
-    import cups, os, json, sys, fcntl, termios, struct, math
+if __name__ == '__main__':  # pragma: no cover
+    import cups
+    import os
+    import json
+    import sys
+    import fcntl
+    import termios
+    import struct
+    import math
     from auth import Auth
     from printer import Printer
     from ccputils import Utils
     Utils.SetupLogging()
 
     # line below is replaced on commit
-    CCPVersion = "20140316 143822"
+    CCPVersion = "20140323 134450"
     Utils.ShowVersion(CCPVersion)
 
     unattended = False
@@ -102,7 +113,7 @@ if __name__ == '__main__': # pragma: no cover
         if unattended:
             break
         answer = raw_input("Add more accounts (Y/N)? ")
-        if not ( answer.startswith("Y") or answer.startswith("y") ):
+        if not (answer.startswith("Y") or answer.startswith("y")):
             break
         else:
             Auth.AddAccount(storage)
@@ -114,23 +125,29 @@ if __name__ == '__main__': # pragma: no cover
         prefix = ""
         printer = Printer(requestor)
         printers = printer.getPrinters()
-        if printers == None:
+        if printers is None:
             print "Sorry, no printers were found on your Google Cloud Print account."
             continue
 
         if unattended:
             answer = "Y"
         else:
-            answer = raw_input("Add all Google Cloud Print printers to local CUPS install from " + requestor.getAccount() + " (Y/N)? ")
+            answer = raw_input(
+                "Add all Google Cloud Print printers to local CUPS install from " +
+                requestor.getAccount(
+                ) +
+                " (Y/N)? ")
 
-        if not ( answer.startswith("Y") or answer.startswith("y") ):
+        if not (answer.startswith("Y") or answer.startswith("y")):
             answer = 1
             print "Not adding printers automatically"
 
             while int(answer) != 0:
                 printPrinters(printers)
                 maxprinterid = len(printers)
-                answer = raw_input("Add printer (1-%d, 0 to cancel)? " % maxprinterid)
+                answer = raw_input(
+                    "Add printer (1-%d, 0 to cancel)? " %
+                    maxprinterid)
                 try:
                     answer = int(answer)
                 except ValueError:
@@ -139,14 +156,18 @@ if __name__ == '__main__': # pragma: no cover
                     if answer >= 1 and answer <= maxprinterid:
                         ccpprinter = printers[answer - 1]
                         print "Adding " + printers[answer - 1]['displayName']
-                        prefixanswer = raw_input("Use a prefix for name of printer (Y/N)? ")
+                        prefixanswer = raw_input(
+                            "Use a prefix for name of printer (Y/N)? ")
                         if prefixanswer.startswith("Y") or prefixanswer.startswith("y"):
                             prefix = raw_input("Prefix ( e.g. GCP- )? ")
                             if prefix == "":
                                 print "Not using prefix"
 
-                        printername = prefix + ccpprinter['name'].encode('ascii', 'replace')
-                        uri = printer.printerNameToUri(ccpprinter['account'], ccpprinter['id'])
+                        printername = prefix + \
+                            ccpprinter['name'].encode('ascii', 'replace')
+                        uri = printer.printerNameToUri(
+                            ccpprinter['account'],
+                            ccpprinter['id'])
                         found = False
                         for cupsprinter in cupsprinters:
                             if cupsprinters[cupsprinter]['device-uri'] == uri:
@@ -163,7 +184,8 @@ if __name__ == '__main__': # pragma: no cover
         if unattended:
             prefixanswer = "Y"
         else:
-            prefixanswer = raw_input("Use a prefix for names of created printers (Y/N)? ")
+            prefixanswer = raw_input(
+                "Use a prefix for names of created printers (Y/N)? ")
 
         if prefixanswer.startswith("Y") or prefixanswer.startswith("y"):
             prefix = ""
@@ -176,7 +198,9 @@ if __name__ == '__main__': # pragma: no cover
                 print "Not using prefix"
 
         for ccpprinter in printers:
-            uri = printer.printerNameToUri(ccpprinter['account'], ccpprinter['id'])
+            uri = printer.printerNameToUri(
+                ccpprinter['account'],
+                ccpprinter['id'])
             found = False
             for cupsprinter in cupsprinters:
                 if cupsprinters[cupsprinter]['device-uri'] == uri:
@@ -191,11 +215,19 @@ if __name__ == '__main__': # pragma: no cover
                     if printer.sanitizePrinterName(cupsprinters[ccpprinter2]['printer-info']) == printer.sanitizePrinterName(printername):
                         foundbyname = True
                 if foundbyname and not unattended:
-                    answer = raw_input("Printer " + printer.sanitizePrinterName(printername) + " already exists, supply another name (Y/N)? ")
+                    answer = raw_input(
+                        "Printer " +
+                        printer.sanitizePrinterName(
+                            printername) +
+                        " already exists, supply another name (Y/N)? ")
                     if answer.startswith("Y") or answer.startswith("y"):
                         printername = raw_input("New printer name? ")
                     else:
-                        answer = raw_input("Overwrite " + printer.sanitizePrinterName(printername) + " with new printer (Y/N)? ")
+                        answer = raw_input(
+                            "Overwrite " +
+                            printer.sanitizePrinterName(
+                                printername) +
+                            " with new printer (Y/N)? ")
                         if answer.startswith("N") or answer.startswith("n"):
                             printername = ""
                 elif foundbyname and unattended:
@@ -216,7 +248,9 @@ if __name__ == '__main__': # pragma: no cover
     printer = Printer(requestors)
     printers = printer.getPrinters()
     for foundprinter in printers:
-        printeruris.append(printer.printerNameToUri(foundprinter['account'], foundprinter['id']))
+        printeruris.append(
+            printer.printerNameToUri(foundprinter['account'],
+                                     foundprinter['id']))
 
     # check for printers to prune
     prunePrinters = []
@@ -224,12 +258,12 @@ if __name__ == '__main__': # pragma: no cover
     cupsprinters = connection.getPrinters()
 
     for cupsprinter in cupsprinters:
-        if cupsprinters[cupsprinter]['device-uri'].startswith( printer.PROTOCOL ):
+        if cupsprinters[cupsprinter]['device-uri'].startswith(printer.PROTOCOL):
             if cupsprinters[cupsprinter]['device-uri'] not in printeruris:
                 prunePrinters.append(cupsprinter)
 
-    if len(prunePrinters) > 0 :
-        print "Found " + str(len( prunePrinters )) + " printers which no longer exist on cloud print:"
+    if len(prunePrinters) > 0:
+        print "Found " + str(len(prunePrinters)) + " printers which no longer exist on cloud print:"
         for printer in prunePrinters:
             print printer
         answer = raw_input("Remove (Y/N)? ")

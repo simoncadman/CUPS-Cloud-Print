@@ -15,11 +15,14 @@
 #    You should have received a copy of the GNU General Public License
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-if __name__ == '__main__': # pragma: no cover
+if __name__ == '__main__':  # pragma: no cover
 
-    import sys, os, subprocess, logging
+    import sys
+    import os
+    import subprocess
+    import logging
     libpath = "/usr/local/share/cloudprint-cups/"
-    if not os.path.exists( libpath  ):
+    if not os.path.exists(libpath):
         libpath = "/usr/share/cloudprint-cups"
     sys.path.insert(0, libpath)
 
@@ -27,31 +30,45 @@ if __name__ == '__main__': # pragma: no cover
     from printer import Printer
     from ccputils import Utils
     Utils.SetupLogging()
-    
+
     # line below is replaced on commit
-    CCPVersion = "20140316 143822"
+    CCPVersion = "20140323 134450"
     Utils.ShowVersion(CCPVersion)
-    
+
     requestors, storage = Auth.SetupAuth(True)
     printer = Printer(requestors)
     printers = printer.getPrinters(True)
-    if printers == None:
+    if printers is None:
         print "ERROR: No Printers Found"
         sys.exit(1)
 
     for foundprinter in printers:
-        print '"cupscloudprint:' + foundprinter['account'].encode('ascii', 'replace').replace(' ', '-') +':' + foundprinter['name'].encode('ascii', 'replace').replace(' ', '-') + '.ppd" en "Google" "' + foundprinter['name'].encode('ascii', 'replace') + ' (' + foundprinter['account'] + ')" "MFG:GOOGLE;DRV:GCP;CMD:POSTSCRIPT;MDL:' + printer.printerNameToUri( foundprinter['account'], foundprinter['id'] ) +';"'
+        print '"cupscloudprint:' + foundprinter['account'].encode('ascii', 'replace').replace(' ', '-') + ':' + foundprinter['name'].encode('ascii', 'replace').replace(' ', '-') + '.ppd" en "Google" "' + foundprinter['name'].encode('ascii', 'replace') + ' (' + foundprinter['account'] + ')" "MFG:GOOGLE;DRV:GCP;CMD:POSTSCRIPT;MDL:' + printer.printerNameToUri(foundprinter['account'], foundprinter['id']) + ';"'
         print ""
         print foundprinter['fulldetails']
         print "\n"
-        p = subprocess.Popen([os.path.join(libpath,'dynamicppd.py'), 'cat', ('cupscloudprint:' + foundprinter['account'].encode('ascii', 'replace').replace(' ', '-') +':' + foundprinter['name'].encode('ascii', 'replace').replace(' ', '-') + '-' + foundprinter['id'].encode('ascii', 'replace').replace(' ', '-') + '.ppd').lstrip('-')], stdout=subprocess.PIPE)
+        p = subprocess.Popen(
+            [os.path.join(libpath,
+                          'dynamicppd.py'),
+             'cat',
+             ('cupscloudprint:' + foundprinter['account'].encode('ascii',
+                                                                 'replace').replace(' ',
+                                                                                    '-') + ':' + foundprinter['name'].encode('ascii',
+                                                                                                                             'replace').replace(' ',
+                                                                                                                                                '-') + '-' + foundprinter['id'].encode('ascii',
+                                                                                                                                                                                       'replace').replace(' ',
+                                                                                                                                                                                                          '-') + '.ppd').lstrip('-')],
+            stdout=subprocess.PIPE)
         ppddata = p.communicate()[0]
         result = p.returncode
         tempfile = open('/tmp/.ppdfile', 'w')
         tempfile.write(ppddata)
         tempfile.close()
 
-        p = subprocess.Popen(['cupstestppd', '/tmp/.ppdfile'], stdout=subprocess.PIPE)
+        p = subprocess.Popen(
+            ['cupstestppd',
+             '/tmp/.ppdfile'],
+            stdout=subprocess.PIPE)
         testdata = p.communicate()[0]
         result = p.returncode
         print "Result of cupstestppd was " + str(result)

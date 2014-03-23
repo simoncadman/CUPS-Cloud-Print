@@ -15,22 +15,23 @@
 #    You should have received a copy of the GNU General Public License
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-if __name__ == '__main__': # pragma: no cover
+if __name__ == '__main__':  # pragma: no cover
 
-    import sys, logging
+    import sys
+    import logging
     from auth import Auth
     from printer import Printer
     from ccputils import Utils
     Utils.SetupLogging()
-    
+
     # line below is replaced on commit
-    CCPVersion = "20140316 143822"
+    CCPVersion = "20140323 134450"
     Utils.ShowVersion(CCPVersion)
 
     requestors, storage = Auth.SetupAuth(True)
     printer = Printer(requestors)
     printers = printer.getPrinters()
-    if printers == None:
+    if printers is None:
         print "No Printers Found"
         sys.exit(1)
 

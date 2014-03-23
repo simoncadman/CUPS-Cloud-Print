@@ -13,15 +13,18 @@
 #
 #    You should have received a copy of the GNU General Public License
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
-import json, urllib, sys
+import json
+import urllib
+import sys
 sys.path.insert(0, ".")
+
 
 class MockRequestor:
 
     account = None
     printers = []
 
-    def setAccount ( self, account ):
+    def setAccount(self, account):
         """Sets the account name
 
         Args:
@@ -29,7 +32,7 @@ class MockRequestor:
         """
         self.account = account
 
-    def getAccount ( self ):
+    def getAccount(self):
         """Gets the account name
 
         Return:
@@ -37,18 +40,20 @@ class MockRequestor:
         """
         return self.account
 
-    def mockSearch ( self, path, headers, data , boundary ) :
-        result = { 'printers' : self.printers }
-        return json.dumps( result )
+    def mockSearch(self, path, headers, data, boundary):
+        result = {'printers': self.printers}
+        return json.dumps(result)
 
-    def mockSubmit ( self, path, headers, data , boundary ) :
+    def mockSubmit(self, path, headers, data, boundary):
         if 'FAIL PAGE' in data:
-            result = { 'success' : False, 'message' : 'FAIL PAGE was in message' }
+            result = {
+                'success': False,
+                'message': 'FAIL PAGE was in message'}
         else:
-            result = { 'success' : True }
-        return json.dumps( result )
+            result = {'success': True}
+        return json.dumps(result)
 
-    def mockPrinter ( self, path, headers, data , boundary ) :
+    def mockPrinter(self, path, headers, data, boundary):
         printername = path.split('=')[1]
         foundPrinter = None
         for printer in self.printers:
@@ -56,17 +61,17 @@ class MockRequestor:
                 foundPrinter = printer
                 break
 
-        if foundPrinter == None:
+        if foundPrinter is None:
             return json.dumps(None)
 
-        result = { 'printers' : [foundPrinter] }
-        return json.dumps( result )
+        result = {'printers': [foundPrinter]}
+        return json.dumps(result)
 
-    def doRequest ( self, path, headers = None, data = None , boundary = None ):
-        if ( path.startswith('search?') ) :
+    def doRequest(self, path, headers=None, data=None, boundary=None):
+        if (path.startswith('search?')):
             return json.loads(self.mockSearch(path, headers, data, boundary))
-        if ( path.startswith('printer?') ) :
+        if (path.startswith('printer?')):
             return json.loads(self.mockPrinter(path, headers, data, boundary))
-        if ( path == 'submit' ) :
+        if (path == 'submit'):
             return json.loads(self.mockSubmit(path, headers, data, boundary))
         return None

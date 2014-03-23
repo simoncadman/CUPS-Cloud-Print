@@ -13,14 +13,19 @@
 #
 #    You should have received a copy of the GNU General Public License
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
-import os, logging, sys, pytest
+import os
+import logging
+import sys
+import pytest
 sys.path.insert(0, ".")
 
 from ccputils import Utils
 
+
 def teardown_function(function):
     logging.shutdown()
     reload(logging)
+
 
 def test_SetupLogging():
     testLogFile = '/tmp/testccp.log'
@@ -29,7 +34,8 @@ def test_SetupLogging():
     logging.error('test_setupLogging error test')
     assert os.path.exists(testLogFile) == True
     os.unlink(testLogFile)
-    
+
+
 def test_SetupLoggingDefault():
     testLogFile = '/tmp/testccp.log'
     assert os.path.exists(testLogFile) == False
@@ -39,83 +45,116 @@ def test_SetupLoggingDefault():
     assert os.path.exists(testLogFile) == True
     os.unlink(testLogFile)
 
+
 def test_SetupLoggingFails():
     testLogFile = '/tmp/dirthatdoesntexist/testccp.log'
     assert os.path.exists(testLogFile) == False
     assert Utils.SetupLogging(testLogFile) == False
     assert os.path.exists(testLogFile) == False
-    
+
+
 def test_fileIsPDFFails():
     assert Utils.fileIsPDF('testing/testfiles/NotPdf.txt') == False
+
 
 def test_fileIsPDFSucceeds():
     assert Utils.fileIsPDF('testing/testfiles/Test Page.pdf') == True
 
+
 def test_fileIsPDFErrors():
     assert Utils.fileIsPDF("-dsadsa") == False
 
+
 def test_whichFails():
-    assert Utils.which('dsaph9oaghd9ahdsadsadsadsadasd') == None
+    assert Utils.which('dsaph9oaghd9ahdsadsadsadsadasd') is None
+
 
 def test_whichSucceeds():
-    assert Utils.which('bash') in ( '/bin/bash', '/usr/bin/bash', '/usr/sbin/bash' )
+    assert Utils.which(
+        'bash') in (
+        '/bin/bash',
+        '/usr/bin/bash',
+        '/usr/sbin/bash')
+
 
 def test_isExeSucceeds():
     if os.path.exists('/usr/bin/sh'):
-        assert Utils.is_exe( "/usr/bin/sh" ) == True
+        assert Utils.is_exe("/usr/bin/sh") == True
     else:
-        assert Utils.is_exe( "/bin/sh" ) == True
+        assert Utils.is_exe("/bin/sh") == True
+
 
 def test_isExeFails():
-    assert Utils.is_exe( "/dev/null" ) == False
-    
+    assert Utils.is_exe("/dev/null") == False
+
 
 def test_getLPID():
     assert int(Utils.GetLPID()) > 0
-    assert Utils.GetLPID() != None
-    
+    assert Utils.GetLPID() is not None
+
     import grp
-    
+
     workingPrintGroupName = 'lp'
     try:
         grp.getgrnam(workingPrintGroupName)
     except:
         workingPrintGroupName = 'cups'
         pass
-    
-    assert Utils.GetLPID('brokendefault', 'brokenalternative', False) == None
-    assert int(Utils.GetLPID('brokendefault', workingPrintGroupName, False)) > 0
-    assert Utils.GetLPID('brokendefault', workingPrintGroupName, False) != None
-    
+
+    assert Utils.GetLPID('brokendefault', 'brokenalternative', False) is None
+    assert int(
+        Utils.GetLPID(
+            'brokendefault',
+            workingPrintGroupName,
+            False)) > 0
+    assert Utils.GetLPID(
+        'brokendefault',
+        workingPrintGroupName,
+        False) is not None
+
     # test blacklist works
-    assert Utils.GetLPID(workingPrintGroupName, 'brokenalternative', True, [ workingPrintGroupName, 'brokendefault', 'adm', 'wheel', 'root' ], True) == None
-    
+    assert Utils.GetLPID(
+        workingPrintGroupName,
+        'brokenalternative',
+        True,
+        [workingPrintGroupName,
+         'brokendefault',
+         'adm',
+         'wheel',
+         'root'],
+        True) is None
+
+
 def test_showVersion():
     assert Utils.ShowVersion("12345") == False
     sys.argv = ['testfile', 'version']
     with pytest.raises(SystemExit):
         Utils.ShowVersion("12345")
-        
+
+
 def test_readFile():
     Utils.WriteFile('/tmp/testfile', 'data')
     assert Utils.ReadFile('/tmp/testfile') == 'data'
-    assert Utils.ReadFile('/tmp/filethatdoesntexist') == None
+    assert Utils.ReadFile('/tmp/filethatdoesntexist') is None
     os.unlink('/tmp/testfile')
-    
+
+
 def test_writeFile():
     Utils.WriteFile('/tmp/testfile', 'data') == True
     Utils.WriteFile('/tmp/testfile/dsadsaasd', 'data') == False
     os.unlink('/tmp/testfile')
-    
+
+
 def test_base64encode():
     Utils.WriteFile('/tmp/testfile', 'data') == True
     assert Utils.Base64Encode('/tmp/testfile') == '/tmp/testfile.b64'
-    assert Utils.ReadFile('/tmp/testfile.b64') == 'data:application/octet-stream;base64,ZGF0YQ=='
+    assert Utils.ReadFile(
+        '/tmp/testfile.b64') == 'data:application/octet-stream;base64,ZGF0YQ=='
     os.unlink('/tmp/testfile.b64')
-    
+
     os.mkdir('/tmp/testfile.b64')
-    assert Utils.Base64Encode('/tmp/testfile') == None
+    assert Utils.Base64Encode('/tmp/testfile') is None
     os.unlink('/tmp/testfile')
     os.rmdir('/tmp/testfile.b64')
-    
-    assert Utils.Base64Encode('/tmp/testfile/dsiahdisa') == None
+
+    assert Utils.Base64Encode('/tmp/testfile/dsiahdisa') is None

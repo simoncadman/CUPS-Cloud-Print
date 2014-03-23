@@ -13,7 +13,15 @@
 #
 #    You should have received a copy of the GNU General Public License
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
-import json, urllib, cups, os, stat, grp, pytest, logging, sys
+import json
+import urllib
+import cups
+import os
+import stat
+import grp
+import pytest
+import logging
+import sys
 sys.path.insert(0, ".")
 
 from auth import Auth
@@ -21,6 +29,8 @@ from test_mockrequestor import MockRequestor
 from oauth2client import client
 from oauth2client import multistore_file
 from ccputils import Utils
+
+
 def setup_function(function):
     # setup mock requestors
     global requestors
@@ -34,11 +44,13 @@ def setup_function(function):
 
     Auth.config = '/tmp/cloudprint.conf'
 
+
 def teardown_function(function):
     if os.path.exists(Auth.config):
         os.unlink(Auth.config)
     logging.shutdown()
     reload(logging)
+
 
 def test_fixConfigPermissions():
     configfile = open(Auth.config, "w")
@@ -48,14 +60,16 @@ def test_fixConfigPermissions():
     assert '0000' == oct(os.stat(Auth.config)[stat.ST_MODE])[-4:]
     assert True == Utils.FixFilePermissions(Auth.config)[0]
     assert '0660' == oct(os.stat(Auth.config)[stat.ST_MODE])[-4:]
-    
+
     origconfig = Auth.config
     Auth.config = '/tmp/filethatdoesntexist'
     assert (False, False) == Utils.FixFilePermissions(Auth.config)
     Auth.config = origconfig
 
-@pytest.mark.skipif( grp.getgrnam('lp').gr_gid not in ( os.getgroups() ) and os.getuid() != 0 ,
-                    reason="will only pass if running user part of lp group or root")
+
+@pytest.mark.skipif(
+    grp.getgrnam('lp').gr_gid not in (os.getgroups()) and os.getuid() != 0,
+    reason="will only pass if running user part of lp group or root")
 def test_fixConfigOwnerships():
     configfile = open(Auth.config, "w")
     configfile.close()
@@ -64,9 +78,10 @@ def test_fixConfigOwnerships():
     assert True == Utils.FixFilePermissions(Auth.config)[1]
     assert Utils.GetLPID() == os.stat(Auth.config).st_gid
 
+
 def test_setupAuth():
     testUserName = 'testaccount1'
-    
+
     # create initial file
     assert os.path.exists(Auth.config) == False
     assert Auth.SetupAuth(False) == (False, False)
@@ -83,8 +98,8 @@ def test_setupAuth():
         ['https://www.googleapis.com/auth/cloudprint'])
 
     credentials = client.OAuth2Credentials('test', Auth.clientid,
-                               'testsecret', 'testtoken', 1,
-                               'https://www.googleapis.com/auth/cloudprint', testUserName)
+                                           'testsecret', 'testtoken', 1,
+                                           'https://www.googleapis.com/auth/cloudprint', testUserName)
     storage.put(credentials)
 
     # ensure permissions are correct after populating config
@@ -92,17 +107,19 @@ def test_setupAuth():
 
     # re-run to test getting credentials
     requestors, storage = Auth.SetupAuth(False)
-    assert requestors != None
-    assert storage != None
-    
+    assert requestors is not None
+    assert storage is not None
+
     # check deleting account
-    assert Auth.DeleteAccount(testUserName) == None
+    assert Auth.DeleteAccount(testUserName) is None
     requestors, storage = Auth.SetupAuth(False)
     assert requestors == False
     assert storage == False
 
-@pytest.mark.skipif( grp.getgrnam('lp').gr_gid not in ( os.getgroups() ) and os.getuid() != 0 ,
-                    reason="will only pass if running user part of lp group or root")
+
+@pytest.mark.skipif(
+    grp.getgrnam('lp').gr_gid not in (os.getgroups()) and os.getuid() != 0,
+    reason="will only pass if running user part of lp group or root")
 def test_setupAuthOwnership():
     assert Auth.SetupAuth(False) == (False, False)
 
@@ -117,10 +134,9 @@ def test_setupAuthOwnership():
         ['https://www.googleapis.com/auth/cloudprint'])
 
     credentials = client.OAuth2Credentials('test', Auth.clientid,
-                               'testsecret', 'testtoken', 1,
-                               'https://www.googleapis.com/auth/cloudprint', 'testaccount1')
+                                           'testsecret', 'testtoken', 1,
+                                           'https://www.googleapis.com/auth/cloudprint', 'testaccount1')
     storage.put(credentials)
 
     # ensure ownership is correct after populating config
     assert Utils.GetLPID() == os.stat(Auth.config).st_gid
-

@@ -15,15 +15,26 @@
 #    You should have received a copy of the GNU General Public License
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-if __name__ == '__main__': # pragma: no cover
+if __name__ == '__main__':  # pragma: no cover
 
-    import fileinput, re, sys, glob, subprocess, os
+    import fileinput
+    import re
+    import sys
+    import glob
+    import subprocess
+    import os
     from datetime import datetime
 
     searchRegex = 'CCPVersion = "(\d)+ (\d){6}"'
-    replaceValue = 'CCPVersion = "' + datetime.utcnow().strftime('%Y%m%d %H%M%S') + '"'
+    replaceValue = 'CCPVersion = "' + \
+        datetime.utcnow().strftime('%Y%m%d %H%M%S') + '"'
 
-    p = subprocess.Popen(["git", "diff", "--cached", "--name-only"], stdout=subprocess.PIPE)
+    p = subprocess.Popen(
+        ["git",
+         "diff",
+         "--cached",
+         "--name-only"],
+        stdout=subprocess.PIPE)
     output = p.communicate()[0]
     result = p.returncode
     if result != 0:
@@ -31,14 +42,14 @@ if __name__ == '__main__': # pragma: no cover
     files = output.split("\n")
     for file in files:
         if len(file) > 0 and os.path.exists(file):
-            testfile = open( file, "r" )
+            testfile = open(file, "r")
             fileNeedsUpdating = False
             for line in testfile:
-                 if '# line below is replaced on commit' in line:
-                     fileNeedsUpdating = True
-                     break
+                if '# line below is replaced on commit' in line:
+                    fileNeedsUpdating = True
+                    break
             testfile.close()
-            
+
             if fileNeedsUpdating:
                 replaceLine = False
                 for line in fileinput.input(file, inplace=1):
@@ -50,8 +61,12 @@ if __name__ == '__main__': # pragma: no cover
                         replaceLine = False
                     sys.stdout.write(line)
 
-                p = subprocess.Popen(["git", "add", file.lstrip('-')], stdout=subprocess.PIPE)
+                p = subprocess.Popen(
+                    ["git",
+                     "add",
+                     file.lstrip('-')],
+                    stdout=subprocess.PIPE)
                 output = p.communicate()[0]
                 result = p.returncode
                 if result != 0:
-                        sys.exit(result)
+                    sys.exit(result)

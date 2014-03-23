@@ -15,11 +15,14 @@
 #    You should have received a copy of the GNU General Public License
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-if __name__ == '__main__': # pragma: no cover
-    import sys, os, locale, logging
+if __name__ == '__main__':  # pragma: no cover
+    import sys
+    import os
+    import locale
+    import logging
 
     libpath = "/usr/local/share/cloudprint-cups/"
-    if not os.path.exists( libpath  ):
+    if not os.path.exists(libpath):
         libpath = "/usr/share/cloudprint-cups"
     sys.path.insert(0, libpath)
 
@@ -27,33 +30,37 @@ if __name__ == '__main__': # pragma: no cover
     from printer import Printer
     from ccputils import Utils
     Utils.SetupLogging()
-    
+
     # line below is replaced on commit
-    CCPVersion = "20140316 143822"
+    CCPVersion = "20140323 134450"
     Utils.ShowVersion(CCPVersion)
-    
+
     def showUsage():
-        sys.stderr.write("ERROR: Usage: " + sys.argv[0] + " [list|version|cat drivername]\n")
+        sys.stderr.write(
+            "ERROR: Usage: " +
+            sys.argv[
+                0] +
+            " [list|version|cat drivername]\n")
         sys.exit(1)
 
     requestors, storage = Auth.SetupAuth(False)
     if requestors == False:
         sys.stderr.write("ERROR: config is invalid or missing\n")
-        logging.error("backend tried to run with invalid config");
+        logging.error("backend tried to run with invalid config")
         sys.exit(1)
 
     printer = Printer(requestors)
 
-    if ( len(sys.argv) < 2 ):
+    if (len(sys.argv) < 2):
         showUsage()
 
     if sys.argv[1] == 'list':
         printers = printer.getPrinters(True)
-        if printers == None:
+        if printers is None:
             print "ERROR: No Printers Found"
             sys.exit(1)
         for foundprinter in printers:
-            print '"cupscloudprint:' + foundprinter['account'].encode('ascii', 'replace').replace(' ', '-') +':' + foundprinter['name'].encode('ascii', 'replace').replace(' ', '-') + '-' + foundprinter['id'].encode('ascii', 'replace').replace(' ', '-') + '.ppd" en "Google" "' + foundprinter['name'].encode('ascii', 'replace') + ' (' + foundprinter['account'] + ')" "MFG:GOOGLE;DRV:GCP;CMD:POSTSCRIPT;MDL:' + printer.printerNameToUri( foundprinter['account'], foundprinter['id'] ) +';"'
+            print '"cupscloudprint:' + foundprinter['account'].encode('ascii', 'replace').replace(' ', '-') + ':' + foundprinter['name'].encode('ascii', 'replace').replace(' ', '-') + '-' + foundprinter['id'].encode('ascii', 'replace').replace(' ', '-') + '.ppd" en "Google" "' + foundprinter['name'].encode('ascii', 'replace') + ' (' + foundprinter['account'] + ')" "MFG:GOOGLE;DRV:GCP;CMD:POSTSCRIPT;MDL:' + printer.printerNameToUri(foundprinter['account'], foundprinter['id']) + ';"'
 
     elif sys.argv[1] == 'cat':
         if len(sys.argv) == 2 or sys.argv[2] == "":
@@ -66,29 +73,37 @@ if __name__ == '__main__': # pragma: no cover
                 sys.exit(1)
 
             accountName = ppdparts[1]
-            printers = printer.getPrinters(True, accountName )
+            printers = printer.getPrinters(True, accountName)
 
-            if printers == None or len(printers) == 0:
+            if printers is None or len(printers) == 0:
                 # still cant find printer specifically, try all accounts
                 printers = printer.getPrinters(True)
 
-            if printers == None:
+            if printers is None:
                 print "ERROR: No Printers Found"
                 sys.exit(1)
 
             # find printer
             for foundprinter in printers:
-                if ppdname == 'cupscloudprint:' + foundprinter['account'].encode('ascii', 'replace').replace(' ', '-') +':' + foundprinter['name'].encode('ascii', 'replace').replace(' ', '-') + '-' + foundprinter['id'].encode('ascii', 'replace').replace(' ', '-') + '.ppd':
+                if ppdname == 'cupscloudprint:' + foundprinter['account'].encode('ascii', 'replace').replace(' ', '-') + ':' + foundprinter['name'].encode('ascii', 'replace').replace(' ', '-') + '-' + foundprinter['id'].encode('ascii', 'replace').replace(' ', '-') + '.ppd':
                     capabilities = []
                     # generate and output ppd
                     language = "en"
                     defaultpapertype = "Letter"
                     defaultlocal = locale.getdefaultlocale()[0]
-                    if defaultlocal != None:
+                    if defaultlocal is not None:
                         language = defaultlocal
 
                         # taken from wikipedia
-                        lettercountries = [ 'US', 'CA', 'MX', 'BO', 'CO', 'VE', 'PH', 'CL' ]
+                        lettercountries = [
+                            'US',
+                            'CA',
+                            'MX',
+                            'BO',
+                            'CO',
+                            'VE',
+                            'PH',
+                            'CL']
                         if len(language.split('_')) > 1:
                             if language.split('_')[1] not in lettercountries:
                                 defaultpapertype = "A4"
@@ -102,7 +117,7 @@ if __name__ == '__main__': # pragma: no cover
 *FileVersion: "1.0"
 *LanguageVersion: English
 *LanguageEncoding: ISOLatin1
-*cupsLanguages: \"""" + language +"""\"
+*cupsLanguages: \"""" + language + """\"
 *cupsFilter: "application/vnd.cups-postscript 100 -"
 *cupsFilter: "application/vnd.cups-pdf 0 -"
 *PCFileName: "ccp.ppd"
@@ -155,51 +170,80 @@ if __name__ == '__main__': # pragma: no cover
                     if len(sys.argv) > 3 and sys.argv[3] == "testmode" and os.path.exists('test-capabilities.serial'):
                         with file("test-capabilities.serial") as f:
                             import ast
-                            foundprinter['fulldetails'] = ast.literal_eval(f.read())
+                            foundprinter[
+                                'fulldetails'] = ast.literal_eval(f.read())
 
                     if 'capabilities' in foundprinter['fulldetails']:
                         addedCapabilities = []
 
                         for capability in foundprinter['fulldetails']['capabilities']:
                             originCapabilityName = None
-                            internalcapabilityName = printer.getInternalName(capability, 'capability', None, addedCapabilities)
+                            internalcapabilityName = printer.getInternalName(
+                                capability,
+                                'capability',
+                                None,
+                                addedCapabilities)
                             addedCapabilities.append(internalcapabilityName)
 
                             if 'displayName' in capability and len(capability['displayName']) > 0:
-                                originCapabilityName = printer.sanitizeText(capability['displayName'])
+                                originCapabilityName = printer.sanitizeText(
+                                    capability['displayName'])
                             elif 'psk:DisplayName' in capability and len(capability['psk:DisplayName']) > 0:
-                                originCapabilityName = printer.sanitizeText(capability['psk:DisplayName'])
+                                originCapabilityName = printer.sanitizeText(
+                                    capability['psk:DisplayName'])
                             else:
-                                originCapabilityName = printer.sanitizeText(capability['name'])
+                                originCapabilityName = printer.sanitizeText(
+                                    capability['name'])
 
-                            engCapabilityName = printer.sanitizeText(capability['name'])
+                            engCapabilityName = printer.sanitizeText(
+                                capability['name'])
                             if capability['type'] == 'Feature':
-                                ppddetails += '*OpenUI *' + internalcapabilityName + '/' + internalcapabilityName +': PickOne' + "\n"
+                                ppddetails += '*OpenUI *' + internalcapabilityName + \
+                                    '/' + internalcapabilityName + \
+                                    ': PickOne' + "\n"
 
-                                # translation of capability, allows use of 8 bit chars
-                                ppddetails += '*' + language + '.Translation' + ' ' + internalcapabilityName + '/' + originCapabilityName + ": \"\"\n"
+                                # translation of capability, allows use of 8
+                                # bit chars
+                                ppddetails += '*' + language + '.Translation' + ' ' + \
+                                    internalcapabilityName + '/' + \
+                                    originCapabilityName + ": \"\"\n"
 
                                 addedOptions = []
 
                                 for option in capability['options']:
                                     originOptionName = None
                                     if 'displayName' in option and len(option['displayName']) > 0:
-                                        originOptionName = printer.sanitizeText(option['displayName'])
+                                        originOptionName = printer.sanitizeText(
+                                            option['displayName'])
                                     elif 'psk:DisplayName' in option and len(option['psk:DisplayName']) > 0:
-                                        originOptionName = printer.sanitizeText(option['psk:DisplayName'])
+                                        originOptionName = printer.sanitizeText(
+                                            option['psk:DisplayName'])
                                     else:
-                                        originOptionName = printer.sanitizeText(option['name'])
-                                    engOptionName = printer.sanitizeText(option['name'])
-                                    internalOptionName = printer.getInternalName(option, 'option', capability['name'], addedOptions)
+                                        originOptionName = printer.sanitizeText(
+                                            option['name'])
+                                    engOptionName = printer.sanitizeText(
+                                        option['name'])
+                                    internalOptionName = printer.getInternalName(
+                                        option,
+                                        'option',
+                                        capability['name'],
+                                        addedOptions)
                                     addedOptions.append(internalOptionName)
                                     if 'default' in option and option['default'] == True:
-                                        ppddetails += '*Default' + internalcapabilityName + ': ' + internalOptionName + "\n"
-                                    ppddetails += '*' + internalcapabilityName + ' ' + internalOptionName + ':' + internalOptionName + "\n"
+                                        ppddetails += '*Default' + internalcapabilityName + \
+                                            ': ' + internalOptionName + "\n"
+                                    ppddetails += '*' + internalcapabilityName + ' ' + \
+                                        internalOptionName + ':' + \
+                                        internalOptionName + "\n"
 
-                                    # translation of option, allows use of 8 bit chars
-                                    ppddetails += '*' + language + '.' + internalcapabilityName + ' ' + internalOptionName + "/" + originOptionName + ": \"\"\n"
+                                    # translation of option, allows use of 8
+                                    # bit chars
+                                    ppddetails += '*' + language + '.' + internalcapabilityName + \
+                                        ' ' + internalOptionName + "/" + \
+                                        originOptionName + ": \"\"\n"
 
-                                ppddetails += '*CloseUI: *' + internalcapabilityName + "\n"
+                                ppddetails += '*CloseUI: *' + \
+                                    internalcapabilityName + "\n"
                             elif capability['type'] == 'ParameterDef':
                                 pass
 
@@ -244,5 +288,5 @@ if __name__ == '__main__': # pragma: no cover
                     sys.exit(0)
 
             # no printers found
-            print "ERROR: PPD " + ppdname +" Not Found"
+            print "ERROR: PPD " + ppdname + " Not Found"
             sys.exit(1)

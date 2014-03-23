@@ -13,30 +13,45 @@
 #
 #    You should have received a copy of the GNU General Public License
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
-import json, pytest, logging, sys
+import json
+import pytest
+import logging
+import sys
 sys.path.insert(0, ".")
 
 from cloudprintrequestor import cloudprintrequestor
 
 global requestor
 
+
 def teardown_function(function):
     logging.shutdown()
     reload(logging)
+
 
 def setup_function(function):
     global requestor
     requestor = cloudprintrequestor()
 
+
 def test_requestor():
     requestor.setAccount('testdetails')
     assert requestor.getAccount() == 'testdetails'
 
+
 def test_request():
-    assert requestor.doRequest(path="/test",testResponse=json.dumps("randomstring1233")) == "randomstring1233"
+    assert requestor.doRequest(
+        path="/test",
+        testResponse=json.dumps("randomstring1233")) == "randomstring1233"
     with pytest.raises(ValueError):
-        assert requestor.doRequest(path="/test",testResponse="")
-        
-    assert requestor.doRequest(path="/test",testResponse=json.dumps("randomstring1233"), endpointurl=requestor.CLOUDPRINT_URL) == "randomstring1233"
+        assert requestor.doRequest(path="/test", testResponse="")
+
+    assert requestor.doRequest(
+        path="/test",
+        testResponse=json.dumps("randomstring1233"),
+        endpointurl=requestor.CLOUDPRINT_URL) == "randomstring1233"
     with pytest.raises(ValueError):
-        assert requestor.doRequest(path="/test",testResponse="", endpointurl=requestor.CLOUDPRINT_URL)
+        assert requestor.doRequest(
+            path="/test",
+            testResponse="",
+            endpointurl=requestor.CLOUDPRINT_URL)

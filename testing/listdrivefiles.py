@@ -15,22 +15,24 @@
 #    You should have received a copy of the GNU General Public License
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-if __name__ == '__main__': # pragma: no cover
-    import sys, logging
+if __name__ == '__main__':  # pragma: no cover
+    import sys
+    import logging
     sys.path.insert(0, ".")
 
     from auth import Auth
     from printer import Printer
     from ccputils import Utils
     Utils.SetupLogging()
-    
+
     # line below is replaced on commit
-    CCPVersion = "20140309 225901"
+    CCPVersion = "20140323 134450"
     Utils.ShowVersion(CCPVersion)
-    
-    requestors, storage = Auth.SetupAuth(True, permissions=['https://www.googleapis.com/auth/cloudprint', 'https://www.googleapis.com/auth/drive.readonly'])
+
+    requestors, storage = Auth.SetupAuth(
+        True, permissions=['https://www.googleapis.com/auth/cloudprint', 'https://www.googleapis.com/auth/drive.readonly'])
     files = Utils.GetDriveFiles(requestors)
-    if files == None:
+    if files is None:
         print "No Files Found"
         sys.exit(1)
 

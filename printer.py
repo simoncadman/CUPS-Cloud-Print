@@ -13,10 +13,18 @@
 #
 #    You should have received a copy of the GNU General Public License
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
-import json, urllib, os, mimetools, re, hashlib, subprocess, logging
+import json
+import urllib
+import os
+import mimetools
+import re
+import hashlib
+import subprocess
+import logging
 from auth import Auth
 from urlparse import urlparse
 from ccputils import Utils
+
 
 class Printer:
     BOUNDARY = mimetools.choose_boundary()
@@ -26,25 +34,25 @@ class Printer:
     requestor = None
     cachedPrinterDetails = {}
     reservedCapabilityWords = [
-                               'Duplex', 'Resolution', 'Attribute', 'Choice', 'ColorDevice', 'ColorModel', 'ColorProfile',
-                               'Copyright', 'CustomMedia', 'Cutter', 'Darkness', 'DriverType', 'FileName', 'Filter',
-                               'Filter', 'Finishing', 'Font', 'Group', 'HWMargins', 'InputSlot', 'Installable',
-                               'LocAttribute', 'ManualCopies', 'Manufacturer', 'MaxSize', 'MediaSize', 'MediaType',
-                               'MinSize', 'ModelName', 'ModelNumber', 'Option', 'PCFileName', 'SimpleColorProfile',
-                               'Throughput', 'UIConstraints', 'VariablePaperSize', 'Version', 'Color', 'Background',
-                               'Stamp', 'DestinationColorProfile'
-                              ]
+        'Duplex', 'Resolution', 'Attribute', 'Choice', 'ColorDevice', 'ColorModel', 'ColorProfile',
+        'Copyright', 'CustomMedia', 'Cutter', 'Darkness', 'DriverType', 'FileName', 'Filter',
+        'Filter', 'Finishing', 'Font', 'Group', 'HWMargins', 'InputSlot', 'Installable',
+        'LocAttribute', 'ManualCopies', 'Manufacturer', 'MaxSize', 'MediaSize', 'MediaType',
+        'MinSize', 'ModelName', 'ModelNumber', 'Option', 'PCFileName', 'SimpleColorProfile',
+        'Throughput', 'UIConstraints', 'VariablePaperSize', 'Version', 'Color', 'Background',
+        'Stamp', 'DestinationColorProfile'
+    ]
     URIFormatLatest = 1
     URIFormat20140307 = 2
     URIFormat20140210 = 3
 
-    def __init__( self, requestors ):
+    def __init__(self, requestors):
         """Create an instance of Printer, with authorised requestor
 
         Args:
           requestors: list or cloudprintrequestor instance, A list of requestors, or a single requestor to use for all Cloud Print requests.
         """
-        if requestors != None:
+        if requestors is not None:
             if isinstance(requestors, list):
                 self.requestors = requestors
             else:
@@ -56,13 +64,14 @@ class Printer:
         cupsprinters = connection.getPrinters()
         accountPrinters = []
         for cupsprinter in cupsprinters:
-            id, requestor = self.getPrinterIDByURI(cupsprinters[cupsprinter]['device-uri'])
-            if id != None and requestor != None:
+            id, requestor = self.getPrinterIDByURI(
+                cupsprinters[cupsprinter]['device-uri'])
+            if id is not None and requestor is not None:
                 if requestor.getAccount() == account:
                     accountPrinters.append(cupsprinters[cupsprinter])
         return accountPrinters, connection
 
-    def getPrinters(self, fulldetails = False, accountName=None ):
+    def getPrinters(self, fulldetails=False, accountName=None):
         """Fetch a list of printers
 
         Returns:
@@ -70,10 +79,11 @@ class Printer:
         """
         allprinters = []
         for requestor in self.requestors:
-            if accountName != None and accountName != requestor.getAccount():
+            if accountName is not None and accountName != requestor.getAccount():
                 continue
-            
-            responseobj = requestor.doRequest('search?connection_status=ALL&client=webui')
+
+            responseobj = requestor.doRequest(
+                'search?connection_status=ALL&client=webui')
 
             if 'printers' in responseobj and len(responseobj['printers']) > 0:
                 for printer in responseobj['printers']:
@@ -82,15 +92,23 @@ class Printer:
                     # fetch all details - search doesnt return all capabilities
                     if fulldetails:
                         self.requestor = requestor
-                        details = self.getPrinterDetails( printer['id'] )
+                        details = self.getPrinterDetails(printer['id'])
                         printer['fulldetails'] = details['printers'][0]
                     allprinters.append(printer)
         return allprinters
 
     def sanitizeText(self, text):
-        return text.replace('/','-').replace(':','_').replace(';','_').replace(' ','_').encode('utf8', 'ignore')
+        return (
+            text.replace(
+                '/',
+                '-').replace(':',
+                             '_').replace(';',
+                                          '_').replace(' ',
+                                                       '_').encode('utf8',
+                                                                   'ignore')
+        )
 
-    def printerNameToUri( self, account, printerid ) :
+    def printerNameToUri(self, account, printerid):
         """Generates a URI for the Cloud Print Printer
 
         Args:
@@ -100,10 +118,14 @@ class Printer:
         Returns:
           string: URI for the printer
         """
-        return self.PROTOCOL + urllib.quote(account.encode('ascii', 'replace')) + "/" + urllib.quote(printerid.encode('ascii', 'replace'))
+        return (
+            self.PROTOCOL + urllib.quote(account.encode('ascii', 'replace')) +
+            "/" +
+            urllib.quote(
+                printerid.encode('ascii', 'replace'))
+        )
 
-
-    def sanitizePrinterName ( self, name ) :
+    def sanitizePrinterName(self, name):
         """Sanitizes printer name for CUPS
 
         Args:
@@ -112,9 +134,18 @@ class Printer:
         Returns:
           string: CUPS-friendly name for the printer
         """
-        return re.sub('[^a-zA-Z0-9\-_]', '', name.encode('ascii', 'replace').replace( ' ', '_' ) )
+        return (
+            re.sub(
+                '[^a-zA-Z0-9\-_]',
+                '',
+                name.encode(
+                    'ascii',
+                    'replace').replace(
+                    ' ',
+                    '_'))
+        )
 
-    def addPrinter( self, printername, uri, connection, ppd=None ) :
+    def addPrinter(self, printername, uri, connection, ppd=None):
         """Adds a printer to CUPS
 
         Args:
@@ -129,26 +160,27 @@ class Printer:
         printername = self.sanitizePrinterName(printername)
         result = None
         try:
-            if ppd == None:
+            if ppd is None:
                 ppdid = 'MFG:GOOGLE;DRV:GCP;CMD:POSTSCRIPT;MDL:' + uri + ';'
                 ppds = connection.getPPDs(ppd_device_id=ppdid)
                 printerppdname, printerppd = ppds.popitem()
             else:
                 printerppdname = ppd
-            result = connection.addPrinter(name=printername,ppdname=printerppdname,info=printername,location='Google Cloud Print',device=uri)
+            result = connection.addPrinter(
+                name=printername, ppdname=printerppdname, info=printername, location='Google Cloud Print', device=uri)
             connection.enablePrinter(printername)
             connection.acceptJobs(printername)
             connection.setPrinterShared(printername, False)
-        except Exception , error:
+        except Exception as error:
             result = error
-        if result == None:
+        if result is None:
             print "Added " + printername
             return True
         else:
-            print "Error adding: " + printername,result
+            print "Error adding: " + printername, result
             return False
 
-    def parseURI( self, uristring ):
+    def parseURI(self, uristring):
         """Parses a CUPS Cloud Print URI
 
         Args:
@@ -163,7 +195,7 @@ class Printer:
         printerId = pathparts[1]
         return uri.netloc, printerId
 
-    def parseLegacyURI( self, uristring, requestors ):
+    def parseLegacyURI(self, uristring, requestors):
         """Parses previous CUPS Cloud Print URIs, only used for upgrades
 
         Args:
@@ -187,17 +219,17 @@ class Printer:
             printerName = urllib.unquote(uri.netloc)
         else:
             if urllib.unquote(uri.netloc) not in Auth.GetAccountNames(requestors):
-               formatId = Printer.URIFormat20140210
-               printerName = urllib.unquote(uri.netloc)
-               accountName = urllib.unquote(pathparts[0])
+                formatId = Printer.URIFormat20140210
+                printerName = urllib.unquote(uri.netloc)
+                accountName = urllib.unquote(pathparts[0])
             else:
-               formatId = Printer.URIFormatLatest
-               printerId = urllib.unquote(pathparts[0])
-               printerName = None
-               accountName = urllib.unquote(uri.netloc)
-                
+                formatId = Printer.URIFormatLatest
+                printerId = urllib.unquote(pathparts[0])
+                printerName = None
+                accountName = urllib.unquote(uri.netloc)
+
         return accountName, printerName, printerId, formatId
-    
+
     def findRequestorForAccount(self, account):
         """Searches the requestors in the printer object for the requestor for a specific account
 
@@ -222,10 +254,10 @@ class Printer:
         account, printerid = self.parseURI(uri)
         # find requestor based on account
         requestor = self.findRequestorForAccount(urllib.unquote(account))
-        if requestor == None:
+        if requestor is None:
             return None, None
-        
-        if printerid != None:
+
+        if printerid is not None:
             return printerid, requestor
         else:
             return None, None
@@ -241,14 +273,14 @@ class Printer:
         """
         # find requestor based on account
         requestor = self.findRequestorForAccount(urllib.unquote(account))
-        if requestor == None:
+        if requestor is None:
             return None, None
-        
-        if printerid != None:
+
+        if printerid is not None:
             return printerid, requestor
         else:
             return None, None
-        
+
     def getPrinterDetails(self, printerid):
         """Gets details about printer from Google
 
@@ -258,7 +290,8 @@ class Printer:
           list: data from Google
         """
         if printerid not in self.cachedPrinterDetails:
-            printerdetails = self.requestor.doRequest( 'printer?printerid=%s' % (  printerid ) )
+            printerdetails = self.requestor.doRequest(
+                'printer?printerid=%s' % (printerid))
             self.cachedPrinterDetails[printerid] = printerdetails
         else:
             printerdetails = self.cachedPrinterDetails[printerid]
@@ -283,13 +316,13 @@ class Printer:
         lines.append('')  # blank line
         return self.CRLF.join(lines)
 
-    def getOverrideCapabilities ( self, overrideoptionsstring ):
+    def getOverrideCapabilities(self, overrideoptionsstring):
         overrideoptions = overrideoptionsstring.split(' ')
         overridecapabilities = {}
-        
-        ignorecapabilities = [ 'Orientation' ]
+
+        ignorecapabilities = ['Orientation']
         for optiontext in overrideoptions:
-            if '=' in optiontext :
+            if '=' in optiontext:
                 optionparts = optiontext.split('=')
                 option = optionparts[0]
                 if option in ignorecapabilities:
@@ -304,8 +337,9 @@ class Printer:
 
         return overridecapabilities
 
-    def getCapabilitiesDict ( self, attrs, printercapabilities, overridecapabilities ) :
-        capabilities = { "capabilities" : [] }
+    def getCapabilitiesDict(
+            self, attrs, printercapabilities, overridecapabilities):
+        capabilities = {"capabilities": []}
         for attr in attrs:
             if attr['name'].startswith('Default'):
                 # gcp setting, reverse back to GCP capability
@@ -319,7 +353,8 @@ class Printer:
                     if hashname == self.getInternalName(capability, 'capability'):
                         gcpname = capability['name']
                         for option in capability['options']:
-                            internalCapability = self.getInternalName(option, 'option', gcpname, addedCapabilities)
+                            internalCapability = self.getInternalName(
+                                option, 'option', gcpname, addedCapabilities)
                             addedCapabilities.append(internalCapability)
                             if attr['value'] == internalCapability:
                                 gcpoption = option['name']
@@ -327,9 +362,11 @@ class Printer:
                         addedOptions = []
                         for overridecapability in overridecapabilities:
                             if 'Default' + overridecapability == attr['name']:
-                                selectedoption = overridecapabilities[overridecapability]
+                                selectedoption = overridecapabilities[
+                                    overridecapability]
                                 for option in capability['options']:
-                                    internalOption = self.getInternalName(option, 'option', gcpname, addedOptions)
+                                    internalOption = self.getInternalName(
+                                        option, 'option', gcpname, addedOptions)
                                     addedOptions.append(internalOption)
                                     if selectedoption == internalOption:
                                         gcpoption = option['name']
@@ -338,17 +375,18 @@ class Printer:
                         break
 
                 # hardcoded to feature type temporarily
-                if gcpname != None and gcpoption != None:
-                    capabilities['capabilities'].append( { 'type' : 'Feature', 'name' : gcpname, 'options' : [ { 'name' : gcpoption } ] } )
+                if gcpname is not None and gcpoption is not None:
+                    capabilities['capabilities'].append(
+                        {'type': 'Feature', 'name': gcpname, 'options': [{'name': gcpoption}]})
         return capabilities
 
-    def attrListToArray ( self, attrs ) :
+    def attrListToArray(self, attrs):
         attrArray = []
         for attr in attrs:
-            attrArray.append( { 'name' : attr.name, 'value' : attr.value } )
+            attrArray.append({'name': attr.name, 'value': attr.value})
         return attrArray
 
-    def getCapabilities ( self, gcpid, cupsprintername, overrideoptionsstring ) :
+    def getCapabilities(self, gcpid, cupsprintername, overrideoptionsstring):
         """Gets capabilities of printer and maps them against list
 
         Args:
@@ -361,20 +399,28 @@ class Printer:
         import cups
         connection = cups.Connection()
         cupsprinters = connection.getPrinters()
-        overridecapabilities = self.getOverrideCapabilities(overrideoptionsstring)
-        overrideDefaultDefaults = { 'Duplex' : 'None' }
-        
-        details = self.getPrinterDetails( gcpid )
+        overridecapabilities = self.getOverrideCapabilities(
+            overrideoptionsstring)
+        overrideDefaultDefaults = {'Duplex': 'None'}
+
+        details = self.getPrinterDetails(gcpid)
         fulldetails = details['printers'][0]
         for capability in overrideDefaultDefaults:
             if capability not in overridecapabilities:
-                overridecapabilities[capability] = overrideDefaultDefaults[capability]
+                overridecapabilities[
+                    capability] = overrideDefaultDefaults[capability]
 
         attrs = cups.PPD(connection.getPPD(cupsprintername)).attributes
         attrArray = self.attrListToArray(attrs)
-        return self.getCapabilitiesDict(attrArray, fulldetails['capabilities'], overridecapabilities)
+        return (
+            self.getCapabilitiesDict(
+                attrArray,
+                fulldetails['capabilities'],
+                overridecapabilities)
+        )
 
-    def submitJob(self, printerid, jobtype, jobfile, jobname, printername, options="" ):
+    def submitJob(self, printerid, jobtype, jobfile,
+                  jobname, printername, options=""):
         """Submit a job to printerid with content of dataUrl.
 
         Args:
@@ -406,19 +452,22 @@ class Printer:
                 print "ERROR: PDF doesnt exist"
                 return False
             if rotate > 0:
-                p = subprocess.Popen(['convert', '-density', '300x300', jobfile.lstrip('-'), '-rotate', str(rotate), jobfile.lstrip('-')], stdout=subprocess.PIPE)
+                p = subprocess.Popen(
+                    ['convert', '-density', '300x300', jobfile.lstrip('-'),
+                     '-rotate', str(rotate), jobfile.lstrip('-')], stdout=subprocess.PIPE)
                 output = p.communicate()[0]
                 result = p.returncode
                 if result != 0:
                     print "ERROR: Failed to rotate PDF"
-                    logging.error("Failed to rotate pdf: " + str(['convert', '-density', '300x300', jobfile.lstrip('-'), '-rotate', str(rotate), jobfile.lstrip('-')]))
+                    logging.error("Failed to rotate pdf: " +
+                                  str(['convert', '-density', '300x300', jobfile.lstrip('-'), '-rotate', str(rotate), jobfile.lstrip('-')]))
                     logging.error(output)
                     return False
                 if not os.path.exists(jobfile):
                     print "ERROR: PDF doesnt exist"
                     return False
             b64file = Utils.Base64Encode(jobfile)
-            if b64file == None:
+            if b64file is None:
                 print "ERROR: Cannot write to file: " + jobfile + ".b64"
                 return False
             fdata = Utils.ReadFile(b64file)
@@ -435,41 +484,45 @@ class Printer:
 
         title = jobname
         if title == "":
-           title = "Untitled page" 
-        
+            title = "Untitled page"
+
         content = {'pdf': fdata,
                    'jpeg': jobfile,
                    'png': jobfile,
-                  }
+                   }
         content_type = {'pdf': 'dataUrl',
                         'jpeg': 'image/jpeg',
                         'png': 'image/png',
-                       }
+                        }
         headers = [
-          ('printerid', printerid),
-          ('title', title),
-          ('content', content[jobtype]),
-          ('contentType', content_type[jobtype]),
-          ('capabilities', json.dumps( self.getCapabilities(printerid, printername, options ) ) )
+            ('printerid', printerid),
+            ('title', title),
+            ('content', content[jobtype]),
+            ('contentType', content_type[jobtype]),
+            ('capabilities',
+             json.dumps(self.getCapabilities(printerid, printername, options)))
         ]
         logging.info('Capability headers are: %s', headers[4])
         edata = ""
         if jobtype in ['pdf', 'jpeg', 'png']:
-            edata = self.encodeMultiPart(headers, file_type=content_type[jobtype])
+            edata = self.encodeMultiPart(
+                headers, file_type=content_type[jobtype])
 
-        responseobj = self.requestor.doRequest( 'submit', None, edata, self.BOUNDARY )
+        responseobj = self.requestor.doRequest(
+            'submit', None, edata, self.BOUNDARY)
         try:
             if responseobj['success'] == True:
                 return True
             else:
-                print 'ERROR: Error response from Cloud Print for type %s: %s' % ( jobtype, responseobj['message'] )
+                print 'ERROR: Error response from Cloud Print for type %s: %s' % (jobtype, responseobj['message'])
                 return False
 
-        except Exception, error_msg:
-            print 'ERROR: Print job %s failed with %s' % ( jobtype, error_msg )
+        except Exception as error_msg:
+            print 'ERROR: Print job %s failed with %s' % (jobtype, error_msg)
             return False
 
-    def getInternalName ( self, details, internalType, capabilityName = None, existingList = [] ) :
+    def getInternalName(self, details, internalType,
+                        capabilityName=None, existingList=[]):
         returnValue = None
         fixedNameMap = {}
         reservedWords = self.reservedCapabilityWords
@@ -486,11 +539,16 @@ class Printer:
                 fixedNameMap['psk:Portrait'] = "Portrait"
         else:
             # capability
-            fixedNameMap['ns1:Colors']                                 = "ColorModel"
-            fixedNameMap['ns1:PrintQualities']                         = "OutputMode"
-            fixedNameMap['ns1:InputBins']                              = "InputSlot"
-            fixedNameMap['psk:JobDuplexAllDocumentsContiguously']      = "Duplex"
-            fixedNameMap['psk:PageOrientation']                        = "Orientation"
+            fixedNameMap[
+                'ns1:Colors'] = "ColorModel"
+            fixedNameMap[
+                'ns1:PrintQualities'] = "OutputMode"
+            fixedNameMap[
+                'ns1:InputBins'] = "InputSlot"
+            fixedNameMap[
+                'psk:JobDuplexAllDocumentsContiguously'] = "Duplex"
+            fixedNameMap[
+                'psk:PageOrientation'] = "Orientation"
 
         for itemName in fixedNameMap:
             if details['name'] == itemName:
@@ -510,10 +568,10 @@ class Printer:
             sanitisedName = 'GCP_' + sanitisedName
 
         # only sanitise, no hash
-        if returnValue == None and len(sanitisedName) <= 30 and sanitisedName.decode("utf-8", 'ignore').encode("ascii","ignore") == sanitisedName:
+        if returnValue is None and len(sanitisedName) <= 30 and sanitisedName.decode("utf-8", 'ignore').encode("ascii", "ignore") == sanitisedName:
             returnValue = sanitisedName
 
-        if returnValue == None:
+        if returnValue is None:
             returnValue = hashlib.sha256(sanitisedName).hexdigest()[:7]
 
         if returnValue not in existingList:
@@ -525,7 +583,7 @@ class Printer:
             return "GCP_" + origReturnValue
 
         # max 100 rotations, prevent infinite loop
-        for i in range(1,100):
+        for i in range(1, 100):
             if returnValue in existingList:
                 returnValue = "GCP_" + str(i) + "_" + origReturnValue
 
@@ -533,14 +591,23 @@ class Printer:
 
         return returnValue
 
-    def getBackendDescription ( self ) :
+    def getBackendDescription(self):
         return "network cloudprint \"Unknown\" \"Google Cloud Print\""
 
-    def getListDescription ( self, foundprinter ):
+    def getListDescription(self, foundprinter):
         printerName = foundprinter['name']
         if 'displayName' in foundprinter:
             printerName = foundprinter['displayName']
-        return printerName.encode('ascii', 'replace') + ' - ' + self.printerNameToUri(foundprinter['account'], foundprinter['id']) + " - " + foundprinter['account']
-    
-    def getBackendDescriptionForPrinter( self, foundprinter ):
-        return "network " + self.printerNameToUri(foundprinter['account'], foundprinter['id']) + " " + "\"" + foundprinter['name'] + "\" \"Google Cloud Print\"" + " \"MFG:Google;MDL:Cloud Print;DES:GoogleCloudPrint;\""
+        return (
+            printerName.encode(
+                'ascii',
+                'replace') + ' - ' + self.printerNameToUri(foundprinter['account'],
+                                                           foundprinter['id']) + " - " + foundprinter['account']
+        )
+
+    def getBackendDescriptionForPrinter(self, foundprinter):
+        return (
+            "network " + self.printerNameToUri(foundprinter['account'], foundprinter['id']) + " " + "\"" +
+            foundprinter[
+                'name'] + "\" \"Google Cloud Print\"" + " \"MFG:Google;MDL:Cloud Print;DES:GoogleCloudPrint;\""
+        )

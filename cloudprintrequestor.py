@@ -13,14 +13,17 @@
 #
 #    You should have received a copy of the GNU General Public License
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
-import httplib2, json, sys
+import httplib2
+import json
+import sys
+
 
 class cloudprintrequestor(httplib2.Http):
 
     CLOUDPRINT_URL = 'https://www.google.com/cloudprint'
     account = None
 
-    def setAccount ( self, account ):
+    def setAccount(self, account):
         """Sets the account name
 
         Args:
@@ -28,7 +31,7 @@ class cloudprintrequestor(httplib2.Http):
         """
         self.account = account
 
-    def getAccount ( self ):
+    def getAccount(self):
         """Gets the account name
 
         Return:
@@ -36,7 +39,8 @@ class cloudprintrequestor(httplib2.Http):
         """
         return self.account
 
-    def doRequest ( self, path, headers = None, data = None , boundary = None, testResponse=None, endpointurl=None ):
+    def doRequest(self, path, headers=None, data=None,
+                  boundary=None, testResponse=None, endpointurl=None):
         """Sends a request to Google Cloud Print
 
         Args:
@@ -48,22 +52,24 @@ class cloudprintrequestor(httplib2.Http):
           list: Decoded json response from Google.
         """
         # force useragent to CCP
-        if headers == None:
+        if headers is None:
             headers = {}
         headers['user-agent'] = "CUPS Cloud Print"
 
         url = '%s/%s' % (self.CLOUDPRINT_URL, path)
-        if endpointurl != None:
+        if endpointurl is not None:
             url = '%s/%s' % (endpointurl, path)
 
         # use test response for testing
-        if testResponse == None: # pragma: no cover
-            if data == None:
+        if testResponse is None:  # pragma: no cover
+            if data is None:
                 headers, response = self.request(url, "GET", headers=headers)
             else:
                 headers['Content-Length'] = str(len(data))
-                headers['Content-Type'] = 'multipart/form-data;boundary=%s' % boundary
-                headers, response = self.request(url, "POST", body=data, headers=headers)
+                headers[
+                    'Content-Type'] = 'multipart/form-data;boundary=%s' % boundary
+                headers, response = self.request(
+                    url, "POST", body=data, headers=headers)
         else:
             response = testResponse
 
