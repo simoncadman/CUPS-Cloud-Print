@@ -66,8 +66,8 @@ class cloudprintrequestor(httplib2.Http):
                 headers, response = self.request(url, "GET", headers=headers)
             else:
                 headers['Content-Length'] = str(len(data))
-                headers[
-                    'Content-Type'] = 'multipart/form-data;boundary=%s' % boundary
+                contenttype = 'multipart/form-data;boundary=%s' % boundary
+                headers['Content-Type'] = contenttype
                 headers, response = self.request(
                     url, "POST", body=data, headers=headers)
         else:
