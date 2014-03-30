@@ -28,7 +28,7 @@ if __name__ == '__main__':  # pragma: no cover
     Utils.SetupLogging()
 
     # line below is replaced on commit
-    CCPVersion = "20140323 134450"
+    CCPVersion = "20140330 143208"
     Utils.ShowVersion(CCPVersion)
 
     while True:
@@ -52,10 +52,11 @@ if __name__ == '__main__':  # pragma: no cover
                     print accounts[int(answer) - 1] + " deleted."
                     deleteprintersanswer = raw_input(
                         "Also delete associated printers? ")
-                    if deleteprintersanswer.startswith("Y") or deleteprintersanswer.startswith("y"):
+                    if deleteprintersanswer.lower().startswith("y"):
                         printer = Printer(requestors)
-                        printers, connection = printer.getCUPSPrintersForAccount(
-                            accounts[int(answer) - 1])
+                        printers, connection = \
+                            printer.getCUPSPrintersForAccount(
+                                accounts[int(answer) - 1])
                         if len(printers) == 0:
                             print "No printers to delete"
                         else:
@@ -64,11 +65,16 @@ if __name__ == '__main__':  # pragma: no cover
                                 deleteReturnValue = connection.deletePrinter(
                                     cupsPrinter['printer-info'])
                                 if deleteReturnValue is not None:
-                                    print "Error deleting printer: " + str(deleteReturnValue)
+                                    errormessage = "Error deleting printer: "
+                                    errormessage += str(deleteReturnValue)
+                                    print errormessage
                     else:
                         print "Not deleting associated printers"
                 else:
-                    print "Error deleting stored credentials, perhaps /etc/cloudprint.conf is not writable?"
+                    errormessage = "Error deleting stored "
+                    errormessage += "credentials, perhaps "
+                    errormessage += Auth.config + " is not writable?"
+                    print errormessage
             elif (answer == "0"):
                 break
             else:
