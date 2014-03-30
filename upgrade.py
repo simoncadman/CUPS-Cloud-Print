@@ -32,7 +32,7 @@ if __name__ == '__main__':  # pragma: no cover
     Utils.SetupLogging()
 
     # line below is replaced on commit
-    CCPVersion = "20140323 140328"
+    CCPVersion = "20140330 150225"
     Utils.ShowVersion(CCPVersion)
 
     if not os.path.exists("/etc/cloudprint.conf"):
@@ -72,14 +72,18 @@ if __name__ == '__main__':  # pragma: no cover
             sys.exit(0)
 
     else:
-        sys.stderr.write(
-            "\nRun: /usr/share/cloudprint-cups/setupcloudprint.py to setup your Google Credentials and add your printers to CUPS\n\n")
+        errormessage = "\nRun: /usr/share/cloudprint-cups/"
+        errormessage += "setupcloudprint.py to"
+        errormessage += " setup your Google Credentials"
+        errormessage += " and add your printers to CUPS\n\n"
+        sys.stderr.write(errormessage)
         sys.exit(0)
 
     from ccputils import Utils
     if Utils.which('lpadmin') is None:
-        sys.stderr.write(
-            "lpadmin command not found, you may need to run this script as root\n")
+        errormessage = "lpadmin command not found"
+        errormessage += ", you may need to run this script as root\n"
+        sys.stderr.write(errormessage)
         sys.exit(1)
 
     try:
@@ -93,11 +97,16 @@ if __name__ == '__main__':  # pragma: no cover
     for device in cupsprinters:
         try:
             if (cupsprinters[device]["device-uri"].find("cloudprint://") == 0):
-                account, printername, printerid, formatid = printerItem.parseLegacyURI(
-                    cupsprinters[device]["device-uri"], requestors)
+                account, printername, printerid, formatid = \
+                    printerItem.parseLegacyURI(
+                        cupsprinters[device]["device-uri"],
+                        requestors)
                 if formatid != Printer.URIFormatLatest:
                     # not latest format, needs upgrading
-                    print "Updating " + cupsprinters[device]["printer-info"], "with new id uri format"
+                    updatingmessage = "Updating "
+                    updatingmessage += cupsprinters[device]["printer-info"]
+                    updatingmessage += " with new id uri format"
+                    print updatingmessage
                     printerid, requestor = printerItem.getPrinterIDByDetails(
                         account, printername, printerid)
                     if printerid is not None:
@@ -116,7 +125,11 @@ if __name__ == '__main__':  # pragma: no cover
                         result = p.returncode
                         sys.stderr.write(output)
                     else:
-                        print cupsprinters[device]["printer-info"], " not found, you should delete and re-add this printer"
+                        errormessage = cupsprinters[device]["printer-info"]
+                        errormessage += " not found, "
+                        errormessage += "you should delete and "
+                        errormessage += "re-add this printer"
+                        print errormessage
                         continue
                 else:
                     print "Updating " + cupsprinters[device]["printer-info"]
@@ -141,6 +154,9 @@ if __name__ == '__main__':  # pragma: no cover
                     result = p.returncode
                     sys.stderr.write(output)
                 else:
-                    print cupsprinters[device]["printer-info"], "not found, you should delete and re-add this printer"
+                    errormessage = cupsprinters[device]["printer-info"]
+                    errormessage += " not found, you should delete and"
+                    errormessage += " re-add this printer"
+                    print errormessage
         except Exception as e:
             sys.stderr.write("Error connecting to CUPS: " + str(e) + "\n")
