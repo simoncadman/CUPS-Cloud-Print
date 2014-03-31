@@ -73,7 +73,7 @@ if __name__ == '__main__':  # pragma: no cover
                 sys.exit(1)
 
             accountName = ppdparts[1]
-            printers = printer.getPrinters(True, accountName)
+            printers = printer.getPrinters(False, accountName)
 
             if printers is None or len(printers) == 0:
                 # still cant find printer specifically, try all accounts
@@ -85,7 +85,11 @@ if __name__ == '__main__':  # pragma: no cover
 
             # find printer
             for foundprinter in printers:
-                if ppdname == 'cupscloudprint:' + foundprinter['account'].encode('ascii', 'replace').replace(' ', '-') + ':' + foundprinter['name'].encode('ascii', 'replace').replace(' ', '-') + '-' + foundprinter['id'].encode('ascii', 'replace').replace(' ', '-') + '.ppd':
+                foundppdname = 'cupscloudprint:%s:%s-%s.ppd' % (
+                    foundprinter['account'].encode('ascii', 'replace').replace(' ', '-'),
+                    foundprinter['name'].encode('ascii', 'replace').replace(' ', '-'),
+                    foundprinter['id'].encode('ascii', 'replace').replace(' ', '-'))
+                if ppdname == foundppdname:
                     capabilities = []
                     # generate and output ppd
                     language = "en"
@@ -170,8 +174,11 @@ if __name__ == '__main__':  # pragma: no cover
                     if len(sys.argv) > 3 and sys.argv[3] == "testmode" and os.path.exists('test-capabilities.serial'):
                         with file("test-capabilities.serial") as f:
                             import ast
-                            foundprinter[
-                                'fulldetails'] = ast.literal_eval(f.read())
+                            foundprinter['fulldetails'] = ast.literal_eval(f.read())
+                    else:
+                        printer.requestor = printer.requestors[1]
+                        details = printer.getPrinterDetails(foundprinter['id'])
+                        foundprinter['fulldetails'] = details['printers'][0]
 
                     if 'capabilities' in foundprinter['fulldetails']:
                         addedCapabilities = []
