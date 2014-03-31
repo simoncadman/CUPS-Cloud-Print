@@ -55,7 +55,7 @@ if __name__ == '__main__':  # pragma: no cover
         showUsage()
 
     if sys.argv[1] == 'list':
-        printers = printer.getPrinters(True)
+        printers = printer.getPrinters(False)
         if printers is None:
             print "ERROR: No Printers Found"
             sys.exit(1)
