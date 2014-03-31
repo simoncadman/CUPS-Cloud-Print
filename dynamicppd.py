@@ -32,7 +32,7 @@ if __name__ == '__main__':  # pragma: no cover
     Utils.SetupLogging()
 
     # line below is replaced on commit
-    CCPVersion = "20140323 140328"
+    CCPVersion = "20140331 215708"
     Utils.ShowVersion(CCPVersion)
 
     def showUsage():
@@ -176,7 +176,7 @@ if __name__ == '__main__':  # pragma: no cover
                             import ast
                             foundprinter['fulldetails'] = ast.literal_eval(f.read())
                     else:
-                        printer.requestor = printer.requestors[1]
+                        printer.requestor = printer.findRequestorForAccount(accountName)
                         details = printer.getPrinterDetails(foundprinter['id'])
                         foundprinter['fulldetails'] = details['printers'][0]
 
