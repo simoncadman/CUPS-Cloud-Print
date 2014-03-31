@@ -3,3 +3,6 @@ cloudprint.ppd
 test-capabilities.serial
 .coverage
 htmlcov
+Makefile
+config.log
+config.status
