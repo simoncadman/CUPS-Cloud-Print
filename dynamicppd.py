@@ -128,7 +128,7 @@ __ppd_template_foot = """*DefaultFont: Courier
 *% End of cloudprint.ppd, 04169 bytes."""
 
 def doList(sys, printer):
-    printers = printer.getPrinters(False)
+    printers = printer.getPrinters()
     if printers is None:
         print "ERROR: No Printers Found"
         sys.exit(1)
@@ -151,11 +151,11 @@ def doCat():
         sys.exit(1)
 
     accountName = ppdparts[1]
-    printers = printer.getPrinters(False, accountName)
+    printers = printer.getPrinters(accountName=accountName)
 
     if printers is None or len(printers) == 0:
         # still can't find printer specifically, try all accounts
-        printers = printer.getPrinters(False)
+        printers = printer.getPrinters()
 
     if printers is None:
         print "ERROR: No Printers Found"
