@@ -33,7 +33,7 @@ class Printer:
     requestors = None
     requestor = None
     cachedPrinterDetails = {}
-    reservedCapabilityWords = [
+    reservedCapabilityWords = set((
         'Duplex', 'Resolution', 'Attribute', 'Choice', 'ColorDevice', 'ColorModel', 'ColorProfile',
         'Copyright', 'CustomMedia', 'Cutter', 'Darkness', 'DriverType', 'FileName', 'Filter',
         'Filter', 'Finishing', 'Font', 'Group', 'HWMargins', 'InputSlot', 'Installable',
@@ -41,7 +41,7 @@ class Printer:
         'MinSize', 'ModelName', 'ModelNumber', 'Option', 'PCFileName', 'SimpleColorProfile',
         'Throughput', 'UIConstraints', 'VariablePaperSize', 'Version', 'Color', 'Background',
         'Stamp', 'DestinationColorProfile'
-    ]
+    ))
     URIFormatLatest = 1
     URIFormat20140307 = 2
     URIFormat20140210 = 3
@@ -50,7 +50,9 @@ class Printer:
         """Create an instance of Printer, with authorised requestor
 
         Args:
-          requestors: list or cloudprintrequestor instance, A list of requestors, or a single requestor to use for all Cloud Print requests.
+          requestors: list or cloudprintrequestor instance, A list of
+          requestors, or a single requestor to use for all Cloud Print
+          requests.
         """
         if requestors is not None:
             if isinstance(requestors, list):
@@ -64,8 +66,7 @@ class Printer:
         cupsprinters = connection.getPrinters()
         accountPrinters = []
         for cupsprinter in cupsprinters:
-            id, requestor = self.getPrinterIDByURI(
-                cupsprinters[cupsprinter]['device-uri'])
+            id, requestor = self.getPrinterIDByURI(cupsprinters[cupsprinter]['device-uri'])
             if id is not None and requestor is not None:
                 if requestor.getAccount() == account:
                     accountPrinters.append(cupsprinters[cupsprinter])
@@ -98,15 +99,8 @@ class Printer:
         return allprinters
 
     def sanitizeText(self, text):
-        return (
-            text.replace(
-                '/',
-                '-').replace(':',
-                             '_').replace(';',
-                                          '_').replace(' ',
-                                                       '_').encode('utf8',
-                                                                   'ignore')
-        )
+        return text.replace('/', '-').replace(':', '_').replace(';', '_').replace(' ', '_') \
+            .encode('utf8', 'ignore')
 
     def printerNameToUri(self, account, printerid):
         """Generates a URI for the Cloud Print Printer
@@ -118,12 +112,9 @@ class Printer:
         Returns:
           string: URI for the printer
         """
-        return (
-            self.PROTOCOL + urllib.quote(account.encode('ascii', 'replace')) +
-            "/" +
-            urllib.quote(
-                printerid.encode('ascii', 'replace'))
-        )
+        account = urllib.quote(account.encode('ascii', 'replace'))
+        printer_id = urllib.quote(printerid.encode('ascii', 'replace'))
+        return "%s%s/%s" % (self.PROTOCOL, account, printer_id)
 
     def sanitizePrinterName(self, name):
         """Sanitizes printer name for CUPS
@@ -134,16 +125,7 @@ class Printer:
         Returns:
           string: CUPS-friendly name for the printer
         """
-        return (
-            re.sub(
-                '[^a-zA-Z0-9\-_]',
-                '',
-                name.encode(
-                    'ascii',
-                    'replace').replace(
-                    ' ',
-                    '_'))
-        )
+        return re.sub('[^a-zA-Z0-9\-_]', '', name.encode('ascii', 'replace').replace(' ', '_'))
 
     def addPrinter(self, printername, uri, connection, ppd=None):
         """Adds a printer to CUPS
@@ -167,7 +149,8 @@ class Printer:
             else:
                 printerppdname = ppd
             result = connection.addPrinter(
-                name=printername, ppdname=printerppdname, info=printername, location='Google Cloud Print', device=uri)
+                name=printername, ppdname=printerppdname, info=printername,
+                location='Google Cloud Print', device=uri)
             connection.enablePrinter(printername)
             connection.acceptJobs(printername)
             connection.setPrinterShared(printername, False)
@@ -398,7 +381,6 @@ class Printer:
         """
         import cups
         connection = cups.Connection()
-        cupsprinters = connection.getPrinters()
         overridecapabilities = self.getOverrideCapabilities(
             overrideoptionsstring)
         overrideDefaultDefaults = {'Duplex': 'None'}
@@ -472,7 +454,6 @@ class Printer:
                 return False
             fdata = Utils.ReadFile(b64file)
             os.unlink(b64file)
-            hsid = True
         elif jobtype in ['png', 'jpeg']:
             if not os.path.exists(jobfile):
                 print "ERROR: File doesnt exist"

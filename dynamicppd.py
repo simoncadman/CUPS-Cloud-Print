@@ -18,13 +18,13 @@
 import os
 import sys
 
-__list_format = '"cupscloudprint:%s:%s-%s.ppd" en "Google" "%s (%s)" "MFG:GOOGLE;DRV:GCP;CMD:POSTSCRIPT;MDL:%s;"'
+_list_format = '"cupscloudprint:%s:%s-%s.ppd" en "Google" "%s (%s)" "MFG:GOOGLE;DRV:GCP;CMD:POSTSCRIPT;MDL:%s;"'
 
 # Countries where letter sized paper is used, according to:
 # http://en.wikipedia.org/wiki/Letter_(paper_size)
-__letter_countries = set(('US', 'CA', 'MX', 'BO', 'CO', 'VE', 'PH', 'CL'))
+_letter_countries = set(('US', 'CA', 'MX', 'BO', 'CO', 'VE', 'PH', 'CL'))
 
-__ppd_template_head = """*PPD-Adobe: "4.3"
+_ppd_template_head = """*PPD-Adobe: "4.3"
 *%%%%%%%% PPD file for Cloud Print with CUPS.
 *FormatVersion: "4.3"
 *FileVersion: "1.0"
@@ -81,7 +81,7 @@ __ppd_template_head = """*PPD-Adobe: "4.3"
 *PaperDimension A4.Fullbleed/A4: "595 842"
 """
 
-__ppd_template_foot = """*DefaultFont: Courier
+_ppd_template_foot = """*DefaultFont: Courier
 *Font AvantGarde-Book: Standard "(1.05)" Standard ROM
 *Font AvantGarde-BookOblique: Standard "(1.05)" Standard ROM
 *Font AvantGarde-Demi: Standard "(1.05)" Standard ROM
@@ -133,8 +133,7 @@ def doList(sys, printer):
         name = foundprinter['name'].encode('ascii', 'replace')
         account = foundprinter['account']
         uri = printer.printerNameToUri(foundprinter['account'], foundprinter['id'])
-        print __list_format % \
-            (account_no_spaces, name_no_spaces, id, name, account, uri)
+        print _list_format % (account_no_spaces, name_no_spaces, id, name, account, uri)
     sys.exit(0)
 
 
@@ -145,12 +144,12 @@ def generatePPD(accountName, foundprinter):
     defaultlocale = locale.getdefaultlocale()[0]
     if defaultlocale is not None:
         language = defaultlocale
-        if len(language.split('_')) > 1 and language.split('_')[1] not in __letter_countries:
+        if len(language.split('_')) > 1 and language.split('_')[1] not in _letter_countries:
             defaultpapertype = "A4"
     if '_' in language and language.split("_")[0] != "en":
         language = language.split("_")[0]
     uri = printer.printerNameToUri(foundprinter['account'], foundprinter['id'])
-    ppd = __ppd_template_head % \
+    ppd = _ppd_template_head % \
         {'language': language, 'defaultpapertype': defaultpapertype, 'uri': uri}
     if len(sys.argv) > 3 and sys.argv[3] == "testmode" and os.path.exists('test-capabilities.serial'):
         with file("test-capabilities.serial") as f:
@@ -184,8 +183,7 @@ def generatePPD(accountName, foundprinter):
                 for option in capability['options']:
                     originOptionName = None
                     if 'displayName' in option and len(option['displayName']) > 0:
-                        originOptionName = printer.sanitizeText(
-                            option['displayName'])
+                        originOptionName = printer.sanitizeText(option['displayName'])
                     elif 'psk:DisplayName' in option and len(option['psk:DisplayName']) > 0:
                         originOptionName = printer.sanitizeText(option['psk:DisplayName'])
                     else:
@@ -206,7 +204,7 @@ def generatePPD(accountName, foundprinter):
             elif capability['type'] == 'ParameterDef':
                 pass
 
-    ppd += __ppd_template_foot
+    ppd += _ppd_template_foot
     return ppd
 
 

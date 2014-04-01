@@ -19,7 +19,6 @@ if __name__ == '__main__':  # pragma: no cover
     import sys
     import os
     import subprocess
-    import mimetypes
     import logging
 
     progname = 'cloudprint'
@@ -61,14 +60,12 @@ if __name__ == '__main__':  # pragma: no cover
         sys.exit(0)
 
     if len(sys.argv) < 6 or len(sys.argv) > 7:
-        sys.stderr.write("ERROR: Usage: " + progname +
-                         " job-id user title copies options [file]\n")
+        sys.stderr.write("ERROR: Usage: %s job-id user title copies options [file]\n" % progname)
         sys.exit(0)
 
     printFile = None
     if len(sys.argv) == 7:
-        prog, jobID, userName, jobTitle, copies,
-        printOptions, printFile = sys.argv
+        prog, jobID, userName, jobTitle, copies, printOptions, printFile = sys.argv
     else:
         prog, jobID, userName, jobTitle, copies, printOptions = sys.argv
 
