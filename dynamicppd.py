@@ -120,9 +120,9 @@ _ppd_template_foot = """*DefaultFont: Courier
 *% End of cloudprint.ppd, 04169 bytes."""
 
 
-def doList(sys, printer):
+def doList(sys, printer_manager):
     """Lists Google Cloud Print printers."""
-    printers = printer.getPrinters()
+    printers = printer_manager.getPrinters()
     if printers is None:
         sys.stderr.write("ERROR: No Printers Found\n")
         sys.exit(1)
@@ -132,7 +132,7 @@ def doList(sys, printer):
         id = foundprinter['id'].encode('ascii', 'replace').replace(' ', '-')
         name = foundprinter['name'].encode('ascii', 'replace')
         account = foundprinter['account']
-        uri = printer.printerNameToUri(foundprinter['account'], foundprinter['id'])
+        uri = printer_manager.printerNameToUri(foundprinter['account'], foundprinter['id'])
         print _list_format % (account_no_spaces, name_no_spaces, id, name, account, uri)
     sys.exit(0)
 
@@ -148,7 +148,7 @@ def generatePPD(accountName, foundprinter):
             defaultpapertype = "A4"
     if '_' in language and language.split("_")[0] != "en":
         language = language.split("_")[0]
-    uri = printer.printerNameToUri(foundprinter['account'], foundprinter['id'])
+    uri = printer_manager.printerNameToUri(foundprinter['account'], foundprinter['id'])
     ppd = _ppd_template_head % \
         {'language': language, 'defaultpapertype': defaultpapertype, 'uri': uri}
     if len(sys.argv) > 3 and sys.argv[3] == "testmode" and os.path.exists('test-capabilities.serial'):
@@ -156,22 +156,22 @@ def generatePPD(accountName, foundprinter):
             import ast
             foundprinter['fulldetails'] = ast.literal_eval(f.read())
     else:
-        printer.requestor = printer.findRequestorForAccount(accountName)
-        details = printer.getPrinterDetails(foundprinter['id'])
+        printer_manager.requestor = printer_manager.findRequestorForAccount(accountName)
+        details = printer_manager.getPrinterDetails(foundprinter['id'])
         foundprinter['fulldetails'] = details['printers'][0]
     if 'capabilities' in foundprinter['fulldetails']:
         addedCapabilities = []
         for capability in foundprinter['fulldetails']['capabilities']:
             originCapabilityName = None
             internalCapabilityName = \
-                printer.getInternalName(capability, 'capability', None, addedCapabilities)
+                printer_manager.getInternalName(capability, 'capability', None, addedCapabilities)
             addedCapabilities.append(internalCapabilityName)
             if 'displayName' in capability and len(capability['displayName']) > 0:
-                originCapabilityName = printer.sanitizeText(capability['displayName'])
+                originCapabilityName = printer_manager.sanitizeText(capability['displayName'])
             elif 'psk:DisplayName' in capability and len(capability['psk:DisplayName']) > 0:
-                originCapabilityName = printer.sanitizeText(capability['psk:DisplayName'])
+                originCapabilityName = printer_manager.sanitizeText(capability['psk:DisplayName'])
             else:
-                originCapabilityName = printer.sanitizeText(capability['name'])
+                originCapabilityName = printer_manager.sanitizeText(capability['name'])
             if capability['type'] == 'Feature':
                 ppd += '*OpenUI *%s/%s: PickOne\n' % \
                     (internalCapabilityName, internalCapabilityName)
@@ -183,13 +183,13 @@ def generatePPD(accountName, foundprinter):
                 for option in capability['options']:
                     originOptionName = None
                     if 'displayName' in option and len(option['displayName']) > 0:
-                        originOptionName = printer.sanitizeText(option['displayName'])
+                        originOptionName = printer_manager.sanitizeText(option['displayName'])
                     elif 'psk:DisplayName' in option and len(option['psk:DisplayName']) > 0:
-                        originOptionName = printer.sanitizeText(option['psk:DisplayName'])
+                        originOptionName = printer_manager.sanitizeText(option['psk:DisplayName'])
                     else:
-                        originOptionName = printer.sanitizeText(option['name'])
-                    internalOptionName = \
-                        printer.getInternalName(option, 'option', capability['name'], addedOptions)
+                        originOptionName = printer_manager.sanitizeText(option['name'])
+                    internalOptionName = printer_manager.getInternalName(
+                        option, 'option', capability['name'], addedOptions)
                     addedOptions.append(internalOptionName)
                     if 'default' in option and option['default']:
                         ppd += '*Default%s: %s\n' % (internalCapabilityName, internalOptionName)
@@ -217,11 +217,11 @@ def doCat():
         sys.exit(1)
 
     accountName = ppdparts[1]
-    printers = printer.getPrinters(accountName=accountName)
+    printers = printer_manager.getPrinters(accountName=accountName)
 
     if printers is None or len(printers) == 0:
         # still can't find printer specifically, try all accounts
-        printers = printer.getPrinters()
+        printers = printer_manager.getPrinters()
 
     if printers is None:
         sys.stderr.write("ERROR: No Printers Found\n")
@@ -256,7 +256,7 @@ if __name__ == '__main__':  # pragma: no cover
     sys.path.insert(0, libpath)
 
     from auth import Auth
-    from printer import Printer
+    from printer import PrinterManager
     from ccputils import Utils
     Utils.SetupLogging()
 
@@ -270,13 +270,13 @@ if __name__ == '__main__':  # pragma: no cover
         logging.error("backend tried to run with invalid config")
         sys.exit(1)
 
-    printer = Printer(requestors)
+    printer_manager = PrinterManager(requestors)
 
     if (len(sys.argv) < 2):
         showUsage()
 
     elif sys.argv[1] == 'list':
-        doList(sys, printer)
+        doList(sys, printer_manager)
 
     elif sys.argv[1] == 'cat':
         if len(sys.argv) == 2 or sys.argv[2] == "":

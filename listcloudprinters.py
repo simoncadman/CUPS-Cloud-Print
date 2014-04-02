@@ -18,9 +18,8 @@
 if __name__ == '__main__':  # pragma: no cover
 
     import sys
-    import logging
     from auth import Auth
-    from printer import Printer
+    from printer import PrinterManager
     from ccputils import Utils
     Utils.SetupLogging()
 
@@ -29,11 +28,11 @@ if __name__ == '__main__':  # pragma: no cover
     Utils.ShowVersion(CCPVersion)
 
     requestors, storage = Auth.SetupAuth(True)
-    printer = Printer(requestors)
-    printers = printer.getPrinters()
+    printer_manager = PrinterManager(requestors)
+    printers = printer_manager.getPrinters()
     if printers is None:
         print "No Printers Found"
         sys.exit(1)
 
     for foundprinter in printers:
-        print printer.getListDescription(foundprinter)
+        print printer_manager.getListDescription(foundprinter)

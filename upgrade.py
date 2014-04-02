@@ -28,7 +28,7 @@ if __name__ == '__main__':  # pragma: no cover
     from oauth2client import multistore_file
     from auth import Auth
     from ccputils import Utils
-    from printer import Printer
+    from printer import PrinterManager
     Utils.SetupLogging()
 
     # line below is replaced on commit
@@ -46,7 +46,7 @@ if __name__ == '__main__':  # pragma: no cover
         sys.stderr.write("Config is invalid or missing\n")
         logging.error("Upgrade tried to run with invalid config")
         sys.exit(0)
-    printerItem = Printer(requestors)
+    printer_manager = PrinterManager(requestors)
 
     logging.info("Upgrading to " + CCPVersion)
 
@@ -98,19 +98,19 @@ if __name__ == '__main__':  # pragma: no cover
         try:
             if (cupsprinters[device]["device-uri"].find("cloudprint://") == 0):
                 account, printername, printerid, formatid = \
-                    printerItem.parseLegacyURI(
+                    printer_manager.parseLegacyURI(
                         cupsprinters[device]["device-uri"],
                         requestors)
-                if formatid != Printer.URIFormatLatest:
+                if formatid != PrinterManager.URIFormatLatest:
                     # not latest format, needs upgrading
                     updatingmessage = "Updating "
                     updatingmessage += cupsprinters[device]["printer-info"]
                     updatingmessage += " with new id uri format"
                     print updatingmessage
-                    printerid, requestor = printerItem.getPrinterIDByDetails(
+                    printerid, requestor = printer_manager.getPrinterIDByDetails(
                         account, printername, printerid)
                     if printerid is not None:
-                        newDeviceURI = printerItem.printerNameToUri(
+                        newDeviceURI = printer_manager.printerNameToUri(
                             urllib.unquote(account),
                             printerid)
                         cupsprinters[device]["device-uri"] = newDeviceURI

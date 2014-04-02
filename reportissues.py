@@ -20,14 +20,13 @@ if __name__ == '__main__':  # pragma: no cover
     import sys
     import os
     import subprocess
-    import logging
     libpath = "/usr/local/share/cloudprint-cups/"
     if not os.path.exists(libpath):
         libpath = "/usr/share/cloudprint-cups"
     sys.path.insert(0, libpath)
 
     from auth import Auth
-    from printer import Printer
+    from printer import PrinterManager
     from ccputils import Utils
     Utils.SetupLogging()
 
@@ -36,28 +35,29 @@ if __name__ == '__main__':  # pragma: no cover
     Utils.ShowVersion(CCPVersion)
 
     requestors, storage = Auth.SetupAuth(True)
-    printer = Printer(requestors)
-    printers = printer.getPrinters(True)
+    printer_manager = PrinterManager(requestors)
+    printers = printer_manager.getPrinters(True)
     if printers is None:
         print "ERROR: No Printers Found"
         sys.exit(1)
 
     for foundprinter in printers:
-        print '"cupscloudprint:' + foundprinter['account'].encode('ascii', 'replace').replace(' ', '-') + ':' + foundprinter['name'].encode('ascii', 'replace').replace(' ', '-') + '.ppd" en "Google" "' + foundprinter['name'].encode('ascii', 'replace') + ' (' + foundprinter['account'] + ')" "MFG:GOOGLE;DRV:GCP;CMD:POSTSCRIPT;MDL:' + printer.printerNameToUri(foundprinter['account'], foundprinter['id']) + ';"'
+        printer_manager.printerNameToUri(foundprinter['account'], foundprinter['id'])
+        print '"cupscloudprint:%s:%s.ppd" en "Google" "%s (%s)" "MFG:GOOGLE;DRV:GCP;CMD:POSTSCRIPT;MDL:%s;"' % (
+            foundprinter['account'].encode('ascii', 'replace').replace(' ', '-'),
+            foundprinter['name'].encode('ascii', 'replace').replace(' ', '-'),
+            foundprinter['name'].encode('ascii', 'replace'),
+            foundprinter['account'])
         print ""
         print foundprinter['fulldetails']
         print "\n"
+        printer_string = 'cupscloudprint:%s:%s-%s.ppd' % (
+            foundprinter['account'].encode('ascii', 'replace').replace(' ', '-'),
+            foundprinter['name'].encode('ascii', 'replace').replace(' ', '-'),
+            foundprinter['id'].encode('ascii', 'replace').replace(' ', '-')
+        )
         p = subprocess.Popen(
-            [os.path.join(libpath,
-                          'dynamicppd.py'),
-             'cat',
-             ('cupscloudprint:' + foundprinter['account'].encode('ascii',
-                                                                 'replace').replace(' ',
-                                                                                    '-') + ':' + foundprinter['name'].encode('ascii',
-                                                                                                                             'replace').replace(' ',
-                                                                                                                                                '-') + '-' + foundprinter['id'].encode('ascii',
-                                                                                                                                                                                       'replace').replace(' ',
-                                                                                                                                                                                                          '-') + '.ppd').lstrip('-')],
+            (os.path.join(libpath, 'dynamicppd.py'), 'cat', printer_string.lstrip('-')),
             stdout=subprocess.PIPE)
         ppddata = p.communicate()[0]
         result = p.returncode

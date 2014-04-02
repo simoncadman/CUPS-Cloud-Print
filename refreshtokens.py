@@ -17,10 +17,8 @@
 
 if __name__ == '__main__':  # pragma: no cover
 
-    import sys
-    import logging
     from auth import Auth
-    from printer import Printer
+    from printer import PrinterManager
     from ccputils import Utils
     Utils.SetupLogging()
 

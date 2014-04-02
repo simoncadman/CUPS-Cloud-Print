@@ -78,7 +78,7 @@ if __name__ == '__main__':  # pragma: no cover
     import struct
     import math
     from auth import Auth
-    from printer import Printer
+    from printer import PrinterManager
     from ccputils import Utils
     Utils.SetupLogging()
 
@@ -121,8 +121,8 @@ if __name__ == '__main__':  # pragma: no cover
         connection = cups.Connection()
         cupsprinters = connection.getPrinters()
         prefix = ""
-        printer = Printer(requestor)
-        printers = printer.getPrinters()
+        printer_manager = PrinterManager(requestor)
+        printers = printer_manager.getPrinters()
         if printers is None:
             print "Sorry, no printers were found on your Google Cloud Print account."
             continue
@@ -161,7 +161,7 @@ if __name__ == '__main__':  # pragma: no cover
                         print "Not using prefix"
 
                 printername = prefix + ccpprinter['name'].encode('ascii', 'replace')
-                uri = printer.printerNameToUri(ccpprinter['account'], ccpprinter['id'])
+                uri = printer_manager.printerNameToUri(ccpprinter['account'], ccpprinter['id'])
                 found = False
                 for cupsprinter in cupsprinters:
                     if cupsprinters[cupsprinter]['device-uri'] == uri:
@@ -169,7 +169,7 @@ if __name__ == '__main__':  # pragma: no cover
                 if found:
                     print "\nPrinter with %s already exists\n" % printername
                 else:
-                    printer.addPrinter(printername, uri, connection)
+                    printer_manager.addPrinter(printername, uri, connection)
 
             continue
 
@@ -190,9 +190,7 @@ if __name__ == '__main__':  # pragma: no cover
                 print "Not using prefix"
 
         for ccpprinter in printers:
-            uri = printer.printerNameToUri(
-                ccpprinter['account'],
-                ccpprinter['id'])
+            uri = printer_manager.printerNameToUri(ccpprinter['account'], ccpprinter['id'])
             found = False
             for cupsprinter in cupsprinters:
                 if cupsprinters[cupsprinter]['device-uri'] == uri:
@@ -206,17 +204,17 @@ if __name__ == '__main__':  # pragma: no cover
             # check if printer name already exists
             foundbyname = False
             for ccpprinter2 in cupsprinters:
-                if printer.sanitizePrinterName(cupsprinters[ccpprinter2]['printer-info']) == \
-                        printer.sanitizePrinterName(printername):
+                if printer_manager.sanitizePrinterName(cupsprinters[ccpprinter2]['printer-info']) == \
+                        printer_manager.sanitizePrinterName(printername):
                     foundbyname = True
             if foundbyname and not unattended:
                 answer = raw_input('Printer %s already exists, supply another name (Y/N)? ' %
-                                   printer.sanitizePrinterName(printername))
+                                   printer_manager.sanitizePrinterName(printername))
                 if answer.startswith("Y") or answer.startswith("y"):
                     printername = raw_input("New printer name? ")
                 else:
                     answer = raw_input("Overwrite %s with new printer (Y/N)? " %
-                                       printer.sanitizePrinterName(printername))
+                                       printer_manager.sanitizePrinterName(printername))
                     if answer.lower().startswith("n"):
                         printername = ""
             elif foundbyname and unattended:
@@ -224,7 +222,7 @@ if __name__ == '__main__':  # pragma: no cover
                 printername = ""
 
             if printername != "":
-                printer.addPrinter(printername, uri, connection)
+                printer_manager.addPrinter(printername, uri, connection)
                 cupsprinters = connection.getPrinters()
                 addedCount += 1
 
@@ -234,10 +232,11 @@ if __name__ == '__main__':  # pragma: no cover
             print "No new printers to add"
 
     printer_uris = []
-    printer = Printer(requestors)
-    printers = printer.getPrinters()
+    printer_manager = PrinterManager(requestors)
+    printers = printer_manager.getPrinters()
     for foundprinter in printers:
-        printer_uris.append(printer.printerNameToUri(foundprinter['account'], foundprinter['id']))
+        uri = printer_manager.printerNameToUri(foundprinter['account'], foundprinter['id'])
+        printer_uris.append(uri)
 
     # check for printers to prune
     prunePrinters = []
@@ -245,7 +244,7 @@ if __name__ == '__main__':  # pragma: no cover
     cupsprinters = connection.getPrinters()
 
     for cupsprinter in cupsprinters:
-        if cupsprinters[cupsprinter]['device-uri'].startswith(printer.PROTOCOL) \
+        if cupsprinters[cupsprinter]['device-uri'].startswith(printer_manager.PROTOCOL) \
                 and cupsprinters[cupsprinter]['device-uri'] not in printer_uris:
             prunePrinters.append(cupsprinter)
 

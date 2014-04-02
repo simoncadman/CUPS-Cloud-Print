@@ -29,7 +29,7 @@ if __name__ == '__main__':  # pragma: no cover
     sys.path.insert(0, libpath)
 
     from auth import Auth
-    from printer import Printer
+    from printer import PrinterManager
     from ccputils import Utils
 
     Utils.SetupLogging()
@@ -43,16 +43,16 @@ if __name__ == '__main__':  # pragma: no cover
         sys.stderr.write("ERROR: config is invalid or missing\n")
         logging.error("backend tried to run with invalid config")
         sys.exit(1)
-    printer = Printer(requestors)
-    printers = printer.getPrinters()
+    printer_manager = PrinterManager(requestors)
+    printers = printer_manager.getPrinters()
 
     if len(sys.argv) == 1:
-        print printer.getBackendDescription()
+        print printer_manager.getBackendDescription()
 
         try:
             if printers is not None:
                 for foundprinter in printers:
-                    print printer.getBackendDescriptionForPrinter(foundprinter)
+                    print printer_manager.getBackendDescriptionForPrinter(foundprinter)
         except Exception as error:
             sys.stderr.write("ERROR: " + error)
             logging.error(error)
@@ -141,14 +141,14 @@ if __name__ == '__main__':  # pragma: no cover
             sys.stderr.write("INFO: Sending document to Cloud Print\n")
             logging.info("Sending " + pdfFile + " to cloud")
 
-            printerid, requestor = printer.getPrinterIDByURI(uri)
-            printer.requestor = requestor
+            printerid, requestor = printer_manager.getPrinterIDByURI(uri)
+            printer_manager.requestor = requestor
             if printerid is None:
-                print "ERROR: Printer '" + uri + "' not found"
+                print "ERROR: PrinterManager '" + uri + "' not found"
                 result = 1
             else:
-                if printer.submitJob(printerid, 'pdf', pdfFile,
-                                     jobTitle, printername, printOptions):
+                if printer_manager.submitJob(
+                        printerid, 'pdf', pdfFile, jobTitle, printername, printOptions):
                     print "INFO: Successfully printed"
                     result = 0
                 else:

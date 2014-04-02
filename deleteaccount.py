@@ -16,13 +16,8 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 if __name__ == '__main__':  # pragma: no cover
-    import cups
-    import os
-    import json
-    import sys
-    import logging
     from auth import Auth
-    from printer import Printer
+    from printer import PrinterManager
 
     from ccputils import Utils
     Utils.SetupLogging()
@@ -53,10 +48,9 @@ if __name__ == '__main__':  # pragma: no cover
                     deleteprintersanswer = raw_input(
                         "Also delete associated printers? ")
                     if deleteprintersanswer.lower().startswith("y"):
-                        printer = Printer(requestors)
+                        printer_manager = PrinterManager(requestors)
                         printers, connection = \
-                            printer.getCUPSPrintersForAccount(
-                                accounts[int(answer) - 1])
+                            printer_manager.getCUPSPrintersForAccount(accounts[int(answer) - 1])
                         if len(printers) == 0:
                             print "No printers to delete"
                         else:

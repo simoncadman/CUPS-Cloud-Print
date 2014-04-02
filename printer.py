@@ -26,7 +26,7 @@ from urlparse import urlparse
 from ccputils import Utils
 
 
-class Printer:
+class PrinterManager:
     BOUNDARY = mimetools.choose_boundary()
     CRLF = '\r\n'
     PROTOCOL = 'cloudprint://'
@@ -47,7 +47,7 @@ class Printer:
     URIFormat20140210 = 3
 
     def __init__(self, requestors):
-        """Create an instance of Printer, with authorised requestor
+        """Create an instance of PrinterManager, with authorised requestor
 
         Args:
           requestors: list or cloudprintrequestor instance, A list of
@@ -196,17 +196,17 @@ class Printer:
         uri = urlparse(uristring)
         pathparts = uri.path.strip('/').split('/')
         if len(pathparts) == 2:
-            formatId = Printer.URIFormat20140307
+            formatId = PrinterManager.URIFormat20140307
             printerId = urllib.unquote(pathparts[1])
             accountName = urllib.unquote(pathparts[0])
             printerName = urllib.unquote(uri.netloc)
         else:
             if urllib.unquote(uri.netloc) not in Auth.GetAccountNames(requestors):
-                formatId = Printer.URIFormat20140210
+                formatId = PrinterManager.URIFormat20140210
                 printerName = urllib.unquote(uri.netloc)
                 accountName = urllib.unquote(pathparts[0])
             else:
-                formatId = Printer.URIFormatLatest
+                formatId = PrinterManager.URIFormatLatest
                 printerId = urllib.unquote(pathparts[0])
                 printerName = None
                 accountName = urllib.unquote(uri.netloc)
