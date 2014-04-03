@@ -28,11 +28,11 @@ if __name__ == '__main__':  # pragma: no cover
     from oauth2client import multistore_file
     from auth import Auth
     from ccputils import Utils
-    from printer import PrinterManager
+    from printermanager import PrinterManager
     Utils.SetupLogging()
 
     # line below is replaced on commit
-    CCPVersion = "20140330 150225"
+    CCPVersion = "20140403 201514"
     Utils.ShowVersion(CCPVersion)
 
     if not os.path.exists("/etc/cloudprint.conf"):

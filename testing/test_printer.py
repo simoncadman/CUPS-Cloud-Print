@@ -19,7 +19,7 @@ import logging
 import sys
 sys.path.insert(0, ".")
 
-from printer import PrinterManager
+from printermanager import PrinterManager
 from test_mockrequestor import MockRequestor
 
 global requestors, printerItem

@@ -256,12 +256,12 @@ if __name__ == '__main__':  # pragma: no cover
     sys.path.insert(0, libpath)
 
     from auth import Auth
-    from printer import PrinterManager
+    from printermanager import PrinterManager
     from ccputils import Utils
     Utils.SetupLogging()
 
     # line below is replaced on commit
-    CCPVersion = "20140331 215708"
+    CCPVersion = "20140403 201514"
     Utils.ShowVersion(CCPVersion)
 
     requestors, storage = Auth.SetupAuth(False)

@@ -44,7 +44,7 @@ python2 -m compileall -q -f .
 %attr(644, root, lp) %{_usr}/share/cloudprint-cups/.coveragerc
 %attr(644, root, lp) %{_usr}/share/cloudprint-cups/auth.py
 %attr(644, root, lp) %{_usr}/share/cloudprint-cups/cloudprintrequestor.py
-%attr(644, root, lp) %{_usr}/share/cloudprint-cups/printer.py
+%attr(644, root, lp) %{_usr}/share/cloudprint-cups/printermanager.py
 %attr(644, root, lp) %{_usr}/share/cloudprint-cups/oauth2client/__init__.py
 %attr(644, root, lp) %{_usr}/share/cloudprint-cups/oauth2client/anyjson.py
 %attr(644, root, lp) %{_usr}/share/cloudprint-cups/oauth2client/client.py
