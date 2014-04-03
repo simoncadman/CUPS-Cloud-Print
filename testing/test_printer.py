@@ -19,7 +19,7 @@ import logging
 import sys
 sys.path.insert(0, ".")
 
-from printer import Printer
+from printer import PrinterManager
 from test_mockrequestor import MockRequestor
 
 global requestors, printerItem
@@ -164,12 +164,12 @@ def test_getCUPSPrintersForAccount():
 def test_instantiate():
     global requestors, printerItem
     # verify adding single requestor works
-    printerItem = Printer(requestors[0])
+    printerItem = PrinterManager(requestors[0])
     assert printerItem.requestors[0] == requestors[0]
     assert len(printerItem.requestors) == 1
 
     # verify adding whole array of requestors works
-    printerItem = Printer(requestors)
+    printerItem = PrinterManager(requestors)
     assert printerItem.requestors == requestors
     assert len(printerItem.requestors) == len(requestors)
 
