@@ -2,7 +2,7 @@ policy_module(cupscloudprint,1.0.0)
 
 gen_require(` type unconfined_t, etc_t, cupsd_t, admin_home_t, bin_t, locale_t, user_devpts_t; ')
 gen_require(` type cupsd_var_run_t, net_conf_t, proc_t, random_device_t, urandom_device_t, var_log_t; ')
-gen_require(` type cupsd_log_t, http_port_t, cert_t, lpr_exec_t, usr_t, cupsd_etc_t;')
+gen_require(` type cupsd_log_t, http_port_t, cert_t, lpr_exec_t, usr_t, cupsd_etc_t, user_tty_device_t;')
 gen_require(` role unconfined_r;')
 
 type cupscloudprint_t;
@@ -68,8 +68,10 @@ allow cupscloudprint_t usr_t:file { open getattr read };
 allow cupscloudprint_t etc_t:file { read open getattr };
 allow cupscloudprint_t etc_t:lnk_file read;
 allow cupscloudprint_t cupsd_etc_t:dir search;
-allow cupscloudprint_t cupsd_var_run_t:file read;
+allow cupscloudprint_t cupsd_var_run_t:file { read open getattr };
 
 allow cupsd_t cupscloudprint_etc_t:file lock;
 
 filetrans_pattern(cupscloudprint_t, etc_t, cupscloudprint_etc_t, file)
+
+allow cupscloudprint_t user_tty_device_t:chr_file { read write };
