@@ -74,4 +74,4 @@ allow cupsd_t cupscloudprint_etc_t:file lock;
 
 filetrans_pattern(cupscloudprint_t, etc_t, cupscloudprint_etc_t, file)
 
-allow cupscloudprint_t user_tty_device_t:chr_file { read write };
+allow cupscloudprint_t user_tty_device_t:chr_file { read write ioctl getattr };
