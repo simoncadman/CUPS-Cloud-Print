@@ -58,6 +58,7 @@ allow cupscloudprint_t cupsd_t:unix_stream_socket connectto;
 
 allow cupscloudprint_t cert_t:file { getattr open read};
 allow cupscloudprint_t cert_t:dir search;
+allow cupscloudprint_t cert_t:lnk_file read;
 
 allow cupscloudprint_t cupscloudprint_exec_t : file { ioctl read getattr lock execute entrypoint open } ;
 allow cupscloudprint_t cupscloudprint_log_t:file { read_file_perms append_file_perms };
