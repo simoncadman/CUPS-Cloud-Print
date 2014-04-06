@@ -1,0 +1,65 @@
+policy_module(cupscloudprint,1.0.0)
+
+gen_require(` type unconfined_t, etc_t, cupsd_t, admin_home_t, bin_t, locale_t, user_devpts_t; ')
+gen_require(` type cupsd_var_run_t, net_conf_t, proc_t, random_device_t, urandom_device_t, var_log_t; ')
+gen_require(` type cupsd_log_t, http_port_t, cert_t, lpr_exec_t;')
+
+type cupscloudprint_t;
+type cupscloudprint_exec_t;
+domain_type(cupscloudprint_t)
+domain_entry_file(cupscloudprint_t, cupscloudprint_exec_t)
+
+type cupscloudprint_log_t;
+logging_log_file(cupscloudprint_log_t)
+
+type cupscloudprint_etc_t;
+files_config_file(cupscloudprint_etc_t)
+
+# local policy
+allow cupsd_t cupscloudprint_exec_t:file { read getattr open };
+allow cupsd_t cupscloudprint_etc_t:file { write read open getattr};
+
+allow cupscloudprint_t self:tcp_socket { create getattr setopt connect write read };
+allow cupscloudprint_t http_port_t:tcp_socket name_connect;
+
+type_transition unconfined_t cupscloudprint_exec_t : process cupscloudprint_t;
+role unconfined_r types cupscloudprint_t;
+allow unconfined_t cupscloudprint_t:process transition;
+
+allow cupscloudprint_t admin_home_t:dir search;
+allow cupscloudprint_t bin_t:lnk_file read;
+allow cupscloudprint_t bin_t:file { read open execute execute_no_trans getattr };
+allow cupscloudprint_t locale_t:dir search;
+allow cupscloudprint_t locale_t:file { read open getattr };
+allow cupscloudprint_t user_devpts_t:chr_file { read write ioctl getattr };
+
+allow cupscloudprint_t cupsd_var_run_t:dir search;
+allow cupscloudprint_t cupsd_var_run_t:sock_file { getattr write };
+
+allow cupscloudprint_t lpr_exec_t:file { read open getattr execute execute_no_trans };
+
+allow cupscloudprint_t net_conf_t:file { read open getattr };
+allow cupscloudprint_t proc_t:file { read open getattr };
+allow cupscloudprint_t random_device_t:chr_file { open read };
+allow cupscloudprint_t urandom_device_t:chr_file { read open getattr };
+
+allow cupscloudprint_t self:netlink_route_socket { bind nlmsg_read write getattr create read};
+allow cupscloudprint_t self:process signal;
+allow cupscloudprint_t self:udp_socket { create write connect getattr read ioctl };
+allow cupscloudprint_t var_log_t:dir search;
+
+allow cupscloudprint_t cupsd_log_t:dir search;
+allow cupscloudprint_t cupsd_log_t:file { getattr setattr open append };
+
+allow cupscloudprint_t self:capability { chown dac_override };
+
+allow cupscloudprint_t cupsd_t:unix_stream_socket connectto;
+
+allow cupscloudprint_t cert_t:file { getattr open read};
+allow cupscloudprint_t cert_t:dir search;
+
+allow cupscloudprint_t cupscloudprint_exec_t : file { ioctl read getattr lock execute entrypoint open } ;
+allow cupscloudprint_t cupscloudprint_log_t:file { read_file_perms append_file_perms };
+allow cupscloudprint_t cupscloudprint_etc_t:file manage_file_perms;
+
+filetrans_pattern(cupscloudprint_t, etc_t, cupscloudprint_etc_t, file)

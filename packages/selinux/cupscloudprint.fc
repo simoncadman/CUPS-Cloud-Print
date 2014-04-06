@@ -1,0 +1,4 @@
+/etc/cloudprint.conf	--	gen_context(system_u:object_r:cupscloudprint_etc_t,s0)
+/usr/share/cloudprint-cups/(.*).py([co]?)	--	gen_context(system_u:object_r:cupscloudprint_exec_t,s0)
+/usr/share/cloudprint-cups/oauth2client/(.*).py([co]?)	--	gen_context(system_u:object_r:cupscloudprint_exec_t,s0)
+/usr/share/cloudprint-cups/testing/(.*).py([co]?)	--	gen_context(system_u:object_r:cupscloudprint_exec_t,s0)
