@@ -34,10 +34,24 @@ python2 -m compileall -q -f .
 %post
 %{_usr}/share/cloudprint-cups/upgrade.py
 
+# load selinux module if running selinux
+hash sestatus 2>&1 > /dev/null
+if [[ "$?" == 0 ]]; then
+    semodule -i %{_usr}/share/cloudprint-cups/selinux/cupscloudprint.pp
+fi
+
+%postun
+# remove selinux module if running selinux
+hash sestatus 2>&1 > /dev/null
+if [[ "$?" == 0 ]]; then
+    semodule -r cupscloudprint.pp
+fi
+
 %files
 %dir %{_usr}/share/cloudprint-cups/
 %dir %{_usr}/share/cloudprint-cups/oauth2client
 %dir %{_usr}/share/cloudprint-cups/testing
+%dir %{_usr}/share/cloudprint-cups/selinux
 %docdir %{_usr}/share/cloudprint-cups/testing/testfiles
 %{_usr}/%{_lib}/cups/backend/cloudprint
 %{_usr}/%{_lib}/cups/driver/cupscloudprint
@@ -71,6 +85,7 @@ python2 -m compileall -q -f .
 %attr(644, root, lp) %{_usr}/share/cloudprint-cups/testing/testfiles/*
 %attr(755, root, lp) %{_usr}/share/cloudprint-cups/testing/listdrivefiles.py
 %attr(744, root, root) %{_sysconfdir}/cron.daily/cupscloudprint
+%attr(644, root, root) %{_usr}/share/cloudprint-cups/selinux/*
 %doc %{_usr}/share/cloudprint-cups/COPYING
 %doc %{_usr}/share/cloudprint-cups/README.md
 
