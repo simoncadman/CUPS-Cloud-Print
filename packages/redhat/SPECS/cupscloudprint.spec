@@ -38,6 +38,9 @@ python2 -m compileall -q -f .
 hash sestatus 2>&1 > /dev/null
 if [[ "$?" == 0 ]]; then
     semodule -i %{_usr}/share/cloudprint-cups/selinux/cupscloudprint.pp
+    restorecon -RF %{_sysconfdir}/cloudprint.conf
+    restorecon -RF %{_usr}/share/cloudprint-cups/
+    restorecon -RF %{_localstatedir}/log
 fi
 
 %postun
