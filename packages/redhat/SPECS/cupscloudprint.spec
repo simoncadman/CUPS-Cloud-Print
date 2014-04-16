@@ -47,7 +47,7 @@ fi
 # remove selinux module if running selinux
 hash sestatus 2>&1 > /dev/null
 if [[ "$?" == 0 ]]; then
-    semodule -r cupscloudprint.pp
+    semodule -r cupscloudprint
 fi
 
 %files
