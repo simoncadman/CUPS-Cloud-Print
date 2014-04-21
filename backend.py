@@ -48,7 +48,7 @@ if __name__ == '__main__':  # pragma: no cover
 
     if len(sys.argv) == 7:
         prog, jobID, userName, jobTitle, copies, printOptions, printFile = sys.argv
-    else:
+    if len(sys.argv) == 6:
         prog, jobID, userName, jobTitle, copies, printOptions = sys.argv
         printFile = None
 
@@ -77,8 +77,8 @@ if __name__ == '__main__':  # pragma: no cover
         tmpDir = os.getenv('TMPDIR')
         if not tmpDir:
             tmpDir = "/tmp"
-        tempFile = '%s/%s-%s-cupsjob-%s' %
-            (tmpDir, jobID, userName, str(os.getpid())
+        tempFile = '%s/%s-%s-cupsjob-%s' % \
+            (tmpDir, jobID, userName, str(os.getpid()))
 
         OUT = open(tempFile, 'w')
 
