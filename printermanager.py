@@ -13,6 +13,7 @@
 #
 #    You should have received a copy of the GNU General Public License
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+import cups
 import json
 import urllib
 import os
@@ -63,7 +64,6 @@ class PrinterManager:
                 self.requestors = [requestors]
 
     def getCUPSPrintersForAccount(self, account):
-        import cups
         connection = cups.Connection()
         cupsprinters = connection.getPrinters()
         accountPrinters = []
@@ -85,7 +85,7 @@ class PrinterManager:
             if accountName is not None and accountName != requestor.getAccount():
                 continue
 
-            responseobj = requestor.doRequest('search?connection_status=ALL&client=webui')
+            responseobj = requestor.search()
 
             if 'printers' in responseobj and len(responseobj['printers']) > 0:
                 for printer in responseobj['printers']:
@@ -274,8 +274,7 @@ class PrinterManager:
           list: data from Google
         """
         if printerid not in self.cachedPrinterDetails:
-            printerdetails = self.requestor.doRequest(
-                'printer?printerid=%s' % (printerid))
+            printerdetails = self.requestor.printer(printerid)
             self.cachedPrinterDetails[printerid] = printerdetails
         else:
             printerdetails = self.cachedPrinterDetails[printerid]
@@ -380,7 +379,6 @@ class PrinterManager:
         Returns:
           List of capabilities
         """
-        import cups
         connection = cups.Connection()
         overridecapabilities = self.getOverrideCapabilities(
             overrideoptionsstring)
@@ -402,8 +400,7 @@ class PrinterManager:
                 overridecapabilities)
         )
 
-    def submitJob(self, printerid, jobtype, jobfile,
-                  jobname, printername, options=""):
+    def submitJob(self, printerid, jobtype, jobfile, jobname, printername, options=""):
         """Submit a job to printerid with content of dataUrl.
 
         Args:
@@ -485,12 +482,11 @@ class PrinterManager:
              json.dumps(self.getCapabilities(printerid, printername, options)))
         ]
         logging.info('Capability headers are: %s', headers[4])
-        edata = ""
-        if jobtype in ['pdf', 'jpeg', 'png']:
-            edata = self.encodeMultiPart(
-                headers, file_type=content_type[jobtype])
+        data = ""
+        if jobtype in ('pdf', 'jpeg', 'png'):
+            data = self.encodeMultiPart(headers, file_type=content_type[jobtype])
 
-        responseobj = self.requestor.doRequest('submit', None, edata, self.BOUNDARY)
+        responseobj = self.requestor.submit(data, self.BOUNDARY)
         try:
             if responseobj['success']:
                 return True

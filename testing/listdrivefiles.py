@@ -15,6 +15,20 @@
 #    You should have received a copy of the GNU General Public License
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+def getDriveFiles(requestors):
+    returnValue = []
+    for requestor in requestors:
+        responseobj = requestor.doRequest(
+            'files', endpointurl="https://www.googleapis.com/drive/v2")
+        if 'error' in responseobj:
+            print "Errored fetching files from drive"
+        else:
+            for item in responseobj['items']:
+                returnValue.append(item)
+    if len(returnValue) == 0:
+        return None
+    return returnValue
+
 if __name__ == '__main__':  # pragma: no cover
     import sys
     import logging
@@ -28,9 +42,9 @@ if __name__ == '__main__':  # pragma: no cover
     CCPVersion = "20140403 200811"
     Utils.ShowVersion(CCPVersion)
 
-    requestors, storage = Auth.SetupAuth(
-        True, permissions=['https://www.googleapis.com/auth/cloudprint', 'https://www.googleapis.com/auth/drive.readonly'])
-    files = Utils.GetDriveFiles(requestors)
+    requestors, storage = Auth.SetupAuth(True,
+        permissions=['https://www.googleapis.com/auth/cloudprint', 'https://www.googleapis.com/auth/drive.readonly'])
+    files = getDriveFiles(requestors)
     if files is None:
         print "No Files Found"
         sys.exit(1)

@@ -136,7 +136,7 @@ class Auth:
 
             if credentials:
                 # renew if expired
-                requestor = cloudprintrequestor()
+                requestor = CloudPrintRequestor()
                 if credentials.access_token_expired:
                     from oauth2client.client import AccessTokenRefreshError
                     try:
