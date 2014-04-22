@@ -45,6 +45,8 @@ class PrinterManager:
     URIFormatLatest = 1
     URIFormat20140307 = 2
     URIFormat20140210 = 3
+    backendDescription =\
+        'network %s "%s" "Google Cloud Print" "MFG:Google;MDL:Cloud Print;DES:GoogleCloudPrint;"'
 
     def __init__(self, requestors):
         """Create an instance of PrinterManager, with authorised requestor
@@ -83,8 +85,7 @@ class PrinterManager:
             if accountName is not None and accountName != requestor.getAccount():
                 continue
 
-            responseobj = requestor.doRequest(
-                'search?connection_status=ALL&client=webui')
+            responseobj = requestor.doRequest('search?connection_status=ALL&client=webui')
 
             if 'printers' in responseobj and len(responseobj['printers']) > 0:
                 for printer in responseobj['printers']:
@@ -442,7 +443,7 @@ class PrinterManager:
                 if result != 0:
                     print "ERROR: Failed to rotate PDF"
                     logging.error("Failed to rotate pdf: " +
-                                  str(['convert', '-density', '300x300', jobfile.lstrip('-'), '-rotate', str(rotate), jobfile.lstrip('-')]))
+                        str(['convert', '-density', '300x300', jobfile.lstrip('-'), '-rotate', str(rotate), jobfile.lstrip('-')]))
                     logging.error(output)
                     return False
                 if not os.path.exists(jobfile):
@@ -489,13 +490,13 @@ class PrinterManager:
             edata = self.encodeMultiPart(
                 headers, file_type=content_type[jobtype])
 
-        responseobj = self.requestor.doRequest(
-            'submit', None, edata, self.BOUNDARY)
+        responseobj = self.requestor.doRequest('submit', None, edata, self.BOUNDARY)
         try:
             if responseobj['success']:
                 return True
             else:
-                print 'ERROR: Error response from Cloud Print for type %s: %s' % (jobtype, responseobj['message'])
+                print 'ERROR: Error response from Cloud Print for type %s: %s' %\
+                    (jobtype, responseobj['message'])
                 return False
 
         except Exception as error_msg:
@@ -520,16 +521,11 @@ class PrinterManager:
                 fixedNameMap['psk:Portrait'] = "Portrait"
         else:
             # capability
-            fixedNameMap[
-                'ns1:Colors'] = "ColorModel"
-            fixedNameMap[
-                'ns1:PrintQualities'] = "OutputMode"
-            fixedNameMap[
-                'ns1:InputBins'] = "InputSlot"
-            fixedNameMap[
-                'psk:JobDuplexAllDocumentsContiguously'] = "Duplex"
-            fixedNameMap[
-                'psk:PageOrientation'] = "Orientation"
+            fixedNameMap['ns1:Colors'] = "ColorModel"
+            fixedNameMap['ns1:PrintQualities'] = "OutputMode"
+            fixedNameMap['ns1:InputBins'] = "InputSlot"
+            fixedNameMap['psk:JobDuplexAllDocumentsContiguously'] = "Duplex"
+            fixedNameMap['psk:PageOrientation'] = "Orientation"
 
         for itemName in fixedNameMap:
             if details['name'] == itemName:
@@ -549,7 +545,9 @@ class PrinterManager:
             sanitisedName = 'GCP_' + sanitisedName
 
         # only sanitise, no hash
-        if returnValue is None and len(sanitisedName) <= 30 and sanitisedName.decode("utf-8", 'ignore').encode("ascii", "ignore") == sanitisedName:
+        if returnValue is None
+            and len(sanitisedName) <= 30
+            and sanitisedName.decode("utf-8", 'ignore').encode("ascii", "ignore") == sanitisedName:
             returnValue = sanitisedName
 
         if returnValue is None:
@@ -573,22 +571,18 @@ class PrinterManager:
         return returnValue
 
     def getBackendDescription(self):
-        return "network cloudprint \"Unknown\" \"Google Cloud Print\""
+        return 'network cloudprint "Unknown" "Google Cloud Print"'
 
     def getListDescription(self, foundprinter):
         printerName = foundprinter['name']
         if 'displayName' in foundprinter:
             printerName = foundprinter['displayName']
-        return (
-            printerName.encode(
-                'ascii',
-                'replace') + ' - ' + self.printerNameToUri(foundprinter['account'],
-                                                           foundprinter['id']) + " - " + foundprinter['account']
-        )
+        return '%s - %s - %s' % (
+            printerName.encode('ascii', 'replace'),
+            self.printerNameToUri(foundprinter['account'], foundprinter['id']),
+            foundprinter['account'])
 
     def getBackendDescriptionForPrinter(self, foundprinter):
-        return (
-            "network " + self.printerNameToUri(foundprinter['account'], foundprinter['id']) + " " + "\"" +
-            foundprinter[
-                'name'] + "\" \"Google Cloud Print\"" + " \"MFG:Google;MDL:Cloud Print;DES:GoogleCloudPrint;\""
-        )
+        return self.backendDescription % (
+            self.printerNameToUri(foundprinter['account'], foundprinter['id']),
+            foundprinter['name'])
