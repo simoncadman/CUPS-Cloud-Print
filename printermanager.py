@@ -541,9 +541,9 @@ class PrinterManager:
             sanitisedName = 'GCP_' + sanitisedName
 
         # only sanitise, no hash
-        if returnValue is None
-            and len(sanitisedName) <= 30
-            and sanitisedName.decode("utf-8", 'ignore').encode("ascii", "ignore") == sanitisedName:
+        if returnValue is None and\
+            len(sanitisedName) <= 30 and\
+            sanitisedName.decode("utf-8", 'ignore').encode("ascii", "ignore") == sanitisedName:
             returnValue = sanitisedName
 
         if returnValue is None:
