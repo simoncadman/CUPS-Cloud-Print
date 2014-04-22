@@ -18,7 +18,7 @@ import json
 import sys
 
 
-class cloudprintrequestor(httplib2.Http):
+class CloudPrintRequestor(httplib2.Http):
 
     CLOUDPRINT_URL = 'https://www.google.com/cloudprint'
     account = None

@@ -52,7 +52,7 @@ class PrinterManager:
         """Create an instance of PrinterManager, with authorised requestor
 
         Args:
-          requestors: list or cloudprintrequestor instance, A list of
+          requestors: list or CloudPrintRequestor instance, A list of
           requestors, or a single requestor to use for all Cloud Print
           requests.
         """

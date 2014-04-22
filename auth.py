@@ -19,7 +19,7 @@ import os
 import sys
 from oauth2client import client
 from oauth2client import multistore_file
-from cloudprintrequestor import cloudprintrequestor
+from cloudprintrequestor import CloudPrintRequestor
 from ccputils import Utils
 
 
