@@ -34,5 +34,5 @@ if __name__ == '__main__':  # pragma: no cover
         print "No Printers Found"
         sys.exit(1)
 
-    for foundprinter in printers:
-        print printer_manager.getListDescription(foundprinter)
+    for printer in printers:
+        print printer.getListDescription()

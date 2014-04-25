@@ -61,12 +61,12 @@ if __name__ == '__main__':  # pragma: no cover
     printers = printer_manager.getPrinters()
 
     if len(sys.argv) == 1:
-        print printer_manager.getBackendDescription()
+        print 'network cloudprint "Unknown" "Google Cloud Print"'
 
         if printers is not None:
             try:
-                for foundprinter in printers:
-                    print printer_manager.getBackendDescriptionForPrinter(foundprinter)
+                for printer in printers:
+                    print printer.getBackendDescription()
             except Exception as error:
                 sys.stderr.write("ERROR: " + error)
                 logging.error(error)
@@ -98,17 +98,16 @@ if __name__ == '__main__':  # pragma: no cover
         copies = 1
 
     uri = os.getenv('DEVICE_URI')
-    printername = os.getenv('PRINTER')
+    cupsprintername = os.getenv('PRINTER')
     if uri is None:
-        message =\
-            'URI must be "cloudprint://<account name>/<cloud printer id>"!\n'
+        message = 'URI must be "cloudprint://<account name>/<cloud printer id>"!\n'
         sys.stdout.write(message)
         sys.exit(255)
 
     logging.info("Printing file " + printFile)
     optionsstring = ' '.join(["'%s'" % option for option in sys.argv])
     logging.info("Device is %s , printername is %s, params are: %s" %
-        (uri, printername, optionsstring))
+        (uri, cupsprintername, optionsstring))
 
     pdfFile = printFile + ".pdf"
     if Utils.which("ps2pdf") is None:
@@ -119,6 +118,7 @@ if __name__ == '__main__':  # pragma: no cover
 
     result = 0
 
+    logging.info('is this a pdf? ' + printFile)
     if not Utils.fileIsPDF(printFile):
         sys.stderr.write("INFO: Converting print job to PDF\n")
         if subprocess.call(convertToPDFParams) != 0:
@@ -135,13 +135,11 @@ if __name__ == '__main__':  # pragma: no cover
         sys.stderr.write("INFO: Sending document to Cloud Print\n")
         logging.info("Sending %s to cloud" % pdfFile)
 
-        printerid, requestor = printer_manager.getPrinterIDByURI(uri)
-        printer_manager.requestor = requestor
-        if printerid is None:
+        printer = printer_manager.getPrinterByURI(uri)
+        if printer is None:
             print "ERROR: PrinterManager '%s' not found" % uri
             result = 1
-        elif printer_manager.submitJob(
-                printerid, 'pdf', pdfFile, jobTitle, printername, printOptions):
+        elif printer.submitJob('pdf', pdfFile, jobTitle, cupsprintername, printOptions):
             print "INFO: Successfully printed"
             result = 0
         else:

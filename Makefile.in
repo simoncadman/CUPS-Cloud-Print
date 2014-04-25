@@ -18,6 +18,7 @@ install: all
 	${INSTALL} -m 644 ${srcdir}/ccputils.py ${prefix}/share/cloudprint-cups/
 	${INSTALL} -m 644 ${srcdir}/cloudprintrequestor.py ${prefix}/share/cloudprint-cups/
 	${INSTALL} -m 644 ${srcdir}/printermanager.py ${prefix}/share/cloudprint-cups/
+	${INSTALL} -m 644 ${srcdir}/printer.py ${prefix}/share/cloudprint-cups/
 	${INSTALL} -m 644 ${srcdir}/auth.py ${prefix}/share/cloudprint-cups/
 	${INSTALL} -m 644 ${srcdir}/.coveragerc ${prefix}/share/cloudprint-cups/
 	unlink ${prefix}/share/cloudprint-cups/pre-commit.py
