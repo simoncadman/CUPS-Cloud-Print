@@ -239,21 +239,3 @@ class Utils:
             return None
 
     Base64Encode = staticmethod(Base64Encode)
-
-    def GetDriveFiles(requestors):
-        returnValue = []
-        for requestor in requestors:
-            responseobj = requestor.doRequest(
-                'files',
-                endpointurl="https://www.googleapis.com/drive/v2")
-            if 'error' in responseobj:
-                print "Errored fetching files from drive"
-                pass
-            else:
-                for item in responseobj['items']:
-                    returnValue.append(item)
-        if len(returnValue) == 0:
-            return None
-        return returnValue
-
-    GetDriveFiles = staticmethod(GetDriveFiles)

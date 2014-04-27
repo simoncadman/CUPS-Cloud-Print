@@ -18,7 +18,7 @@ import json
 import sys
 
 
-class cloudprintrequestor(httplib2.Http):
+class CloudPrintRequestor(httplib2.Http):
 
     CLOUDPRINT_URL = 'https://www.google.com/cloudprint'
     account = None
@@ -39,8 +39,8 @@ class cloudprintrequestor(httplib2.Http):
         """
         return self.account
 
-    def doRequest(self, path, headers=None, data=None,
-                  boundary=None, testResponse=None, endpointurl=None):
+    def doRequest(self, path, headers=None, data=None, boundary=None, testResponse=None,
+                  endpointurl=None):
         """Sends a request to Google Cloud Print
 
         Args:
@@ -80,3 +80,12 @@ class cloudprintrequestor(httplib2.Http):
             raise e
 
         return decodedresponse
+
+    def search(self):
+        return self.doRequest('search?connection_status=ALL&client=webui')
+
+    def printer(self, printerid):
+        return self.doRequest('printer?printerid=%s' % printerid)
+
+    def submit(self, edata, boundary):
+        return self.doRequest('submit', data=edata, boundary=boundary)

@@ -161,15 +161,14 @@ if __name__ == '__main__':  # pragma: no cover
                         print "Not using prefix"
 
                 printername = prefix + ccpprinter['name'].encode('ascii', 'replace')
-                uri = printer_manager.printerNameToUri(ccpprinter['account'], ccpprinter['id'])
                 found = False
                 for cupsprinter in cupsprinters:
-                    if cupsprinters[cupsprinter]['device-uri'] == uri:
+                    if cupsprinters[cupsprinter]['device-uri'] == ccpprinter.getURI():
                         found = True
                 if found:
                     print "\nPrinter with %s already exists\n" % printername
                 else:
-                    printer_manager.addPrinter(printername, uri, connection)
+                    printer_manager.addPrinter(printername, ccpprinter.getURI(), connection)
 
             continue
 
@@ -190,10 +189,9 @@ if __name__ == '__main__':  # pragma: no cover
                 print "Not using prefix"
 
         for ccpprinter in printers:
-            uri = printer_manager.printerNameToUri(ccpprinter['account'], ccpprinter['id'])
             found = False
             for cupsprinter in cupsprinters:
-                if cupsprinters[cupsprinter]['device-uri'] == uri:
+                if cupsprinters[cupsprinter]['device-uri'] == ccpprinter.getURI():
                     found = True
 
             if found:
@@ -234,9 +232,8 @@ if __name__ == '__main__':  # pragma: no cover
     printer_uris = []
     printer_manager = PrinterManager(requestors)
     printers = printer_manager.getPrinters()
-    for foundprinter in printers:
-        uri = printer_manager.printerNameToUri(foundprinter['account'], foundprinter['id'])
-        printer_uris.append(uri)
+    for printer in printers:
+        printer_uris.append(printer.getURI())
 
     # check for printers to prune
     prunePrinters = []

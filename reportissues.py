@@ -41,23 +41,14 @@ if __name__ == '__main__':  # pragma: no cover
         print "ERROR: No Printers Found"
         sys.exit(1)
 
-    for foundprinter in printers:
-        printer_manager.printerNameToUri(foundprinter['account'], foundprinter['id'])
-        print '"cupscloudprint:%s:%s.ppd" en "Google" "%s (%s)" "MFG:GOOGLE;DRV:GCP;CMD:POSTSCRIPT;MDL:%s;"' % (
-            foundprinter['account'].encode('ascii', 'replace').replace(' ', '-'),
-            foundprinter['name'].encode('ascii', 'replace').replace(' ', '-'),
-            foundprinter['name'].encode('ascii', 'replace'),
-            foundprinter['account'])
+    for printer in printers:
+        print printer.getCUPSListDescription()
         print ""
-        print foundprinter['fulldetails']
+        print printer
         print "\n"
-        printer_string = 'cupscloudprint:%s:%s-%s.ppd' % (
-            foundprinter['account'].encode('ascii', 'replace').replace(' ', '-'),
-            foundprinter['name'].encode('ascii', 'replace').replace(' ', '-'),
-            foundprinter['id'].encode('ascii', 'replace').replace(' ', '-')
-        )
+        ppdname = printer.getPPDName()
         p = subprocess.Popen(
-            (os.path.join(libpath, 'dynamicppd.py'), 'cat', printer_string.lstrip('-')),
+            (os.path.join(libpath, 'dynamicppd.py'), 'cat', ppdname.lstrip('-')),
             stdout=subprocess.PIPE)
         ppddata = p.communicate()[0]
         result = p.returncode
@@ -65,10 +56,7 @@ if __name__ == '__main__':  # pragma: no cover
         tempfile.write(ppddata)
         tempfile.close()
 
-        p = subprocess.Popen(
-            ['cupstestppd',
-             '/tmp/.ppdfile'],
-            stdout=subprocess.PIPE)
+        p = subprocess.Popen(['cupstestppd', '/tmp/.ppdfile'], stdout=subprocess.PIPE)
         testdata = p.communicate()[0]
         result = p.returncode
         print "Result of cupstestppd was " + str(result)

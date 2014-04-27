@@ -19,7 +19,7 @@ import os
 import sys
 from oauth2client import client
 from oauth2client import multistore_file
-from cloudprintrequestor import cloudprintrequestor
+from cloudprintrequestor import CloudPrintRequestor
 from ccputils import Utils
 
 
@@ -136,7 +136,7 @@ class Auth:
 
             if credentials:
                 # renew if expired
-                requestor = cloudprintrequestor()
+                requestor = CloudPrintRequestor()
                 if credentials.access_token_expired:
                     from oauth2client.client import AccessTokenRefreshError
                     try:
