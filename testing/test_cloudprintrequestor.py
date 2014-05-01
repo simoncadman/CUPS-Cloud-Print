@@ -19,7 +19,7 @@ import logging
 import sys
 sys.path.insert(0, ".")
 
-from cloudprintrequestor import cloudprintrequestor
+from cloudprintrequestor import CloudPrintRequestor
 
 global requestor
 
@@ -31,7 +31,7 @@ def teardown_function(function):
 
 def setup_function(function):
     global requestor
-    requestor = cloudprintrequestor()
+    requestor = CloudPrintRequestor()
 
 
 def test_requestor():
