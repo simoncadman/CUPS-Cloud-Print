@@ -1,6 +1,6 @@
 #! /bin/sh
 "true" '''\'
-if command -v python2; then
+if command -v python2 > /dev/null; then
   exec python2 "$0" "$@"
 else
   exec python "$0" "$@"
@@ -92,7 +92,7 @@ if __name__ == '__main__':  # pragma: no cover
     Utils.SetupLogging()
 
     # line below is replaced on commit
-    CCPVersion = "20140403 201514"
+    CCPVersion = "20140501 203545"
     Utils.ShowVersion(CCPVersion)
 
     unattended = False
