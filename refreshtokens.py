@@ -1,4 +1,13 @@
-#! /usr/bin/env python2
+#! /bin/sh
+"true" '''\'
+if command -v python2; then
+  exec python2 "$0" "$@"
+else
+  exec python "$0" "$@"
+fi
+exit $?
+'''
+
 #    CUPS Cloudprint - Print via Google Cloud Print
 #    Copyright (C) 2014 Simon Cadman
 #
