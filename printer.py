@@ -247,8 +247,11 @@ class Printer(object):
                             (internalCapabilityName, internalOptionName, internalOptionName)
                         # translation of option, allows use of 8
                         # bit chars
-                        ppd += '*%s.%s %s/%s: ""\n' % \
-                            (language, internalCapabilityName, internalOptionName, originOptionName)
+                        value = ''
+                        if 'ppd:value' in option:
+                            value = option['ppd:value']
+                        ppd += '*%s.%s %s/%s: "%s"\n' % \
+                            (language, internalCapabilityName, internalOptionName, originOptionName, value)
 
                     ppd += '*CloseUI: *%s\n' % internalCapabilityName
                 elif capability['type'] == 'ParameterDef':
