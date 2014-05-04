@@ -71,7 +71,6 @@ class PrinterManager:
         for cupsprinter in cupsprinters:
             printer = self.getPrinterByURI(cupsprinters[cupsprinter]['device-uri'])
             if printer is not None:
-                print printer.getAccount() , account
                 if printer.getAccount() == account:
                     accountPrinters.append(cupsprinters[cupsprinter])
         return accountPrinters, connection
@@ -220,21 +219,6 @@ class PrinterManager:
         else:
             return None, None
 
-    def getPrinterDetails(self, printerid):
-        """Gets details about printer from Google
-
-        Args:
-          printerid: string, Google printer id
-        Return:
-          list: data from Google
-        """
-        if printerid not in self.cachedPrinterDetails:
-            printerdetails = self.requestor.printer(printerid)
-            self.cachedPrinterDetails[printerid] = printerdetails
-        else:
-            printerdetails = self.cachedPrinterDetails[printerid]
-        return printerdetails
-
     def getOverrideCapabilities(self, overrideoptionsstring):
         overrideoptions = overrideoptionsstring.split(' ')
         overridecapabilities = {}
@@ -255,47 +239,3 @@ class PrinterManager:
                 overridecapabilities['Orientation'] = 'Landscape'
 
         return overridecapabilities
-
-    def getCapabilitiesDict(
-            self, attrs, printercapabilities, overridecapabilities):
-        capabilities = {"capabilities": []}
-        for attr in attrs:
-            if attr['name'].startswith('Default'):
-                # gcp setting, reverse back to GCP capability
-                gcpname = None
-                hashname = attr['name'].replace('Default', '')
-
-                # find item name from hashes
-                gcpoption = None
-                addedCapabilities = []
-                for capability in printercapabilities:
-                    if hashname == self.getInternalName(capability, 'capability'):
-                        gcpname = capability['name']
-                        for option in capability['options']:
-                            internalCapability = self.getInternalName(
-                                option, 'option', gcpname, addedCapabilities)
-                            addedCapabilities.append(internalCapability)
-                            if attr['value'] == internalCapability:
-                                gcpoption = option['name']
-                                break
-                        addedOptions = []
-                        for overridecapability in overridecapabilities:
-                            if 'Default' + overridecapability == attr['name']:
-                                selectedoption = overridecapabilities[
-                                    overridecapability]
-                                for option in capability['options']:
-                                    internalOption = self.getInternalName(
-                                        option, 'option', gcpname, addedOptions)
-                                    addedOptions.append(internalOption)
-                                    if selectedoption == internalOption:
-                                        gcpoption = option['name']
-                                        break
-                                break
-                        break
-
-                # hardcoded to feature type temporarily
-                if gcpname is not None and gcpoption is not None:
-                    capabilities['capabilities'].append(
-                        {'type': 'Feature', 'name': gcpname, 'options': [{'name': gcpoption}]})
-        return capabilities
-

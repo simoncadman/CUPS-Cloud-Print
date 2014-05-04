@@ -177,87 +177,16 @@ def test_getOverrideCapabilities():
         'test': 'one',
         'anothertest': 'two'}
 
-
-def test_getCapabilities():
-    global printerManagerInstance, requestors
-    foundprinters, connection = printerManagerInstance.getCUPSPrintersForAccount(
-        requestors[1].getAccount())
-
-    # total printer
-    totalPrinters = 0
-    for requestor in requestors:
-        totalPrinters += len(requestor.printers)
-
-    fullprinters = printerManagerInstance.getPrinters(True)
-
-    printers = printerManagerInstance.getPrinters()
-    printer = printers[0]
-    uri = printerManagerInstance.printerNameToUri(
-        requestors[1].getAccount(),
-        printer['id'])
-    account, printerid = printerManagerInstance.parseURI(uri)
-    printerId = printerManagerInstance._getPrinterIdFromURI(uri)
-
-    # get ppd
-    ppdid = 'MFG:GOOGLE;DRV:GCP;CMD:POSTSCRIPT;MDL:'
-    ppds = connection.getPPDs(ppd_device_id=ppdid)
-    printerppdname, printerppd = ppds.popitem()
-
-    # add test printer to cups
-    assert printerManagerInstance.addPrinter(
-        printer['name'],
-        uri,
-        connection,
-        printerppdname) is not None
-    foundprinters, newconnection = printerManagerInstance.getCUPSPrintersForAccount(
-        requestors[1].getAccount())
-
-    emptyoptions = printerManagerInstance.getCapabilities(
-        printerId,
-        printerManagerInstance.sanitizePrinterName(printer['name']),
-        "")
-    assert isinstance(emptyoptions, dict)
-    assert isinstance(emptyoptions['capabilities'], list)
-    assert len(emptyoptions['capabilities']) == 0
-
-    # delete test printer
-    connection.deletePrinter(printerManagerInstance.sanitizePrinterName(printer['name']))
-
-
-def test_GetCapabilitiesDict():
-    global printerManagerInstance, requestors
-    assert printerManagerInstance.getCapabilitiesDict(
-        {},
-        {},
-        {}) == {"capabilities": []}
-    assert printerManagerInstance.getCapabilitiesDict(
-        [{'name': 'test'}],
-        {},
-        {}) == {"capabilities": []}
-    assert printerManagerInstance.getCapabilitiesDict(
-        [{'name': 'Default' + 'test', 'value': 'test'}],
-        [{'name': printerManagerInstance.getInternalName({'name': "test"}, 'capability'),
-          'value': printerManagerInstance.getInternalName({'name': "test123"},
-                                               'option', printerManagerInstance.getInternalName({'name': "Defaulttest"}, 'capability'), []),
-          'options': [{'name': 'test'}, {'name': 'test2'}]}], {}) == {'capabilities': [{'name': 'test', 'options': [{'name': 'test'}], 'type': 'Feature'}]}
-    assert printerManagerInstance.getCapabilitiesDict(
-        [{'name': 'Default' + 'test', 'value': 'test'}],
-        [{'name': printerManagerInstance.getInternalName({'name': "test"}, 'capability'),
-          'value': printerManagerInstance.getInternalName({'name': "test123"},
-                                               'option', printerManagerInstance.getInternalName({'name': "Defaulttest"}, 'capability'), []),
-          'options': [{'name': 'test'}, {'name': 'test2'}]}], {'test': 'test2'}) == {'capabilities': [{'name': 'test', 'options': [{'name': 'test2'}], 'type': 'Feature'}]}
-
-
-def test_GetPrinterIDByURIFails():
+def test_GetPrinterByURIFails():
     global printerManagerInstance, requestors
 
     # ensure invalid account returns None/None
-    printerIdNoneTest = printerManagerInstance._getPrinterIdFromURI(
+    printerIdNoneTest = printerManagerInstance.getPrinterByURI(
         'cloudprint://testprinter/accountthatdoesntexist')
     assert printerIdNoneTest is None
 
     # ensure invalid printer on valid account returns None/None
-    printerIdNoneTest = printerManagerInstance._getPrinterIdFromURI(
+    printerIdNoneTest = printerManagerInstance.getPrinterByURI(
         'cloudprint://testprinter/' + urllib.quote(requestors[0].getAccount()))
     assert printerIdNoneTest is None
 
@@ -266,74 +195,9 @@ def test_addPrinterFails():
     global printerManagerInstance
     assert printerManagerInstance.addPrinter('', '', '') == False
 
-
-def test_findPrinterFails():
-    global printerManagerInstance
-    printerManagerInstance.requestor = requestors[0]
-    assert printerManagerInstance.getPrinterDetails('dsah-sdhjsda-sd') is None
-
-
 def test_invalidRequest():
     testMock = MockRequestor()
     assert testMock.doRequest('thisrequestisinvalid') is None
-
-
-def test_internalName():
-    global printerManagerInstance
-
-    internalCapabilityTests = []
-
-    # generate test cases for each reserved word
-    # for word in printerManagerInstance.reservedCapabilityWords:
-    #    internalCapabilityTests.append( { 'name' : word } )
-
-    # load test file and try all those
-    for filelineno, line in enumerate(open('testing/testfiles/capabilitylist')):
-        internalCapabilityTests.append({'name': line.decode("utf-8")})
-
-    for internalTest in internalCapabilityTests:
-        assert printerManagerInstance.getInternalName(
-            internalTest,
-            'capability') not in printerManagerInstance.reservedCapabilityWords
-        assert ':' not in printerManagerInstance.getInternalName(
-            internalTest,
-            'capability')
-        assert ' ' not in printerManagerInstance.getInternalName(
-            internalTest,
-            'capability')
-        assert len(
-            printerManagerInstance.getInternalName(
-                internalTest,
-                'capability')) <= 30
-        assert len(
-            printerManagerInstance.getInternalName(
-                internalTest,
-                'capability')) >= 1
-
-    for internalTest in internalCapabilityTests:
-        for capabilityName in ["psk:JobDuplexAllDocumentsContiguously", "other", "psk:PageOrientation"]:
-            assert printerManagerInstance.getInternalName(
-                internalTest,
-                'option',
-                capabilityName) not in printerManagerInstance.reservedCapabilityWords
-            assert ':' not in printerManagerInstance.getInternalName(
-                internalTest,
-                'option',
-                capabilityName)
-            assert ' ' not in printerManagerInstance.getInternalName(
-                internalTest,
-                'option')
-            assert len(
-                printerManagerInstance.getInternalName(
-                    internalTest,
-                    'option',
-                    capabilityName)) <= 30
-            assert len(
-                printerManagerInstance.getInternalName(
-                    internalTest,
-                    'option',
-                    capabilityName)) >= 1
-
 
 def test_printers():
     global printerManagerInstance, requestors
@@ -347,11 +211,7 @@ def test_printers():
     for requestor in requestors:
         totalPrinters += len(requestor.printers)
 
-    fullprinters = printerManagerInstance.getPrinters(True)
-    assert 'fulldetails' in fullprinters[0]
-
     printers = printerManagerInstance.getPrinters()
-    assert 'fulldetails' not in printers[0]
     import re
     assert len(printers) == totalPrinters
     for printer in printers:
@@ -361,8 +221,8 @@ def test_printers():
         assert len(printer['name']) > 0
 
         # account
-        assert isinstance(printer['account'], str)
-        assert len(printer['account']) > 0
+        assert isinstance(printer.getAccount(), str)
+        assert len(printer.getAccount()) > 0
 
         # id
         assert isinstance(printer['id'], unicode)
@@ -371,16 +231,11 @@ def test_printers():
         # test encoding and decoding printer details to/from uri
         uritest = re.compile(
             "cloudprint://(.*)/" + urllib.quote(printer['id']))
-        uri = printerManagerInstance.printerNameToUri(printer['account'], printer['id'])
-        assert isinstance(uri, str) or isinstance(uri, unicode)
-        assert len(uri) > 0
-        assert uritest.match(uri) is not None
+        assert isinstance(printer.getURI(), str) or isinstance(printer.getURI(), unicode)
+        assert len(printer.getURI()) > 0
+        assert uritest.match(printer.getURI()) is not None
 
-        account, printerid = printerManagerInstance.parseURI(uri)
-        assert isinstance(account, str)
-        assert urllib.unquote(account) == printer['account']
-
-        printerId = printerManagerInstance._getPrinterIdFromURI(uri)
+        printerId = printerManagerInstance._getPrinterIdFromURI(printer.getURI())
         assert isinstance(printerId, str)
 
         # get ppd
@@ -391,7 +246,7 @@ def test_printers():
         # test add printer to cups
         assert printerManagerInstance.addPrinter(
             printer['name'],
-            uri,
+            printer.getURI(),
             connection,
             printerppdname) is not None
         testprintername = printerManagerInstance.sanitizePrinterName(printer['name'])
@@ -405,124 +260,6 @@ def test_printers():
                 break
 
         assert found == True
-
-        # get details about printer
-        printerdetails = printerManagerInstance.getPrinterDetails(printer['id'])
-        assert printerdetails is not None
-        assert printerdetails['printers'][0] is not None
-        assert 'capabilities' in printerdetails['printers'][0]
-        assert isinstance(printerdetails['printers'][0]['capabilities'], list)
-
-        # test submitting job
-        assert printerManagerInstance.submitJob(
-            printerId,
-            'pdf',
-            'testing/testfiles/Test Page.pdf',
-            'Test Page',
-            testprintername) == True
-        assert printerManagerInstance.submitJob(
-            printerId,
-            'pdf',
-            'testing/testfiles/Test Page Doesnt Exist.pdf',
-            'Test Page',
-            testprintername) == False
-
-        # test submitting job with rotate
-        assert printerManagerInstance.submitJob(
-            printerId,
-            'pdf',
-            'testing/testfiles/Test Page.pdf',
-            'Test Page',
-            testprintername,
-            "landscape") == True
-        assert printerManagerInstance.submitJob(
-            printerId,
-            'pdf',
-            'testing/testfiles/Test Page.pdf',
-            'Test Page',
-            testprintername,
-            "nolandscape") == True
-
-        # test submitting job with no name
-        assert printerManagerInstance.submitJob(
-            printerId,
-            'pdf',
-            'testing/testfiles/Test Page.pdf',
-            '',
-            testprintername) == True
-        assert printerManagerInstance.submitJob(
-            printerId,
-            'pdf',
-            'testing/testfiles/Test Page Doesnt Exist.pdf',
-            '',
-            testprintername) == False
-
-        # png
-        assert printerManagerInstance.submitJob(
-            printerId,
-            'png',
-            'testing/testfiles/Test Page.png',
-            'Test Page',
-            testprintername) == True
-        assert printerManagerInstance.submitJob(
-            printerId,
-            'png',
-            'testing/testfiles/Test Page Doesnt Exist.png',
-            'Test Page',
-            testprintername) == False
-
-        # ps
-        assert printerManagerInstance.submitJob(
-            printerId,
-            'ps',
-            'testing/testfiles/Test Page.ps',
-            'Test Page',
-            testprintername) == False
-        assert printerManagerInstance.submitJob(
-            printerId,
-            'ps',
-            'testing/testfiles/Test Page Doesnt Exist.ps',
-            'Test Page',
-            testprintername) == False
-
-        # test failure of print job
-        assert printerManagerInstance.submitJob(
-            printerId,
-            'pdf',
-            'testing/testfiles/Test Page.pdf',
-            'FAIL PAGE',
-            testprintername) == False
-
+        
         # delete test printer
         connection.deletePrinter(testprintername)
-
-
-def test_backendDescription():
-    global printerManagerInstance
-    import re
-    backendtest = re.compile("^\w+ \w+ \"\w+\" \".+\"$")
-    description = printerManagerInstance.getBackendDescription()
-    assert isinstance(description, str)
-    assert description.startswith('network')
-    assert backendtest.match(description) is not None
-
-
-def test_getListDescription():
-    global printerManagerInstance
-    assert printerManagerInstance.getListDescription(
-        {'name': 'Save to Google Drive',
-         'account': 'test',
-         'id': '__test_save_docs'}) == 'Save to Google Drive - cloudprint://test/__test_save_docs - test'
-    assert printerManagerInstance.getListDescription(
-        {'name': 'Save to Google Drive',
-         'displayName': 'Save to Google Drive 2',
-         'account': 'test',
-         'id': '__test_save_docs'}) == 'Save to Google Drive 2 - cloudprint://test/__test_save_docs - test'
-
-
-def test_getBackendDescriptionForPrinter():
-    global printerManagerInstance
-    assert printerManagerInstance.getBackendDescriptionForPrinter(
-        {'name': 'Save to Google Docs',
-         'account': 'test',
-         'id': '__test_save_docs'}) == 'network cloudprint://test/__test_save_docs "Save to Google Docs" "Google Cloud Print" "MFG:Google;MDL:Cloud Print;DES:GoogleCloudPrint;"'
