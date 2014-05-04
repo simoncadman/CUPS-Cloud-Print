@@ -20,7 +20,7 @@ import sys
 sys.path.insert(0, ".")
 
 from printermanager import PrinterManager
-from test_mockrequestor import MockRequestor
+from mockrequestor import MockRequestor
 
 global requestors, printerItem
 
