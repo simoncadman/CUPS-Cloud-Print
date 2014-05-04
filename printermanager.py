@@ -69,9 +69,10 @@ class PrinterManager:
         cupsprinters = connection.getPrinters()
         accountPrinters = []
         for cupsprinter in cupsprinters:
-            id, requestor = self.getPrinterIDByURI(cupsprinters[cupsprinter]['device-uri'])
-            if id is not None and requestor is not None:
-                if requestor.getAccount() == account:
+            printer = self.getPrinterByURI(cupsprinters[cupsprinter]['device-uri'])
+            if printer is not None:
+                print printer.getAccount() , account
+                if printer.getAccount() == account:
                     accountPrinters.append(cupsprinters[cupsprinter])
         return accountPrinters, connection
 
@@ -88,7 +89,6 @@ class PrinterManager:
                     continue
 
                 responseobj = requestor.search()
-
                 if 'printers' in responseobj:
                     for printer_info in responseobj['printers']:
                         self._printers.append(Printer(printer_info, requestor))

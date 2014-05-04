@@ -44,7 +44,7 @@ class MockRequestor:
         return self.mockSearch('search', None, None, None)
 
     def mockSearch(self, path, headers, data, boundary):
-        return json.dumps(self.printers)
+        return json.loads(json.dumps({'printers': self.printers}))
 
     def mockSubmit(self, path, headers, data, boundary):
         if 'FAIL PAGE' in data:
