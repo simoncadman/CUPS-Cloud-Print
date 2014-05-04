@@ -63,14 +63,11 @@ def teardown_function(function):
     logging.shutdown()
     reload(logging)
 
-
 def test_parseURI():
     global printerItem, requestors
-    account, printerid = printerItem.parseURI(
+    printerid = printerItem._getPrinterIdFromURI(
         "cloudprint://testaccount2%40gmail.com/testid")
-    assert account == "testaccount2%40gmail.com"
     assert printerid == "testid"
-
 
 def test_parseLegacyURI():
     global printerItem, requestors
