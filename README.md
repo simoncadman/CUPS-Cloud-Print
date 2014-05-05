@@ -1,4 +1,5 @@
 [![Build Status](https://travis-ci.org/simoncadman/CUPS-Cloud-Print.png)](https://travis-ci.org/simoncadman/CUPS-Cloud-Print)
+[![Coverage Status](https://coveralls.io/repos/simoncadman/CUPS-Cloud-Print/badge.png)](https://coveralls.io/r/simoncadman/CUPS-Cloud-Print)
 
 INTRODUCTION
 ============

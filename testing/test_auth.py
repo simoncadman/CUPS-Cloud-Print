@@ -25,7 +25,7 @@ import sys
 sys.path.insert(0, ".")
 
 from auth import Auth
-from test_mockrequestor import MockRequestor
+from mockrequestor import MockRequestor
 from oauth2client import client
 from oauth2client import multistore_file
 from ccputils import Utils

@@ -88,11 +88,12 @@ if __name__ == '__main__':  # pragma: no cover
     import math
     from auth import Auth
     from printermanager import PrinterManager
+    from printer import Printer
     from ccputils import Utils
     Utils.SetupLogging()
 
     # line below is replaced on commit
-    CCPVersion = "20140501 203545"
+    CCPVersion = "20140504 224714"
     Utils.ShowVersion(CCPVersion)
 
     unattended = False
@@ -229,7 +230,7 @@ if __name__ == '__main__':  # pragma: no cover
                 printername = ""
 
             if printername != "":
-                printer_manager.addPrinter(printername, uri, connection)
+                printer_manager.addPrinter(printername, ccpprinter.getURI(), connection)
                 cupsprinters = connection.getPrinters()
                 addedCount += 1
 

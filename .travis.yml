@@ -6,7 +6,7 @@ python:
 before_install:
  - sudo apt-get update -qq
  - sudo apt-get install -qq debhelper autotools-dev cups-ppdc libcups2-dev cups imagemagick ghostscript
- - pip install httplib2 pycups pytest-cov --use-mirrors
+ - pip install httplib2 pycups pytest-cov python-coveralls pyOpenSSL --use-mirrors
 install:
  - ./configure
  - sudo gpasswd -a `whoami` lpadmin
@@ -22,12 +22,15 @@ script:
  - sudo touch /var/log/cups/cloudprint_log
  - sudo chown $USER:lp /var/log/cups/cloudprint_log
  - sudo chmod 660 /var/log/cups/cloudprint_log
+ - cd $TRAVIS_BUILD_DIR
  - ./upgrade.py
  - sudo python -m compileall .
- - py.test -rxs --cov .
+ - py.test -rxs --cov . --doctest-modules -v --cov-report term-missing
  - ls -al /tmp/
  - sudo cat /var/log/cups/cloudprint_log /var/log/cups/error_log
  - sudo unlink /usr/share/cups/model/testppd.ppd
+after_success:
+ - coveralls
 notifications:
   webhooks:
     urls:

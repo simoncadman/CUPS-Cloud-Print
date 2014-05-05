@@ -39,10 +39,15 @@ class MockRequestor:
         string: Account name.
         """
         return self.account
+    
+    def printer(self, name):
+        return json.loads(self.mockPrinter('name=' + name, None, None, None))
+
+    def search(self):
+        return self.mockSearch('', None, None, None)
 
     def mockSearch(self, path, headers, data, boundary):
-        result = {'printers': self.printers}
-        return json.dumps(result)
+        return json.loads(json.dumps({'printers': self.printers}))
 
     def mockSubmit(self, path, headers, data, boundary):
         if 'FAIL PAGE' in data:
