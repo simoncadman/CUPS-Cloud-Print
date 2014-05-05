@@ -171,24 +171,6 @@ def test_instantiate():
     assert printerManagerInstance.requestors == requestors
     assert len(printerManagerInstance.requestors) == len(requestors)
 
-
-def test_getOverrideCapabilities():
-    global printerManagerInstance, requestors
-    assert printerManagerInstance.getOverrideCapabilities("") == {}
-    assert printerManagerInstance.getOverrideCapabilities(
-        "landscape") == {'Orientation': 'Landscape'}
-    assert printerManagerInstance.getOverrideCapabilities(
-        "nolandscape") == {'Orientation': 'Landscape'}
-    assert printerManagerInstance.getOverrideCapabilities("test=one") == {'test': 'one'}
-    assert printerManagerInstance.getOverrideCapabilities(
-        "test=one anothertest=two") == {
-        'test': 'one',
-        'anothertest': 'two'}
-    assert printerManagerInstance.getOverrideCapabilities(
-        "test=one anothertest=two Orientation=yes") == {
-        'test': 'one',
-        'anothertest': 'two'}
-
 def test_GetPrinterByURIFails():
     global printerManagerInstance, requestors
 

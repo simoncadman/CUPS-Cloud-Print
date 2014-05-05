@@ -218,24 +218,3 @@ class PrinterManager:
             return printerid, requestor
         else:
             return None, None
-
-    def getOverrideCapabilities(self, overrideoptionsstring):
-        overrideoptions = overrideoptionsstring.split(' ')
-        overridecapabilities = {}
-
-        ignorecapabilities = ['Orientation']
-        for optiontext in overrideoptions:
-            if '=' in optiontext:
-                optionparts = optiontext.split('=')
-                option = optionparts[0]
-                if option in ignorecapabilities:
-                    continue
-
-                value = optionparts[1]
-                overridecapabilities[option] = value
-
-            # landscape
-            if optiontext == 'landscape' or optiontext == 'nolandscape':
-                overridecapabilities['Orientation'] = 'Landscape'
-
-        return overridecapabilities
