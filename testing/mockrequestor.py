@@ -21,25 +21,8 @@ from cloudprintrequestor import CloudPrintRequestor
 
 class MockRequestor(CloudPrintRequestor):
 
-    account = None
     printers = []
 
-    def setAccount(self, account):
-        """Sets the account name
-
-        Args:
-        filename: string, name of the account
-        """
-        self.account = account
-
-    def getAccount(self):
-        """Gets the account name
-
-        Return:
-        string: Account name.
-        """
-        return self.account
-    
     def mockSearch(self, path, headers, data, boundary):
         return json.dumps({'printers': self.printers})
 
