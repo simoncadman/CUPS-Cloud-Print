@@ -6,7 +6,7 @@ python:
 before_install:
  - sudo apt-get update -qq
  - sudo apt-get install -qq debhelper autotools-dev cups-ppdc libcups2-dev cups imagemagick ghostscript
- - pip install httplib2 pycups pytest-cov python-coveralls --use-mirrors
+ - pip install httplib2 pycups pytest-cov python-coveralls pyOpenSSL --use-mirrors
 install:
  - ./configure
  - sudo gpasswd -a `whoami` lpadmin
