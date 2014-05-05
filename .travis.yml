@@ -29,6 +29,8 @@ script:
  - sudo cat /var/log/cups/cloudprint_log /var/log/cups/error_log
  - sudo unlink /usr/share/cups/model/testppd.ppd
 after_success:
+ - cd $TRAVIS_BUILD_DIR
+ - cp /usr/local/share/cloudprint-cups/.coverage .
  - coveralls
 notifications:
   webhooks:
