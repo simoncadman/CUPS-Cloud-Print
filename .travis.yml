@@ -24,7 +24,7 @@ script:
  - sudo chmod 660 /var/log/cups/cloudprint_log
  - ./upgrade.py
  - sudo python -m compileall .
- - py.test -rxs --cov . --doctest-modules  -v --cov coveralls --cov-report term-missing
+ - py.test -rxs --cov . --doctest-modules -v --cov-report term-missing
  - ls -al /tmp/
  - sudo cat /var/log/cups/cloudprint_log /var/log/cups/error_log
  - sudo unlink /usr/share/cups/model/testppd.ppd
