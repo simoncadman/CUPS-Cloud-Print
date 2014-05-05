@@ -96,11 +96,23 @@ def test_parseLegacyURI():
     assert printerid == "testid"
     assert printername is None
 
+def test_getPrinterIDByDetails():
     printerid, requestor = printerManagerInstance.getPrinterIDByDetails(
         "testaccount2@gmail.com", "printername", "testid")
     assert printerid == "testid"
     assert isinstance(requestor, MockRequestor)
     assert requestor.getAccount() == 'testaccount2@gmail.com'
+    
+    # test fails
+    printerid, requestor = printerManagerInstance.getPrinterIDByDetails(
+        "accountthatdoesntexist", "printernamethatdoesntexist", "testidthatdoesntexist")
+    assert printerid is None
+    assert requestor is None
+    
+    printerid, requestor = printerManagerInstance.getPrinterIDByDetails(
+        "testaccount2@gmail.com", "printernamethatdoesntexist", None)
+    assert printerid is None
+    assert requestor is None
 
 
 def test_getCUPSPrintersForAccount():
