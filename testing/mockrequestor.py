@@ -17,9 +17,9 @@ import json
 import urllib
 import sys
 sys.path.insert(0, ".")
+from cloudprintrequestor import CloudPrintRequestor
 
-
-class MockRequestor:
+class MockRequestor(CloudPrintRequestor):
 
     account = None
     printers = []
@@ -40,14 +40,8 @@ class MockRequestor:
         """
         return self.account
     
-    def printer(self, name):
-        return json.loads(self.mockPrinter('name=' + name, None, None, None))
-
-    def search(self):
-        return self.mockSearch('', None, None, None)
-
     def mockSearch(self, path, headers, data, boundary):
-        return json.loads(json.dumps({'printers': self.printers}))
+        return json.dumps({'printers': self.printers})
 
     def mockSubmit(self, path, headers, data, boundary):
         if 'FAIL PAGE' in data:
