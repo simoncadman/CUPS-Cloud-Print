@@ -204,7 +204,11 @@ def test_printers():
     totalPrinters = 0
     for requestor in requestors:
         totalPrinters += len(requestor.printers)
-
+    
+    # test getting printers for specific account
+    printersforaccount = printerManagerInstance.getPrinters(requestors[1].getAccount())
+    assert len(printersforaccount) == len(requestors[1].printers)
+    
     printers = printerManagerInstance.getPrinters()
     import re
     assert len(printers) == totalPrinters
