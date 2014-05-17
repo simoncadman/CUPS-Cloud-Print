@@ -18,7 +18,6 @@ import urllib
 import logging
 import sys
 sys.path.insert(0, ".")
-
 from printermanager import PrinterManager
 from mockrequestor import MockRequestor
 
@@ -34,7 +33,10 @@ def setup_function(function):
                                         'id': '__test_save_docs',
                                         'capabilities': [{'name': 'ns1:Colors',
                                                           'type': 'Feature'}]},
-                                       ]
+                                      {'name': 'Save to Google Drive 2',
+                                       'displayName' : 'Save to Google Drive 2 DisplayName',
+                                        'id': '__test_save_docs_2' },
+                                     ]
                                         
     printerManagerInstance = PrinterManager(mockRequestorInstance)
     printers = printerManagerInstance.getPrinters()
@@ -66,3 +68,60 @@ def test_getMimeBoundary():
         
         printer._mime_boundary = 'test_boundry'
         assert printer._getMimeBoundary() == 'test_boundry'
+        
+def test_getCapabilitiesItems():
+    global printers
+    printer = printers[0]
+    correctCapabilities = [{'name': 'ns1:Colors', 'type': 'Feature'}]
+    assert printer._fields['capabilities'] == correctCapabilities
+    assert printer._fields['capabilities'] == printer['capabilities']
+    del printer._fields['capabilities']
+    assert 'capabilities' not in printer._fields
+    assert printer['capabilities'] == correctCapabilities
+    assert printer._fields['capabilities'] == printer['capabilities']
+    
+def test_getCapabilitiesItemsMissing():
+    global printers
+    printer = printers[1]
+    assert 'capabilities' not in printer._fields
+    assert printer['capabilities'] == None
+    
+def test_contains():
+    global printers
+    for printer in printers:
+        assert 'testvalue' not in printer
+        printer._fields['testvalue'] = 'test'
+        assert 'testvalue' in printer
+        del printer._fields['testvalue']
+        assert 'testvalue' not in printer
+
+def test_fetchDetails():
+    global printers
+    assert printers[0]._fetchDetails() == {'capabilities': [{'name': 'ns1:Colors', 'type': 'Feature'}], 'id': '__test_save_docs', 'name': 'Save to Google Drive'}
+    assert printers[1]._fetchDetails() == {'displayName' : 'Save to Google Drive 2 DisplayName', 'id': '__test_save_docs_2', 'name': 'Save to Google Drive 2'}
+    
+def test_getURI():
+    global printers
+    assert printers[0].getURI() == "cloudprint://testaccount2%40gmail.com/__test_save_docs"
+    assert printers[1].getURI() == "cloudprint://testaccount2%40gmail.com/__test_save_docs_2"
+    
+def test_getListDescription():
+    global printers
+    assert printers[0].getListDescription() == "Save to Google Drive - cloudprint://testaccount2%40gmail.com/__test_save_docs - testaccount2@gmail.com"
+    assert printers[1].getListDescription() == "Save to Google Drive 2 DisplayName - cloudprint://testaccount2%40gmail.com/__test_save_docs_2 - testaccount2@gmail.com"
+    
+def test_getBackendDescription():
+    global printers
+    assert printers[0].getBackendDescription() == 'network cloudprint://testaccount2%40gmail.com/__test_save_docs "Save to Google Drive" "Google Cloud Print" "MFG:Google;MDL:Cloud Print;DES:GoogleCloudPrint;"'
+    assert printers[1].getBackendDescription() == 'network cloudprint://testaccount2%40gmail.com/__test_save_docs_2 "Save to Google Drive 2" "Google Cloud Print" "MFG:Google;MDL:Cloud Print;DES:GoogleCloudPrint;"'
+    
+def test_getCUPSListDescription():
+    global printers
+    assert printers[0].getCUPSListDescription() == '"cupscloudprint:testaccount2@gmail.com:Save-to-Google-Drive-__test_save_docs.ppd" en "Google" "Save to Google Drive (testaccount2@gmail.com)" "MFG:GOOGLE;DRV:GCP;CMD:POSTSCRIPT;MDL:cloudprint://testaccount2%40gmail.com/__test_save_docs;"'
+    assert printers[1].getCUPSListDescription() == '"cupscloudprint:testaccount2@gmail.com:Save-to-Google-Drive-2-__test_save_docs_2.ppd" en "Google" "Save to Google Drive 2 (testaccount2@gmail.com)" "MFG:GOOGLE;DRV:GCP;CMD:POSTSCRIPT;MDL:cloudprint://testaccount2%40gmail.com/__test_save_docs_2;"'
+    
+        
+def test_getPPDName():
+    global printers
+    assert printers[0].getPPDName() == "cupscloudprint:testaccount2@gmail.com:Save-to-Google-Drive-__test_save_docs.ppd"
+    assert printers[1].getPPDName() == "cupscloudprint:testaccount2@gmail.com:Save-to-Google-Drive-2-__test_save_docs_2.ppd"
