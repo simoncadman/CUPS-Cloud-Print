@@ -105,7 +105,7 @@ class PrinterManager:
         """
         return re.sub('[^a-zA-Z0-9\-_]', '', name.encode('ascii', 'replace').replace(' ', '_'))
 
-    def addPrinter(self, printername, uri, connection, ppd=None):
+    def addPrinter(self, printername, printer, connection, ppd=None):
         """Adds a printer to CUPS
 
         Args:
@@ -119,16 +119,15 @@ class PrinterManager:
         # fix printer name
         printername = self.sanitizePrinterName(printername)
         result = None
+        printerppdname = None
         try:
             if ppd is None:
-                ppdid = 'MFG:GOOGLE;DRV:GCP;CMD:POSTSCRIPT;MDL:' + uri + ';'
-                ppds = connection.getPPDs(ppd_device_id=ppdid)
-                printerppdname, printerppd = ppds.popitem()
+                printerppdname = printer.getPPDName()
             else:
                 printerppdname = ppd
             result = connection.addPrinter(
                 name=printername, ppdname=printerppdname, info=printername,
-                location='Google Cloud Print', device=uri)
+                location='Google Cloud Print', device=printer.getURI())
             connection.enablePrinter(printername)
             connection.acceptJobs(printername)
             connection.setPrinterShared(printername, False)

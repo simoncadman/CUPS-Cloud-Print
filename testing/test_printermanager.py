@@ -146,7 +146,7 @@ def test_getCUPSPrintersForAccount():
     # test add printer to cups
     assert printerManagerInstance.addPrinter(
         printer['name'],
-        printer.getURI(),
+        printer,
         connection,
         printerppdname) is not None
     foundprinters, newconnection = printerManagerInstance.getCUPSPrintersForAccount(
@@ -187,7 +187,7 @@ def test_GetPrinterByURIFails():
 
 def test_addPrinterFails():
     global printerManagerInstance
-    assert printerManagerInstance.addPrinter('', '', '') == False
+    assert printerManagerInstance.addPrinter('', None, '') == False
 
 def test_invalidRequest():
     testMock = MockRequestor()
@@ -244,7 +244,7 @@ def test_printers():
         # test add printer to cups
         assert printerManagerInstance.addPrinter(
             printer['name'],
-            printer.getURI(),
+            printer,
             connection,
             printerppdname) is not None
         testprintername = printerManagerInstance.sanitizePrinterName(printer['name'])

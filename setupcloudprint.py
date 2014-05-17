@@ -93,7 +93,7 @@ if __name__ == '__main__':  # pragma: no cover
     Utils.SetupLogging()
 
     # line below is replaced on commit
-    CCPVersion = "20140504 224714"
+    CCPVersion = "20140517 173042"
     Utils.ShowVersion(CCPVersion)
 
     unattended = False
@@ -178,7 +178,7 @@ if __name__ == '__main__':  # pragma: no cover
                 if found:
                     print "\nPrinter with %s already exists\n" % printername
                 else:
-                    printer_manager.addPrinter(printername, ccpprinter.getURI(), connection)
+                    printer_manager.addPrinter(printername, ccpprinter, connection)
 
             continue
 
@@ -230,7 +230,7 @@ if __name__ == '__main__':  # pragma: no cover
                 printername = ""
 
             if printername != "":
-                printer_manager.addPrinter(printername, ccpprinter.getURI(), connection)
+                printer_manager.addPrinter(printername, ccpprinter, connection)
                 cupsprinters = connection.getPrinters()
                 addedCount += 1
 
