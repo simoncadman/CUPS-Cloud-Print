@@ -206,7 +206,7 @@ class Printer(object):
             self['name'].encode('ascii', 'replace').replace(' ', '-'),
             self['id'].encode('ascii', 'replace').replace(' ', '-'))
 
-    def generatePPD(self, testmode=False):
+    def generatePPD(self):
         """Generates a PPD string for this printer."""
         language = "en"
         defaultpapertype = "Letter"
@@ -219,11 +219,6 @@ class Printer(object):
             language = language.split("_")[0]
         ppd = self._PPD_TEMPLATE_HEAD % \
             {'language': language, 'defaultpapertype': defaultpapertype, 'uri': self.getURI()}
-        if testmode and os.path.exists('test-capabilities.serial'):
-            with file("test-capabilities.serial") as f:
-                import ast
-                self._fields = ast.literal_eval(f.read())
-
         if self['capabilities'] is not None:
             addedCapabilities = []
             for capability in self['capabilities']:
