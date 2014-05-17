@@ -215,26 +215,26 @@ def test_printers():
     for printer in printers:
 
         # name
-        assert isinstance(printer['name'], unicode)
+        assert isinstance(printer['name'],basestring)
         assert len(printer['name']) > 0
 
         # account
-        assert isinstance(printer.getAccount(), str)
+        assert isinstance(printer.getAccount(),basestring)
         assert len(printer.getAccount()) > 0
 
         # id
-        assert isinstance(printer['id'], unicode)
+        assert isinstance(printer['id'],basestring)
         assert len(printer['id']) > 0
 
         # test encoding and decoding printer details to/from uri
         uritest = re.compile(
             "cloudprint://(.*)/" + urllib.quote(printer['id']))
-        assert isinstance(printer.getURI(), str) or isinstance(printer.getURI(), unicode)
+        assert isinstance(printer.getURI(),basestring)
         assert len(printer.getURI()) > 0
         assert uritest.match(printer.getURI()) is not None
 
         printerId = printerManagerInstance._getPrinterIdFromURI(printer.getURI())
-        assert isinstance(printerId, str)
+        assert isinstance(printerId,basestring)
 
         # get ppd
         ppdid = 'MFG:GOOGLE;DRV:GCP;CMD:POSTSCRIPT;MDL:'
