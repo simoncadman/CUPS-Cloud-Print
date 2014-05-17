@@ -253,8 +253,6 @@ class Printer(object):
                             (language, internalCapabilityName, internalOptionName, originOptionName, value)
 
                     ppd += '*CloseUI: *%s\n' % internalCapabilityName
-                elif capability['type'] == 'ParameterDef':
-                    pass
 
         ppd += self._PPD_TEMPLATE_FOOT
         return ppd
