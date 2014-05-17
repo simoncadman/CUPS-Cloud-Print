@@ -22,6 +22,7 @@ import mimetools
 import os
 import re
 import urllib
+import subprocess
 
 from ccputils import Utils
 
@@ -428,7 +429,6 @@ class Printer(object):
         for capability in overrideDefaultDefaults:
             if capability not in overridecapabilities:
                 overridecapabilities[capability] = overrideDefaultDefaults[capability]
-
         attrs = cups.PPD(connection.getPPD(cupsprintername)).attributes
         attrArray = self._attrListToArray(attrs)
         return self._getCapabilitiesDict(attrArray, self['capabilities'], overridecapabilities)
