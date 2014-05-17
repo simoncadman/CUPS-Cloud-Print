@@ -152,3 +152,9 @@ def test_generatePPD():
         os.unlink('/tmp/.ppdfile')
         assert p.returncode == 0
     
+def test_sanitizeText():
+    global printers
+    assert printers[0]._sanitizeText("") == ""
+    assert printers[0]._sanitizeText("TESTSTRING") == "TESTSTRING"
+    assert printers[0]._sanitizeText("TEST:; STRING /2") == "TEST___STRING_-2"
+    assert printers[0]._sanitizeText("TEST:; STRING /2") == "TEST___STRING_-2"
