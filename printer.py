@@ -127,10 +127,6 @@ class Printer(object):
 
     _LIST_FORMAT = '"cupscloudprint:%s:%s-%s.ppd" en "Google" "%s (%s)" "MFG:GOOGLE;DRV:GCP;CMD:POSTSCRIPT;MDL:%s;"'
 
-    # Countries where letter sized paper is used, according to:
-    # http://en.wikipedia.org/wiki/Letter_(paper_size)
-    _LETTER_COUNTRIES = set(('US', 'CA', 'MX', 'BO', 'CO', 'VE', 'PH', 'CL'))
-
     _RESERVED_CAPABILITY_WORDS = set((
         'Duplex', 'Resolution', 'Attribute', 'Choice', 'ColorDevice', 'ColorModel', 'ColorProfile',
         'Copyright', 'CustomMedia', 'Cutter', 'Darkness', 'DriverType', 'FileName', 'Filter',
@@ -208,15 +204,9 @@ class Printer(object):
 
     def generatePPD(self):
         """Generates a PPD string for this printer."""
-        language = "en"
-        defaultpapertype = "Letter"
-        defaultlocale = locale.getdefaultlocale()[0]
-        if defaultlocale is not None:
-            language = defaultlocale
-            if len(language.split('_')) > 1 and language.split('_')[1] not in self._LETTER_COUNTRIES:
-                defaultpapertype = "A4"
-        if '_' in language and language.split("_")[0] != "en":
-            language = language.split("_")[0]
+        defaultlocale = locale.getdefaultlocale()
+        language = Utils.GetLanguage(defaultlocale)
+        defaultpapertype = Utils.GetDefaultPaperType(defaultlocale)
         ppd = self._PPD_TEMPLATE_HEAD % \
             {'language': language, 'defaultpapertype': defaultpapertype, 'uri': self.getURI()}
         if self['capabilities'] is not None:
