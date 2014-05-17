@@ -23,11 +23,11 @@ sys.path.insert(0, ".")
 from printermanager import PrinterManager
 from mockrequestor import MockRequestor
 
-global printers
+global printers, printerManagerInstance
 
 def setup_function(function):
     # setup mock requestors
-    global printers
+    global printers, printerManagerInstance
 
     mockRequestorInstance = MockRequestor()
     mockRequestorInstance.setAccount('testaccount2@gmail.com')
@@ -182,3 +182,140 @@ def test_getInternalName():
             assert ' ' not in printerItem._getInternalName(internalTest,'option')
             assert len(printerItem._getInternalName(internalTest,'option',capabilityName)) <= 30
             assert len(printerItem._getInternalName(internalTest,'option',capabilityName)) >= 1
+            
+def test_encodeMultiPart():
+    pass
+
+def test_getOverrideCapabilities():
+    global printers
+    printerItem = printers[0]
+    assert printerItem._getOverrideCapabilities("") == {}
+    assert printerItem._getOverrideCapabilities("landscape") == {'Orientation': 'Landscape'}
+    assert printerItem._getOverrideCapabilities("nolandscape") == {'Orientation': 'Landscape'}
+    assert printerItem._getOverrideCapabilities("test=one") == {'test': 'one'}
+    assert printerItem._getOverrideCapabilities("test=one anothertest=two") == {'test': 'one','anothertest': 'two'}
+    assert printerItem._getOverrideCapabilities("test=one anothertest=two Orientation=yes") == {'test': 'one','anothertest': 'two'}
+    
+def test_GetCapabilitiesDict():
+    global printers
+    printerItem = printers[0]
+    assert printerItem._getCapabilitiesDict({},{},{}) == {"capabilities": []}
+    assert printerItem._getCapabilitiesDict([{'name': 'test'}],{},{}) == {"capabilities": []}
+    assert printerItem._getCapabilitiesDict([{'name': 'Default' + 'test', 'value': 'test'}],[{'name': printerItem._getInternalName({'name': "test"}, 'capability'),'value': printerItem._getInternalName({'name': "test123"},
+                                              'option', printerItem._getInternalName({'name': "Defaulttest"}, 'capability'), []),
+                                              'options': [{'name': 'test'}, {'name': 'test2'}]}], {}) == {'capabilities': [{'name': 'test', 'options': [{'name': 'test'}], 'type': 'Feature'}]}
+    assert printerItem._getCapabilitiesDict([{'name': 'Default' + 'test', 'value': 'test'}],
+                                            [{'name': printerItem._getInternalName({'name': "test"}, 'capability'),
+                                             'value': printerItem._getInternalName({'name': "test123"},
+                                             'option', printerItem._getInternalName({'name': "Defaulttest"}, 'capability'), []),
+                                             'options': [{'name': 'test'}, {'name': 'test2'}]}], {'test': 'test2'}) == {'capabilities': [{'name': 'test', 'options': [{'name': 'test2'}], 'type': 'Feature'}]}
+
+def test_getCapabilities():
+    global printers, printerManagerInstance
+    printer = printers[0]
+    connection = cups.Connection()
+    
+    # get test ppd
+    ppdid = 'MFG:GOOGLE;DRV:GCP;CMD:POSTSCRIPT;MDL:'
+    ppds = connection.getPPDs(ppd_device_id=ppdid)
+    printerppdname, printerppd = ppds.popitem()
+    
+    assert printerManagerInstance.addPrinter(
+        printer['name'],
+        printer,
+        connection,
+        printerppdname) is not None
+    emptyoptions = printer._getCapabilities(printerManagerInstance.sanitizePrinterName(printer['name']),"landscape")
+    assert isinstance(emptyoptions, dict)
+    assert isinstance(emptyoptions['capabilities'], list)
+    assert len(emptyoptions['capabilities']) == 0
+    connection.deletePrinter(printerManagerInstance.sanitizePrinterName(printer['name']))
+    
+def test_submitJob():
+    global printers, printerManagerInstance
+    printer = printers[0]
+    connection = cups.Connection()
+    testprintername = printerManagerInstance.sanitizePrinterName(printer['name'])
+    
+    # get test ppd
+    ppdid = 'MFG:GOOGLE;DRV:GCP;CMD:POSTSCRIPT;MDL:'
+    ppds = connection.getPPDs(ppd_device_id=ppdid)
+    printerppdname, printerppd = ppds.popitem()
+    
+    assert printerManagerInstance.addPrinter(
+        printer['name'],
+        printer,
+        connection,
+        printerppdname) is not None
+    
+    # test submitting job
+    assert printer.submitJob(
+        'pdf',
+        'testing/testfiles/Test Page.pdf',
+        'Test Page',
+        testprintername) == True
+    assert printer.submitJob(
+        'pdf',
+        'testing/testfiles/Test Page Doesnt Exist.pdf',
+        'Test Page',
+        testprintername) == False
+
+    # test submitting job with rotate
+    assert printer.submitJob(
+        'pdf',
+        'testing/testfiles/Test Page.pdf',
+        'Test Page',
+        testprintername,
+        "landscape") == True
+    assert printer.submitJob(
+        'pdf',
+        'testing/testfiles/Test Page.pdf',
+        'Test Page',
+        testprintername,
+        "nolandscape") == True
+
+    # test submitting job with no name
+    assert printer.submitJob(
+        'pdf',
+        'testing/testfiles/Test Page.pdf',
+        '',
+        testprintername) == True
+    assert printer.submitJob(
+        'pdf',
+        'testing/testfiles/Test Page Doesnt Exist.pdf',
+        '',
+        testprintername) == False
+
+    # png
+    assert printer.submitJob(
+        'png',
+        'testing/testfiles/Test Page.png',
+        'Test Page',
+        testprintername) == True
+    assert printer.submitJob(
+        'png',
+        'testing/testfiles/Test Page Doesnt Exist.png',
+        'Test Page',
+        testprintername) == False
+
+    # ps
+    assert printer.submitJob(
+        'ps',
+        'testing/testfiles/Test Page.ps',
+        'Test Page',
+        testprintername) == False
+    assert printer.submitJob(
+        'ps',
+        'testing/testfiles/Test Page Doesnt Exist.ps',
+        'Test Page',
+        testprintername) == False
+
+    # test failure of print job
+    assert printer.submitJob(
+        'pdf',
+        'testing/testfiles/Test Page.pdf',
+        'FAIL PAGE',
+        testprintername) == False
+
+    # delete test printer
+    connection.deletePrinter(testprintername)
