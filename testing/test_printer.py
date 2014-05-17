@@ -184,7 +184,10 @@ def test_getInternalName():
             assert len(printerItem._getInternalName(internalTest,'option',capabilityName)) >= 1
             
 def test_encodeMultiPart():
-    pass
+    global printers
+    assert isinstance(printers[0]._encodeMultiPart([('test','testvalue')]),str)
+    assert 'testvalue' in printers[0]._encodeMultiPart([('test','testvalue')])
+    assert 'Content-Disposition: form-data; name="test"' in printers[0]._encodeMultiPart([('test','testvalue')])
 
 def test_getOverrideCapabilities():
     global printers
@@ -209,6 +212,10 @@ def test_GetCapabilitiesDict():
                                              'value': printerItem._getInternalName({'name': "test123"},
                                              'option', printerItem._getInternalName({'name': "Defaulttest"}, 'capability'), []),
                                              'options': [{'name': 'test'}, {'name': 'test2'}]}], {'test': 'test2'}) == {'capabilities': [{'name': 'test', 'options': [{'name': 'test2'}], 'type': 'Feature'}]}
+
+def test_attrListToArray():
+    global printers
+    assert len(list(printers[0]._attrListToArray({}))) == 0
 
 def test_getCapabilities():
     global printers, printerManagerInstance
