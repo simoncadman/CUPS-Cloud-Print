@@ -208,7 +208,6 @@ class Printer(object):
 
     def generatePPD(self, testmode=False):
         """Generates a PPD string for this printer."""
-
         language = "en"
         defaultpapertype = "Letter"
         defaultlocale = locale.getdefaultlocale()[0]

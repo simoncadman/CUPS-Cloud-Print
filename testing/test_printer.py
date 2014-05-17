@@ -17,6 +17,8 @@ import cups
 import urllib
 import logging
 import sys
+import subprocess
+import os
 sys.path.insert(0, ".")
 from printermanager import PrinterManager
 from mockrequestor import MockRequestor
@@ -32,7 +34,10 @@ def setup_function(function):
     mockRequestorInstance.printers = [{'name': 'Save to Google Drive',
                                         'id': '__test_save_docs',
                                         'capabilities': [{'name': 'ns1:Colors',
-                                                          'type': 'Feature'}]},
+                                                          'DisplayName' : 'Colors',
+                                                          'type': 'Feature',
+                                                          'options' : 
+                                                           [{'default': True, 'name': 'test'}, {'name': 'test2'}] }]},
                                       {'name': 'Save to Google Drive 2',
                                        'displayName' : 'Save to Google Drive 2 DisplayName',
                                         'id': '__test_save_docs_2' },
@@ -72,7 +77,7 @@ def test_getMimeBoundary():
 def test_getCapabilitiesItems():
     global printers
     printer = printers[0]
-    correctCapabilities = [{'name': 'ns1:Colors', 'type': 'Feature'}]
+    correctCapabilities = [{'name': 'ns1:Colors', 'DisplayName' : 'Colors', 'type': 'Feature', 'options' : [{'default': True, 'name': 'test'}, {'name': 'test2'}] }]
     assert printer._fields['capabilities'] == correctCapabilities
     assert printer._fields['capabilities'] == printer['capabilities']
     del printer._fields['capabilities']
@@ -97,7 +102,13 @@ def test_contains():
 
 def test_fetchDetails():
     global printers
-    assert printers[0]._fetchDetails() == {'capabilities': [{'name': 'ns1:Colors', 'type': 'Feature'}], 'id': '__test_save_docs', 'name': 'Save to Google Drive'}
+    assert printers[0]._fetchDetails() == {'name': 'Save to Google Drive', 
+                                           'id': '__test_save_docs',
+                                            'capabilities': [{'name': 'ns1:Colors',
+                                                          'DisplayName' : 'Colors',
+                                                          'type': 'Feature',
+                                                          'options' : 
+                                                           [{'default': True, 'name': 'test'}, {'name': 'test2'}] }]}
     assert printers[1]._fetchDetails() == {'displayName' : 'Save to Google Drive 2 DisplayName', 'id': '__test_save_docs_2', 'name': 'Save to Google Drive 2'}
     
 def test_getURI():
@@ -120,8 +131,24 @@ def test_getCUPSListDescription():
     assert printers[0].getCUPSListDescription() == '"cupscloudprint:testaccount2@gmail.com:Save-to-Google-Drive-__test_save_docs.ppd" en "Google" "Save to Google Drive (testaccount2@gmail.com)" "MFG:GOOGLE;DRV:GCP;CMD:POSTSCRIPT;MDL:cloudprint://testaccount2%40gmail.com/__test_save_docs;"'
     assert printers[1].getCUPSListDescription() == '"cupscloudprint:testaccount2@gmail.com:Save-to-Google-Drive-2-__test_save_docs_2.ppd" en "Google" "Save to Google Drive 2 (testaccount2@gmail.com)" "MFG:GOOGLE;DRV:GCP;CMD:POSTSCRIPT;MDL:cloudprint://testaccount2%40gmail.com/__test_save_docs_2;"'
     
-        
 def test_getPPDName():
     global printers
     assert printers[0].getPPDName() == "cupscloudprint:testaccount2@gmail.com:Save-to-Google-Drive-__test_save_docs.ppd"
     assert printers[1].getPPDName() == "cupscloudprint:testaccount2@gmail.com:Save-to-Google-Drive-2-__test_save_docs_2.ppd"
+    
+def test_generatePPD():
+    global printers
+    for printer in printers:
+        ppddata = printer.generatePPD()
+        assert isinstance(ppddata,str)
+        
+        # test ppd data is valid
+        tempfile = open('/tmp/.ppdfile', 'w')
+        tempfile.write(ppddata)
+        tempfile.close()
+        
+        p = subprocess.Popen(['cupstestppd', '/tmp/.ppdfile'], stdout=subprocess.PIPE)
+        testdata = p.communicate()[0]
+        os.unlink('/tmp/.ppdfile')
+        assert p.returncode == 0
+    
