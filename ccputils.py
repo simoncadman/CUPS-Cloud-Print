@@ -31,6 +31,7 @@ class Utils:
     # http://en.wikipedia.org/wiki/Letter_(paper_size)
     _LETTER_COUNTRIES = set(('US', 'CA', 'MX', 'BO', 'CO', 'VE', 'PH', 'CL'))
 
+    @staticmethod
     def FixFilePermissions(filename):
         filePermissions = True
         fileOwnerships = True
@@ -62,8 +63,7 @@ class Utils:
 
         return filePermissions, fileOwnerships
 
-    FixFilePermissions = staticmethod(FixFilePermissions)
-
+    @staticmethod
     def SetupLogging(logpath=None):
         returnValue = True
         logformat = "%(asctime)s|%(levelname)s|%(message)s"
@@ -86,8 +86,7 @@ class Utils:
             returnValue = False
         return returnValue
 
-    SetupLogging = staticmethod(SetupLogging)
-
+    @staticmethod
     def fileIsPDF(filename):
         """Check if a file is or isnt a PDF
 
@@ -108,13 +107,11 @@ class Utils:
         else:
             return "PDF document" in output
 
-    fileIsPDF = staticmethod(fileIsPDF)
-
+    @staticmethod
     def is_exe(fpath):
         return os.path.exists(fpath) and os.access(fpath, os.X_OK)
 
-    is_exe = staticmethod(is_exe)
-
+    @staticmethod
     def which(program):
         for path in os.environ["PATH"].split(os.pathsep):
             exe_file = os.path.join(path, program)
@@ -122,8 +119,7 @@ class Utils:
                 return exe_file
         return None
 
-    which = staticmethod(which)
-
+    @staticmethod
     def GetLPID(default='lp', alternative='cups', useFiles=True,
                 blacklistedGroups=['adm', 'wheel', 'root'],
                 useFilesOnly=False):
@@ -166,16 +162,14 @@ class Utils:
         else:
             return lpgrp.gr_gid
 
-    GetLPID = staticmethod(GetLPID)
-
+    @staticmethod
     def ShowVersion(CCPVersion):
         if len(sys.argv) == 2 and sys.argv[1] == 'version':
             print "CUPS Cloud Print Version " + CCPVersion
             sys.exit(0)
         return False
 
-    ShowVersion = staticmethod(ShowVersion)
-
+    @staticmethod
     def ReadFile(pathname):
         """Read contents of a file and return content.
 
@@ -192,8 +186,7 @@ class Utils:
             print 'ERROR: Error opening %s\n%s', pathname, e
             return None
 
-    ReadFile = staticmethod(ReadFile)
-
+    @staticmethod
     def WriteFile(file_name, data):
         """Write contents of data to a file_name.
 
@@ -214,8 +207,7 @@ class Utils:
 
         return status
 
-    WriteFile = staticmethod(WriteFile)
-
+    @staticmethod
     def Base64Encode(pathname):
         """Convert a file to a base64 encoded file.
 
@@ -241,9 +233,8 @@ class Utils:
             return b64_pathname
         else:
             return None
-
-    Base64Encode = staticmethod(Base64Encode)
     
+    @staticmethod
     def GetLanguage(locale):
         language = 'en'
         if len(locale) < 1 or locale[0] == None:
@@ -253,9 +244,8 @@ class Utils:
         if '_' in language:
             language = language.split("_")[0]
         return language
-        
-    GetLanguage = staticmethod(GetLanguage)
 
+    @staticmethod
     def GetDefaultPaperType(locale):
         defaultpapertype = "Letter"
         if len(locale) < 1 or locale[0] == None:
@@ -263,5 +253,3 @@ class Utils:
         if len(locale[0].split('_')) > 1 and locale[0].split('_')[1] not in Utils._LETTER_COUNTRIES:
             defaultpapertype = "A4"
         return defaultpapertype
-        
-    GetDefaultPaperType = staticmethod(GetDefaultPaperType)

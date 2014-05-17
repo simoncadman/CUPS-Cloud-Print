@@ -29,6 +29,7 @@ class Auth:
     clientsecret = 'MzTBsY4xlrD_lxkmwFbBrvBv'
     config = '/etc/cloudprint.conf'
 
+    @staticmethod
     def DeleteAccount(userid=None):
         """Delete an account from the configuration file
 
@@ -46,8 +47,7 @@ class Auth:
             ['https://www.googleapis.com/auth/cloudprint'])
         return storage.delete()
 
-    DeleteAccount = staticmethod(DeleteAccount)
-
+    @staticmethod
     def AddAccount(storage, userid=None,
                    permissions=['https://www.googleapis.com/auth/cloudprint']):
         """Adds an account to the configuration file
@@ -88,8 +88,7 @@ class Auth:
                 message += str(e) + " ), please try again.\n"
                 print message
 
-    AddAccount = staticmethod(AddAccount)
-
+    @staticmethod
     def SetupAuth(interactive=False,
                   permissions=['https://www.googleapis.com/auth/cloudprint']):
         """Sets up requestors with authentication tokens
@@ -174,12 +173,9 @@ class Auth:
         else:
             return requestors, storage
 
-    SetupAuth = staticmethod(SetupAuth)
-
+    @staticmethod
     def GetAccountNames(requestors):
         requestorAccounts = []
         for requestor in requestors:
             requestorAccounts.append(requestor.getAccount())
         return requestorAccounts
-
-    GetAccountNames = staticmethod(GetAccountNames)
