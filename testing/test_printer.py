@@ -25,6 +25,21 @@ from mockrequestor import MockRequestor
 
 global printers, printerManagerInstance
 
+testCapabilities1 = [{'name': 'ns1:Colors',
+                      'displayName' : 'Colors',
+                      'type': 'Feature',
+                      'options' : 
+                      [{'default': True, 'name': 'test', 'displayName' : 'testdisplay'}, {'name': 'test2'}] },
+                     {'name': 'ns1:Size',
+                      'psk:DisplayName' : 'Size',
+                      'type': 'Feature',
+                      'options' : 
+                      [{'default': True, 'name': 'big', 'psk:DisplayName' : 'testdisplay big'}, {'name': 'small'}] },
+                     {'name': 'ns1:Something',
+                      'type': 'Feature',
+                      'options' : 
+                      [{'default': True, 'name': 'one'}, {'name': 'two', 'ppd:value' : 'testval'}] }]
+
 def setup_function(function):
     # setup mock requestors
     global printers, printerManagerInstance
@@ -33,11 +48,7 @@ def setup_function(function):
     mockRequestorInstance.setAccount('testaccount2@gmail.com')
     mockRequestorInstance.printers = [{'name': 'Save to Google Drive',
                                         'id': '__test_save_docs',
-                                        'capabilities': [{'name': 'ns1:Colors',
-                                                          'DisplayName' : 'Colors',
-                                                          'type': 'Feature',
-                                                          'options' : 
-                                                           [{'default': True, 'name': 'test'}, {'name': 'test2'}] }]},
+                                        'capabilities': testCapabilities1},
                                       {'name': 'Save to Google Drive 2',
                                        'displayName' : 'Save to Google Drive 2 DisplayName',
                                         'id': '__test_save_docs_2' },
@@ -77,7 +88,7 @@ def test_getMimeBoundary():
 def test_getCapabilitiesItems():
     global printers
     printer = printers[0]
-    correctCapabilities = [{'name': 'ns1:Colors', 'DisplayName' : 'Colors', 'type': 'Feature', 'options' : [{'default': True, 'name': 'test'}, {'name': 'test2'}] }]
+    correctCapabilities = testCapabilities1
     assert printer._fields['capabilities'] == correctCapabilities
     assert printer._fields['capabilities'] == printer['capabilities']
     del printer._fields['capabilities']
@@ -104,11 +115,7 @@ def test_fetchDetails():
     global printers
     assert printers[0]._fetchDetails() == {'name': 'Save to Google Drive', 
                                            'id': '__test_save_docs',
-                                            'capabilities': [{'name': 'ns1:Colors',
-                                                          'DisplayName' : 'Colors',
-                                                          'type': 'Feature',
-                                                          'options' : 
-                                                           [{'default': True, 'name': 'test'}, {'name': 'test2'}] }]}
+                                            'capabilities': testCapabilities1}
     assert printers[1]._fetchDetails() == {'displayName' : 'Save to Google Drive 2 DisplayName', 'id': '__test_save_docs_2', 'name': 'Save to Google Drive 2'}
     
 def test_getURI():
@@ -140,7 +147,7 @@ def test_generatePPD():
     global printers
     for printer in printers:
         ppddata = printer.generatePPD()
-        assert isinstance(ppddata,str)
+        assert isinstance(ppddata,basestring)
         
         # test ppd data is valid
         tempfile = open('/tmp/.ppdfile', 'w')
@@ -185,7 +192,7 @@ def test_getInternalName():
             
 def test_encodeMultiPart():
     global printers
-    assert isinstance(printers[0]._encodeMultiPart([('test','testvalue')]),str)
+    assert isinstance(printers[0]._encodeMultiPart([('test','testvalue')]),basestring)
     assert 'testvalue' in printers[0]._encodeMultiPart([('test','testvalue')])
     assert 'Content-Disposition: form-data; name="test"' in printers[0]._encodeMultiPart([('test','testvalue')])
 
