@@ -266,6 +266,11 @@ def test_submitJob():
         'testing/testfiles/Test Page Doesnt Exist.pdf',
         'Test Page',
         testprintername) == False
+    assert printer.submitJob(
+        'pdf',
+        'testing/testfiles/Test Page Corrupt.pdf',
+        'Test Page',
+        testprintername, 'landscape') == False
 
     # test submitting job with rotate
     assert printer.submitJob(
