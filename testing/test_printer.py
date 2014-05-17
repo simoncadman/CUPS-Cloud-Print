@@ -158,3 +158,27 @@ def test_sanitizeText():
     assert printers[0]._sanitizeText("TESTSTRING") == "TESTSTRING"
     assert printers[0]._sanitizeText("TEST:; STRING /2") == "TEST___STRING_-2"
     assert printers[0]._sanitizeText("TEST:; STRING /2") == "TEST___STRING_-2"
+    
+def test_getInternalName():
+    global printers
+    printerItem = printers[0]
+
+    internalCapabilityTests = []
+    # load test file and try all those
+    for filelineno, line in enumerate(open('testing/testfiles/capabilitylist')):
+        internalCapabilityTests.append({'name': line.decode("utf-8")})
+
+    for internalTest in internalCapabilityTests:
+        assert printerItem._getInternalName(internalTest, 'capability') not in printerItem._RESERVED_CAPABILITY_WORDS
+        assert ':' not in printerItem._getInternalName(internalTest, 'capability')
+        assert ' ' not in printerItem._getInternalName(internalTest, 'capability')
+        assert len(printerItem._getInternalName(internalTest,'capability')) <= 30
+        assert len(printerItem._getInternalName(internalTest,'capability')) >= 1
+
+    for internalTest in internalCapabilityTests:
+        for capabilityName in ["psk:JobDuplexAllDocumentsContiguously","other", "psk:PageOrientation"]:
+            assert printerItem._getInternalName(internalTest,'option',capabilityName) not in printerItem._RESERVED_CAPABILITY_WORDS
+            assert ':' not in printerItem._getInternalName(internalTest,'option',capabilityName)
+            assert ' ' not in printerItem._getInternalName(internalTest,'option')
+            assert len(printerItem._getInternalName(internalTest,'option',capabilityName)) <= 30
+            assert len(printerItem._getInternalName(internalTest,'option',capabilityName)) >= 1
