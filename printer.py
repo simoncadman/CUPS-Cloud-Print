@@ -186,8 +186,19 @@ class Printer(object):
             self.getDisplayName().encode('ascii', 'replace'), self.getURI(), self.getAccount())
 
     def getBackendDescription(self):
-        displayName = self.getDisplayName()
-        return self._BACKEND_DESCRIPTION % (self.getURI(), displayName, displayName)
+        display_name = self.getDisplayName()
+        name_and_location = display_name
+
+        # Look for hints of a location tag.
+        for tag in self['tags']:
+          if '=' not in tag:
+            continue
+          key, value = tag.split('=', 1)
+          if 'location' in key:
+            name_and_location = '%s (%s)' % (display_name, value)
+            break
+
+        return self._BACKEND_DESCRIPTION % (self.getURI(), display_name, name_and_location)
 
     def getCUPSListDescription(self):
         id = self['id'].encode('ascii', 'replace').replace(' ', '-')
