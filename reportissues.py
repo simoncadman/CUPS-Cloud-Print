@@ -40,21 +40,18 @@ if __name__ == '__main__':  # pragma: no cover
     Utils.SetupLogging()
 
     # line below is replaced on commit
-    CCPVersion = "20140501 203545"
+    CCPVersion = "20140518 132852"
     Utils.ShowVersion(CCPVersion)
 
     requestors, storage = Auth.SetupAuth(True)
     printer_manager = PrinterManager(requestors)
-    printers = printer_manager.getPrinters(True)
+    printers = printer_manager.getPrinters()
     if printers is None:
         print "ERROR: No Printers Found"
         sys.exit(1)
 
     for printer in printers:
         print printer.getCUPSListDescription()
-        print ""
-        print printer
-        print "\n"
         ppdname = printer.getPPDName()
         p = subprocess.Popen(
             (os.path.join(libpath, 'dynamicppd.py'), 'cat', ppdname.lstrip('-')),
