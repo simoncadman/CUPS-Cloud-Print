@@ -137,6 +137,8 @@ class Printer(object):
         'Throughput', 'UIConstraints', 'VariablePaperSize', 'Version', 'Color', 'Background',
         'Stamp', 'DestinationColorProfile'
     ))
+    
+    _CONVERTCOMMAND = 'convert'
 
     def __init__(self, fields, requestor):
         self._fields = fields
@@ -464,14 +466,14 @@ class Printer(object):
                 return False
             if rotate > 0:
                 p = subprocess.Popen(
-                    ['convert', '-density', '300x300', jobfile.lstrip('-'),
+                    [self._CONVERTCOMMAND, '-density', '300x300', jobfile.lstrip('-'),
                      '-rotate', str(rotate), jobfile.lstrip('-')], stdout=subprocess.PIPE)
                 output = p.communicate()[0]
                 result = p.returncode
                 if result != 0:
                     print "ERROR: Failed to rotate PDF"
                     logging.error("Failed to rotate pdf: " +
-                        str(['convert', '-density', '300x300', jobfile.lstrip('-'), '-rotate', str(rotate), jobfile.lstrip('-')]))
+                        str([self._CONVERTCOMMAND, '-density', '300x300', jobfile.lstrip('-'), '-rotate', str(rotate), jobfile.lstrip('-')]))
                     logging.error(output)
                     return False
                 if not os.path.exists(jobfile):
