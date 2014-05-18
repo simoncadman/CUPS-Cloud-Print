@@ -298,7 +298,7 @@ class Printer(object):
             name = details['name']
 
         sanitisedName = Printer._sanitizeText(name)
-
+        
         if sanitisedName in Printer._RESERVED_CAPABILITY_WORDS:
             sanitisedName = 'GCP_' + sanitisedName
 

@@ -38,7 +38,19 @@ testCapabilities1 = [{'name': 'ns1:Colors',
                      {'name': 'ns1:Something',
                       'type': 'Feature',
                       'options' : 
-                      [{'default': True, 'name': 'one'}, {'name': 'two', 'ppd:value' : 'testval'}] }]
+                      [{'default': True, 'name': 'one'}, {'name': 'two', 'ppd:value' : 'testval'}] },
+                     {'name': 'ns1:TestReservedWord',
+                      'type': 'Feature',
+                      'options' : 
+                      [{'default': True, 'name': 'Resolution'}, {'name': 'two', 'ppd:value' : 'testval'}] },
+                     {'name': 'ns1:TestReservedWord',
+                      'type': 'Feature',
+                      'options' : 
+                      [{'default': True, 'name': 'Resolution'}, {'name': 'two', 'ppd:value' : 'testval'}] },
+                     {'name': 'ns1:TestReservedWord',
+                      'type': 'Feature',
+                      'options' : 
+                      [{'default': True, 'name': 'Resolution'}, {'name': 'two', 'ppd:value' : 'testval'}] }]
 
 def setup_function(function):
     # setup mock requestors
