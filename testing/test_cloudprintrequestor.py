@@ -35,23 +35,33 @@ def setup_function(function):
 
 
 def test_requestor():
+    global requestor
     requestor.setAccount('testdetails')
     assert requestor.getAccount() == 'testdetails'
 
 
 def test_request():
+    global requestor
     assert requestor.doRequest(
-        path="/test",
+        path="test",
         testResponse=json.dumps("randomstring1233")) == "randomstring1233"
     with pytest.raises(ValueError):
-        assert requestor.doRequest(path="/test", testResponse="")
+        assert requestor.doRequest(path="test", testResponse="")
 
     assert requestor.doRequest(
-        path="/test",
+        path="test",
         testResponse=json.dumps("randomstring1233"),
         endpointurl=requestor.CLOUDPRINT_URL) == "randomstring1233"
     with pytest.raises(ValueError):
         assert requestor.doRequest(
-            path="/test",
+            path="test",
             testResponse="",
             endpointurl=requestor.CLOUDPRINT_URL)
+
+    # test doing actual requests, not supplying test reponse data
+    # we expect them to fail due to missing auth data
+    with pytest.raises(ValueError):
+        requestor.doRequest(path="printers")
+    with pytest.raises(ValueError):
+        requestor.doRequest(path="submit", data="test")
+    
