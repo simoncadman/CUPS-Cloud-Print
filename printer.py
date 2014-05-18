@@ -476,9 +476,6 @@ class Printer(object):
                         str([self._CONVERTCOMMAND, '-density', '300x300', jobfile.lstrip('-'), '-rotate', str(rotate), jobfile.lstrip('-')]))
                     logging.error(output)
                     return False
-                if not os.path.exists(jobfile):
-                    print "ERROR: PDF doesnt exist"
-                    return False
             b64file = Utils.Base64Encode(jobfile)
             if b64file is None:
                 print "ERROR: Cannot write to file: " + jobfile + ".b64"

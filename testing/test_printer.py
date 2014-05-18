@@ -22,6 +22,7 @@ import os
 sys.path.insert(0, ".")
 from printermanager import PrinterManager
 from mockrequestor import MockRequestor
+from ccputils import Utils
 
 global printers, printerManagerInstance
 
@@ -355,5 +356,15 @@ def test_submitJob():
         'TEST PAGE WITH EXCEPTION',
         testprintername) == False
 
+    # test failure of print job because b64 version of file exists
+    Utils.WriteFile('testing/testfiles/Test Page.pdf.b64', 'test')
+    os.chmod('testing/testfiles/Test Page.pdf.b64',0)
+    assert printer.submitJob(
+        'pdf',
+        'testing/testfiles/Test Page.pdf',
+        'Test Page',
+        testprintername) == False
+    os.unlink('testing/testfiles/Test Page.pdf.b64')
+    
     # delete test printer
     connection.deletePrinter(testprintername)
