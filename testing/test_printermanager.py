@@ -131,7 +131,7 @@ def test_getCUPSPrintersForAccount():
     fullprintersforaccount = printerManagerInstance.getPrinters(requestors[1].getAccount())
     assert len(fullprintersforaccount) == len(requestors[1].printers)
 
-    fullprinters = printerManagerInstance.getPrinters(True)
+    fullprinters = printerManagerInstance.getPrinters()
     assert len(fullprinters) == totalPrinters
 
     printers = printerManagerInstance.getPrinters()
