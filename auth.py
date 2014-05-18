@@ -21,7 +21,7 @@ from oauth2client import client
 from oauth2client import multistore_file
 from cloudprintrequestor import CloudPrintRequestor
 from ccputils import Utils
-
+from oauth2client.client import AccessTokenRefreshError
 
 class Auth:
 
@@ -29,6 +29,31 @@ class Auth:
     clientsecret = 'MzTBsY4xlrD_lxkmwFbBrvBv'
     config = '/etc/cloudprint.conf'
 
+    @staticmethod
+    def RenewToken(interactive, requestor, credentials, storage, userid):
+        try:
+            credentials.refresh(requestor)
+        except AccessTokenRefreshError as e:
+            if not interactive:
+                    message = "ERROR: Failed to renew token "
+                    message += "(error: "
+                    message += str(e)
+                    message += "), "
+                    message += "please re-run "
+                    message += "/usr/share/cloudprint-cups/"
+                    message += "setupcloudprint.py\n"
+                    sys.stderr.write(message)
+                    sys.exit(1)
+            else:
+                    message = "Failed to renew token (error: "
+                    message += str(e) + "), "
+                    message += "authentication needs to be "
+                    message += "setup again:\n"
+                    sys.stderr.write(message)
+                    Auth.AddAccount(storage, userid)
+                    credentials = storage.get()
+        return credentials
+        
     @staticmethod
     def DeleteAccount(userid=None):
         """Delete an account from the configuration file
@@ -137,29 +162,7 @@ class Auth:
                 # renew if expired
                 requestor = CloudPrintRequestor()
                 if credentials.access_token_expired:
-                    from oauth2client.client import AccessTokenRefreshError
-                    try:
-                        credentials.refresh(requestor)
-                    except AccessTokenRefreshError as e:
-                        if not interactive:
-                                message = "ERROR: Failed to renew token "
-                                message += "(error: "
-                                message += str(e)
-                                message += "), "
-                                message += "please re-run "
-                                message += "/usr/share/cloudprint-cups/"
-                                message += "setupcloudprint.py\n"
-                                sys.stderr.write(message)
-                                sys.exit(1)
-                        else:
-                                message = "Failed to renew token (error: "
-                                message += str(e) + "), "
-                                message += "authentication needs to be "
-                                message += "setup again:\n"
-                                sys.stderr.write(message)
-                                Auth.AddAccount(storage, userid)
-                                credentials = storage.get()
-
+                    Auth.RenewToken(interactive, requestor, credentials, storage, userid)
                 requestor = credentials.authorize(requestor)
                 requestor.setAccount(userid)
                 requestors.append(requestor)

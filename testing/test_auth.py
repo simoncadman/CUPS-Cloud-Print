@@ -116,6 +116,25 @@ def test_setupAuth():
     assert requestors == False
     assert storage == False
 
+def test_renewToken():
+    global requestors
+    storage = multistore_file.get_credential_storage(
+        Auth.config,
+        Auth.clientid,
+        'testuseraccount',
+        ['https://www.googleapis.com/auth/cloudprint'])
+    
+    credentials = client.OAuth2Credentials('test', Auth.clientid,
+                                           'testsecret', 'testtoken', 1,
+                                           'https://www.googleapis.com/auth/cloudprint', 'testaccount1')
+    
+    # test renewing token exits in non-interactive mode
+    with pytest.raises(SystemExit):
+        Auth.RenewToken(False, requestors[0], credentials,storage, 'test')
+        
+    # test renewing interactively tries to read from stdin
+    with pytest.raises(IOError):
+        assert Auth.RenewToken(True, requestors[0], credentials,storage, 'test') == False
 
 @pytest.mark.skipif(
     grp.getgrnam('lp').gr_gid not in (os.getgroups()) and os.getuid() != 0,
