@@ -19,6 +19,7 @@ import logging
 import sys
 import subprocess
 import os
+import pytest
 sys.path.insert(0, ".")
 from printermanager import PrinterManager
 from mockrequestor import MockRequestor
@@ -356,6 +357,29 @@ def test_submitJob():
         'TEST PAGE WITH EXCEPTION',
         testprintername) == False
 
+    # delete test printer
+    connection.deletePrinter(testprintername)
+    
+@pytest.mark.skipif(
+    os.getuid() == 0,
+    reason="will only pass if running tests as non-root user")
+def test_submitJobFileCreationFails():
+    global printers, printerManagerInstance
+    printer = printers[0]
+    connection = cups.Connection()
+    testprintername = printerManagerInstance.sanitizePrinterName(printer['name'])
+    
+    # get test ppd
+    ppdid = 'MFG:GOOGLE;DRV:GCP;CMD:POSTSCRIPT;MDL:'
+    ppds = connection.getPPDs(ppd_device_id=ppdid)
+    printerppdname, printerppd = ppds.popitem()
+    
+    assert printerManagerInstance.addPrinter(
+        printer['name'],
+        printer,
+        connection,
+        printerppdname) is not None
+    
     # test failure of print job because b64 version of file exists
     Utils.WriteFile('testing/testfiles/Test Page.pdf.b64', 'test')
     os.chmod('testing/testfiles/Test Page.pdf.b64',0)
