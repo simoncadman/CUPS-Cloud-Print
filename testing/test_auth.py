@@ -116,6 +116,12 @@ def test_setupAuth():
     assert requestors == False
     assert storage == False
 
+def test_setupAuthInteractive():
+    
+    # ensure running setup in interactive mode tries to read stdin
+    with pytest.raises(IOError):
+        Auth.SetupAuth(True)
+
 def test_renewToken():
     global requestors
     storage = multistore_file.get_credential_storage(
