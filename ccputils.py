@@ -102,10 +102,7 @@ class Utils:
             stdout=subprocess.PIPE)
         output = p.communicate()[0]
         result = p.returncode
-        if result != 0:  # pragma: no cover
-            return False
-        else:
-            return "PDF document" in output
+        return "PDF document" in output
 
     @staticmethod
     def is_exe(fpath):
