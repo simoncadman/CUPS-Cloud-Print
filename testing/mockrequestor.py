@@ -31,7 +31,9 @@ class MockRequestor(CloudPrintRequestor):
             result = {
                 'success': False,
                 'message': 'FAIL PAGE was in message'}
-        else:
+        elif 'TEST PAGE WITH EXCEPTION' in data:
+            raise Exception("Test exception")
+        else:   
             result = {'success': True}
         return json.dumps(result)
 

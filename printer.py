@@ -515,8 +515,8 @@ class Printer(object):
         logging.info('Capability headers are: %s', headers[4])
         data = self._encodeMultiPart(headers, content_type[jobtype])
 
-        responseobj = self.getRequestor().submit(data, self._getMimeBoundary())
         try:
+            responseobj = self.getRequestor().submit(data, self._getMimeBoundary())
             if responseobj['success']:
                 return True
             else:

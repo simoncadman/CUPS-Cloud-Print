@@ -348,5 +348,12 @@ def test_submitJob():
         'FAIL PAGE',
         testprintername) == False
 
+    # test failure of print job with exception
+    assert printer.submitJob(
+        'pdf',
+        'testing/testfiles/Test Page.pdf',
+        'TEST PAGE WITH EXCEPTION',
+        testprintername) == False
+
     # delete test printer
     connection.deletePrinter(testprintername)
