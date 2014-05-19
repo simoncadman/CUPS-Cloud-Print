@@ -124,7 +124,7 @@ class Printer(object):
 
     _PROTOCOL = 'cloudprint://'
     _BACKEND_DESCRIPTION =\
-        'network %s "%s" "Google Cloud Print" "MFG:Google;MDL:Cloud Print;DES:GoogleCloudPrint;"'
+        'network %s "%s" "%s" "MFG:Google;MDL:Cloud Print;DES:GoogleCloudPrint;"'
 
     _LIST_FORMAT = '"cupscloudprint:%s:%s-%s.ppd" en "Google" "%s (%s)" "MFG:GOOGLE;DRV:GCP;CMD:POSTSCRIPT;MDL:%s;"'
 
@@ -172,37 +172,49 @@ class Printer(object):
         return responseobj['printers'][0]
 
     def getURI(self):
-        """Generates a URI for the Cloud Print Printer
+        """Generates a URI for the Cloud Print Printer.
 
         Returns:
-          string: URI for the printer
+          URI for the printer
         """
         account = urllib.quote(self.getAccount().encode('ascii', 'replace'))
         printer_id = urllib.quote(self['id'].encode('ascii', 'replace'))
         return "%s%s/%s" % (self._PROTOCOL, account, printer_id)
 
     def getListDescription(self):
-        printerName = self['name']
-        if 'displayName' in self:
-            printerName = self['displayName']
         return '%s - %s - %s' % (
-            printerName.encode('ascii', 'replace'), self.getURI(), self.getAccount())
+            self.getDisplayName().encode('ascii', 'replace'), self.getURI(), self.getAccount())
 
     def getBackendDescription(self):
-        return self._BACKEND_DESCRIPTION % (self.getURI(), self['name'])
+        displayName = self.getDisplayName()
+        return self._BACKEND_DESCRIPTION % (self.getURI(), displayName, displayName)
 
     def getCUPSListDescription(self):
-        account_no_spaces = self.getAccount().encode('ascii', 'replace').replace(' ', '-')
-        name_no_spaces = self['name'].encode('ascii', 'replace').replace(' ', '-')
         id = self['id'].encode('ascii', 'replace').replace(' ', '-')
-        name = self['name'].encode('ascii', 'replace')
+        name = getDisplayName().encode('ascii', 'replace')
+        name_no_spaces = name.replace(' ', '-')
+        account_no_spaces = self.getAccount().encode('ascii', 'replace').replace(' ', '-')
         return self._LIST_FORMAT %\
             (account_no_spaces, name_no_spaces, id, name, self.getAccount(), self.getURI())
+
+    def getDisplayName(self):
+        """Gets a name that carbon-based lifeforms can read.
+
+        For example, "HP LaserJet 2000", not "HP_LaserJet-2000".
+
+        Returns:
+          A name that makes sense when displayed to a non-technical user
+        """
+
+        if 'displayName' in self and self['displayName']:
+            return self['displayName']
+        else:
+            return self['name']
 
     def getPPDName(self):
         return 'cupscloudprint:%s:%s-%s.ppd' % (
             self.getAccount().encode('ascii', 'replace').replace(' ', '-'),
-            self['name'].encode('ascii', 'replace').replace(' ', '-'),
+            getDisplayName().encode('ascii', 'replace').replace(' ', '-'),
             self['id'].encode('ascii', 'replace').replace(' ', '-'))
 
     def generatePPD(self):
@@ -436,15 +448,16 @@ class Printer(object):
         return self._getCapabilitiesDict(attrArray, self['capabilities'], overridecapabilities)
 
     def submitJob(self, jobtype, jobfile, jobname, cupsprintername, options=""):
-        """Submit a job to printerid with content of dataUrl.
+        """Submits a job to printerid with content of dataUrl.
 
         Args:
           jobtype: string, must match the dictionary keys in content and content_type.
           jobfile: string, points to source for job. Could be a pathname or id string.
           jobname: string, name of the print job ( usually page name ).
           options: string, key-value pair of options from print job.
+
         Returns:
-          boolean: True = submitted, False = errors.
+          True if submitted, False otherwise
         """
         rotate = 0
 
