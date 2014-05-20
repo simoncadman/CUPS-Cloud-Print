@@ -125,9 +125,13 @@ class PrinterManager:
                 printerppdname = printer.getPPDName()
             else:
                 printerppdname = ppd
+            location = printer.getLocation()
+            if not location:
+                location = 'Google Cloud Print'
+
             result = connection.addPrinter(
                 name=printername, ppdname=printerppdname, info=printername,
-                location='Google Cloud Print', device=printer.getURI())
+                location=location, device=printer.getURI())
             connection.enablePrinter(printername)
             connection.acceptJobs(printername)
             connection.setPrinterShared(printername, False)

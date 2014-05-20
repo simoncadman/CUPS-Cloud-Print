@@ -185,18 +185,27 @@ class Printer(object):
         return '%s - %s - %s' % (
             self.getDisplayName().encode('ascii', 'replace'), self.getURI(), self.getAccount())
 
-    def getBackendDescription(self):
-        display_name = self.getDisplayName()
-        name_and_location = display_name
+    def getLocation(self):
+        """Gets the location of the printer, or '' if location not available."""
 
         # Look for hints of a location tag.
         for tag in self['tags']:
-          if '=' not in tag:
-            continue
-          key, value = tag.split('=', 1)
-          if 'location' in key:
-            name_and_location = '%s (%s)' % (display_name, value)
-            break
+            if '=' not in tag:
+                continue
+            key, value = tag.split('=', 1)
+            if 'location' in key:
+                return value
+
+        return ''
+
+    def getBackendDescription(self):
+        display_name = self.getDisplayName()
+
+        location = self.getLocation()
+        if location:
+            name_and_location = '%s (%s)' % (display_name, location)
+        else:
+            name_and_location = display_name
 
         return self._BACKEND_DESCRIPTION % (self.getURI(), display_name, name_and_location)
 
