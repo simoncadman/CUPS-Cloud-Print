@@ -170,7 +170,7 @@ if __name__ == '__main__':  # pragma: no cover
                     if prefix == "":
                         print "Not using prefix"
 
-                printername = prefix + ccpprinter['name'].encode('ascii', 'replace')
+                printername = prefix + ccpprinter.getDisplayName().encode('ascii', 'replace')
                 found = False
                 for cupsprinter in cupsprinters:
                     if cupsprinters[cupsprinter]['device-uri'] == ccpprinter.getURI():
@@ -207,7 +207,7 @@ if __name__ == '__main__':  # pragma: no cover
             if found:
                 continue
 
-            printername = prefix + ccpprinter['name']
+            printername = prefix + ccpprinter.getDisplayName()
 
             # check if printer name already exists
             foundbyname = False
