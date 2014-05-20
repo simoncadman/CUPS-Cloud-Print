@@ -137,6 +137,11 @@ def test_getURI():
     assert printers[0].getURI() == "cloudprint://testaccount2%40gmail.com/__test_save_docs"
     assert printers[1].getURI() == "cloudprint://testaccount2%40gmail.com/__test_save_docs_2"
     
+def test_getDisplayName():
+    global printers
+    assert printers[0].getDisplayName() == "Save to Google Drive"
+    assert printers[1].getDisplayName() == "Save to Google Drive 2 DisplayName"
+    
 def test_getListDescription():
     global printers
     assert printers[0].getListDescription() == "Save to Google Drive - cloudprint://testaccount2%40gmail.com/__test_save_docs - testaccount2@gmail.com"
