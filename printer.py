@@ -191,7 +191,7 @@ class Printer(object):
 
     def getCUPSListDescription(self):
         id = self['id'].encode('ascii', 'replace').replace(' ', '-')
-        name = getDisplayName().encode('ascii', 'replace')
+        name = self.getDisplayName().encode('ascii', 'replace')
         name_no_spaces = name.replace(' ', '-')
         account_no_spaces = self.getAccount().encode('ascii', 'replace').replace(' ', '-')
         return self._LIST_FORMAT %\
@@ -214,7 +214,7 @@ class Printer(object):
     def getPPDName(self):
         return 'cupscloudprint:%s:%s-%s.ppd' % (
             self.getAccount().encode('ascii', 'replace').replace(' ', '-'),
-            getDisplayName().encode('ascii', 'replace').replace(' ', '-'),
+            self.getDisplayName().encode('ascii', 'replace').replace(' ', '-'),
             self['id'].encode('ascii', 'replace').replace(' ', '-'))
 
     def generatePPD(self):
