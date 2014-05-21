@@ -211,7 +211,7 @@ class Printer(object):
         else:
             return self._BACKEND_DESCRIPTION % (self.getURI(), display_name, display_name)
 
-    def getCUPSDeviceDescription(self):
+    def getCUPSDriverDescription(self):
         id = self['id'].encode('ascii', 'replace').replace(' ', '-')
         name = self.getDisplayName().encode('ascii', 'replace')
         name_no_spaces = name.replace(' ', '-')

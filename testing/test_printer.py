@@ -152,10 +152,10 @@ def test_getCUPSBackendDescription():
     assert printers[0].getCUPSBackendDescription() == 'network cloudprint://testaccount2%40gmail.com/__test_save_docs "Save to Google Drive" "Save to Google Drive" "MFG:Google;MDL:Cloud Print;DES:GoogleCloudPrint;"'
     assert printers[1].getCUPSBackendDescription() == 'network cloudprint://testaccount2%40gmail.com/__test_save_docs_2 "Save to Google Drive 2 DisplayName" "Save to Google Drive 2 DisplayName" "MFG:Google;MDL:Cloud Print;DES:GoogleCloudPrint;"'
     
-def test_getCUPSDeviceDescription():
+def test_getCUPSDriverDescription():
     global printers
-    assert printers[0].getCUPSDeviceDescription() == '"cupscloudprint:testaccount2@gmail.com:Save-to-Google-Drive-__test_save_docs.ppd" en "Google" "Save to Google Drive (testaccount2@gmail.com)" "MFG:GOOGLE;DRV:GCP;CMD:POSTSCRIPT;MDL:cloudprint://testaccount2%40gmail.com/__test_save_docs;"'
-    assert printers[1].getCUPSDeviceDescription() == '"cupscloudprint:testaccount2@gmail.com:Save-to-Google-Drive-2-DisplayName-__test_save_docs_2.ppd" en "Google" "Save to Google Drive 2 DisplayName (testaccount2@gmail.com)" "MFG:GOOGLE;DRV:GCP;CMD:POSTSCRIPT;MDL:cloudprint://testaccount2%40gmail.com/__test_save_docs_2;"'
+    assert printers[0].getCUPSDriverDescription() == '"cupscloudprint:testaccount2@gmail.com:Save-to-Google-Drive-__test_save_docs.ppd" en "Google" "Save to Google Drive (testaccount2@gmail.com)" "MFG:GOOGLE;DRV:GCP;CMD:POSTSCRIPT;MDL:cloudprint://testaccount2%40gmail.com/__test_save_docs;"'
+    assert printers[1].getCUPSDriverDescription() == '"cupscloudprint:testaccount2@gmail.com:Save-to-Google-Drive-2-DisplayName-__test_save_docs_2.ppd" en "Google" "Save to Google Drive 2 DisplayName (testaccount2@gmail.com)" "MFG:GOOGLE;DRV:GCP;CMD:POSTSCRIPT;MDL:cloudprint://testaccount2%40gmail.com/__test_save_docs_2;"'
     
 def test_getPPDName():
     global printers

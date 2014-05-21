@@ -51,7 +51,7 @@ if __name__ == '__main__':  # pragma: no cover
         sys.exit(1)
 
     for printer in printers:
-        print printer.getCUPSDeviceDescription()
+        print printer.getCUPSDriverDescription()
         ppdname = printer.getPPDName()
         p = subprocess.Popen(
             (os.path.join(libpath, 'dynamicppd.py'), 'cat', ppdname.lstrip('-')),

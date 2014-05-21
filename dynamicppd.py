@@ -34,7 +34,7 @@ def doList(sys, printer_manager):
         sys.stderr.write("ERROR: No Printers Found\n")
         sys.exit(1)
     for printer in printers:
-        print printer.getCUPSDeviceDescription()
+        print printer.getCUPSDriverDescription()
     sys.exit(0)
 
 
