@@ -128,7 +128,7 @@ class Printer(object):
     _BACKEND_DESCRIPTION_PLUS_LOCATION =\
         'network %s "%s" "%s" "MFG:Google;MDL:Cloud Print;DES:GoogleCloudPrint;" "%s"'
 
-    _LIST_FORMAT = '"cupscloudprint:%s:%s-%s.ppd" en "Google" "%s (%s)" "MFG:GOOGLE;DRV:GCP;CMD:POSTSCRIPT;MDL:%s;"'
+    _DEVICE_DESCRIPTION = '"cupscloudprint:%s:%s-%s.ppd" en "Google" "%s (%s)" "MFG:GOOGLE;DRV:GCP;CMD:POSTSCRIPT;MDL:%s;"'
 
     _RESERVED_CAPABILITY_WORDS = set((
         'Duplex', 'Resolution', 'Attribute', 'Choice', 'ColorDevice', 'ColorModel', 'ColorProfile',
@@ -216,7 +216,7 @@ class Printer(object):
         name = self.getDisplayName().encode('ascii', 'replace')
         name_no_spaces = name.replace(' ', '-')
         account_no_spaces = self.getAccount().encode('ascii', 'replace').replace(' ', '-')
-        return self._LIST_FORMAT %\
+        return self._DEVICE_DESCRIPTION %\
             (account_no_spaces, name_no_spaces, id, name, self.getAccount(), self.getURI())
 
     def getDisplayName(self):
