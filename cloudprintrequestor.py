@@ -15,7 +15,6 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 import httplib2
 import json
-import sys
 
 
 class CloudPrintRequestor(httplib2.Http):

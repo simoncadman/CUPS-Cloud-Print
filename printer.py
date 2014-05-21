@@ -26,6 +26,7 @@ import subprocess
 
 from ccputils import Utils
 
+
 class Printer(object):
     _PPD_TEMPLATE_HEAD = """*PPD-Adobe: "4.3"
 *%%%%%%%% PPD file for Cloud Print with CUPS.
@@ -128,7 +129,9 @@ class Printer(object):
     _BACKEND_DESCRIPTION_PLUS_LOCATION =\
         'network %s "%s" "%s" "MFG:Google;MDL:Cloud Print;DES:GoogleCloudPrint;" "%s"'
 
-    _DEVICE_DESCRIPTION = '"cupscloudprint:%s:%s-%s.ppd" en "Google" "%s (%s)" "MFG:GOOGLE;DRV:GCP;CMD:POSTSCRIPT;MDL:%s;"'
+    _DEVICE_DESCRIPTION = '"%s" en "Google" "%s (%s)" "MFG:GOOGLE;DRV:GCP;CMD:POSTSCRIPT;MDL:%s;"'
+    
+    _PPD_NAME = 'cupscloudprint:%s:%s.ppd'
 
     _RESERVED_CAPABILITY_WORDS = set((
         'Duplex', 'Resolution', 'Attribute', 'Choice', 'ColorDevice', 'ColorModel', 'ColorProfile',
@@ -139,7 +142,7 @@ class Printer(object):
         'Throughput', 'UIConstraints', 'VariablePaperSize', 'Version', 'Color', 'Background',
         'Stamp', 'DestinationColorProfile'
     ))
-    
+
     _CONVERTCOMMAND = 'convert'
 
     def __init__(self, fields, requestor):
@@ -212,12 +215,9 @@ class Printer(object):
             return self._BACKEND_DESCRIPTION % (self.getURI(), display_name, display_name)
 
     def getCUPSDriverDescription(self):
-        id = self['id'].encode('ascii', 'replace').replace(' ', '-')
         name = self.getDisplayName().encode('ascii', 'replace')
-        name_no_spaces = name.replace(' ', '-')
-        account_no_spaces = self.getAccount().encode('ascii', 'replace').replace(' ', '-')
-        return self._DEVICE_DESCRIPTION %\
-            (account_no_spaces, name_no_spaces, id, name, self.getAccount(), self.getURI())
+        return self._DEVICE_DESCRIPTION % (
+                self.getPPDName(), name, self.getAccount(), self.getURI())
 
     def getDisplayName(self):
         """Gets a name that carbon-based lifeforms can read.
@@ -234,9 +234,8 @@ class Printer(object):
             return self['name']
 
     def getPPDName(self):
-        return 'cupscloudprint:%s:%s-%s.ppd' % (
+        return self._PPD_NAME % (
             self.getAccount().encode('ascii', 'replace').replace(' ', '-'),
-            self.getDisplayName().encode('ascii', 'replace').replace(' ', '-'),
             self['id'].encode('ascii', 'replace').replace(' ', '-'))
 
     def generatePPD(self):
@@ -275,7 +274,8 @@ class Printer(object):
                             originOptionName = self._sanitizeText(option['psk:DisplayName'])
                         else:
                             originOptionName = self._sanitizeText(option['name'])
-                        internalOptionName = self._getInternalName(option, 'option', capability['name'], addedOptions)
+                        internalOptionName = self._getInternalName(
+                            option, 'option', capability['name'], addedOptions)
                         addedOptions.append(internalOptionName)
                         if 'default' in option and option['default']:
                             ppd += '*Default%s: %s\n' % (internalCapabilityName, internalOptionName)
@@ -286,8 +286,9 @@ class Printer(object):
                         value = ''
                         if 'ppd:value' in option:
                             value = option['ppd:value']
-                        ppd += '*%s.%s %s/%s: "%s"\n' % \
-                            (language, internalCapabilityName, internalOptionName, originOptionName, value)
+                        ppd += '*%s.%s %s/%s: "%s"\n' % (
+                            language, internalCapabilityName, internalOptionName, originOptionName,
+                            value)
 
                     ppd += '*CloseUI: *%s\n' % internalCapabilityName
 
@@ -334,14 +335,14 @@ class Printer(object):
             name = details['name']
 
         sanitisedName = Printer._sanitizeText(name)
-        
+
         if sanitisedName in Printer._RESERVED_CAPABILITY_WORDS:
             sanitisedName = 'GCP_' + sanitisedName
 
         # only sanitise, no hash
         if returnValue is None and\
-            len(sanitisedName) <= 30 and\
-            sanitisedName.decode("utf-8", 'ignore').encode("ascii", "ignore") == sanitisedName:
+                len(sanitisedName) <= 30 and\
+                sanitisedName.decode("utf-8", 'ignore').encode("ascii", "ignore") == sanitisedName:
             returnValue = sanitisedName
 
         if returnValue is None:
@@ -421,7 +422,8 @@ class Printer(object):
                     if hashname == Printer._getInternalName(capability, 'capability'):
                         gcpname = capability['name']
                         for option in capability['options']:
-                            internalCapability = Printer._getInternalName(option, 'option', gcpname, addedCapabilities)
+                            internalCapability = Printer._getInternalName(
+                                option, 'option', gcpname, addedCapabilities)
                             addedCapabilities.append(internalCapability)
                             if attr['value'] == internalCapability:
                                 gcpoption = option['name']
@@ -432,7 +434,8 @@ class Printer(object):
                                 selectedoption = overridecapabilities[
                                     overridecapability]
                                 for option in capability['options']:
-                                    internalOption = Printer._getInternalName(option, 'option', gcpname, addedOptions)
+                                    internalOption = Printer._getInternalName(
+                                        option, 'option', gcpname, addedOptions)
                                     addedOptions.append(internalOption)
                                     if selectedoption == internalOption:
                                         gcpoption = option['name']
@@ -500,15 +503,14 @@ class Printer(object):
                 print "ERROR: PDF doesnt exist"
                 return False
             if rotate > 0:
-                p = subprocess.Popen(
-                    [self._CONVERTCOMMAND, '-density', '300x300', jobfile.lstrip('-'),
-                     '-rotate', str(rotate), jobfile.lstrip('-')], stdout=subprocess.PIPE)
+                command = [self._CONVERTCOMMAND, '-density', '300x300', jobfile.lstrip('-'),
+                           '-rotate', str(rotate), jobfile.lstrip('-')]
+                p = subprocess.Popen(command, stdout=subprocess.PIPE)
                 output = p.communicate()[0]
                 result = p.returncode
                 if result != 0:
                     print "ERROR: Failed to rotate PDF"
-                    logging.error("Failed to rotate pdf: " +
-                        str([self._CONVERTCOMMAND, '-density', '300x300', jobfile.lstrip('-'), '-rotate', str(rotate), jobfile.lstrip('-')]))
+                    logging.error("Failed to rotate pdf: " + str(command))
                     logging.error(output)
                     return False
             b64file = Utils.Base64Encode(jobfile)
@@ -561,4 +563,3 @@ class Printer(object):
         except Exception as error_msg:
             print 'ERROR: Print job %s failed with %s' % (jobtype, error_msg)
             return False
-

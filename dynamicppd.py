@@ -24,8 +24,10 @@ exit $?
 #    You should have received a copy of the GNU General Public License
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+import logging
 import os
 import sys
+
 
 def doList(sys, printer_manager):
     """Lists Google Cloud Print printers."""
@@ -42,30 +44,22 @@ def doCat():
     """Prints a PPD to stdout, per argv arguments."""
     ppdname = sys.argv[2]
     ppdparts = ppdname.split(":")
-    if len(ppdparts) < 3:
+    if len(ppdparts) < 3 or ppdparts[0] != 'cupscloudprint' or not ppdparts[2].endswith('.ppd'):
         sys.stderr.write("ERROR: PPD name is invalid\n")
         sys.exit(1)
 
     accountName = ppdparts[1]
-    printers = printer_manager.getPrinters(accountName=accountName)
+    printerId = ppdparts[2].rsplit('.', 1)[0]
 
-    if printers is None or len(printers) == 0:
-        # still can't find printer specifically, try all accounts
-        printers = printer_manager.getPrinters()
+    printer = printer_manager.getPrinter(printerId, accountName)
 
-    if printers is None:
-        sys.stderr.write("ERROR: No Printers Found\n")
+    if printer is None:
+        sys.stderr.write("ERROR: PPD %s Not Found\n" % ppdname)
         sys.exit(1)
 
-    # find printer
-    for printer in printers:
-        if ppdname == printer.getPPDName():
-            print printer.generatePPD()
-            sys.exit(0)
+    print printer.generatePPD()
 
-    # no printers found
-    sys.stderr.write("ERROR: PPD %s Not Found\n" % ppdname)
-    sys.exit(1)
+    sys.exit(0)
 
 
 def showUsage():
@@ -73,8 +67,6 @@ def showUsage():
     sys.exit(1)
 
 if __name__ == '__main__':  # pragma: no cover
-    import locale
-    import logging
 
     libpath = "/usr/local/share/cloudprint-cups/"
     if not os.path.exists(libpath):
@@ -84,6 +76,10 @@ if __name__ == '__main__':  # pragma: no cover
     from auth import Auth
     from printermanager import PrinterManager
     from ccputils import Utils
+
+    if len(sys.argv) < 2:
+        showUsage()
+
     Utils.SetupLogging()
 
     # line below is replaced on commit
@@ -98,13 +94,12 @@ if __name__ == '__main__':  # pragma: no cover
 
     printer_manager = PrinterManager(requestors)
 
-    if (len(sys.argv) < 2):
-        showUsage()
-
-    elif sys.argv[1] == 'list':
+    if sys.argv[1] == 'list':
         doList(sys, printer_manager)
 
     elif sys.argv[1] == 'cat':
         if len(sys.argv) == 2 or sys.argv[2] == "":
             showUsage()
         doCat()
+
+    showUsage()

@@ -75,6 +75,28 @@ class PrinterManager:
                     accountPrinters.append(cupsprinters[cupsprinter])
         return accountPrinters, connection
 
+    def getPrinter(self, printerId, accountName):
+        """Fetch one printer, including capabilities.
+
+        Args:
+          printerId: something like e64b1063-80e7-a87e-496c-3caa8cb7d736
+          accountName: email address (account) printer is associated with
+
+        Returns:
+          A Printer object, or None if printer not found."""
+
+        for requestor in self.requestors:
+            if accountName != requestor.getAccount():
+                continue
+
+            response = requestor.printer(printerId)
+            if not response['success'] or 'printers' not in response or not response['printers']:
+                break
+
+            return Printer(response['printers'][0], requestor)
+
+        return None
+
     def getPrinters(self, accountName=None):
         """Fetch a list of printers
 
