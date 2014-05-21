@@ -34,7 +34,7 @@ def doList(sys, printer_manager):
         sys.stderr.write("ERROR: No Printers Found\n")
         sys.exit(1)
     for printer in printers:
-        print printer.getCUPSListDescription()
+        print printer.getCUPSDeviceDescription()
     sys.exit(0)
 
 
@@ -87,7 +87,7 @@ if __name__ == '__main__':  # pragma: no cover
     Utils.SetupLogging()
 
     # line below is replaced on commit
-    CCPVersion = "20140501 203545"
+    CCPVersion = "20140521 163500"
     Utils.ShowVersion(CCPVersion)
 
     requestors, storage = Auth.SetupAuth(False)

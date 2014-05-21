@@ -200,7 +200,7 @@ class Printer(object):
 
         return ''
 
-    def getBackendDescription(self):
+    def getCUPSBackendDescription(self):
         display_name = self.getDisplayName()
 
         location = self.getLocation()
@@ -211,7 +211,7 @@ class Printer(object):
         else:
             return self._BACKEND_DESCRIPTION % (self.getURI(), display_name, display_name)
 
-    def getCUPSListDescription(self):
+    def getCUPSDeviceDescription(self):
         id = self['id'].encode('ascii', 'replace').replace(' ', '-')
         name = self.getDisplayName().encode('ascii', 'replace')
         name_no_spaces = name.replace(' ', '-')

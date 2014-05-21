@@ -42,7 +42,7 @@ if __name__ == '__main__':  # pragma: no cover
     Utils.SetupLogging()
 
     # line below is replaced on commit
-    CCPVersion = "20140501 203545"
+    CCPVersion = "20140521 163500"
     Utils.ShowVersion(CCPVersion)
 
     if len(sys.argv) != 1 and len(sys.argv) < 6 or len(sys.argv) > 7:
@@ -75,7 +75,7 @@ if __name__ == '__main__':  # pragma: no cover
         if printers is not None:
             try:
                 for printer in printers:
-                    print printer.getBackendDescription()
+                    print printer.getCUPSBackendDescription()
             except Exception as error:
                 sys.stderr.write("ERROR: " + error)
                 logging.error(error)
