@@ -125,6 +125,8 @@ class Printer(object):
     _PROTOCOL = 'cloudprint://'
     _BACKEND_DESCRIPTION =\
         'network %s "%s" "%s" "MFG:Google;MDL:Cloud Print;DES:GoogleCloudPrint;"'
+    _BACKEND_DESCRIPTION_PLUS_LOCATION =\
+        'network %s "%s" "%s" "MFG:Google;MDL:Cloud Print;DES:GoogleCloudPrint;" "%s"'
 
     _LIST_FORMAT = '"cupscloudprint:%s:%s-%s.ppd" en "Google" "%s (%s)" "MFG:GOOGLE;DRV:GCP;CMD:POSTSCRIPT;MDL:%s;"'
 
@@ -204,10 +206,10 @@ class Printer(object):
         location = self.getLocation()
         if location:
             name_and_location = '%s (%s)' % (display_name, location)
+            return self._BACKEND_DESCRIPTION_PLUS_LOCATION %\
+                (self.getURI(), display_name, name_and_location, location)
         else:
-            name_and_location = display_name
-
-        return self._BACKEND_DESCRIPTION % (self.getURI(), display_name, name_and_location)
+            return self._BACKEND_DESCRIPTION % (self.getURI(), display_name, display_name)
 
     def getCUPSListDescription(self):
         id = self['id'].encode('ascii', 'replace').replace(' ', '-')
