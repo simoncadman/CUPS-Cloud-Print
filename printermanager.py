@@ -167,9 +167,11 @@ class PrinterManager:
             return False
 
     @staticmethod
-    def _getPrinterIdFromURI(uristring):
-        uri = urlparse(uristring)
-        return uri.path.split('/')[1]
+    def _getAccountNameAndPrinterIdFromURI(uri):
+        splituri = uri.rsplit('/', 2)
+        accountName = urllib.unquote(splituri[1])
+        printerId = urllib.unquote(splituri[2])
+        return accountName, printerId
 
     def parseLegacyURI(self, uristring, requestors):
         """Parses previous CUPS Cloud Print URIs, only used for upgrades
@@ -219,11 +221,8 @@ class PrinterManager:
                 return requestor
 
     def getPrinterByURI(self, uri):
-        printerid = self._getPrinterIdFromURI(uri)
-        for printer in self.getPrinters():
-            if printer['id'] == printerid:
-                return printer
-        return None
+        accountName, printerId = self._getAccountNameAndPrinterIdFromURI(uri)
+        return self.getPrinter(printerId, accountName)
 
     def getPrinterIDByDetails(self, account, printername, printerid):
         """Gets printer id and requestor by printer
