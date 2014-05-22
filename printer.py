@@ -194,12 +194,13 @@ class Printer(object):
         """Gets the location of the printer, or '' if location not available."""
 
         # Look for hints of a location tag.
-        for tag in self['tags']:
-            if '=' not in tag:
-                continue
-            key, value = tag.split('=', 1)
-            if 'location' in key:
-                return value
+        if 'tags' in self:
+            for tag in self['tags']:
+                if '=' not in tag:
+                    continue
+                key, value = tag.split('=', 1)
+                if 'location' in key:
+                    return value
 
         return ''
 
