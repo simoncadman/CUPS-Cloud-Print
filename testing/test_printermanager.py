@@ -65,9 +65,10 @@ def teardown_function(function):
 
 def test_parseURI():
     global printerManagerInstance, requestors
-    printerid = printerManagerInstance._getPrinterIdFromURI(
+    accountName, printerid = printerManagerInstance._getAccountNameAndPrinterIdFromURI(
         "cloudprint://testaccount2%40gmail.com/testid")
     assert printerid == "testid"
+    assert accountName == "testaccount2@gmail.com"
 
 def test_parseLegacyURI():
     global printerManagerInstance, requestors
@@ -233,8 +234,11 @@ def test_printers():
         assert len(printer.getURI()) > 0
         assert uritest.match(printer.getURI()) is not None
 
-        printerId = printerManagerInstance._getPrinterIdFromURI(printer.getURI())
+        accountName, printerId = printerManagerInstance._getAccountNameAndPrinterIdFromURI(printer.getURI())
+        assert isinstance(accountName,basestring)
         assert isinstance(printerId,basestring)
+        assert accountName == printer.getAccount()
+        assert printerId == printer['id']
 
         # get ppd
         ppdid = 'MFG:GOOGLE;DRV:GCP;CMD:POSTSCRIPT;MDL:'
