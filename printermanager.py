@@ -75,6 +75,28 @@ class PrinterManager:
                     accountPrinters.append(cupsprinters[cupsprinter])
         return accountPrinters, connection
 
+    def getPrinter(self, printerId, accountName):
+        """Fetch one printer, including capabilities.
+
+        Args:
+          printerId: something like e64b1063-80e7-a87e-496c-3caa8cb7d736
+          accountName: email address (account) printer is associated with
+
+        Returns:
+          A Printer object, or None if printer not found."""
+
+        for requestor in self.requestors:
+            if accountName != requestor.getAccount():
+                continue
+
+            response = requestor.printer(printerId)
+            if not response['success'] or 'printers' not in response or not response['printers']:
+                break
+
+            return Printer(response['printers'][0], requestor)
+
+        return None
+
     def getPrinters(self, accountName=None):
         """Fetch a list of printers
 
@@ -125,9 +147,13 @@ class PrinterManager:
                 printerppdname = printer.getPPDName()
             else:
                 printerppdname = ppd
+            location = printer.getLocation()
+            if not location:
+                location = 'Google Cloud Print'
+
             result = connection.addPrinter(
                 name=printername, ppdname=printerppdname, info=printername,
-                location='Google Cloud Print', device=printer.getURI())
+                location=location, device=printer.getURI())
             connection.enablePrinter(printername)
             connection.acceptJobs(printername)
             connection.setPrinterShared(printername, False)
@@ -141,9 +167,11 @@ class PrinterManager:
             return False
 
     @staticmethod
-    def _getPrinterIdFromURI(uristring):
-        uri = urlparse(uristring)
-        return uri.path.split('/')[1]
+    def _getAccountNameAndPrinterIdFromURI(uri):
+        splituri = uri.rsplit('/', 2)
+        accountName = urllib.unquote(splituri[1])
+        printerId = urllib.unquote(splituri[2])
+        return accountName, printerId
 
     def parseLegacyURI(self, uristring, requestors):
         """Parses previous CUPS Cloud Print URIs, only used for upgrades
@@ -193,11 +221,8 @@ class PrinterManager:
                 return requestor
 
     def getPrinterByURI(self, uri):
-        printerid = self._getPrinterIdFromURI(uri)
-        for printer in self.getPrinters():
-            if printer['id'] == printerid:
-                return printer
-        return None
+        accountName, printerId = self._getAccountNameAndPrinterIdFromURI(uri)
+        return self.getPrinter(printerId, accountName)
 
     def getPrinterIDByDetails(self, account, printername, printerid):
         """Gets printer id and requestor by printer

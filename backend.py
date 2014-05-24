@@ -42,7 +42,7 @@ if __name__ == '__main__':  # pragma: no cover
     Utils.SetupLogging()
 
     # line below is replaced on commit
-    CCPVersion = "20140501 203545"
+    CCPVersion = "20140521 163500"
     Utils.ShowVersion(CCPVersion)
 
     if len(sys.argv) != 1 and len(sys.argv) < 6 or len(sys.argv) > 7:
@@ -67,18 +67,19 @@ if __name__ == '__main__':  # pragma: no cover
         logging.error("backend tried to run with invalid config")
         sys.exit(1)
     printer_manager = PrinterManager(requestors)
-    printers = printer_manager.getPrinters()
 
     if len(sys.argv) == 1:
         print 'network cloudprint "Unknown" "Google Cloud Print"'
 
+        printers = printer_manager.getPrinters()
         if printers is not None:
             try:
                 for printer in printers:
-                    print printer.getBackendDescription()
+                    print printer.getCUPSBackendDescription()
             except Exception as error:
                 sys.stderr.write("ERROR: " + error)
                 logging.error(error)
+                sys.exit(1)
         sys.exit(0)
 
     # if no printfile, put stdin to a temp file
@@ -128,7 +129,10 @@ if __name__ == '__main__':  # pragma: no cover
     result = 0
 
     logging.info('is this a pdf? ' + printFile)
-    if not Utils.fileIsPDF(printFile):
+    if not os.path.exists(printFile):
+        sys.stderr.write('ERROR: file "%s" not found\n' % printFile)
+        result = 1
+    elif not Utils.fileIsPDF(printFile):
         sys.stderr.write("INFO: Converting print job to PDF\n")
         if subprocess.call(convertToPDFParams) != 0:
             sys.stderr.write("ERROR: Failed to convert file to pdf\n")
