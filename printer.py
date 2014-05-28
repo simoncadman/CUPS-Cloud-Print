@@ -124,12 +124,12 @@ class Printer(object):
 *% End of cloudprint.ppd, 04169 bytes."""
 
     _PROTOCOL = 'cloudprint://'
-    _BACKEND_DESCRIPTION =\
-        'network %s "%s" "%s" "MFG:Google;MDL:Cloud Print;DES:GoogleCloudPrint;"'
-    _BACKEND_DESCRIPTION_PLUS_LOCATION =\
-        'network %s "%s" "%s" "MFG:Google;MDL:Cloud Print;DES:GoogleCloudPrint;" "%s"'
+    _BACKEND_DESCRIPTION = 'network %s "%s" "%s" "%s"'
+    _BACKEND_DESCRIPTION_PLUS_LOCATION = 'network %s "%s" "%s (%s)" "%s" "%s"'
 
-    _DEVICE_DESCRIPTION = '"%s" en "Google" "%s (%s)" "MFG:GOOGLE;DRV:GCP;CMD:POSTSCRIPT;MDL:%s;"'
+    _IEEE_1284 = 'MFG:Google;DRV:GCP;CMD:POSTSCRIPT;DES:GoogleCloudPrint;MDL:%s'
+
+    _DRIVER_DESCRIPTION = '"%s" en "Google" "%s (%s)" "%s"'
     
     _PPD_NAME = 'cupscloudprint:%s:%s.ppd'
 
@@ -209,16 +209,19 @@ class Printer(object):
 
         location = self.getLocation()
         if location:
-            name_and_location = '%s (%s)' % (display_name, location)
-            return self._BACKEND_DESCRIPTION_PLUS_LOCATION %\
-                (self.getURI(), display_name, name_and_location, location)
+            return self._BACKEND_DESCRIPTION_PLUS_LOCATION % (
+                self.getURI(), display_name, display_name, location, self.getIEEE1284(), location)
         else:
-            return self._BACKEND_DESCRIPTION % (self.getURI(), display_name, display_name)
+            return self._BACKEND_DESCRIPTION % (
+                self.getURI(), display_name, display_name, self.getIEEE1284())
 
     def getCUPSDriverDescription(self):
         name = self.getDisplayName().encode('ascii', 'replace')
-        return self._DEVICE_DESCRIPTION % (
-                self.getPPDName(), name, self.getAccount(), self.getURI())
+        return self._DRIVER_DESCRIPTION % (
+                self.getPPDName(), name, self.getAccount(), self.getIEEE1284())
+
+    def getIEEE1284(self):
+        return self._IEEE_1284 % self.getURI()
 
     def getDisplayName(self):
         """Gets a name that carbon-based lifeforms can read.
