@@ -125,7 +125,7 @@ class Printer(object):
 
     _PROTOCOL = 'cloudprint://'
     _BACKEND_DESCRIPTION = 'network %s "%s" "%s" "%s"'
-    _BACKEND_DESCRIPTION_PLUS_LOCATION = 'network %s "%s" "%s (%s)" "%s" "%s"'
+    _BACKEND_DESCRIPTION_PLUS_LOCATION = 'network %s "%s" "%s @ %s" "%s" "%s"'
 
     _IEEE_1284 = 'MFG:Google;DRV:GCP;CMD:POSTSCRIPT;DES:GoogleCloudPrint;MDL:%s'
 
