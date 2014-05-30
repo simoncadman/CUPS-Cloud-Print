@@ -52,7 +52,7 @@ class Printer(object):
 *LandscapeOrientation: Minus90
 *TTRasterizer: Type42
 *%% Driver-defined attributes...
-*1284DeviceID: "MFG:GOOGLE;DRV:GCP;CMD:POSTSCRIPT;MDL:%(uri)s;"
+*1284DeviceID: "%(ieee1284)s;"
 *OpenUI *PageSize/Media Size: PickOne
 *%(language)s.Translation PageSize/Media Size: ""
 *OrderDependency: 10 AnySetup *PageSize
@@ -247,8 +247,8 @@ class Printer(object):
         defaultlocale = locale.getdefaultlocale()
         language = Utils.GetLanguage(defaultlocale)
         defaultpapertype = Utils.GetDefaultPaperType(defaultlocale)
-        ppd = self._PPD_TEMPLATE_HEAD % \
-            {'language': language, 'defaultpapertype': defaultpapertype, 'uri': self.getURI()}
+        ppd = self._PPD_TEMPLATE_HEAD % {'language': language, 'defaultpapertype': defaultpapertype,
+                'ieee1284': self.getIEEE1284()}
         if self['capabilities'] is not None:
             addedCapabilities = []
             for capability in self['capabilities']:
