@@ -239,7 +239,7 @@ class Printer(object):
 
     def getPPDName(self):
         return self._PPD_NAME % (
-            self.getAccount().encode('ascii', 'replace').replace(' ', '-'),
+            urllib.quote(self.getAccount().encode('ascii', 'replace').replace(' ', '-')),
             self['id'].encode('ascii', 'replace').replace(' ', '-'))
 
     def generatePPD(self):
