@@ -26,6 +26,7 @@ exit $?
 
 import logging
 import os
+import urllib
 import sys
 
 
@@ -42,19 +43,22 @@ def doList(sys, printer_manager):
 
 def doCat():
     """Prints a PPD to stdout, per argv arguments."""
-    ppdname = sys.argv[2]
-    ppdparts = ppdname.split(":")
-    if len(ppdparts) < 3 or ppdparts[0] != 'cupscloudprint' or not ppdparts[2].endswith('.ppd'):
-        sys.stderr.write("ERROR: PPD name is invalid\n")
-        sys.exit(1)
+    try:
+        drivername, accountName, printerId = sys.argv[2].split(':', 2)
+        if drivername != 'cupscloudprint' or not printerId.endswith('.ppd'):
+            raise Exception('Bad PPD name format')
 
-    accountName = ppdparts[1]
-    printerId = ppdparts[2].rsplit('.', 1)[0]
+        accountName = urllib.unquote(accountName)
+        printerId = printerId[:-4]
+
+    except:
+        sys.stderr.write("ERROR: PPD name '%s' is invalid\n" % sys.argv[2])
+        sys.exit(1)
 
     printer = printer_manager.getPrinter(printerId, accountName)
 
     if printer is None:
-        sys.stderr.write("ERROR: PPD %s Not Found\n" % ppdname)
+        sys.stderr.write("ERROR: PPD %s not found\n" % sys.argv[2])
         sys.exit(1)
 
     print printer.generatePPD()
