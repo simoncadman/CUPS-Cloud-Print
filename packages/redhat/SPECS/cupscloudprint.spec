@@ -35,7 +35,7 @@ python2 -m compileall -q -f .
 %{_usr}/share/cloudprint-cups/upgrade.py
 
 # load selinux module if running selinux
-hash sestatus > /dev/null 2>&1
+hash semodule > /dev/null 2>&1
 if [[ "$?" == 0 ]]; then
     semodule -i %{_usr}/share/cloudprint-cups/selinux/cupscloudprint.pp
     restorecon -RF %{_sysconfdir}/cloudprint.conf
@@ -45,7 +45,7 @@ fi
 
 %postun
 # remove selinux module if running selinux
-hash sestatus > /dev/null 2>&1
+hash semodule > /dev/null 2>&1
 if [[ "$?" == 0 ]]; then
     semodule -r cupscloudprint
 fi
