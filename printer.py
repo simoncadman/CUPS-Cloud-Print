@@ -130,7 +130,7 @@ class Printer(object):
         'network %s "%s" "%s" "MFG:Google;MDL:Cloud Print;DES:GoogleCloudPrint;" "%s"'
 
     _DEVICE_DESCRIPTION = '"%s" en "Google" "%s (%s)" "MFG:GOOGLE;DRV:GCP;CMD:POSTSCRIPT;MDL:%s;"'
-    
+
     _PPD_NAME = 'cupscloudprint:%s:%s.ppd'
 
     _RESERVED_CAPABILITY_WORDS = set((
@@ -217,8 +217,8 @@ class Printer(object):
 
     def getCUPSDriverDescription(self):
         name = self.getDisplayName().encode('ascii', 'replace')
-        return self._DEVICE_DESCRIPTION % (
-                self.getPPDName(), name, self.getAccount(), self.getURI())
+        return self._DEVICE_DESCRIPTION %\
+            (self.getPPDName(), name, self.getAccount(), self.getURI())
 
     def getDisplayName(self):
         """Gets a name that carbon-based lifeforms can read.

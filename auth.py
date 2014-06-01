@@ -23,8 +23,8 @@ from cloudprintrequestor import CloudPrintRequestor
 from ccputils import Utils
 from oauth2client.client import AccessTokenRefreshError
 
-class Auth:
 
+class Auth:
     clientid = "843805314553.apps.googleusercontent.com"
     clientsecret = 'MzTBsY4xlrD_lxkmwFbBrvBv'
     config = '/etc/cloudprint.conf'
@@ -53,7 +53,7 @@ class Auth:
                     Auth.AddAccount(storage, userid)
                     credentials = storage.get()
         return credentials
-        
+
     @staticmethod
     def DeleteAccount(userid=None):
         """Delete an account from the configuration file
