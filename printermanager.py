@@ -90,7 +90,7 @@ class PrinterManager:
                 continue
 
             response = requestor.printer(printerId)
-            if not response['success'] or 'printers' not in response or not response['printers']:
+            if response == None or not response['success'] or 'printers' not in response or not response['printers']:
                 break
 
             return Printer(response['printers'][0], requestor)

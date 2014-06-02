@@ -19,6 +19,7 @@ import logging
 import sys
 sys.path.insert(0, ".")
 
+from printer import Printer
 from printermanager import PrinterManager
 from mockrequestor import MockRequestor
 
@@ -159,6 +160,11 @@ def test_getCUPSPrintersForAccount():
     assert len(foundprinters) == 1
     assert isinstance(connection, cups.Connection)
 
+def test_getPrinter():
+    global requestors, printerManagerInstance
+    assert printerManagerInstance.getPrinter('test', 'missingaccount') == None
+    assert isinstance(printerManagerInstance.getPrinter('__test_save_docs', requestors[1].getAccount()),Printer)
+    assert printerManagerInstance.getPrinter('test', requestors[0].getAccount()) == None
 
 def test_instantiate():
     global requestors, printerManagerInstance
