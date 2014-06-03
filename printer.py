@@ -34,10 +34,10 @@ class Printer(object):
 *FileVersion: "1.0"
 *LanguageVersion: English
 *LanguageEncoding: ISOLatin1
-*cupsLanguages: \"%(language)s\"
+*cupsLanguages: "%(language)s"
 *cupsFilter: "application/vnd.cups-postscript 100 -"
 *cupsFilter: "application/vnd.cups-pdf 0 -"
-*PCFileName: "ccp.ppd"
+*PCFileName: "%(ppdname)s"
 *Product: "(Google Cloud Print)"
 *Manufacturer: "Google"
 *ModelName: "Google Cloud Print"
@@ -52,7 +52,7 @@ class Printer(object):
 *LandscapeOrientation: Minus90
 *TTRasterizer: Type42
 *%% Driver-defined attributes...
-*1284DeviceID: "MFG:GOOGLE;DRV:GCP;CMD:POSTSCRIPT;MDL:%(uri)s;"
+*1284DeviceID: "%(ieee1284)s;"
 *OpenUI *PageSize/Media Size: PickOne
 *%(language)s.Translation PageSize/Media Size: ""
 *OrderDependency: 10 AnySetup *PageSize
@@ -247,8 +247,9 @@ class Printer(object):
         defaultlocale = locale.getdefaultlocale()
         language = Utils.GetLanguage(defaultlocale)
         defaultpapertype = Utils.GetDefaultPaperType(defaultlocale)
-        ppd = self._PPD_TEMPLATE_HEAD % \
-            {'language': language, 'defaultpapertype': defaultpapertype, 'uri': self.getURI()}
+        ppd = self._PPD_TEMPLATE_HEAD % {
+                'language': language, 'defaultpapertype': defaultpapertype,
+                'ieee1284': self.getIEEE1284(), 'ppdname': self.getPPDName()}
         if self['capabilities'] is not None:
             addedCapabilities = []
             for capability in self['capabilities']:
