@@ -48,7 +48,7 @@ class MockRequestor(CloudPrintRequestor):
         if foundPrinter is None:
             return json.dumps(None)
 
-        result = {'printers': [foundPrinter]}
+        result = {'success' : True, 'printers': [foundPrinter]}
         return json.dumps(result)
 
     def doRequest(self, path, headers=None, data=None, boundary=None):

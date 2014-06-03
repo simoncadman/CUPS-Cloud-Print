@@ -24,9 +24,8 @@ import base64
 
 
 class Utils:
-
     logpath = '/var/log/cups/cloudprint_log'
-    
+
     # Countries where letter sized paper is used, according to:
     # http://en.wikipedia.org/wiki/Letter_(paper_size)
     _LETTER_COUNTRIES = set(('US', 'CA', 'MX', 'BO', 'CO', 'VE', 'PH', 'CL'))
@@ -225,11 +224,11 @@ class Utils:
             return b64_pathname
         else:
             return None
-    
+
     @staticmethod
     def GetLanguage(locale):
         language = 'en'
-        if len(locale) < 1 or locale[0] == None:
+        if len(locale) < 1 or locale[0] is None:
             return language
         defaultlocale = locale[0]
         language = defaultlocale
@@ -240,7 +239,7 @@ class Utils:
     @staticmethod
     def GetDefaultPaperType(locale):
         defaultpapertype = "Letter"
-        if len(locale) < 1 or locale[0] == None:
+        if len(locale) < 1 or locale[0] is None:
             return defaultpapertype
         if len(locale[0].split('_')) > 1 and locale[0].split('_')[1] not in Utils._LETTER_COUNTRIES:
             defaultpapertype = "A4"

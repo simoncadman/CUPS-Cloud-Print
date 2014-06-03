@@ -146,11 +146,19 @@ def test_getListDescription():
     global printers
     assert printers[0].getListDescription() == "Save to Google Drive - cloudprint://testaccount2%40gmail.com/__test_save_docs - testaccount2@gmail.com"
     assert printers[1].getListDescription() == "Save to Google Drive 2 DisplayName - cloudprint://testaccount2%40gmail.com/__test_save_docs_2 - testaccount2@gmail.com"
+
+def test_getLocation():
+    global printers
+    assert printers[0].getLocation() == ''
+    printers[0]._fields['tags'] = ['novalue','name=value','location=test-location']
+    assert printers[0].getLocation() == 'test-location'
     
 def test_getCUPSBackendDescription():
     global printers
     assert printers[0].getCUPSBackendDescription() == 'network cloudprint://testaccount2%40gmail.com/__test_save_docs "Save to Google Drive" "Save to Google Drive" "MFG:Google;MDL:Cloud Print;DES:GoogleCloudPrint;"'
     assert printers[1].getCUPSBackendDescription() == 'network cloudprint://testaccount2%40gmail.com/__test_save_docs_2 "Save to Google Drive 2 DisplayName" "Save to Google Drive 2 DisplayName" "MFG:Google;MDL:Cloud Print;DES:GoogleCloudPrint;"'
+    printers[0]._fields['tags'] = ['novalue','name=value','location=test-location']
+    assert printers[0].getCUPSBackendDescription() == 'network cloudprint://testaccount2%40gmail.com/__test_save_docs "Save to Google Drive" "Save to Google Drive (test-location)" "MFG:Google;MDL:Cloud Print;DES:GoogleCloudPrint;" "test-location"'
     
 def test_getCUPSDriverDescription():
     global printers

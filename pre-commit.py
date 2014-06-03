@@ -50,7 +50,16 @@ if __name__ == '__main__':  # pragma: no cover
         sys.exit(result)
     files = output.split("\n")
     for file in files:
-        if len(file) > 0 and os.path.exists(file):
+        if len(file) > 0 and os.path.exists(file) and file.endswith('.py'):
+            p2 = subprocess.Popen(
+                ["pep8",
+                 "--max-line-length=100",
+                 file],
+                stdout=subprocess.PIPE)
+            pep8output = p2.communicate()[0].strip()
+            if p2.returncode != 0:
+                print file, "failed pep8 check:"
+                print pep8output
             testfile = open(file, "r")
             fileNeedsUpdating = False
             for line in testfile:
