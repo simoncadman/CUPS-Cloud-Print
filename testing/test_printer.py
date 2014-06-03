@@ -155,20 +155,20 @@ def test_getLocation():
     
 def test_getCUPSBackendDescription():
     global printers
-    assert printers[0].getCUPSBackendDescription() == 'network cloudprint://testaccount2%40gmail.com/__test_save_docs "Save to Google Drive" "Save to Google Drive" "MFG:Google;MDL:Cloud Print;DES:GoogleCloudPrint;"'
-    assert printers[1].getCUPSBackendDescription() == 'network cloudprint://testaccount2%40gmail.com/__test_save_docs_2 "Save to Google Drive 2 DisplayName" "Save to Google Drive 2 DisplayName" "MFG:Google;MDL:Cloud Print;DES:GoogleCloudPrint;"'
+    assert printers[0].getCUPSBackendDescription() == 'network cloudprint://testaccount2%40gmail.com/__test_save_docs "Save to Google Drive" "Save to Google Drive" "MFG:Google;DRV:GCP;CMD:POSTSCRIPT;DES:GoogleCloudPrint;MDL:cloudprint://testaccount2%40gmail.com/__test_save_docs"'
+    assert printers[1].getCUPSBackendDescription() == 'network cloudprint://testaccount2%40gmail.com/__test_save_docs_2 "Save to Google Drive 2 DisplayName" "Save to Google Drive 2 DisplayName" "MFG:Google;DRV:GCP;CMD:POSTSCRIPT;DES:GoogleCloudPrint;MDL:cloudprint://testaccount2%40gmail.com/__test_save_docs_2"'
     printers[0]._fields['tags'] = ['novalue','name=value','location=test-location']
-    assert printers[0].getCUPSBackendDescription() == 'network cloudprint://testaccount2%40gmail.com/__test_save_docs "Save to Google Drive" "Save to Google Drive (test-location)" "MFG:Google;MDL:Cloud Print;DES:GoogleCloudPrint;" "test-location"'
+    assert printers[0].getCUPSBackendDescription() == 'network cloudprint://testaccount2%40gmail.com/__test_save_docs "Save to Google Drive" "Save to Google Drive @ test-location" "MFG:Google;DRV:GCP;CMD:POSTSCRIPT;DES:GoogleCloudPrint;MDL:cloudprint://testaccount2%40gmail.com/__test_save_docs" "test-location"'
     
 def test_getCUPSDriverDescription():
     global printers
-    assert printers[0].getCUPSDriverDescription() == '"cupscloudprint:testaccount2@gmail.com:__test_save_docs.ppd" en "Google" "Save to Google Drive (testaccount2@gmail.com)" "MFG:GOOGLE;DRV:GCP;CMD:POSTSCRIPT;MDL:cloudprint://testaccount2%40gmail.com/__test_save_docs;"'
-    assert printers[1].getCUPSDriverDescription() == '"cupscloudprint:testaccount2@gmail.com:__test_save_docs_2.ppd" en "Google" "Save to Google Drive 2 DisplayName (testaccount2@gmail.com)" "MFG:GOOGLE;DRV:GCP;CMD:POSTSCRIPT;MDL:cloudprint://testaccount2%40gmail.com/__test_save_docs_2;"'
+    assert printers[0].getCUPSDriverDescription() == '"cupscloudprint:testaccount2%40gmail.com:__test_save_docs.ppd" en "Google" "Save to Google Drive (testaccount2@gmail.com)" "MFG:Google;DRV:GCP;CMD:POSTSCRIPT;DES:GoogleCloudPrint;MDL:cloudprint://testaccount2%40gmail.com/__test_save_docs"'
+    assert printers[1].getCUPSDriverDescription() == '"cupscloudprint:testaccount2%40gmail.com:__test_save_docs_2.ppd" en "Google" "Save to Google Drive 2 DisplayName (testaccount2@gmail.com)" "MFG:Google;DRV:GCP;CMD:POSTSCRIPT;DES:GoogleCloudPrint;MDL:cloudprint://testaccount2%40gmail.com/__test_save_docs_2"'
     
 def test_getPPDName():
     global printers
-    assert printers[0].getPPDName() == "cupscloudprint:testaccount2@gmail.com:__test_save_docs.ppd"
-    assert printers[1].getPPDName() == "cupscloudprint:testaccount2@gmail.com:__test_save_docs_2.ppd"
+    assert printers[0].getPPDName() == "cupscloudprint:testaccount2%40gmail.com:__test_save_docs.ppd"
+    assert printers[1].getPPDName() == "cupscloudprint:testaccount2%40gmail.com:__test_save_docs_2.ppd"
     
 def test_generatePPD():
     global printers
@@ -279,7 +279,7 @@ def test_submitJob():
     testprintername = printerManagerInstance.sanitizePrinterName(printer['name'])
     
     # get test ppd
-    ppdid = 'MFG:GOOGLE;DRV:GCP;CMD:POSTSCRIPT;MDL:'
+    ppdid = 'MFG:Google;DRV:GCP;CMD:POSTSCRIPT;DES:GoogleCloudPrint;MDL:'
     ppds = connection.getPPDs(ppd_device_id=ppdid)
     printerppdname, printerppd = ppds.popitem()
     
@@ -383,7 +383,7 @@ def test_submitJobFileCreationFails():
     testprintername = printerManagerInstance.sanitizePrinterName(printer['name'])
     
     # get test ppd
-    ppdid = 'MFG:GOOGLE;DRV:GCP;CMD:POSTSCRIPT;MDL:'
+    ppdid = 'MFG:Google;DRV:GCP;CMD:POSTSCRIPT;DES:GoogleCloudPrint;MDL:'
     ppds = connection.getPPDs(ppd_device_id=ppdid)
     printerppdname, printerppd = ppds.popitem()
     
