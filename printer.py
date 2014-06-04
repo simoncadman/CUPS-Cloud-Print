@@ -34,10 +34,10 @@ class Printer(object):
 *FileVersion: "1.0"
 *LanguageVersion: English
 *LanguageEncoding: ISOLatin1
-*cupsLanguages: \"%(language)s\"
+*cupsLanguages: "%(language)s"
 *cupsFilter: "application/vnd.cups-postscript 100 -"
 *cupsFilter: "application/vnd.cups-pdf 0 -"
-*PCFileName: "ccp.ppd"
+*PCFileName: "%(ppdname)s"
 *Product: "(Google Cloud Print)"
 *Manufacturer: "Google"
 *ModelName: "Google Cloud Print"
@@ -52,7 +52,7 @@ class Printer(object):
 *LandscapeOrientation: Minus90
 *TTRasterizer: Type42
 *%% Driver-defined attributes...
-*1284DeviceID: "MFG:GOOGLE;DRV:GCP;CMD:POSTSCRIPT;MDL:%(uri)s;"
+*1284DeviceID: "%(ieee1284)s;"
 *OpenUI *PageSize/Media Size: PickOne
 *%(language)s.Translation PageSize/Media Size: ""
 *OrderDependency: 10 AnySetup *PageSize
@@ -124,13 +124,13 @@ class Printer(object):
 *% End of cloudprint.ppd, 04169 bytes."""
 
     _PROTOCOL = 'cloudprint://'
-    _BACKEND_DESCRIPTION =\
-        'network %s "%s" "%s" "MFG:Google;MDL:Cloud Print;DES:GoogleCloudPrint;"'
-    _BACKEND_DESCRIPTION_PLUS_LOCATION =\
-        'network %s "%s" "%s" "MFG:Google;MDL:Cloud Print;DES:GoogleCloudPrint;" "%s"'
+    _BACKEND_DESCRIPTION = 'network %s "%s" "%s" "%s"'
+    _BACKEND_DESCRIPTION_PLUS_LOCATION = 'network %s "%s" "%s @ %s" "%s" "%s"'
 
-    _DEVICE_DESCRIPTION = '"%s" en "Google" "%s (%s)" "MFG:GOOGLE;DRV:GCP;CMD:POSTSCRIPT;MDL:%s;"'
+    _IEEE_1284 = 'MFG:Google;DRV:GCP;CMD:POSTSCRIPT;DES:GoogleCloudPrint;MDL:%s'
 
+    _DRIVER_DESCRIPTION = '"%s" en "Google" "%s (%s)" "%s"'
+    
     _PPD_NAME = 'cupscloudprint:%s:%s.ppd'
 
     _RESERVED_CAPABILITY_WORDS = set((
@@ -209,16 +209,19 @@ class Printer(object):
 
         location = self.getLocation()
         if location:
-            name_and_location = '%s (%s)' % (display_name, location)
-            return self._BACKEND_DESCRIPTION_PLUS_LOCATION %\
-                (self.getURI(), display_name, name_and_location, location)
+            return self._BACKEND_DESCRIPTION_PLUS_LOCATION % (
+                self.getURI(), display_name, display_name, location, self.getIEEE1284(), location)
         else:
-            return self._BACKEND_DESCRIPTION % (self.getURI(), display_name, display_name)
+            return self._BACKEND_DESCRIPTION % (
+                self.getURI(), display_name, display_name, self.getIEEE1284())
 
     def getCUPSDriverDescription(self):
         name = self.getDisplayName().encode('ascii', 'replace')
-        return self._DEVICE_DESCRIPTION %\
-            (self.getPPDName(), name, self.getAccount(), self.getURI())
+        return self._DRIVER_DESCRIPTION % (
+                self.getPPDName(), name, self.getAccount(), self.getIEEE1284())
+
+    def getIEEE1284(self):
+        return self._IEEE_1284 % self.getURI()
 
     def getDisplayName(self):
         """Gets a name that carbon-based lifeforms can read.
@@ -236,7 +239,7 @@ class Printer(object):
 
     def getPPDName(self):
         return self._PPD_NAME % (
-            self.getAccount().encode('ascii', 'replace').replace(' ', '-'),
+            urllib.quote(self.getAccount().encode('ascii', 'replace').replace(' ', '-')),
             self['id'].encode('ascii', 'replace').replace(' ', '-'))
 
     def generatePPD(self):
@@ -244,8 +247,9 @@ class Printer(object):
         defaultlocale = locale.getdefaultlocale()
         language = Utils.GetLanguage(defaultlocale)
         defaultpapertype = Utils.GetDefaultPaperType(defaultlocale)
-        ppd = self._PPD_TEMPLATE_HEAD % \
-            {'language': language, 'defaultpapertype': defaultpapertype, 'uri': self.getURI()}
+        ppd = self._PPD_TEMPLATE_HEAD % {
+                'language': language, 'defaultpapertype': defaultpapertype,
+                'ieee1284': self.getIEEE1284(), 'ppdname': self.getPPDName()}
         if self['capabilities'] is not None:
             addedCapabilities = []
             for capability in self['capabilities']:
