@@ -40,7 +40,7 @@ if __name__ == '__main__':  # pragma: no cover
     Utils.SetupLogging()
 
     # line below is replaced on commit
-    CCPVersion = "20140521 163500"
+    CCPVersion = "20140605 200040"
     Utils.ShowVersion(CCPVersion)
 
     requestors, storage = Auth.SetupAuth(True)
@@ -52,6 +52,10 @@ if __name__ == '__main__':  # pragma: no cover
 
     for printer in printers:
         print printer.getCUPSDriverDescription()
+        print ""
+        print printer._fields
+        print printer['capabilities']
+        print "\n"
         ppdname = printer.getPPDName()
         p = subprocess.Popen(
             (os.path.join(libpath, 'dynamicppd.py'), 'cat', ppdname.lstrip('-')),

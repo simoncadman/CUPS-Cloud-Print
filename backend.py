@@ -42,7 +42,7 @@ if __name__ == '__main__':  # pragma: no cover
     Utils.SetupLogging()
 
     # line below is replaced on commit
-    CCPVersion = "20140521 163500"
+    CCPVersion = "20140605 200040"
     Utils.ShowVersion(CCPVersion)
 
     if len(sys.argv) != 1 and len(sys.argv) < 6 or len(sys.argv) > 7:
@@ -117,7 +117,7 @@ if __name__ == '__main__':  # pragma: no cover
     logging.info("Printing file " + printFile)
     optionsstring = ' '.join(["'%s'" % option for option in sys.argv])
     logging.info("Device is %s , printername is %s, params are: %s" %
-        (uri, cupsprintername, optionsstring))
+                 (uri, cupsprintername, optionsstring))
 
     pdfFile = printFile + ".pdf"
     if Utils.which("ps2pdf") is None:
