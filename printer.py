@@ -305,8 +305,11 @@ class Printer(object):
         return re.sub(r'(:|;| )', '_', text).replace('/', '-').encode('utf8', 'ignore')
 
     @staticmethod
-    def _getInternalName(details, internalType, capabilityName=None, existingList=[]):
+    def _getInternalName(details, internalType, capabilityName=None, existingList=None):
         returnValue = None
+        if existingList is None:
+            existingList = []
+        
         fixedNameMap = {}
 
         # use fixed options for options we recognise

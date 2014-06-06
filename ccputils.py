@@ -112,8 +112,11 @@ class Utils:
 
     @staticmethod
     def GetLPID(default='lp', alternative='cups', useFiles=True,
-                blacklistedGroups=['adm', 'wheel', 'root'],
+                blacklistedGroups=None,
                 useFilesOnly=False):
+        if blacklistedGroups is None:
+            blacklistedGroups = ['adm', 'wheel', 'root']
+        
         blacklistedGroupIds = []
         for group in blacklistedGroups:
             try:

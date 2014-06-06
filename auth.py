@@ -74,7 +74,7 @@ class Auth:
 
     @staticmethod
     def AddAccount(storage, userid=None,
-                   permissions=['https://www.googleapis.com/auth/cloudprint']):
+                   permissions=None):
         """Adds an account to the configuration file
 
         Args:
@@ -84,6 +84,9 @@ class Auth:
         Returns:
           credentials: A credentials instance with the account details
         """
+        if permissions is None:
+            permissions = ['https://www.googleapis.com/auth/cloudprint']
+        
         if userid is None:
             userid = raw_input(
                 "Name for this user account ( eg something@gmail.com )? ")
@@ -115,7 +118,7 @@ class Auth:
 
     @staticmethod
     def SetupAuth(interactive=False,
-                  permissions=['https://www.googleapis.com/auth/cloudprint']):
+                  permissions=None):
         """Sets up requestors with authentication tokens
 
         Args:
@@ -126,6 +129,9 @@ class Auth:
           requestor, storage: Authenticated requestors and an instance
                               of storage
         """
+        if permissions is None:
+            permissions = ['https://www.googleapis.com/auth/cloudprint']
+        
         modifiedconfig = False
 
         # parse config file and extract useragents, which we use for account
