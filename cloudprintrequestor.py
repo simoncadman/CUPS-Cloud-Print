@@ -15,7 +15,8 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 import httplib2
 import json
-
+import logging
+import time
 
 class CloudPrintRequestor(httplib2.Http):
 
@@ -50,6 +51,11 @@ class CloudPrintRequestor(httplib2.Http):
         Return:
           list: Decoded json response from Google.
         """
+
+        rpc_name = path.split('?', 1)[0]
+        logging.info('Calling %s RPC' % rpc_name)
+        start_time = time.time()
+
         # force useragent to CCP
         if headers is None:
             headers = {}
@@ -78,6 +84,8 @@ class CloudPrintRequestor(httplib2.Http):
             print "ERROR: Failed to decode JSON, value was: " + response
             raise e
 
+        logging.debug('%s RPC took %.2f seconds' % (rpc_name, time.time() - start_time))
+
         return decodedresponse
 
     def search(self):
@@ -88,3 +96,4 @@ class CloudPrintRequestor(httplib2.Http):
 
     def submit(self, edata, boundary):
         return self.doRequest('submit', data=edata, boundary=boundary)
+

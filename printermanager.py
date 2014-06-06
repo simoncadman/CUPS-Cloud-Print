@@ -21,7 +21,6 @@ import mimetools
 import re
 import hashlib
 import subprocess
-import logging
 from auth import Auth
 from urlparse import urlparse
 from ccputils import Utils
