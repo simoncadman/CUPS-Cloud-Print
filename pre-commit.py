@@ -29,7 +29,6 @@ if __name__ == '__main__':  # pragma: no cover
     import fileinput
     import re
     import sys
-    import glob
     import subprocess
     import os
     from datetime import datetime

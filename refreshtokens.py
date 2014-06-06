@@ -27,12 +27,11 @@ exit $?
 if __name__ == '__main__':  # pragma: no cover
 
     from auth import Auth
-    from printermanager import PrinterManager
     from ccputils import Utils
     Utils.SetupLogging()
 
     # line below is replaced on commit
-    CCPVersion = "20140501 203545"
+    CCPVersion = "20140606 220318"
     Utils.ShowVersion(CCPVersion)
 
     requestors, storage = Auth.SetupAuth(False)

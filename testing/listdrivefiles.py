@@ -40,7 +40,6 @@ def getDriveFiles(requestors):
 
 if __name__ == '__main__':  # pragma: no cover
     import sys
-    import logging
     sys.path.insert(0, ".")
 
     from auth import Auth
@@ -48,7 +47,7 @@ if __name__ == '__main__':  # pragma: no cover
     Utils.SetupLogging()
 
     # line below is replaced on commit
-    CCPVersion = "20140501 203545"
+    CCPVersion = "20140606 220318"
     Utils.ShowVersion(CCPVersion)
 
     requestors, storage = Auth.SetupAuth(True,

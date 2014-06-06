@@ -14,16 +14,11 @@
 #    You should have received a copy of the GNU General Public License
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 import cups
-import json
 import urllib
-import os
 import mimetools
 import re
-import hashlib
-import subprocess
 from auth import Auth
 from urlparse import urlparse
-from ccputils import Utils
 from printer import Printer
 
 
