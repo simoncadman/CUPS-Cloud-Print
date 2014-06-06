@@ -1,5 +1,6 @@
 [![Build Status](https://travis-ci.org/simoncadman/CUPS-Cloud-Print.png)](https://travis-ci.org/simoncadman/CUPS-Cloud-Print)
 [![Coverage Status](https://coveralls.io/repos/simoncadman/CUPS-Cloud-Print/badge.png)](https://coveralls.io/r/simoncadman/CUPS-Cloud-Print)
+[![Code Health](https://landscape.io/github/simoncadman/CUPS-Cloud-Print/master/landscape.png)](https://landscape.io/github/simoncadman/CUPS-Cloud-Print/master)
 
 INTRODUCTION
 ============
