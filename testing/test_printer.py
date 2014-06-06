@@ -257,7 +257,7 @@ def test_getCapabilities():
     connection = cups.Connection()
     
     # get test ppd
-    ppdid = 'MFG:GOOGLE;DRV:GCP;CMD:POSTSCRIPT;MDL:'
+    ppdid = 'MFG:Google;DRV:GCP;CMD:POSTSCRIPT;DES:GoogleCloudPrint;MDL'
     ppds = connection.getPPDs(ppd_device_id=ppdid)
     printerppdname, printerppd = ppds.popitem()
     
@@ -279,7 +279,7 @@ def test_submitJob():
     testprintername = printerManagerInstance.sanitizePrinterName(printer['name'])
     
     # get test ppd
-    ppdid = 'MFG:Google;DRV:GCP;CMD:POSTSCRIPT;DES:GoogleCloudPrint;MDL:'
+    ppdid = 'MFG:Google;DRV:GCP;CMD:POSTSCRIPT;DES:GoogleCloudPrint;MDL'
     ppds = connection.getPPDs(ppd_device_id=ppdid)
     printerppdname, printerppd = ppds.popitem()
     
@@ -383,7 +383,7 @@ def test_submitJobFileCreationFails():
     testprintername = printerManagerInstance.sanitizePrinterName(printer['name'])
     
     # get test ppd
-    ppdid = 'MFG:Google;DRV:GCP;CMD:POSTSCRIPT;DES:GoogleCloudPrint;MDL:'
+    ppdid = 'MFG:Google;DRV:GCP;CMD:POSTSCRIPT;DES:GoogleCloudPrint;MDL'
     ppds = connection.getPPDs(ppd_device_id=ppdid)
     printerppdname, printerppd = ppds.popitem()
     

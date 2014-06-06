@@ -141,7 +141,7 @@ def test_getCUPSPrintersForAccount():
     printer = printers[0]
 
     # get ppd
-    ppdid = 'MFG:Google;DRV:GCP;CMD:POSTSCRIPT;DES:GoogleCloudPrint;MDL:'
+    ppdid = 'MFG:Google;DRV:GCP;CMD:POSTSCRIPT;DES:GoogleCloudPrint;MDL'
     ppds = connection.getPPDs(ppd_device_id=ppdid)
     printerppdname, printerppd = ppds.popitem()
 
@@ -247,7 +247,7 @@ def test_printers():
         assert printerId == printer['id']
 
         # get ppd
-        ppdid = 'MFG:Google;DRV:GCP;CMD:POSTSCRIPT;DES:GoogleCloudPrint;MDL:'
+        ppdid = 'MFG:Google;DRV:GCP;CMD:POSTSCRIPT;DES:GoogleCloudPrint;MDL'
         ppds = connection.getPPDs(ppd_device_id=ppdid)
         printerppdname, printerppd = ppds.popitem()
 

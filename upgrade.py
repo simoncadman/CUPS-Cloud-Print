@@ -41,7 +41,7 @@ if __name__ == '__main__':  # pragma: no cover
     Utils.SetupLogging()
 
     # line below is replaced on commit
-    CCPVersion = "20140501 203545"
+    CCPVersion = "20140606 224051"
     Utils.ShowVersion(CCPVersion)
 
     if not os.path.exists("/etc/cloudprint.conf"):
@@ -143,8 +143,8 @@ if __name__ == '__main__':  # pragma: no cover
                 else:
                     print "Updating " + cupsprinters[device]["printer-info"]
 
-                ppdid = 'MFG:GOOGLE;DRV:GCP;CMD:POSTSCRIPT;MDL:' + \
-                    cupsprinters[device]["device-uri"] + ';'
+                ppdid = 'MFG:Google;DRV:GCP;CMD:POSTSCRIPT;DES:GoogleCloudPrint;MDL:' + \
+                    cupsprinters[device]["device-uri"]
 
                 # just needs updating
                 printerppdname = None
