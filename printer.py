@@ -130,7 +130,7 @@ class Printer(object):
     _IEEE_1284 = 'MFG:Google;DRV:GCP;CMD:POSTSCRIPT;DES:GoogleCloudPrint;MDL:%s'
 
     _DRIVER_DESCRIPTION = '"%s" en "Google" "%s (%s)" "%s"'
-    
+
     _PPD_NAME = 'cupscloudprint:%s:%s.ppd'
 
     _RESERVED_CAPABILITY_WORDS = set((
@@ -218,7 +218,7 @@ class Printer(object):
     def getCUPSDriverDescription(self):
         name = self.getDisplayName().encode('ascii', 'replace')
         return self._DRIVER_DESCRIPTION % (
-                self.getPPDName(), name, self.getAccount(), self.getIEEE1284())
+            self.getPPDName(), name, self.getAccount(), self.getIEEE1284())
 
     def getIEEE1284(self):
         return self._IEEE_1284 % self.getURI()
@@ -248,8 +248,8 @@ class Printer(object):
         language = Utils.GetLanguage(defaultlocale)
         defaultpapertype = Utils.GetDefaultPaperType(defaultlocale)
         ppd = self._PPD_TEMPLATE_HEAD % {
-                'language': language, 'defaultpapertype': defaultpapertype,
-                'ieee1284': self.getIEEE1284(), 'ppdname': self.getPPDName()}
+            'language': language, 'defaultpapertype': defaultpapertype,
+            'ieee1284': self.getIEEE1284(), 'ppdname': self.getPPDName()}
         if self['capabilities'] is not None:
             addedCapabilities = []
             for capability in self['capabilities']:
@@ -309,9 +309,8 @@ class Printer(object):
         returnValue = None
         if existingList is None:
             existingList = []
-        
-        fixedNameMap = {}
 
+        fixedNameMap = {}
         # use fixed options for options we recognise
         if internalType == "option":
             # option

@@ -18,6 +18,7 @@ import json
 import logging
 import time
 
+
 class CloudPrintRequestor(httplib2.Http):
 
     CLOUDPRINT_URL = 'https://www.google.com/cloudprint'
@@ -96,4 +97,3 @@ class CloudPrintRequestor(httplib2.Http):
 
     def submit(self, edata, boundary):
         return self.doRequest('submit', data=edata, boundary=boundary)
-

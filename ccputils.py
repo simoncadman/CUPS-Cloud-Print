@@ -116,7 +116,6 @@ class Utils:
                 useFilesOnly=False):
         if blacklistedGroups is None:
             blacklistedGroups = ['adm', 'wheel', 'root']
-        
         blacklistedGroupIds = []
         for group in blacklistedGroups:
             try:

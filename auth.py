@@ -86,7 +86,7 @@ class Auth:
         """
         if permissions is None:
             permissions = ['https://www.googleapis.com/auth/cloudprint']
-        
+
         if userid is None:
             userid = raw_input(
                 "Name for this user account ( eg something@gmail.com )? ")
@@ -131,7 +131,6 @@ class Auth:
         """
         if permissions is None:
             permissions = ['https://www.googleapis.com/auth/cloudprint']
-        
         modifiedconfig = False
 
         # parse config file and extract useragents, which we use for account
