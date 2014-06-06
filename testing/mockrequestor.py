@@ -14,7 +14,6 @@
 #    You should have received a copy of the GNU General Public License
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 import json
-import urllib
 import sys
 sys.path.insert(0, ".")
 from cloudprintrequestor import CloudPrintRequestor

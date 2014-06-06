@@ -88,12 +88,11 @@ if __name__ == '__main__':  # pragma: no cover
     import math
     from auth import Auth
     from printermanager import PrinterManager
-    from printer import Printer
     from ccputils import Utils
     Utils.SetupLogging()
 
     # line below is replaced on commit
-    CCPVersion = "20140517 173042"
+    CCPVersion = "20140606 230417"
     Utils.ShowVersion(CCPVersion)
 
     unattended = False
