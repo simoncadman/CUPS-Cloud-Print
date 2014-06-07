@@ -51,7 +51,7 @@ def doCat():
         accountName = urllib.unquote(accountName)
         printerId = printerId[:-4]
 
-    except:
+    except Exception:
         sys.stderr.write("ERROR: PPD name '%s' is invalid\n" % sys.argv[2])
         sys.exit(1)
 
@@ -87,7 +87,7 @@ if __name__ == '__main__':  # pragma: no cover
     Utils.SetupLogging()
 
     # line below is replaced on commit
-    CCPVersion = "20140521 163500"
+    CCPVersion = "20140607 101641"
     Utils.ShowVersion(CCPVersion)
 
     requestors, storage = Auth.SetupAuth(False)

@@ -41,7 +41,7 @@ class Utils:
         if currentStat is None or currentStat.st_mode != 0o100660:
             try:
                 os.chmod(filename, 0o100660)
-            except:
+            except Exception:
                 filePermissions = False
                 sys.stderr.write(
                     "DEBUG: Cannot alter " +
@@ -52,7 +52,7 @@ class Utils:
         if currentStat is None or currentStat.st_gid != Utils.GetLPID():
             try:
                 os.chown(filename, -1, Utils.GetLPID())
-            except:
+            except Exception:
                 fileOwnerships = False
                 sys.stderr.write(
                     "DEBUG: Cannot alter " +
@@ -76,7 +76,7 @@ class Utils:
                 format=logformat,
                 datefmt=dateformat)
             Utils.FixFilePermissions(logpath)
-        except:
+        except Exception:
             logging.basicConfig(
                 level=logging.INFO,
                 format=logformat,
@@ -120,7 +120,7 @@ class Utils:
         for group in blacklistedGroups:
             try:
                 blacklistedGroupIds.append(grp.getgrnam(group).gr_gid)
-            except:
+            except Exception:
                 logging.debug("Group " + group + " not found")
 
         if useFiles:
@@ -145,10 +145,10 @@ class Utils:
         lpgrp = None
         try:
             lpgrp = grp.getgrnam(default)
-        except:
+        except Exception:
             try:
                 lpgrp = grp.getgrnam(alternative)
-            except:
+            except Exception:
                 pass
         if lpgrp is None:
             return None

@@ -39,7 +39,7 @@ def getWindowSize():
         bytes = struct.pack('HHHH', 0, 0, 0, 0)
         winsize = fcntl.ioctl(sys.stdout.fileno(), termios.TIOCGWINSZ, bytes)
         height, width = struct.unpack('HHHH', winsize)[:2]
-    except:
+    except Exception:
         return None
 
     if height > 0 and width > 0:
@@ -92,7 +92,7 @@ if __name__ == '__main__':  # pragma: no cover
     Utils.SetupLogging()
 
     # line below is replaced on commit
-    CCPVersion = "20140606 230417"
+    CCPVersion = "20140607 101641"
     Utils.ShowVersion(CCPVersion)
 
     unattended = False
@@ -107,7 +107,7 @@ if __name__ == '__main__':  # pragma: no cover
             content_file = open(Auth.config, 'r')
             content = content_file.read()
             data = json.loads(content)
-        except:
+        except Exception:
             # remove old config file
             print "Deleting old configuration file: " + Auth.config
             os.remove(Auth.config)
