@@ -195,7 +195,7 @@ class Utils:
             f = open(file_name, 'wb')
             f.write(data)
             f.close()
-        except IOError as e:
+        except IOError:
             status = False
 
         return status
