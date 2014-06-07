@@ -1,5 +1,7 @@
 ignore-paths:
     - oauth2client
     - testing
+ignore-patterns:
+    - ^oauth2client/(.*)$
 max-line-length: 100
 strictness: medium
