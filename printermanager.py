@@ -25,7 +25,6 @@ from printer import Printer
 class PrinterManager:
     BOUNDARY = mimetools.choose_boundary()
     CRLF = '\r\n'
-    PROTOCOL = 'cloudprint://'
     requestors = None
     requestor = None
     cachedPrinterDetails = {}

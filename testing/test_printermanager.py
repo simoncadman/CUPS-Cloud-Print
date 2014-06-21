@@ -22,6 +22,7 @@ sys.path.insert(0, ".")
 from printer import Printer
 from printermanager import PrinterManager
 from mockrequestor import MockRequestor
+from ccputils import Utils
 
 global requestors, printerManagerInstance
 
@@ -67,7 +68,7 @@ def teardown_function(function):
 def test_parseURI():
     global printerManagerInstance, requestors
     accountName, printerid = printerManagerInstance._getAccountNameAndPrinterIdFromURI(
-        "cloudprint://testaccount2%40gmail.com/testid")
+        Utils._PROTOCOL + "testaccount2%40gmail.com/testid")
     assert printerid == "testid"
     assert accountName == "testaccount2@gmail.com"
 
@@ -76,7 +77,7 @@ def test_parseLegacyURI():
 
     # 20140210 format
     account, printername, printerid, formatid = printerManagerInstance.parseLegacyURI(
-        "cloudprint://printername/testaccount2%40gmail.com/", requestors)
+        Utils._PROTOCOL + "printername/testaccount2%40gmail.com/", requestors)
     assert formatid == printerManagerInstance.URIFormat20140210
     assert account == "testaccount2@gmail.com"
     assert printername == "printername"
@@ -84,7 +85,7 @@ def test_parseLegacyURI():
 
     # 20140307 format
     account, printername, printerid, formatid = printerManagerInstance.parseLegacyURI(
-        "cloudprint://printername/testaccount2%40gmail.com/testid", requestors)
+        Utils._PROTOCOL + "printername/testaccount2%40gmail.com/testid", requestors)
     assert formatid == printerManagerInstance.URIFormat20140307
     assert account == "testaccount2@gmail.com"
     assert printername == "printername"
@@ -92,7 +93,7 @@ def test_parseLegacyURI():
 
     # 20140308+ format
     account, printername, printerid, formatid = printerManagerInstance.parseLegacyURI(
-        "cloudprint://testaccount2%40gmail.com/testid", requestors)
+        Utils._PROTOCOL + "testaccount2%40gmail.com/testid", requestors)
     assert formatid == printerManagerInstance.URIFormatLatest
     assert account == "testaccount2@gmail.com"
     assert printerid == "testid"
@@ -183,12 +184,12 @@ def test_GetPrinterByURIFails():
 
     # ensure invalid account returns None/None
     printerIdNoneTest = printerManagerInstance.getPrinterByURI(
-        'cloudprint://testprinter/accountthatdoesntexist')
+        Utils._PROTOCOL + 'testprinter/accountthatdoesntexist')
     assert printerIdNoneTest is None
 
     # ensure invalid printer on valid account returns None/None
     printerIdNoneTest = printerManagerInstance.getPrinterByURI(
-        'cloudprint://testprinter/' + urllib.quote(requestors[0].getAccount()))
+        Utils._PROTOCOL + 'testprinter/' + urllib.quote(requestors[0].getAccount()))
     assert printerIdNoneTest is None
 
 
@@ -235,7 +236,7 @@ def test_printers():
 
         # test encoding and decoding printer details to/from uri
         uritest = re.compile(
-            "cloudprint://(.*)/" + urllib.quote(printer['id']))
+            Utils._PROTOCOL + "(.*)/" + urllib.quote(printer['id']))
         assert isinstance(printer.getURI(),basestring)
         assert len(printer.getURI()) > 0
         assert uritest.match(printer.getURI()) is not None

@@ -123,7 +123,6 @@ class Printer(object):
 *Font ZapfDingbats: Special "(001.005)" Special ROM
 *% End of cloudprint.ppd, 04169 bytes."""
 
-    _PROTOCOL = 'cloudprint://'
     _BACKEND_DESCRIPTION = 'network %s "%s" "%s" "%s"'
     _BACKEND_DESCRIPTION_PLUS_LOCATION = 'network %s "%s" "%s @ %s" "%s" "%s"'
 
@@ -184,7 +183,7 @@ class Printer(object):
         """
         account = urllib.quote(self.getAccount().encode('ascii', 'replace'))
         printer_id = urllib.quote(self['id'].encode('ascii', 'replace'))
-        return "%s%s/%s" % (self._PROTOCOL, account, printer_id)
+        return "%s%s/%s" % (Utils._PROTOCOL, account, printer_id)
 
     def getListDescription(self):
         return '%s - %s - %s' % (

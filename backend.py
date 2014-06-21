@@ -42,7 +42,7 @@ if __name__ == '__main__':  # pragma: no cover
     Utils.SetupLogging()
 
     # line below is replaced on commit
-    CCPVersion = "20140605 200040"
+    CCPVersion = "20140621 192505"
     Utils.ShowVersion(CCPVersion)
 
     if len(sys.argv) != 1 and len(sys.argv) < 6 or len(sys.argv) > 7:
@@ -110,7 +110,7 @@ if __name__ == '__main__':  # pragma: no cover
     uri = os.getenv('DEVICE_URI')
     cupsprintername = os.getenv('PRINTER')
     if uri is None:
-        message = 'URI must be "cloudprint://<account name>/<cloud printer id>"!\n'
+        message = 'URI must be "' + Utils._PROTOCOL + '<account name>/<cloud printer id>"!\n'
         sys.stdout.write(message)
         sys.exit(255)
 
