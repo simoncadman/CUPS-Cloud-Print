@@ -220,6 +220,14 @@ def test_getInternalName():
             assert ' ' not in printerItem._getInternalName(internalTest,'option')
             assert len(printerItem._getInternalName(internalTest,'option',capabilityName)) <= 30
             assert len(printerItem._getInternalName(internalTest,'option',capabilityName)) >= 1
+     
+    # ensure fixed mappings works correctly
+    for fixedCapabilityName in printerItem._FIXED_CAPABILITY_MAPPINGS:
+        assert printerItem._getInternalName({'name': fixedCapabilityName},'capability') == printerItem._FIXED_CAPABILITY_MAPPINGS[fixedCapabilityName]
+        
+    for fixedCapabilityName in printerItem._FIXED_OPTION_MAPPINGS:
+        for fixedOptionName in printerItem._FIXED_OPTION_MAPPINGS[fixedCapabilityName]:
+            assert printerItem._getInternalName({'name': fixedOptionName},'option',fixedCapabilityName) == printerItem._FIXED_OPTION_MAPPINGS[fixedCapabilityName][fixedOptionName]
             
 def test_encodeMultiPart():
     global printers

@@ -142,6 +142,21 @@ class Printer(object):
         'Stamp', 'DestinationColorProfile'
     ))
 
+    _FIXED_OPTION_MAPPINGS = {"psk:JobDuplexAllDocumentsContiguously":
+                              {'psk:OneSided': "None",
+                                  'psk:TwoSidedShortEdge': "DuplexTumble",
+                                  'psk:TwoSidedLongEdge': "DuplexNoTumble"},
+                              "psk:PageOrientation":
+                              {'psk:Landscape': "Landscape",
+                               'psk:Portrait': "Portrait"}
+                              }
+
+    _FIXED_CAPABILITY_MAPPINGS = {'ns1:Colors': "ColorModel",
+                                  'ns1:PrintQualities': "OutputMode",
+                                  'ns1:InputBins': "InputSlot",
+                                  'psk:JobDuplexAllDocumentsContiguously': "Duplex",
+                                  'psk:PageOrientation': "Orientation"}
+
     _CONVERTCOMMAND = 'convert'
 
     def __init__(self, fields, requestor):
@@ -316,20 +331,11 @@ class Printer(object):
         # use fixed options for options we recognise
         if internalType == "option":
             # option
-            if capabilityName == "psk:JobDuplexAllDocumentsContiguously":
-                fixedNameMap['psk:OneSided'] = "None"
-                fixedNameMap['psk:TwoSidedShortEdge'] = "DuplexTumble"
-                fixedNameMap['psk:TwoSidedLongEdge'] = "DuplexNoTumble"
-            if capabilityName == "psk:PageOrientation":
-                fixedNameMap['psk:Landscape'] = "Landscape"
-                fixedNameMap['psk:Portrait'] = "Portrait"
+            if capabilityName in Printer._FIXED_OPTION_MAPPINGS:
+                fixedNameMap = Printer._FIXED_OPTION_MAPPINGS[capabilityName]
         else:
             # capability
-            fixedNameMap['ns1:Colors'] = "ColorModel"
-            fixedNameMap['ns1:PrintQualities'] = "OutputMode"
-            fixedNameMap['ns1:InputBins'] = "InputSlot"
-            fixedNameMap['psk:JobDuplexAllDocumentsContiguously'] = "Duplex"
-            fixedNameMap['psk:PageOrientation'] = "Orientation"
+            fixedNameMap = Printer._FIXED_CAPABILITY_MAPPINGS
 
         for itemName in fixedNameMap:
             if details['name'] == itemName:
