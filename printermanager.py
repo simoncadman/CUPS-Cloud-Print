@@ -38,10 +38,10 @@ class PrinterManager:
         'Throughput', 'UIConstraints', 'VariablePaperSize', 'Version', 'Color', 'Background',
         'Stamp', 'DestinationColorProfile'
     ))
-    URIFormatLatest = 1
-    URIFormat20140308 = 2
-    URIFormat20140307 = 3
-    URIFormat20140210 = 4
+    URIFormatLatest = 9999
+    URIFormat20140308 = 3
+    URIFormat20140307 = 2
+    URIFormat20140210 = 1
     backendDescription =\
         'network %s "%s" "Google Cloud Print" "MFG:Google;MDL:Cloud Print;DES:GoogleCloudPrint;"'
 
@@ -203,8 +203,11 @@ class PrinterManager:
                     printerId = urllib.unquote(pathparts[0])
                     printerName = None
                     accountName = urllib.unquote(uri.netloc)
-        elif uri.scheme == Utils._PROTOCOL:
+        elif uri.scheme == Utils._PROTOCOL_NAME:
             formatId = PrinterManager.URIFormatLatest
+            printerId = urllib.unquote(pathparts[0])
+            printerName = None
+            accountName = urllib.unquote(uri.netloc)
 
         return accountName, printerName, printerId, formatId
 

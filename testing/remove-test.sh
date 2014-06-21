@@ -16,9 +16,9 @@ if [[ -d '/usr/libexec/cups' ]]; then
 fi
 
 
-if [[ -e "$cupsdir/backend/cloudprint" ]]; then
-    echo "$cupsdir/backend/cloudprint file still exists: "
-    ls -alR $cupsdir/backend/cloudprint
+if [[ -e "$cupsdir/backend/gcp" ]]; then
+    echo "$cupsdir/backend/gcp file still exists: "
+    ls -alR $cupsdir/backend/gcp
     returnval=1
 fi
 

@@ -32,10 +32,10 @@ install: all
 	mkdir -p ${cupsdriver}
 	mkdir -p ${cupsmodel}
 ifeq ($(NOPERMS),1)
-	   ${INSTALL} ${srcdir}/backend.py ${cupsbackend}cloudprint
+	   ${INSTALL} ${srcdir}/backend.py ${cupsbackend}gcp
 	   ${INSTALL} ${srcdir}/dynamicppd.py ${cupsdriver}cupscloudprint
 else
-	   ${INSTALL} -g `groups root | cut -d' ' -f1` -o root -m 755  ${srcdir}/backend.py ${cupsbackend}cloudprint
+	   ${INSTALL} -g `groups root | cut -d' ' -f1` -o root -m 755  ${srcdir}/backend.py ${cupsbackend}gcp
 	   ${INSTALL} -g `groups root | cut -d' ' -f1` -o root -m 755  ${srcdir}/dynamicppd.py ${cupsdriver}cupscloudprint
 endif
 	${INSTALL} -m 644 ${srcdir}/README.md ${prefix}/share/cloudprint-cups/README.md

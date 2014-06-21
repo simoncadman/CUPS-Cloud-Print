@@ -99,6 +99,14 @@ def test_parseLegacyURI():
     assert printerid == "testid"
     assert printername is None
     
+    # 20140621+ format
+    account, printername, printerid, formatid = printerManagerInstance.parseLegacyURI(
+        Utils._PROTOCOL + "testaccount2%40gmail.com/testid", requestors)
+    assert formatid == printerManagerInstance.URIFormatLatest
+    assert account == "testaccount2@gmail.com"
+    assert printerid == "testid"
+    assert printername is None
+
 def test_getPrinterIDByDetails():
     printerid, requestor = printerManagerInstance.getPrinterIDByDetails(
         "testaccount2@gmail.com", "printername", "testid")
