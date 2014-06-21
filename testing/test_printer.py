@@ -188,10 +188,14 @@ def test_generatePPD():
     
 def test_sanitizeText():
     global printers
-    assert printers[0]._sanitizeText("") == ""
-    assert printers[0]._sanitizeText("TESTSTRING") == "TESTSTRING"
-    assert printers[0]._sanitizeText("TEST:; STRING /2") == "TEST___STRING_-2"
-    assert printers[0]._sanitizeText("TEST:; STRING /2") == "TEST___STRING_-2"
+    for checkReserved in [False,True]:
+        assert printers[0]._sanitizeText("",checkReserved) == ""
+        assert printers[0]._sanitizeText("TESTSTRING",checkReserved) == "TESTSTRING"
+        assert printers[0]._sanitizeText("TEST:; STRING /2",checkReserved) == "TEST___STRING_-2"
+        assert printers[0]._sanitizeText("TEST:; STRING /2",checkReserved) == "TEST___STRING_-2"
+    
+    assert printers[0]._sanitizeText("Duplex") == "Duplex"
+    assert printers[0]._sanitizeText("Duplex",True) == "GCP_Duplex"
     
 def test_getInternalName():
     global printers

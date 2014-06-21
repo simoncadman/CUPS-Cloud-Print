@@ -300,8 +300,11 @@ class Printer(object):
         return ppd
 
     @staticmethod
-    def _sanitizeText(text):
-        return re.sub(r'(:|;| )', '_', text).replace('/', '-').encode('utf8', 'ignore')
+    def _sanitizeText(text, checkReserved=False):
+        sanitisedName = re.sub(r'(:|;| )', '_', text).replace('/', '-').encode('utf8', 'ignore')
+        if checkReserved and sanitisedName in Printer._RESERVED_CAPABILITY_WORDS:
+            sanitisedName = 'GCP_' + sanitisedName
+        return sanitisedName
 
     @staticmethod
     def _getInternalName(details, internalType, capabilityName=None, existingList=None):
@@ -340,10 +343,7 @@ class Printer(object):
         else:
             name = details['name']
 
-        sanitisedName = Printer._sanitizeText(name)
-
-        if sanitisedName in Printer._RESERVED_CAPABILITY_WORDS:
-            sanitisedName = 'GCP_' + sanitisedName
+        sanitisedName = Printer._sanitizeText(name, True)
 
         # only sanitise, no hash
         if returnValue is None and\
