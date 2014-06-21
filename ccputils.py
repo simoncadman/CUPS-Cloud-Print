@@ -250,3 +250,25 @@ class Utils:
         if len(locale[0].split('_')) > 1 and locale[0].split('_')[1] not in Utils._LETTER_COUNTRIES:
             defaultpapertype = "A4"
         return defaultpapertype
+
+    @staticmethod
+    def GetWindowSize():
+        """Gets window height and width.
+
+        Gets window (aka terminal, console) height and width using IOCtl Get WINdow SiZe
+        method.
+
+        Returns:
+            The tuple (height, width) of the window as integers, or None if the
+            windows size isn't available.
+        """
+        try:
+            bytes = struct.pack('HHHH', 0, 0, 0, 0)
+            winsize = fcntl.ioctl(sys.stdout.fileno(), termios.TIOCGWINSZ, bytes)
+            height, width = struct.unpack('HHHH', winsize)[:2]
+        except Exception:
+            return None
+
+        if height > 0 and width > 0:
+            return height, width
+        return None

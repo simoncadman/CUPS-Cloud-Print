@@ -25,28 +25,6 @@ exit $?
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 
-def getWindowSize():
-    """Gets window height and width.
-
-    Gets window (aka terminal, console) height and width using IOCtl Get WINdow SiZe
-    method.
-
-    Returns:
-        The tuple (height, width) of the window as integers, or None if the
-        windows size isn't available.
-    """
-    try:
-        bytes = struct.pack('HHHH', 0, 0, 0, 0)
-        winsize = fcntl.ioctl(sys.stdout.fileno(), termios.TIOCGWINSZ, bytes)
-        height, width = struct.unpack('HHHH', winsize)[:2]
-    except Exception:
-        return None
-
-    if height > 0 and width > 0:
-        return height, width
-    return None
-
-
 def printPrinters(printers):
     """Prints display name of printers.
 
@@ -63,7 +41,7 @@ def printPrinters(printers):
     printer_names = \
         ["%d) %s" % (i + 1, printer['displayName']) for i, printer in enumerate(printers)]
 
-    window_size = getWindowSize()
+    window_size = Utils.GetWindowSize()
     if window_size is None or window_size[0] > len(printer_names):
         for printer_name in printer_names:
             print printer_name
@@ -96,7 +74,7 @@ if __name__ == '__main__':  # pragma: no cover
     Utils.SetupLogging()
 
     # line below is replaced on commit
-    CCPVersion = "20140621 231612"
+    CCPVersion = "20140621 233623"
     Utils.ShowVersion(CCPVersion)
 
     unattended = False
