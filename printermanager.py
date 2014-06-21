@@ -20,6 +20,7 @@ import re
 from auth import Auth
 from urlparse import urlparse
 from printer import Printer
+from ccputils import Utils
 
 
 class PrinterManager:
@@ -38,8 +39,9 @@ class PrinterManager:
         'Stamp', 'DestinationColorProfile'
     ))
     URIFormatLatest = 1
-    URIFormat20140307 = 2
-    URIFormat20140210 = 3
+    URIFormat20140308 = 2
+    URIFormat20140307 = 3
+    URIFormat20140210 = 4
     backendDescription =\
         'network %s "%s" "Google Cloud Print" "MFG:Google;MDL:Cloud Print;DES:GoogleCloudPrint;"'
 
@@ -179,26 +181,30 @@ class PrinterManager:
           string: google cloud print printer id
           int: format id
         """
+        formatId = None
         printerName = None
         accountName = None
         printerId = None
         uri = urlparse(uristring)
         pathparts = uri.path.strip('/').split('/')
-        if len(pathparts) == 2:
-            formatId = PrinterManager.URIFormat20140307
-            printerId = urllib.unquote(pathparts[1])
-            accountName = urllib.unquote(pathparts[0])
-            printerName = urllib.unquote(uri.netloc)
-        else:
-            if urllib.unquote(uri.netloc) not in Auth.GetAccountNames(requestors):
-                formatId = PrinterManager.URIFormat20140210
-                printerName = urllib.unquote(uri.netloc)
+        if uri.scheme == Utils._OLD_PROTOCOL_NAME:
+            if len(pathparts) == 2:
+                formatId = PrinterManager.URIFormat20140307
+                printerId = urllib.unquote(pathparts[1])
                 accountName = urllib.unquote(pathparts[0])
+                printerName = urllib.unquote(uri.netloc)
             else:
-                formatId = PrinterManager.URIFormatLatest
-                printerId = urllib.unquote(pathparts[0])
-                printerName = None
-                accountName = urllib.unquote(uri.netloc)
+                if urllib.unquote(uri.netloc) not in Auth.GetAccountNames(requestors):
+                    formatId = PrinterManager.URIFormat20140210
+                    printerName = urllib.unquote(uri.netloc)
+                    accountName = urllib.unquote(pathparts[0])
+                else:
+                    formatId = PrinterManager.URIFormat20140308
+                    printerId = urllib.unquote(pathparts[0])
+                    printerName = None
+                    accountName = urllib.unquote(uri.netloc)
+        elif uri.scheme == Utils._PROTOCOL:
+            formatId = PrinterManager.URIFormatLatest
 
         return accountName, printerName, printerId, formatId
 

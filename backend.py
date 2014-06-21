@@ -42,7 +42,7 @@ if __name__ == '__main__':  # pragma: no cover
     Utils.SetupLogging()
 
     # line below is replaced on commit
-    CCPVersion = "20140621 192505"
+    CCPVersion = "20140621 210317"
     Utils.ShowVersion(CCPVersion)
 
     if len(sys.argv) != 1 and len(sys.argv) < 6 or len(sys.argv) > 7:
@@ -69,7 +69,7 @@ if __name__ == '__main__':  # pragma: no cover
     printer_manager = PrinterManager(requestors)
 
     if len(sys.argv) == 1:
-        print 'network cloudprint "Unknown" "Google Cloud Print"'
+        print 'network ' + Utils._PROTOCOL_NAME + ' "Unknown" "Google Cloud Print"'
 
         printers = printer_manager.getPrinters()
         if printers is not None:

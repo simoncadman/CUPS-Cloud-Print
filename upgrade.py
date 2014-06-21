@@ -39,7 +39,7 @@ if __name__ == '__main__':  # pragma: no cover
     Utils.SetupLogging()
 
     # line below is replaced on commit
-    CCPVersion = "20140607 094241"
+    CCPVersion = "20140621 210317"
     Utils.ShowVersion(CCPVersion)
 
     if not os.path.exists("/etc/cloudprint.conf"):
@@ -103,7 +103,7 @@ if __name__ == '__main__':  # pragma: no cover
 
     for device in cupsprinters:
         try:
-            if (cupsprinters[device]["device-uri"].find("cloudprint://") == 0):
+            if (cupsprinters[device]["device-uri"].find(Utils._OLD_PROTOCOL) == 0) or (cupsprinters[device]["device-uri"].find(Utils._PROTOCOL) == 0):
                 account, printername, printerid, formatid = \
                     printer_manager.parseLegacyURI(
                         cupsprinters[device]["device-uri"],
@@ -117,16 +117,16 @@ if __name__ == '__main__':  # pragma: no cover
                     printerid, requestor = printer_manager.getPrinterIDByDetails(
                         account, printername, printerid)
                     if printerid is not None:
-                        newDeviceURI = printer_manager.printerNameToUri(
-                            urllib.unquote(account),
-                            printerid)
-                        cupsprinters[device]["device-uri"] = newDeviceURI
+                        tempprinter = printer_manager.getPrinter(
+                            printerid,
+                            urllib.unquote(account))
+                        cupsprinters[device]["device-uri"] = tempprinter.getURI()
                         p = subprocess.Popen(
                             ["lpadmin",
                              "-p",
                              cupsprinters[device]["printer-info"].lstrip('-'),
                                 "-v",
-                                newDeviceURI],
+                                tempprinter.getURI()],
                             stdout=subprocess.PIPE)
                         output = p.communicate()[0]
                         result = p.returncode

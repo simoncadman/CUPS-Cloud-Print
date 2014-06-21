@@ -29,7 +29,10 @@ class Utils:
     # Countries where letter sized paper is used, according to:
     # http://en.wikipedia.org/wiki/Letter_(paper_size)
     _LETTER_COUNTRIES = set(('US', 'CA', 'MX', 'BO', 'CO', 'VE', 'PH', 'CL'))
-    _PROTOCOL = 'cloudprint://'
+    _PROTOCOL_NAME = 'cloudprint'
+    _PROTOCOL = _PROTOCOL_NAME + '://'
+    _OLD_PROTOCOL_NAME = 'cloudprint'
+    _OLD_PROTOCOL = _PROTOCOL_NAME + '://'
 
     @staticmethod
     def FixFilePermissions(filename):
