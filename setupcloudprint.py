@@ -55,6 +55,9 @@ def printPrinters(printers):
 
     Args:
         printers: List of printers.
+
+    Returns:
+        number of printers printed
     """
 
     printer_names = \
@@ -76,6 +79,7 @@ def printPrinters(printers):
             for printer_name in printer_names[row_i::row_quantity]:
                 row_printers.append(printer_name.ljust(max_name_length))
             print ' '.join(row_printers)
+    return len(printers)
 
 if __name__ == '__main__':  # pragma: no cover
     import cups
@@ -92,7 +96,7 @@ if __name__ == '__main__':  # pragma: no cover
     Utils.SetupLogging()
 
     # line below is replaced on commit
-    CCPVersion = "20140621 230606"
+    CCPVersion = "20140621 231612"
     Utils.ShowVersion(CCPVersion)
 
     unattended = False
@@ -147,8 +151,7 @@ if __name__ == '__main__':  # pragma: no cover
             print "Not adding printers automatically"
 
             while int(answer) != 0:
-                printPrinters(printers)
-                maxprinterid = len(printers)
+                maxprinterid = printPrinters(printers)
                 answer = raw_input("Add printer (1-%d, 0 to cancel)? " % maxprinterid)
                 try:
                     answer = int(answer)
