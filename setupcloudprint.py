@@ -92,7 +92,7 @@ if __name__ == '__main__':  # pragma: no cover
     Utils.SetupLogging()
 
     # line below is replaced on commit
-    CCPVersion = "20140621 210317"
+    CCPVersion = "20140621 230606"
     Utils.ShowVersion(CCPVersion)
 
     unattended = False
@@ -139,9 +139,8 @@ if __name__ == '__main__':  # pragma: no cover
         if unattended:
             answer = "y"
         else:
-            question = "Add all Google Cloud Print printers from %s to CUPS (Y/N)? " % \
-                requestor.getAccount()
-            answer = raw_input(question)
+            answer = raw_input("Add all Google Cloud Print printers from %s to CUPS (Y/N)? " %
+                               requestor.getAccount())
 
         if not answer.lower().startswith("y"):
             answer = 1
