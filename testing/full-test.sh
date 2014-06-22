@@ -138,6 +138,7 @@ done
 if [[ $success == 0 ]]; then
     echo "PDF Job failed to submit in 30 seconds"
     lpstat -W all
+    cat /var/log/cups/cloudprint_log
     exit 1
 fi
 
@@ -163,6 +164,13 @@ do
    sleep 1
 done
 
+if [[ $success == 0 ]]; then
+    echo "Postscript Job failed to submit in 30 seconds"
+    lpstat -W all
+    cat /var/log/cups/cloudprint_log
+    exit 1
+fi
+
 # try postscript from adobe reader
 psreaderjobname="Reader Postscript CCP Test $ccpversion at `date`"
 printfilepath="/usr/share/cloudprint-cups/testing/testfiles/Test Page reader.ps"
@@ -186,8 +194,9 @@ do
 done
 
 if [[ $success == 0 ]]; then
-    echo "Postscript Job failed to submit in 30 seconds"
+    echo "Reader Postscript Job failed to submit in 30 seconds"
     lpstat -W all
+    cat /var/log/cups/cloudprint_log
     exit 1
 fi
 
