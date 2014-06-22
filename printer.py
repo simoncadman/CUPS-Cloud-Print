@@ -525,6 +525,10 @@ class Printer(object):
                     logging.error("Failed to rotate pdf: " + str(command))
                     logging.error(output)
                     return False
+                if not Utils.fileIsPDF(jobfile):
+                    print "ERROR: Failed to rotate PDF"
+                    logging.error("Rotated PDF, but resulting file was not a PDF")
+                    return False
             b64file = Utils.Base64Encode(jobfile)
             if b64file is None:
                 print "ERROR: Cannot write to file: " + jobfile + ".b64"
