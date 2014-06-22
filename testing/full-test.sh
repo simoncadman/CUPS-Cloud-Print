@@ -149,6 +149,9 @@ if [[ -e "/usr/local/share/cloudprint-cups/testing/testfiles/Test Page.ps" ]]; t
     printfilepath="/usr/local/share/cloudprint-cups/testing/testfiles/Test Page.ps"
 fi
 
+echo "Printing: $printfilepath"
+ls -al $printfilepath
+file $printfilepath
 lp "$printfilepath" -d 'GCP-Save_to_Google_Drive' -t "$psjobname"
 echo "Submitted job $psjobname"
 
