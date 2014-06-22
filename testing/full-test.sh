@@ -143,6 +143,7 @@ if [[ $success == 0 ]]; then
     echo "PDF Job failed to submit in 30 seconds"
     lpstat -W all
     cat /var/log/cups/cloudprint_log
+    cat /var/log/cups/error_log
     exit 1
 fi
 
@@ -175,6 +176,7 @@ if [[ $success == 0 ]]; then
     echo "Postscript Job failed to submit in 30 seconds"
     lpstat -W all
     cat /var/log/cups/cloudprint_log
+    cat /var/log/cups/error_log
     exit 1
 fi
 
@@ -207,6 +209,7 @@ if [[ $success == 0 ]]; then
     echo "Reader Postscript Job failed to submit in 30 seconds"
     lpstat -W all
     cat /var/log/cups/cloudprint_log
+    cat /var/log/cups/error_log
     exit 1
 fi
 
