@@ -64,8 +64,10 @@ ls -al /var/log/cups/
 export PYTHONDONTWRITEBYTECODE=1
 
 set +e
+md5sum testing/testfiles/*
 py.test2 -rxs --cov-report xml  --cov . || py.test -rxs --cov-report xml  --cov .
 testresult=$?
+md5sum testing/testfiles/*
 ls -al /var/log/cups
 cat /var/log/cups/cloudprint_log
 cat /var/log/cups/error_log
