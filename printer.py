@@ -520,14 +520,10 @@ class Printer(object):
                 p = subprocess.Popen(command, stdout=subprocess.PIPE)
                 output = p.communicate()[0]
                 result = p.returncode
-                if result != 0:
-                    print "ERROR: Failed to rotate PDF"
-                    logging.error("Failed to rotate pdf: " + str(command))
-                    logging.error(output)
-                    return False
                 if not Utils.fileIsPDF(jobfile):
                     print "ERROR: Failed to rotate PDF"
                     logging.error("Rotated PDF, but resulting file was not a PDF")
+                    logging.error(output)
                     return False
             b64file = Utils.Base64Encode(jobfile)
             if b64file is None:
