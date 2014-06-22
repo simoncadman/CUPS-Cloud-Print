@@ -120,7 +120,7 @@ printfilepath="/usr/share/cloudprint-cups/testing/testfiles/Test Page.pdf"
 if [[ -e "/usr/local/share/cloudprint-cups/testing/testfiles/Test Page.pdf" ]]; then
     printfilepath="/usr/local/share/cloudprint-cups/testing/testfiles/Test Page.pdf"
 fi
-lp "$printfilepath" -d 'GCP-Save_to_Google_Docs' -t "$pdfjobname"
+lp "$printfilepath" -d 'GCP-Save_to_Google_Drive' -t "$pdfjobname"
 echo "Submitted job $pdfjobname"
 
 success=0
@@ -148,7 +148,7 @@ if [[ -e "/usr/local/share/cloudprint-cups/testing/testfiles/Test Page.ps" ]]; t
     printfilepath="/usr/local/share/cloudprint-cups/testing/testfiles/Test Page.ps"
 fi
 
-lp "$printfilepath" -d 'GCP-Save_to_Google_Docs' -t "$psjobname"
+lp "$printfilepath" -d 'GCP-Save_to_Google_Drive' -t "$psjobname"
 echo "Submitted job $psjobname"
 
 success=0
@@ -170,7 +170,7 @@ if [[ -e "/usr/local/share/cloudprint-cups/testing/testfiles/Test Page reader.ps
     printfilepath="/usr/local/share/cloudprint-cups/testing/testfiles/Test Page reader.ps"
 fi
 
-lp "$printfilepath" -d 'GCP-Save_to_Google_Docs' -t "$psreaderjobname"
+lp "$printfilepath" -d 'GCP-Save_to_Google_Drive' -t "$psreaderjobname"
 echo "Submitted job $psreaderjobname"
 
 success=0
