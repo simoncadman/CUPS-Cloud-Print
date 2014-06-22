@@ -20,6 +20,7 @@ import sys
 import subprocess
 import os
 import pytest
+import shutil
 sys.path.insert(0, ".")
 from printermanager import PrinterManager
 from mockrequestor import MockRequestor
@@ -318,19 +319,28 @@ def test_submitJob():
         'Test Page',
         testprintername, 'landscape') == False
 
+    # copy for rotating
+    tmpDir = os.getenv('TMPDIR')
+    if not tmpDir:
+        tmpDir = "/tmp"
+    tmpFile = os.path.join(tmpDir,'Test Page.pdf')
+    shutil.copy('testing/testfiles/Test Page.pdf',tmpFile)
+    
     # test submitting job with rotate
     assert printer.submitJob(
         'pdf',
-        'testing/testfiles/Test Page.pdf',
+        tmpFile,
         'Test Page',
         testprintername,
         "landscape") == True
     assert printer.submitJob(
         'pdf',
-        'testing/testfiles/Test Page.pdf',
+        tmpFile,
         'Test Page',
         testprintername,
         "nolandscape") == True
+
+    os.unlink(tmpFile)
 
     # test submitting job with no name
     assert printer.submitJob(
