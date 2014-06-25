@@ -21,7 +21,9 @@ import sys
 import grp
 import mimetypes
 import base64
-
+import fcntl
+import termios
+import struct
 
 class Utils:
     logpath = '/var/log/cups/cloudprint_log'

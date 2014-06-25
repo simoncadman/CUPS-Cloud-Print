@@ -64,9 +64,6 @@ if __name__ == '__main__':  # pragma: no cover
     import os
     import json
     import sys
-    import fcntl
-    import termios
-    import struct
     import math
     from auth import Auth
     from printermanager import PrinterManager
@@ -74,7 +71,7 @@ if __name__ == '__main__':  # pragma: no cover
     Utils.SetupLogging()
 
     # line below is replaced on commit
-    CCPVersion = "20140621 233623"
+    CCPVersion = "20140625 181101"
     Utils.ShowVersion(CCPVersion)
 
     unattended = False
