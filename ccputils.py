@@ -25,6 +25,7 @@ import fcntl
 import termios
 import struct
 
+
 class Utils:
     logpath = '/var/log/cups/cloudprint_log'
 
