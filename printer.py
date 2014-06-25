@@ -519,7 +519,6 @@ class Printer(object):
                            '-rotate', str(rotate), jobfile.lstrip('-')]
                 p = subprocess.Popen(command, stdout=subprocess.PIPE)
                 output = p.communicate()[0]
-                result = p.returncode
                 if not Utils.fileIsPDF(jobfile):
                     print "ERROR: Failed to rotate PDF"
                     logging.error("Rotated PDF, but resulting file was not a PDF")
