@@ -256,7 +256,7 @@ class Utils:
         return defaultpapertype
 
     @staticmethod
-    def GetWindowSize():
+    def GetWindowSize(winsize=None):
         """Gets window height and width.
 
         Gets window (aka terminal, console) height and width using IOCtl Get WINdow SiZe
@@ -268,7 +268,8 @@ class Utils:
         """
         try:
             bytes = struct.pack('HHHH', 0, 0, 0, 0)
-            winsize = fcntl.ioctl(sys.stdout.fileno(), termios.TIOCGWINSZ, bytes)
+            if winsize is None:
+                winsize = fcntl.ioctl(sys.stdout.fileno(), termios.TIOCGWINSZ, bytes)
             height, width = struct.unpack('HHHH', winsize)[:2]
         except Exception:
             return None

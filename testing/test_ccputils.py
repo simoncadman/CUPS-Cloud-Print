@@ -17,6 +17,7 @@ import os
 import logging
 import sys
 import pytest
+import struct
 sys.path.insert(0, ".")
 
 from ccputils import Utils
@@ -158,3 +159,15 @@ def test_GetDefaultPaperType():
     assert Utils.GetDefaultPaperType(['en_GB',]) == "A4"
     assert Utils.GetDefaultPaperType(['en_US',]) == "Letter"
     assert Utils.GetDefaultPaperType([None,None]) == "Letter"
+
+def test_GetWindowSize():
+    # expect this to fail gracefully if no tty
+    assert Utils.GetWindowSize() == None
+
+    # pass in dummy winsize struct
+    dummywinsize = struct.pack('HHHH', 800, 600, 0, 0)
+    assert Utils.GetWindowSize(dummywinsize) == (800,600)
+
+    # ensure window size of 0x0 returns none
+    dummywinsize = struct.pack('HHHH', 0, 0, 0, 0)
+    assert Utils.GetWindowSize(dummywinsize) == None
