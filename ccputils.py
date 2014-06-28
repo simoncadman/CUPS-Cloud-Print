@@ -103,7 +103,7 @@ class Utils:
         """
         p = subprocess.Popen(["file", filename.lstrip('-')], stdout=subprocess.PIPE)
         output = p.communicate()[0]
-        logging.info("File output was: " + output)
+        logging.debug("File output was: " + output)
         return "PDF document" in output
 
     @staticmethod

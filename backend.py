@@ -42,7 +42,7 @@ if __name__ == '__main__':  # pragma: no cover
     Utils.SetupLogging()
 
     # line below is replaced on commit
-    CCPVersion = "20140621 210317"
+    CCPVersion = "20140628 144005"
     Utils.ShowVersion(CCPVersion)
 
     if len(sys.argv) != 1 and len(sys.argv) < 6 or len(sys.argv) > 7:
@@ -128,7 +128,7 @@ if __name__ == '__main__':  # pragma: no cover
 
     result = 0
 
-    logging.info('is this a pdf? ' + printFile)
+    logging.debug('is this a pdf? ' + printFile)
     if not os.path.exists(printFile):
         sys.stderr.write('ERROR: file "%s" not found\n' % printFile)
         result = 1

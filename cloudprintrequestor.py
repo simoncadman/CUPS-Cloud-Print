@@ -54,7 +54,7 @@ class CloudPrintRequestor(httplib2.Http):
         """
 
         rpc_name = path.split('?', 1)[0]
-        logging.info('Calling %s RPC' % rpc_name)
+        logging.debug('Calling %s RPC' % rpc_name)
         start_time = time.time()
 
         # force useragent to CCP
