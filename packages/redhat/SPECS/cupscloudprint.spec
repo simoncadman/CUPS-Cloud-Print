@@ -48,6 +48,9 @@ fi
 hash semodule > /dev/null 2>&1
 if [[ "$?" == 0 ]]; then
     semodule -r cupscloudprint
+    restorecon -RF %{_sysconfdir}/cloudprint.conf
+    restorecon -RF %{_usr}/share/cloudprint-cups/
+    restorecon -RF %{_localstatedir}/log
 fi
 
 %files
