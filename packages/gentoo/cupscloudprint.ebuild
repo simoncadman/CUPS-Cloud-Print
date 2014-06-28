@@ -12,15 +12,13 @@ LICENSE="GPL-3"
 PYTHON_DEPEND="2"
 SLOT="0"
 KEYWORDS="~alpha ~amd64 ~arm ~ia64 ~ppc ~ppc64 ~s390 ~sh ~sparc ~x86 ~x64 ~amd64-fbsd ~x86-fbsd"
-IUSE="selinux"
 RDEPEND="!net-print/cups-cloudprint
 >=dev-lang/python-2.6
 net-print/cups
 app-text/ghostscript-gpl
 dev-python/pycups
 dev-python/httplib2
-media-gfx/imagemagick[postscript,jpeg,png]
-selinux? ( sec-policy/cupscloudprint )"
+media-gfx/imagemagick[postscript,jpeg,png]"
 S=${WORKDIR}/${P}
 
 src_install() {
