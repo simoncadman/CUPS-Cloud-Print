@@ -39,7 +39,7 @@ if __name__ == '__main__':  # pragma: no cover
     Utils.SetupLogging()
 
     # line below is replaced on commit
-    CCPVersion = "20140628 150835"
+    CCPVersion = "20140628 172343"
     Utils.ShowVersion(CCPVersion)
 
     if not os.path.exists("/etc/cloudprint.conf"):
@@ -115,12 +115,14 @@ if __name__ == '__main__':  # pragma: no cover
                     updatingmessage += cupsprinters[device]["printer-info"]
                     updatingmessage += " with new id uri format"
                     print updatingmessage
+                    tempprinter = None
                     printerid, requestor = printer_manager.getPrinterIDByDetails(
                         account, printername, printerid)
-                    tempprinter = printer_manager.getPrinter(
-                        printerid,
-                        urllib.unquote(account))
-                    if printerid is not None and tempprinter is not None:
+                    if printerid is not None:
+                        tempprinter = printer_manager.getPrinter(
+                            printerid,
+                            urllib.unquote(account))
+                    if tempprinter is not None:
                         cupsprinters[device]["device-uri"] = tempprinter.getURI()
                         p = subprocess.Popen(
                             ["lpadmin",
