@@ -38,9 +38,17 @@ python2 -m compileall -q -f .
 hash semodule > /dev/null 2>&1
 if [[ "$?" == 0 ]]; then
     semodule -i %{_usr}/share/cloudprint-cups/selinux/cupscloudprint.pp
-    restorecon -RF %{_sysconfdir}/cloudprint.conf
-    restorecon -RF %{_usr}/share/cloudprint-cups/
-    restorecon -RF %{_localstatedir}/log
+    if [[ -f "%{_sysconfdir}/cloudprint.conf" ]]; then
+        restorecon -RF "%{_sysconfdir}/cloudprint.conf"
+    fi
+    
+    if [[ -d "%{_usr}/share/cloudprint-cups/" ]]; then
+        restorecon -RF "%{_usr}/share/cloudprint-cups/"
+    fi
+    
+    if [[ -d "%{_localstatedir}/log" ]]; then
+        restorecon -RF "%{_localstatedir}/log"
+    fi
 fi
 
 %postun
@@ -48,9 +56,17 @@ fi
 hash semodule > /dev/null 2>&1
 if [[ "$?" == 0 ]]; then
     semodule -r cupscloudprint
-    restorecon -RF %{_sysconfdir}/cloudprint.conf
-    restorecon -RF %{_usr}/share/cloudprint-cups/
-    restorecon -RF %{_localstatedir}/log
+    if [[ -f "%{_sysconfdir}/cloudprint.conf" ]]; then
+        restorecon -RF "%{_sysconfdir}/cloudprint.conf"
+    fi
+    
+    if [[ -d "%{_usr}/share/cloudprint-cups/" ]]; then
+        restorecon -RF "%{_usr}/share/cloudprint-cups/"
+    fi
+    
+    if [[ -d "%{_localstatedir}/log" ]]; then
+        restorecon -RF "%{_localstatedir}/log"
+    fi
 fi
 
 %files
