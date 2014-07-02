@@ -1,3 +1,19 @@
+2014-07-02 Simon Cadman <src@niftiestsoftware.com>
+
+        * 20140702 :
+          New: Split printer class into seperate Printer and PrinterManager classes
+          New: OS X package support
+          New: Added SELinux support to RPM packages
+          New: Added refresh token cron script
+          Fix: Use python interpreter when python2 interpreter not available.
+          Fix: Setup script shows printer names in multiple columns, instead of one column.
+          Fix: Now PEP8 compliant
+          Fix: Detect _lp as valid cups group in configure script
+          Change: Moved testing data and scripts into 'testing' subdirectory
+          Change: Changed protocol to gcp:// instead of cloudprint://
+
+ -- simon cadman <src@niftiestsoftware.com>  Wed, 02 Jul 2014 19:30:59 +0000
+
 2014-03-08 Simon Cadman <src@niftiestsoftware.com>
 
         * 20140308 :

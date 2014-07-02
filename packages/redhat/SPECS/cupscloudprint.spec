@@ -113,6 +113,18 @@ fi
 %doc %{_usr}/share/cloudprint-cups/README.md
 
 %changelog
+* Wed Jul 02 2014 Simon Cadman <src@niftiestsoftware.com> (20140702-1)
+- New: Split printer class into seperate Printer and PrinterManager classes
+- New: OS X package support
+- New: Added SELinux support to RPM packages
+- New: Added refresh token cron script
+- Fix: Use python interpreter when python2 interpreter not available.
+- Fix: Setup script shows printer names in multiple columns, instead of one column.
+- Fix: Now PEP8 compliant
+- Fix: Detect _lp as valid cups group in configure script
+- Change: Moved testing data and scripts into 'testing' subdirectory
+- Change: Changed protocol to gcp:// instead of cloudprint://
+
 * Sat Mar 08 2014 Simon Cadman <src@niftiestsoftware.com> (20140308-1)
 - Fix: Use shorter URI format to workaround issue on older distros having a short max length on printer URIs
 
