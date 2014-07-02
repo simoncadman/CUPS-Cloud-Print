@@ -53,19 +53,21 @@ fi
 
 %postun
 # remove selinux module if running selinux
-hash semodule > /dev/null 2>&1
-if [[ "$?" == 0 ]]; then
-    semodule -r cupscloudprint
-    if [[ -f "%{_sysconfdir}/cloudprint.conf" ]]; then
-        restorecon -RF "%{_sysconfdir}/cloudprint.conf"
-    fi
-    
-    if [[ -d "%{_usr}/share/cloudprint-cups/" ]]; then
-        restorecon -RF "%{_usr}/share/cloudprint-cups/"
-    fi
-    
-    if [[ -d "%{_localstatedir}/log" ]]; then
-        restorecon -RF "%{_localstatedir}/log"
+if [[ $1 == 0 ]]; then
+    hash semodule > /dev/null 2>&1
+    if [[ "$?" == 0 ]]; then
+        semodule -r cupscloudprint
+        if [[ -f "%{_sysconfdir}/cloudprint.conf" ]]; then
+            restorecon -RF "%{_sysconfdir}/cloudprint.conf"
+        fi
+        
+        if [[ -d "%{_usr}/share/cloudprint-cups/" ]]; then
+            restorecon -RF "%{_usr}/share/cloudprint-cups/"
+        fi
+        
+        if [[ -d "%{_localstatedir}/log" ]]; then
+            restorecon -RF "%{_localstatedir}/log"
+        fi
     fi
 fi
 
