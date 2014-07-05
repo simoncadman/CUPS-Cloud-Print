@@ -444,13 +444,11 @@ class Printer(object):
                         addedOptions = []
                         for overridecapability in overridecapabilities:
                             if 'Default' + overridecapability == attr['name']:
-                                selectedoption = overridecapabilities[
-                                    overridecapability]
                                 for option in capability['options']:
                                     internalOption = Printer._getInternalName(
                                         option, 'option', gcpname, addedOptions)
                                     addedOptions.append(internalOption)
-                                    if selectedoption == internalOption:
+                                    if overridecapabilities[overridecapability] == internalOption:
                                         gcpoption = option['name']
                                         break
                                 break
