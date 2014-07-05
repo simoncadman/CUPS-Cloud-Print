@@ -42,7 +42,7 @@ if __name__ == '__main__':  # pragma: no cover
     Utils.SetupLogging()
 
     # line below is replaced on commit
-    CCPVersion = "20140705 144515"
+    CCPVersion = "20140705 153200"
     Utils.ShowVersion(CCPVersion)
 
     if len(sys.argv) != 1 and len(sys.argv) < 6 or len(sys.argv) > 7:
@@ -52,13 +52,13 @@ if __name__ == '__main__':  # pragma: no cover
 
     if len(sys.argv) >= 4 and sys.argv[3] == "Set Default Options":
         print "ERROR: Unimplemented command: " + sys.argv[3]
-        logging.error("Unimplemented command: " + sys.argv[3])
+        logging.error("Unimplemented command: %s" , sys.argv[3])
         sys.exit(0)
 
     if len(sys.argv) == 7:
-        prog, jobID, userName, jobTitle, copies, printOptions, printFile = sys.argv[0:6]
+        prog, jobID, userName, jobTitle, copies, printOptions, printFile = sys.argv[0:7]
     if len(sys.argv) == 6:
-        prog, jobID, userName, jobTitle, copies, printOptions = sys.argv[0:5]
+        prog, jobID, userName, jobTitle, copies, printOptions = sys.argv[0:6]
         printFile = None
 
     requestors, storage = Auth.SetupAuth(False)
@@ -114,10 +114,10 @@ if __name__ == '__main__':  # pragma: no cover
         sys.stdout.write(message)
         sys.exit(255)
 
-    logging.info("Printing file " + printFile)
+    logging.info("Printing file %s" , printFile)
     optionsstring = ' '.join(["'%s'" % option for option in sys.argv])
-    logging.info("Device is %s , printername is %s, params are: %s" %
-                 (uri, cupsprintername, optionsstring))
+    logging.info("Device is %s , printername is %s, params are: %s" ,
+                 uri, cupsprintername, optionsstring)
 
     pdfFile = printFile + ".pdf"
     if Utils.which("ps2pdf") is None:
@@ -128,9 +128,9 @@ if __name__ == '__main__':  # pragma: no cover
 
     result = 0
 
-    logging.debug('is this a pdf? ' + printFile)
+    logging.debug('is this a pdf? %s' , printFile)
     if not os.path.exists(printFile):
-        sys.stderr.write('ERROR: file "%s" not found\n' % printFile)
+        sys.stderr.write('ERROR: file "%s" not found\n' , printFile)
         result = 1
     elif not Utils.fileIsPDF(printFile):
         sys.stderr.write("INFO: Converting print job to PDF\n")
@@ -138,15 +138,15 @@ if __name__ == '__main__':  # pragma: no cover
             sys.stderr.write("ERROR: Failed to convert file to pdf\n")
             result = 1
         else:
-            logging.info("Converted to PDF as " + pdfFile)
+            logging.info("Converted to PDF as %s" , pdfFile)
     else:
         pdfFile = printFile + '.pdf'
         os.rename(printFile, pdfFile)
-        logging.info("Using %s as is already PDF" % pdfFile)
+        logging.info("Using %s as is already PDF" , pdfFile)
 
     if result == 0:
         sys.stderr.write("INFO: Sending document to Cloud Print\n")
-        logging.info("Sending %s to cloud" % pdfFile)
+        logging.info("Sending %s to cloud" , pdfFile)
 
         printer = printer_manager.getPrinterByURI(uri)
         if printer is None:
@@ -159,14 +159,14 @@ if __name__ == '__main__':  # pragma: no cover
             print "ERROR: Failed to submit job to cloud print"
             result = 1
 
-        logging.info(pdfFile + " sent to cloud print, deleting")
+        logging.info("%s sent to cloud print, deleting",pdfFile)
         if os.path.exists(printFile):
             os.unlink(printFile)
         sys.stderr.write("INFO: Cleaning up temporary files\n")
-        logging.info("Deleted " + printFile)
+        logging.info("Deleted %s", printFile)
         if os.path.exists(pdfFile):
             os.unlink(pdfFile)
-        logging.info("Deleted " + pdfFile)
+        logging.info("Deleted %s", pdfFile)
         if result != 0:
             sys.stderr.write("INFO: Printing Failed\n")
             logging.info("Failed printing")
