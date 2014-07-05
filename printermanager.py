@@ -227,7 +227,7 @@ class PrinterManager(object):
         accountName, printerId = self._getAccountNameAndPrinterIdFromURI(uri)
         return self.getPrinter(printerId, accountName)
 
-    def getPrinterIDByDetails(self, account, printername, printerid):
+    def getPrinterIDByDetails(self, account, printerid):
         """Gets printer id and requestor by printer
 
         Args:

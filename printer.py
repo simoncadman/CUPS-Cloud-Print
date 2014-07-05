@@ -148,8 +148,7 @@ class Printer(object):
                                'psk:TwoSidedLongEdge': 'DuplexNoTumble'},
                               'psk:PageOrientation':
                               {'psk:Landscape': 'Landscape',
-                               'psk:Portrait': 'Portrait'}
-                              }
+                               'psk:Portrait': 'Portrait'}}
 
     _FIXED_CAPABILITY_MAPPINGS = {'ns1:Colors': 'ColorModel',
                                   'ns1:PrintQualities': 'OutputMode',
