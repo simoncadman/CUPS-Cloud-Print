@@ -40,7 +40,7 @@ if __name__ == '__main__':  # pragma: no cover
     Utils.SetupLogging()
 
     # line below is replaced on commit
-    CCPVersion = "20140605 200040"
+    CCPVersion = "20140705 150727"
     Utils.ShowVersion(CCPVersion)
 
     requestors, storage = Auth.SetupAuth(True)
@@ -53,7 +53,7 @@ if __name__ == '__main__':  # pragma: no cover
     for printer in printers:
         print printer.getCUPSDriverDescription()
         print ""
-        print printer._fields
+        print printer.getFields()
         print printer['capabilities']
         print "\n"
         ppdname = printer.getPPDName()

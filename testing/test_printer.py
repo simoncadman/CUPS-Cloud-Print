@@ -78,6 +78,11 @@ def teardown_function(function):
     logging.shutdown()
     reload(logging)
 
+def test_getFields():
+    global printers
+    for printer in printers:
+        assert printer.getFields() == printer._fields
+
 def test_getAccount():
     global printers
     for printer in printers:
