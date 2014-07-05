@@ -71,7 +71,7 @@ if __name__ == '__main__':  # pragma: no cover
     Utils.SetupLogging()
 
     # line below is replaced on commit
-    CCPVersion = "20140705 144515"
+    CCPVersion = "20140705 163713"
     Utils.ShowVersion(CCPVersion)
 
     unattended = False
@@ -188,7 +188,8 @@ if __name__ == '__main__':  # pragma: no cover
             # check if printer name already exists
             foundbyname = False
             for ccpprinter2 in cupsprinters:
-                if printer_manager.sanitizePrinterName(cupsprinters[ccpprinter2]['printer-info']) == \
+                printerinfo = cupsprinters[ccpprinter2]['printer-info']
+                if printer_manager.sanitizePrinterName(printerinfo) == \
                         printer_manager.sanitizePrinterName(printername):
                     foundbyname = True
             if foundbyname and not unattended:
