@@ -142,20 +142,20 @@ class Printer(object):
         'Stamp', 'DestinationColorProfile'
     ))
 
-    _FIXED_OPTION_MAPPINGS = {"psk:JobDuplexAllDocumentsContiguously":
-                              {'psk:OneSided': "None",
-                                  'psk:TwoSidedShortEdge': "DuplexTumble",
-                                  'psk:TwoSidedLongEdge': "DuplexNoTumble"},
-                              "psk:PageOrientation":
-                              {'psk:Landscape': "Landscape",
-                               'psk:Portrait': "Portrait"}
+    _FIXED_OPTION_MAPPINGS = {'psk:JobDuplexAllDocumentsContiguously':
+                              {'psk:OneSided': 'None',
+                               'psk:TwoSidedShortEdge': 'DuplexTumble',
+                               'psk:TwoSidedLongEdge': 'DuplexNoTumble'},
+                              'psk:PageOrientation':
+                              {'psk:Landscape': 'Landscape',
+                               'psk:Portrait': 'Portrait'}
                               }
 
-    _FIXED_CAPABILITY_MAPPINGS = {'ns1:Colors': "ColorModel",
-                                  'ns1:PrintQualities': "OutputMode",
-                                  'ns1:InputBins': "InputSlot",
-                                  'psk:JobDuplexAllDocumentsContiguously': "Duplex",
-                                  'psk:PageOrientation': "Orientation"}
+    _FIXED_CAPABILITY_MAPPINGS = {'ns1:Colors': 'ColorModel',
+                                  'ns1:PrintQualities': 'OutputMode',
+                                  'ns1:InputBins': 'InputSlot',
+                                  'psk:JobDuplexAllDocumentsContiguously': 'Duplex',
+                                  'psk:PageOrientation': 'Orientation'}
 
     _CONVERTCOMMAND = 'convert'
 
@@ -380,12 +380,11 @@ class Printer(object):
 
         return returnValue
 
-    def _encodeMultiPart(self, fields, file_type='application/xml'):
+    def _encodeMultiPart(self, fields):
         """Encodes list of parameters for HTTP multipart format.
 
         Args:
           fields: list of tuples containing name and value of parameters.
-          file_type: string if file type different than application/xml.
         Returns:
           A string to be sent as data for the HTTP post request.
         """
@@ -549,12 +548,10 @@ class Printer(object):
 
         content = {'pdf': fdata,
                    'jpeg': jobfile,
-                   'png': jobfile,
-                   }
+                   'png': jobfile}
         content_type = {'pdf': 'dataUrl',
                         'jpeg': 'image/jpeg',
-                        'png': 'image/png',
-                        }
+                        'png': 'image/png'}
         headers = [
             ('printerid', self['id']),
             ('title', title),
@@ -563,7 +560,7 @@ class Printer(object):
             ('capabilities', json.dumps(self._getCapabilities(cupsprintername, options)))
         ]
         logging.info('Capability headers are: %s', headers[4])
-        data = self._encodeMultiPart(headers, content_type[jobtype])
+        data = self._encodeMultiPart(headers)
 
         try:
             responseobj = self.getRequestor().submit(data, self._getMimeBoundary())

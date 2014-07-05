@@ -54,7 +54,7 @@ class CloudPrintRequestor(httplib2.Http):
         """
 
         rpc_name = path.split('?', 1)[0]
-        logging.debug('Calling %s RPC' % rpc_name)
+        logging.debug('Calling %s RPC', rpc_name)
         start_time = time.time()
 
         # force useragent to CCP
@@ -85,7 +85,7 @@ class CloudPrintRequestor(httplib2.Http):
             print "ERROR: Failed to decode JSON, value was: " + response
             raise e
 
-        logging.debug('%s RPC took %.2f seconds' % (rpc_name, time.time() - start_time))
+        logging.debug('%s RPC took %.2f seconds', rpc_name, time.time() - start_time)
 
         return decodedresponse
 

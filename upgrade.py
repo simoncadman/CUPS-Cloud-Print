@@ -39,7 +39,7 @@ if __name__ == '__main__':  # pragma: no cover
     Utils.SetupLogging()
 
     # line below is replaced on commit
-    CCPVersion = "20140705 144515"
+    CCPVersion = "20140705 160029"
     Utils.ShowVersion(CCPVersion)
 
     if not os.path.exists("/etc/cloudprint.conf"):
@@ -128,8 +128,8 @@ if __name__ == '__main__':  # pragma: no cover
                             ["lpadmin",
                              "-p",
                              cupsprinters[device]["printer-info"].lstrip('-'),
-                                "-v",
-                                tempprinter.getURI()],
+                             "-v",
+                             tempprinter.getURI()],
                             stdout=subprocess.PIPE)
                         output = p.communicate()[0]
                         result = p.returncode
@@ -157,8 +157,8 @@ if __name__ == '__main__':  # pragma: no cover
                         ["lpadmin",
                          "-p",
                          cupsprinters[device]["printer-info"].lstrip('-'),
-                            "-m",
-                            printerppdname.lstrip('-')],
+                         "-m",
+                         printerppdname.lstrip('-')],
                         stdout=subprocess.PIPE)
                     output = p.communicate()[0]
                     result = p.returncode
