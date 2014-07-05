@@ -47,19 +47,19 @@ if __name__ == '__main__':  # pragma: no cover
     result = p.returncode
     if result != 0:
         sys.exit(result)
-    files = output.split("\n")
-    for file in files:
-        if len(file) > 0 and os.path.exists(file) and file.endswith('.py'):
+    alteredfiles = output.split("\n")
+    for alteredfile in alteredfiles:
+        if len(alteredfile) > 0 and os.path.exists(alteredfile) and alteredfile.endswith('.py'):
             p2 = subprocess.Popen(
                 ["pep8",
                  "--max-line-length=100",
-                 file],
+                 alteredfile],
                 stdout=subprocess.PIPE)
             pep8output = p2.communicate()[0].strip()
             if p2.returncode != 0:
-                print file, "failed pep8 check:"
+                print alteredfile, "failed pep8 check:"
                 print pep8output
-            testfile = open(file, "r")
+            testfile = open(alteredfile, "r")
             fileNeedsUpdating = False
             for line in testfile:
                 if '# line below is replaced on commit' in line:
@@ -69,7 +69,7 @@ if __name__ == '__main__':  # pragma: no cover
 
             if fileNeedsUpdating:
                 replaceLine = False
-                for line in fileinput.input(file, inplace=1):
+                for line in fileinput.input(alteredfile, inplace=1):
                     if replaceLine:
                         line = re.sub(searchRegex, replaceValue, line)
                     if '# line below is replaced on commit' in line:
@@ -81,7 +81,7 @@ if __name__ == '__main__':  # pragma: no cover
                 p = subprocess.Popen(
                     ["git",
                      "add",
-                     file.lstrip('-')],
+                     alteredfile.lstrip('-')],
                     stdout=subprocess.PIPE)
                 output = p.communicate()[0]
                 result = p.returncode
