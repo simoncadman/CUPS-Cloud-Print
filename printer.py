@@ -162,7 +162,7 @@ class Printer(object):
     def __init__(self, fields, requestor):
         self._fields = fields
         self._requestor = requestor
-        
+
     def getFields(self):
         return self._fields
 
