@@ -23,7 +23,7 @@ from printer import Printer
 from ccputils import Utils
 
 
-class PrinterManager:
+class PrinterManager(object):
     BOUNDARY = mimetools.choose_boundary()
     CRLF = '\r\n'
     requestors = None

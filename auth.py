@@ -24,7 +24,7 @@ from ccputils import Utils
 from oauth2client.client import AccessTokenRefreshError
 
 
-class Auth:
+class Auth(object):
     clientid = "843805314553.apps.googleusercontent.com"
     clientsecret = 'MzTBsY4xlrD_lxkmwFbBrvBv'
     config = '/etc/cloudprint.conf'

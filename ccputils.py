@@ -26,7 +26,7 @@ import termios
 import struct
 
 
-class Utils:
+class Utils(object):
     logpath = '/var/log/cups/cloudprint_log'
 
     # Countries where letter sized paper is used, according to:
@@ -54,7 +54,6 @@ class Utils:
                     "DEBUG: Cannot alter " +
                     filename +
                     " file permissions\n")
-                pass
 
         if currentStat is None or currentStat.st_gid != Utils.GetLPID():
             try:
@@ -65,7 +64,6 @@ class Utils:
                     "DEBUG: Cannot alter " +
                     filename +
                     " file ownership\n")
-                pass
 
         return filePermissions, fileOwnerships
 
@@ -143,7 +141,7 @@ class Utils:
                     else:
                         logging.debug(
                             "Group " +
-                            group +
+                            str(configGid) +
                             " excluded as blacklisted")
 
         if useFilesOnly:
@@ -267,9 +265,9 @@ class Utils:
             windows size isn't available.
         """
         try:
-            bytes = struct.pack('HHHH', 0, 0, 0, 0)
+            structbytes = struct.pack('HHHH', 0, 0, 0, 0)
             if winsize is None:
-                winsize = fcntl.ioctl(sys.stdout.fileno(), termios.TIOCGWINSZ, bytes)
+                winsize = fcntl.ioctl(sys.stdout.fileno(), termios.TIOCGWINSZ, structbytes)
             height, width = struct.unpack('HHHH', winsize)[:2]
         except Exception:
             return None

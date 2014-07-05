@@ -42,7 +42,7 @@ if __name__ == '__main__':  # pragma: no cover
     Utils.SetupLogging()
 
     # line below is replaced on commit
-    CCPVersion = "20140628 144005"
+    CCPVersion = "20140705 142556"
     Utils.ShowVersion(CCPVersion)
 
     if len(sys.argv) != 1 and len(sys.argv) < 6 or len(sys.argv) > 7:
@@ -56,9 +56,9 @@ if __name__ == '__main__':  # pragma: no cover
         sys.exit(0)
 
     if len(sys.argv) == 7:
-        prog, jobID, userName, jobTitle, copies, printOptions, printFile = sys.argv
+        prog, jobID, userName, jobTitle, copies, printOptions, printFile = sys.argv[0:6]
     if len(sys.argv) == 6:
-        prog, jobID, userName, jobTitle, copies, printOptions = sys.argv
+        prog, jobID, userName, jobTitle, copies, printOptions = sys.argv[0:5]
         printFile = None
 
     requestors, storage = Auth.SetupAuth(False)
