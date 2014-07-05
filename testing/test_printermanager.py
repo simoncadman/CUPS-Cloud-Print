@@ -68,7 +68,7 @@ def teardown_function(function):
 def test_parseURI():
     global printerManagerInstance, requestors
     accountName, printerid = printerManagerInstance._getAccountNameAndPrinterIdFromURI(
-        Utils._PROTOCOL + "testaccount2%40gmail.com/testid")
+        Utils.PROTOCOL + "testaccount2%40gmail.com/testid")
     assert printerid == "testid"
     assert accountName == "testaccount2@gmail.com"
 
@@ -77,7 +77,7 @@ def test_parseLegacyURI():
 
     # 20140210 format
     account, printername, printerid, formatid = printerManagerInstance.parseLegacyURI(
-        Utils._OLD_PROTOCOL + "printername/testaccount2%40gmail.com/", requestors)
+        Utils.OLD_PROTOCOL + "printername/testaccount2%40gmail.com/", requestors)
     assert formatid == printerManagerInstance.URIFormat20140210
     assert account == "testaccount2@gmail.com"
     assert printername == "printername"
@@ -85,7 +85,7 @@ def test_parseLegacyURI():
 
     # 20140307 format
     account, printername, printerid, formatid = printerManagerInstance.parseLegacyURI(
-        Utils._OLD_PROTOCOL + "printername/testaccount2%40gmail.com/testid", requestors)
+        Utils.OLD_PROTOCOL + "printername/testaccount2%40gmail.com/testid", requestors)
     assert formatid == printerManagerInstance.URIFormat20140307
     assert account == "testaccount2@gmail.com"
     assert printername == "printername"
@@ -93,7 +93,7 @@ def test_parseLegacyURI():
 
     # 20140308 format
     account, printername, printerid, formatid = printerManagerInstance.parseLegacyURI(
-        Utils._OLD_PROTOCOL + "testaccount2%40gmail.com/testid", requestors)
+        Utils.OLD_PROTOCOL + "testaccount2%40gmail.com/testid", requestors)
     assert formatid == printerManagerInstance.URIFormat20140308
     assert account == "testaccount2@gmail.com"
     assert printerid == "testid"
@@ -101,7 +101,7 @@ def test_parseLegacyURI():
     
     # 20140621+ format
     account, printername, printerid, formatid = printerManagerInstance.parseLegacyURI(
-        Utils._PROTOCOL + "testaccount2%40gmail.com/testid", requestors)
+        Utils.PROTOCOL + "testaccount2%40gmail.com/testid", requestors)
     assert formatid == printerManagerInstance.URIFormatLatest
     assert account == "testaccount2@gmail.com"
     assert printerid == "testid"
@@ -192,12 +192,12 @@ def test_GetPrinterByURIFails():
 
     # ensure invalid account returns None/None
     printerIdNoneTest = printerManagerInstance.getPrinterByURI(
-        Utils._PROTOCOL + 'testprinter/accountthatdoesntexist')
+        Utils.PROTOCOL + 'testprinter/accountthatdoesntexist')
     assert printerIdNoneTest is None
 
     # ensure invalid printer on valid account returns None/None
     printerIdNoneTest = printerManagerInstance.getPrinterByURI(
-        Utils._PROTOCOL + 'testprinter/' + urllib.quote(requestors[0].getAccount()))
+        Utils.PROTOCOL + 'testprinter/' + urllib.quote(requestors[0].getAccount()))
     assert printerIdNoneTest is None
 
 
@@ -244,7 +244,7 @@ def test_printers():
 
         # test encoding and decoding printer details to/from uri
         uritest = re.compile(
-            Utils._PROTOCOL + "(.*)/" + urllib.quote(printer['id']))
+            Utils.PROTOCOL + "(.*)/" + urllib.quote(printer['id']))
         assert isinstance(printer.getURI(),basestring)
         assert len(printer.getURI()) > 0
         assert uritest.match(printer.getURI()) is not None

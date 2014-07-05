@@ -42,7 +42,7 @@ if __name__ == '__main__':  # pragma: no cover
     Utils.SetupLogging()
 
     # line below is replaced on commit
-    CCPVersion = "20140705 142556"
+    CCPVersion = "20140705 144515"
     Utils.ShowVersion(CCPVersion)
 
     if len(sys.argv) != 1 and len(sys.argv) < 6 or len(sys.argv) > 7:
@@ -69,7 +69,7 @@ if __name__ == '__main__':  # pragma: no cover
     printer_manager = PrinterManager(requestors)
 
     if len(sys.argv) == 1:
-        print 'network ' + Utils._PROTOCOL_NAME + ' "Unknown" "Google Cloud Print"'
+        print 'network ' + Utils.PROTOCOL_NAME + ' "Unknown" "Google Cloud Print"'
 
         printers = printer_manager.getPrinters()
         if printers is not None:
@@ -110,7 +110,7 @@ if __name__ == '__main__':  # pragma: no cover
     uri = os.getenv('DEVICE_URI')
     cupsprintername = os.getenv('PRINTER')
     if uri is None:
-        message = 'URI must be "' + Utils._PROTOCOL + '<account name>/<cloud printer id>"!\n'
+        message = 'URI must be "' + Utils.PROTOCOL + '<account name>/<cloud printer id>"!\n'
         sys.stdout.write(message)
         sys.exit(255)
 

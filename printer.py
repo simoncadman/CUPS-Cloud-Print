@@ -198,7 +198,7 @@ class Printer(object):
         """
         account = urllib.quote(self.getAccount().encode('ascii', 'replace'))
         printer_id = urllib.quote(self['id'].encode('ascii', 'replace'))
-        return "%s%s/%s" % (Utils._PROTOCOL, account, printer_id)
+        return "%s%s/%s" % (Utils.PROTOCOL, account, printer_id)
 
     def getListDescription(self):
         return '%s - %s - %s' % (

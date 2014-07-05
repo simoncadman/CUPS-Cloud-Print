@@ -32,10 +32,10 @@ class Utils(object):
     # Countries where letter sized paper is used, according to:
     # http://en.wikipedia.org/wiki/Letter_(paper_size)
     _LETTER_COUNTRIES = set(('US', 'CA', 'MX', 'BO', 'CO', 'VE', 'PH', 'CL'))
-    _PROTOCOL_NAME = 'gcp'
-    _PROTOCOL = _PROTOCOL_NAME + '://'
-    _OLD_PROTOCOL_NAME = 'cloudprint'
-    _OLD_PROTOCOL = _OLD_PROTOCOL_NAME + '://'
+    PROTOCOL_NAME = 'gcp'
+    PROTOCOL = PROTOCOL_NAME + '://'
+    OLD_PROTOCOL_NAME = 'cloudprint'
+    OLD_PROTOCOL = OLD_PROTOCOL_NAME + '://'
 
     @staticmethod
     def FixFilePermissions(filename):

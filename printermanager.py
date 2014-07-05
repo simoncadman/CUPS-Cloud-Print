@@ -187,7 +187,7 @@ class PrinterManager(object):
         printerId = None
         uri = urlparse(uristring)
         pathparts = uri.path.strip('/').split('/')
-        if uri.scheme == Utils._OLD_PROTOCOL_NAME:
+        if uri.scheme == Utils.OLD_PROTOCOL_NAME:
             if len(pathparts) == 2:
                 formatId = PrinterManager.URIFormat20140307
                 printerId = urllib.unquote(pathparts[1])
@@ -203,7 +203,7 @@ class PrinterManager(object):
                     printerId = urllib.unquote(pathparts[0])
                     printerName = None
                     accountName = urllib.unquote(uri.netloc)
-        elif uri.scheme == Utils._PROTOCOL_NAME:
+        elif uri.scheme == Utils.PROTOCOL_NAME:
             formatId = PrinterManager.URIFormatLatest
             printerId = urllib.unquote(pathparts[0])
             printerName = None

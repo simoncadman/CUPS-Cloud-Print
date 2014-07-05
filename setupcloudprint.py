@@ -71,7 +71,7 @@ if __name__ == '__main__':  # pragma: no cover
     Utils.SetupLogging()
 
     # line below is replaced on commit
-    CCPVersion = "20140625 181101"
+    CCPVersion = "20140705 144515"
     Utils.ShowVersion(CCPVersion)
 
     unattended = False
@@ -227,7 +227,7 @@ if __name__ == '__main__':  # pragma: no cover
     cupsprinters = connection.getPrinters()
 
     for cupsprinter in cupsprinters:
-        if cupsprinters[cupsprinter]['device-uri'].startswith(Utils._PROTOCOL) \
+        if cupsprinters[cupsprinter]['device-uri'].startswith(Utils.PROTOCOL) \
                 and cupsprinters[cupsprinter]['device-uri'] not in printer_uris:
             prunePrinters.append(cupsprinter)
 

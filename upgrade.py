@@ -39,7 +39,7 @@ if __name__ == '__main__':  # pragma: no cover
     Utils.SetupLogging()
 
     # line below is replaced on commit
-    CCPVersion = "20140628 172343"
+    CCPVersion = "20140705 144515"
     Utils.ShowVersion(CCPVersion)
 
     if not os.path.exists("/etc/cloudprint.conf"):
@@ -103,8 +103,8 @@ if __name__ == '__main__':  # pragma: no cover
 
     for device in cupsprinters:
         try:
-            if (cupsprinters[device]["device-uri"].find(Utils._OLD_PROTOCOL) == 0)\
-                    or (cupsprinters[device]["device-uri"].find(Utils._PROTOCOL) == 0):
+            if (cupsprinters[device]["device-uri"].find(Utils.OLD_PROTOCOL) == 0)\
+                    or (cupsprinters[device]["device-uri"].find(Utils.PROTOCOL) == 0):
                 account, printername, printerid, formatid = \
                     printer_manager.parseLegacyURI(
                         cupsprinters[device]["device-uri"],
