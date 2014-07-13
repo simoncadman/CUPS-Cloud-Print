@@ -31,20 +31,26 @@ import time
 import urllib
 import urlparse
 
-from anyjson import simplejson
+from collections import namedtuple
+from oauth2client import GOOGLE_AUTH_URI
+from oauth2client import GOOGLE_REVOKE_URI
+from oauth2client import GOOGLE_TOKEN_URI
+from oauth2client import util
+from oauth2client.anyjson import simplejson
 
 HAS_OPENSSL = False
-try: # pragma: no cover 
-  from oauth2client.crypt import Signer
-  from oauth2client.crypt import make_signed_jwt
-  from oauth2client.crypt import verify_signed_jwt_with_certs
-  HAS_OPENSSL = True
-except ImportError: # pragma: no cover 
+HAS_CRYPTO = False
+try:
+  from oauth2client import crypt
+  HAS_CRYPTO = True
+  if crypt.OpenSSLVerifier is not None:
+    HAS_OPENSSL = True
+except ImportError:
   pass
 
-try: # pragma: no cover 
+try:
   from urlparse import parse_qsl
-except ImportError: # pragma: no cover 
+except ImportError:
   from cgi import parse_qsl
 
 logger = logging.getLogger(__name__)
@@ -58,37 +64,59 @@ ID_TOKEN_VERIFICATON_CERTS = 'https://www.googleapis.com/oauth2/v1/certs'
 # Constant to use for the out of band OAuth 2.0 flow.
 OOB_CALLBACK_URN = 'urn:ietf:wg:oauth:2.0:oob'
 
+# Google Data client libraries may need to set this to [401, 403].
+REFRESH_STATUS_CODES = [401]
+
+# The value representing user credentials.
+AUTHORIZED_USER = 'authorized_user'
+
+# The value representing service account credentials.
+SERVICE_ACCOUNT = 'service_account'
+
+# The environment variable pointing the file with local
+# Application Default Credentials.
+GOOGLE_APPLICATION_CREDENTIALS = 'GOOGLE_APPLICATION_CREDENTIALS'
+
+# The access token along with the seconds in which it expires.
+AccessTokenInfo = namedtuple('AccessTokenInfo', ['access_token', 'expires_in'])
 
 class Error(Exception):
   """Base error for this module."""
-  pass
 
 
 class FlowExchangeError(Error):
   """Error trying to exchange an authorization grant for an access token."""
-  pass
 
 
 class AccessTokenRefreshError(Error):
   """Error trying to refresh an expired access token."""
-  pass
+
+
+class TokenRevokeError(Error):
+  """Error trying to revoke a token."""
+
 
 class UnknownClientSecretsFlowError(Error):
   """The client secrets file called for an unknown type of OAuth 2.0 flow. """
-  pass
 
 
 class AccessTokenCredentialsError(Error):
   """Having only the access_token means no refresh is possible."""
-  pass
 
 
 class VerifyJwtTokenError(Error):
   """Could on retrieve certificates for validation."""
-  pass
 
 
-def _abstract(): # pragma: no cover 
+class NonAsciiHeaderError(Error):
+  """Header names and values must be ASCII strings."""
+
+
+class ApplicationDefaultCredentialsError(Error):
+  """Error retrieving the Application Default Credentials."""
+
+
+def _abstract():
   raise NotImplementedError('You need to override this function')
 
 
@@ -115,17 +143,21 @@ class Credentials(object):
   an HTTP transport.
 
   Subclasses must also specify a classmethod named 'from_json' that takes a JSON
-  string as input and returns an instaniated Credentials object.
+  string as input and returns an instantiated Credentials object.
   """
 
   NON_SERIALIZED_MEMBERS = ['store']
 
   def authorize(self, http):
-    """Take an httplib2.Http instance (or equivalent) and
-    authorizes it for the set of credentials, usually by
-    replacing http.request() with a method that adds in
-    the appropriate headers and then delegates to the original
-    Http.request() method.
+    """Take an httplib2.Http instance (or equivalent) and authorizes it.
+
+    Authorizes it for the set of credentials, usually by replacing
+    http.request() with a method that adds in the appropriate headers and then
+    delegates to the original Http.request() method.
+
+    Args:
+      http: httplib2.Http, an http object to be used to make the refresh
+        request.
     """
     _abstract()
 
@@ -134,6 +166,15 @@ class Credentials(object):
 
     Args:
       http: httplib2.Http, an http object to be used to make the refresh
+        request.
+    """
+    _abstract()
+
+  def revoke(self, http):
+    """Revokes a refresh_token and makes the credentials void.
+
+    Args:
+      http: httplib2.Http, an http object to be used to make the revoke
         request.
     """
     _abstract()
@@ -147,7 +188,7 @@ class Credentials(object):
     _abstract()
 
   def _to_json(self, strip):
-    """Utility function for creating a JSON representation of an instance of Credentials.
+    """Utility function that creates JSON repr. of a Credentials object.
 
     Args:
       strip: array, An array of names of members to not include in the JSON.
@@ -177,6 +218,7 @@ class Credentials(object):
     """
     return self._to_json(Credentials.NON_SERIALIZED_MEMBERS)
 
+  @classmethod
   def new_from_json(cls, s):
     """Utility class method to instantiate a Credentials subclass from a JSON
     representation produced by to_json().
@@ -195,7 +237,7 @@ class Credentials(object):
       m = __import__(module)
     except ImportError:
       # In case there's an object from the old package structure, update it
-      module = module.replace('.apiclient', '')
+      module = module.replace('.googleapiclient', '')
       m = __import__(module)
 
     m = __import__(module, fromlist=module.split('.')[:-1])
@@ -203,8 +245,7 @@ class Credentials(object):
     from_json = getattr(kls, 'from_json')
     return from_json(s)
 
-  new_from_json = classmethod(new_from_json)
-
+  @classmethod
   def from_json(cls, s):
     """Instantiate a Credentials object from a JSON description of it.
 
@@ -218,8 +259,6 @@ class Credentials(object):
     """
     return Credentials()
 
-  from_json = classmethod(from_json)
-
 
 class Flow(object):
   """Base class for all Flow objects."""
@@ -229,7 +268,7 @@ class Flow(object):
 class Storage(object):
   """Base class for all Storage objects.
 
-  Store and retrieve a single credential.  This class supports locking
+  Store and retrieve a single credential. This class supports locking
   such that multiple processes and threads can operate on a single
   store.
   """
@@ -320,6 +359,45 @@ class Storage(object):
       self.release_lock()
 
 
+def clean_headers(headers):
+  """Forces header keys and values to be strings, i.e not unicode.
+
+  The httplib module just concats the header keys and values in a way that may
+  make the message header a unicode string, which, if it then tries to
+  contatenate to a binary request body may result in a unicode decode error.
+
+  Args:
+    headers: dict, A dictionary of headers.
+
+  Returns:
+    The same dictionary but with all the keys converted to strings.
+  """
+  clean = {}
+  try:
+    for k, v in headers.iteritems():
+      clean[str(k)] = str(v)
+  except UnicodeEncodeError:
+    raise NonAsciiHeaderError(k + ': ' + v)
+  return clean
+
+
+def _update_query_params(uri, params):
+  """Updates a URI with new query parameters.
+
+  Args:
+    uri: string, A valid URI, with potential existing query parameters.
+    params: dict, A dictionary of query parameters.
+
+  Returns:
+    The same URI but with the new query parameters added.
+  """
+  parts = list(urlparse.urlparse(uri))
+  query_params = dict(parse_qsl(parts[4]))  # 4 is the index of the query part
+  query_params.update(params)
+  parts[4] = urllib.urlencode(query_params)
+  return urlparse.urlunparse(parts)
+
+
 class OAuth2Credentials(Credentials):
   """Credentials object for OAuth 2.0.
 
@@ -329,8 +407,10 @@ class OAuth2Credentials(Credentials):
   OAuth2Credentials objects may be safely pickled and unpickled.
   """
 
+  @util.positional(8)
   def __init__(self, access_token, client_id, client_secret, refresh_token,
-               token_expiry, token_uri, user_agent, id_token=None):
+               token_expiry, token_uri, user_agent, revoke_uri=None,
+               id_token=None, token_response=None):
     """Create an instance of OAuth2Credentials.
 
     This constructor is not usually called by the user, instead
@@ -344,7 +424,12 @@ class OAuth2Credentials(Credentials):
       token_expiry: datetime, when the access_token expires.
       token_uri: string, URI of token endpoint.
       user_agent: string, The HTTP User-Agent to provide for this application.
+      revoke_uri: string, URI for revoke endpoint. Defaults to None; a token
+        can't be revoked if this is None.
       id_token: object, The identity of the resource owner.
+      token_response: dict, the decoded response to the token request. None
+        if a token hasn't been requested yet. Stored because some providers
+        (e.g. wordpress.com) include extra fields that clients may want.
 
     Notes:
       store: callable, A callable that when passed a Credential
@@ -360,7 +445,9 @@ class OAuth2Credentials(Credentials):
     self.token_expiry = token_expiry
     self.token_uri = token_uri
     self.user_agent = user_agent
+    self.revoke_uri = revoke_uri
     self.id_token = id_token
+    self.token_response = token_response
 
     # True if the credentials have been revoked or expired and can't be
     # refreshed.
@@ -377,7 +464,7 @@ class OAuth2Credentials(Credentials):
 
     Args:
        http: An instance of httplib2.Http
-           or something that acts like it.
+         or something that acts like it.
 
     Returns:
        A modified instance of http that was passed in.
@@ -396,6 +483,7 @@ class OAuth2Credentials(Credentials):
     request_orig = http.request
 
     # The closure that will replace 'httplib2.Http.request'.
+    @util.positional(1)
     def new_request(uri, method='GET', body=None, headers=None,
                     redirections=httplib2.DEFAULT_MAX_REDIRECTS,
                     connection_type=None):
@@ -403,10 +491,12 @@ class OAuth2Credentials(Credentials):
         logger.info('Attempting refresh to obtain initial access_token')
         self._refresh(request_orig)
 
-      # Modify the request headers to add the appropriate
+      # Clone and modify the request headers to add the appropriate
       # Authorization header.
       if headers is None:
         headers = {}
+      else:
+        headers = dict(headers)
       self.apply(headers)
 
       if self.user_agent is not None:
@@ -415,14 +505,14 @@ class OAuth2Credentials(Credentials):
         else:
           headers['user-agent'] = self.user_agent
 
-      resp, content = request_orig(uri, method, body, headers,
+      resp, content = request_orig(uri, method, body, clean_headers(headers),
                                    redirections, connection_type)
 
-      if resp.status == 401:
-        logger.info('Refreshing due to a 401')
+      if resp.status in REFRESH_STATUS_CODES:
+        logger.info('Refreshing due to a %s' % str(resp.status))
         self._refresh(request_orig)
         self.apply(headers)
-        return request_orig(uri, method, body, headers,
+        return request_orig(uri, method, body, clean_headers(headers),
                             redirections, connection_type)
       else:
         return (resp, content)
@@ -444,6 +534,15 @@ class OAuth2Credentials(Credentials):
     """
     self._refresh(http.request)
 
+  def revoke(self, http):
+    """Revokes a refresh_token and makes the credentials void.
+
+    Args:
+      http: httplib2.Http, an http object to be used to make the revoke
+        request.
+    """
+    self._revoke(http.request)
+
   def apply(self, headers):
     """Add the authorization to the headers.
 
@@ -455,6 +554,7 @@ class OAuth2Credentials(Credentials):
   def to_json(self):
     return self._to_json(Credentials.NON_SERIALIZED_MEMBERS)
 
+  @classmethod
   def from_json(cls, s):
     """Instantiate a Credentials object from a JSON description of it. The JSON
     should have been produced by calling .to_json() on the object.
@@ -473,7 +573,7 @@ class OAuth2Credentials(Credentials):
             data['token_expiry'], EXPIRY_FORMAT)
       except:
         data['token_expiry'] = None
-    retval = OAuth2Credentials(
+    retval = cls(
         data['access_token'],
         data['client_id'],
         data['client_secret'],
@@ -481,12 +581,13 @@ class OAuth2Credentials(Credentials):
         data['token_expiry'],
         data['token_uri'],
         data['user_agent'],
-        data.get('id_token', None))
+        revoke_uri=data.get('revoke_uri', None),
+        id_token=data.get('id_token', None),
+        token_response=data.get('token_response', None))
     retval.invalid = data['invalid']
     return retval
-  
-  from_json = classmethod(from_json)
 
+  @property
   def access_token_expired(self):
     """True if the credential is expired or invalid.
 
@@ -504,7 +605,19 @@ class OAuth2Credentials(Credentials):
                   now, self.token_expiry)
       return True
     return False
-  access_token_expired = property(access_token_expired)
+
+  def get_access_token(self, http=None):
+    """Return the access token and its expiration information.
+
+    If the token does not exist, get one.
+    If the token expired, refresh it.
+    """
+    if not self.access_token or self.access_token_expired:
+      if not http:
+        http = httplib2.Http()
+      self.refresh(http)
+    return AccessTokenInfo(access_token=self.access_token,
+                           expires_in=self._expires_in())
 
   def set_store(self, store):
     """Set the Storage for the credential.
@@ -512,11 +625,30 @@ class OAuth2Credentials(Credentials):
     Args:
       store: Storage, an implementation of Stroage object.
         This is needed to store the latest access_token if it
-        has expired and been refreshed.  This implementation uses
+        has expired and been refreshed. This implementation uses
         locking to check for updates before updating the
         access_token.
     """
     self.store = store
+
+  def _expires_in(self):
+    """Return the number of seconds until this token expires.
+
+    If token_expiry is in the past, this method will return 0, meaning the
+    token has already expired.
+    If token_expiry is None, this method will return None. Note that returning
+    0 in such a case would not be fair: the token may still be valid;
+    we just don't know anything about it.
+    """
+    if self.token_expiry:
+      now = datetime.datetime.utcnow()
+      if self.token_expiry > now:
+        time_delta = self.token_expiry - now
+        # TODO(orestica): return time_delta.total_seconds()
+        # once dropping support for Python 2.6
+        return time_delta.days * 86400 + time_delta.seconds
+      else:
+        return 0
 
   def _updateFromCredential(self, other):
     """Update this Credential from another instance."""
@@ -602,6 +734,7 @@ class OAuth2Credentials(Credentials):
     if resp.status == 200:
       # TODO(jcgregorio) Raise an error if loads fails?
       d = simplejson.loads(content)
+      self.token_response = d
       self.access_token = d['access_token']
       self.refresh_token = d.get('refresh_token', self.refresh_token)
       if 'expires_in' in d:
@@ -623,9 +756,49 @@ class OAuth2Credentials(Credentials):
           self.invalid = True
           if self.store:
             self.store.locked_put(self)
-      except:
+      except StandardError:
         pass
       raise AccessTokenRefreshError(error_msg)
+
+  def _revoke(self, http_request):
+    """Revokes the refresh_token and deletes the store if available.
+
+    Args:
+      http_request: callable, a callable that matches the method signature of
+        httplib2.Http.request, used to make the revoke request.
+    """
+    self._do_revoke(http_request, self.refresh_token)
+
+  def _do_revoke(self, http_request, token):
+    """Revokes the credentials and deletes the store if available.
+
+    Args:
+      http_request: callable, a callable that matches the method signature of
+        httplib2.Http.request, used to make the refresh request.
+      token: A string used as the token to be revoked. Can be either an
+        access_token or refresh_token.
+
+    Raises:
+      TokenRevokeError: If the revoke request does not return with a 200 OK.
+    """
+    logger.info('Revoking token')
+    query_params = {'token': token}
+    token_revoke_uri = _update_query_params(self.revoke_uri, query_params)
+    resp, content = http_request(token_revoke_uri)
+    if resp.status == 200:
+      self.invalid = True
+    else:
+      error_msg = 'Invalid response %s.' % resp.status
+      try:
+        d = simplejson.loads(content)
+        if 'error' in d:
+          error_msg = d['error']
+      except StandardError:
+        pass
+      raise TokenRevokeError(error_msg)
+
+    if self.store:
+      self.store.delete()
 
 
 class AccessTokenCredentials(OAuth2Credentials):
@@ -633,7 +806,7 @@ class AccessTokenCredentials(OAuth2Credentials):
 
   Credentials can be applied to an httplib2.Http object using the
   authorize() method, which then signs each request from that object
-  with the OAuth 2.0 access token.  This set of credentials is for the
+  with the OAuth 2.0 access token. This set of credentials is for the
   use case where you have acquired an OAuth 2.0 access_token from
   another place such as a JavaScript client or another web
   application, and wish to use it from Python. Because only the
@@ -653,7 +826,7 @@ class AccessTokenCredentials(OAuth2Credentials):
       revoked.
   """
 
-  def __init__(self, access_token, user_agent):
+  def __init__(self, access_token, user_agent, revoke_uri=None):
     """Create an instance of OAuth2Credentials
 
     This is one of the few types if Credentials that you should contrust,
@@ -662,10 +835,8 @@ class AccessTokenCredentials(OAuth2Credentials):
     Args:
       access_token: string, access token.
       user_agent: string, The HTTP User-Agent to provide for this application.
-
-    Notes:
-      store: callable, a callable that when passed a Credential
-        will store the credential back to where it came from.
+      revoke_uri: string, URI for revoke endpoint. Defaults to None; a token
+        can't be revoked if this is None.
     """
     super(AccessTokenCredentials, self).__init__(
         access_token,
@@ -674,43 +845,364 @@ class AccessTokenCredentials(OAuth2Credentials):
         None,
         None,
         None,
-        user_agent)
+        user_agent,
+        revoke_uri=revoke_uri)
 
+
+  @classmethod
   def from_json(cls, s):
     data = simplejson.loads(s)
     retval = AccessTokenCredentials(
         data['access_token'],
         data['user_agent'])
     return retval
-  from_json = classmethod(from_json)
 
   def _refresh(self, http_request):
     raise AccessTokenCredentialsError(
-        "The access_token is expired or invalid and can't be refreshed.")
+        'The access_token is expired or invalid and can\'t be refreshed.')
+
+  def _revoke(self, http_request):
+    """Revokes the access_token and deletes the store if available.
+
+    Args:
+      http_request: callable, a callable that matches the method signature of
+        httplib2.Http.request, used to make the revoke request.
+    """
+    self._do_revoke(http_request, self.access_token)
 
 
-class AssertionCredentials(OAuth2Credentials):
+_env_name = None
+
+
+def _get_environment(urllib2_urlopen=None):
+  """Detect the environment the code is being run on."""
+
+  global _env_name
+
+  if _env_name:
+    return _env_name
+
+  server_software = os.environ.get('SERVER_SOFTWARE', '')
+  if server_software.startswith('Google App Engine/'):
+    _env_name = 'GAE_PRODUCTION'
+  elif server_software.startswith('Development/'):
+    _env_name = 'GAE_LOCAL'
+  else:
+    import urllib2
+    try:
+      if urllib2_urlopen is None:
+        urllib2_urlopen = urllib2.urlopen
+      response = urllib2_urlopen('http://metadata.google.internal')
+      if any('Metadata-Flavor: Google' in h for h in response.info().headers):
+        _env_name = 'GCE_PRODUCTION'
+      else:
+        _env_name = 'UNKNOWN'
+    except urllib2.URLError:
+      _env_name = 'UNKNOWN'
+
+  return _env_name
+
+
+class GoogleCredentials(OAuth2Credentials):
+  """Application Default Credentials for use in calling Google APIs.
+
+  The Application Default Credentials are being constructed as a function of
+  the environment where the code is being run.
+  More details can be found on this page:
+  https://developers.google.com/accounts/docs/application-default-credentials
+
+  Here is an example of how to use the Application Default Credentials for a
+  service that requires authentication:
+
+  <code>
+  from googleapiclient.discovery import build
+  from oauth2client.client import GoogleCredentials
+
+  PROJECT = 'bamboo-machine-422'  # replace this with one of your projects
+  ZONE = 'us-central1-a'          # replace this with the zone you care about
+
+  credentials = GoogleCredentials.get_application_default()
+  service = build('compute', 'v1', credentials=credentials)
+
+  request = service.instances().list(project=PROJECT, zone=ZONE)
+  response = request.execute()
+
+  print response
+  </code>
+
+  A service that does not require authentication does not need credentials
+  to be passed in:
+
+  <code>
+  from googleapiclient.discovery import build
+
+  service = build('discovery', 'v1')
+
+  request = service.apis().list()
+  response = request.execute()
+
+  print response
+  </code>
+  """
+
+  def __init__(self, access_token, client_id, client_secret, refresh_token,
+               token_expiry, token_uri, user_agent,
+               revoke_uri=GOOGLE_REVOKE_URI):
+    """Create an instance of GoogleCredentials.
+
+    This constructor is not usually called by the user, instead
+    GoogleCredentials objects are instantiated by
+    GoogleCredentials.from_stream() or
+    GoogleCredentials.get_application_default().
+
+    Args:
+      access_token: string, access token.
+      client_id: string, client identifier.
+      client_secret: string, client secret.
+      refresh_token: string, refresh token.
+      token_expiry: datetime, when the access_token expires.
+      token_uri: string, URI of token endpoint.
+      user_agent: string, The HTTP User-Agent to provide for this application.
+      revoke_uri: string, URI for revoke endpoint.
+        Defaults to GOOGLE_REVOKE_URI; a token can't be revoked if this is None.
+    """
+    super(GoogleCredentials, self).__init__(
+        access_token, client_id, client_secret, refresh_token, token_expiry,
+        token_uri, user_agent, revoke_uri=revoke_uri)
+
+  def create_scoped_required(self):
+    """Whether this Credentials object is scopeless.
+
+    create_scoped(scopes) method needs to be called in order to create
+    a Credentials object for API calls.
+    """
+    return False
+
+  def create_scoped(self, scopes):
+    """Create a Credentials object for the given scopes.
+
+    The Credentials type is preserved.
+    """
+    return self
+
+  @staticmethod
+  def get_application_default():
+    """Get the Application Default Credentials for the current environment.
+
+    Exceptions:
+      ApplicationDefaultCredentialsError: raised when the credentials fail
+                                          to be retrieved.
+    """
+
+    _env_name = _get_environment()
+
+    if _env_name in ('GAE_PRODUCTION', 'GAE_LOCAL'):
+      # if we are running inside Google App Engine
+      # there is no need to look for credentials in local files
+      application_default_credential_filename = None
+      well_known_file = None
+    else:
+      application_default_credential_filename = _get_environment_variable_file()
+      well_known_file = _get_well_known_file()
+
+    if application_default_credential_filename:
+      try:
+        return _get_application_default_credential_from_file(
+            application_default_credential_filename)
+      except (ApplicationDefaultCredentialsError, ValueError) as error:
+        extra_help = (' (pointed to by ' + GOOGLE_APPLICATION_CREDENTIALS +
+                      ' environment variable)')
+        _raise_exception_for_reading_json(
+            application_default_credential_filename, extra_help, error)
+    elif well_known_file:
+      try:
+        return _get_application_default_credential_from_file(well_known_file)
+      except (ApplicationDefaultCredentialsError, ValueError) as error:
+        extra_help = (' (produced automatically when running'
+                      ' "gcloud auth login" command)')
+        _raise_exception_for_reading_json(well_known_file, extra_help, error)
+    elif _env_name in ('GAE_PRODUCTION', 'GAE_LOCAL'):
+      return _get_application_default_credential_GAE()
+    elif _env_name == 'GCE_PRODUCTION':
+      return _get_application_default_credential_GCE()
+    else:
+      raise ApplicationDefaultCredentialsError(
+          "The Application Default Credentials are not available. They are "
+          "available if running in Google Compute Engine.  Otherwise, the "
+          " environment variable " + GOOGLE_APPLICATION_CREDENTIALS +
+          " must be defined pointing to a file defining the credentials. "
+          "See https://developers.google.com/accounts/docs/application-default-"
+          "credentials for more information.")
+
+  @staticmethod
+  def from_stream(credential_filename):
+    """Create a Credentials object by reading the information from a given file.
+
+    It returns an object of type GoogleCredentials.
+
+    Args:
+      credential_filename: the path to the file from where the credentials
+        are to be read
+
+    Exceptions:
+      ApplicationDefaultCredentialsError: raised when the credentials fail
+                                          to be retrieved.
+    """
+
+    if credential_filename and os.path.isfile(credential_filename):
+      try:
+        return _get_application_default_credential_from_file(
+            credential_filename)
+      except (ApplicationDefaultCredentialsError, ValueError) as error:
+        extra_help = ' (provided as parameter to the from_stream() method)'
+        _raise_exception_for_reading_json(credential_filename,
+                                          extra_help,
+                                          error)
+    else:
+      raise ApplicationDefaultCredentialsError(
+          'The parameter passed to the from_stream() '
+          'method should point to a file.')
+
+
+def _get_environment_variable_file():
+  application_default_credential_filename = (
+      os.environ.get(GOOGLE_APPLICATION_CREDENTIALS,
+                     None))
+
+  if application_default_credential_filename:
+    if os.path.isfile(application_default_credential_filename):
+      return application_default_credential_filename
+    else:
+      raise ApplicationDefaultCredentialsError(
+          'File ' + application_default_credential_filename + ' (pointed by ' +
+          GOOGLE_APPLICATION_CREDENTIALS +
+          ' environment variable) does not exist!')
+
+
+def _get_well_known_file():
+  """Get the well known file produced by command 'gcloud auth login'."""
+  # TODO(orestica): Revisit this method once gcloud provides a better way
+  # of pinpointing the exact location of the file.
+
+  WELL_KNOWN_CREDENTIALS_FILE = 'application_default_credentials.json'
+  CLOUDSDK_CONFIG_DIRECTORY = 'gcloud'
+
+  if os.name == 'nt':
+    try:
+      default_config_path = os.path.join(os.environ['APPDATA'],
+                                         CLOUDSDK_CONFIG_DIRECTORY)
+    except KeyError:
+      # This should never happen unless someone is really messing with things.
+      drive = os.environ.get('SystemDrive', 'C:')
+      default_config_path = os.path.join(drive, '\\', CLOUDSDK_CONFIG_DIRECTORY)
+  else:
+    default_config_path = os.path.join(os.path.expanduser('~'),
+                                       '.config',
+                                       CLOUDSDK_CONFIG_DIRECTORY)
+
+  default_config_path = os.path.join(default_config_path,
+                                     WELL_KNOWN_CREDENTIALS_FILE)
+
+  if os.path.isfile(default_config_path):
+    return default_config_path
+
+
+def _get_application_default_credential_from_file(
+    application_default_credential_filename):
+  """Build the Application Default Credentials from file."""
+
+  import service_account
+
+  # read the credentials from the file
+  with open(application_default_credential_filename) as (
+      application_default_credential):
+    client_credentials = service_account.simplejson.load(
+        application_default_credential)
+
+  credentials_type = client_credentials.get('type')
+  if credentials_type == AUTHORIZED_USER:
+    required_fields = set(['client_id', 'client_secret', 'refresh_token'])
+  elif credentials_type == SERVICE_ACCOUNT:
+    required_fields = set(['client_id', 'client_email', 'private_key_id',
+                           'private_key'])
+  else:
+    raise ApplicationDefaultCredentialsError(
+        "'type' field should be defined (and have one of the '" +
+        AUTHORIZED_USER + "' or '" + SERVICE_ACCOUNT + "' values)")
+
+  missing_fields = required_fields.difference(client_credentials.keys())
+
+  if missing_fields:
+    _raise_exception_for_missing_fields(missing_fields)
+
+  if client_credentials['type'] == AUTHORIZED_USER:
+    return GoogleCredentials(
+        access_token=None,
+        client_id=client_credentials['client_id'],
+        client_secret=client_credentials['client_secret'],
+        refresh_token=client_credentials['refresh_token'],
+        token_expiry=None,
+        token_uri=GOOGLE_TOKEN_URI,
+        user_agent='Python client library')
+  else:  # client_credentials['type'] == SERVICE_ACCOUNT
+    return service_account._ServiceAccountCredentials(
+        service_account_id=client_credentials['client_id'],
+        service_account_email=client_credentials['client_email'],
+        private_key_id=client_credentials['private_key_id'],
+        private_key_pkcs8_text=client_credentials['private_key'],
+        scopes=[])
+
+
+def _raise_exception_for_missing_fields(missing_fields):
+  raise ApplicationDefaultCredentialsError(
+      'The following field(s) must be defined: ' + ', '.join(missing_fields))
+
+
+def _raise_exception_for_reading_json(credential_file,
+                                      extra_help,
+                                      error):
+  raise ApplicationDefaultCredentialsError(
+      'An error was encountered while reading json file: '+
+      credential_file + extra_help + ': ' + str(error))
+
+
+def _get_application_default_credential_GAE():
+  from oauth2client.appengine import AppAssertionCredentials
+
+  return AppAssertionCredentials([])
+
+
+def _get_application_default_credential_GCE():
+  from oauth2client.gce import AppAssertionCredentials
+
+  return AppAssertionCredentials([])
+
+
+class AssertionCredentials(GoogleCredentials):
   """Abstract Credentials object used for OAuth 2.0 assertion grants.
 
   This credential does not require a flow to instantiate because it
   represents a two legged flow, and therefore has all of the required
-  information to generate and refresh its own access tokens.  It must
+  information to generate and refresh its own access tokens. It must
   be subclassed to generate the appropriate assertion string.
 
   AssertionCredentials objects may be safely pickled and unpickled.
   """
 
-  def __init__(self, assertion_type, user_agent,
-               token_uri='https://accounts.google.com/o/oauth2/token',
+  @util.positional(2)
+  def __init__(self, assertion_type, user_agent=None,
+               token_uri=GOOGLE_TOKEN_URI,
+               revoke_uri=GOOGLE_REVOKE_URI,
                **unused_kwargs):
     """Constructor for AssertionFlowCredentials.
 
     Args:
       assertion_type: string, assertion type that will be declared to the auth
-          server
+        server
       user_agent: string, The HTTP User-Agent to provide for this application.
       token_uri: string, URI for token endpoint. For convenience
         defaults to Google's endpoints but any OAuth 2.0 provider can be used.
+      revoke_uri: string, URI for revoke endpoint.
     """
     super(AssertionCredentials, self).__init__(
         None,
@@ -719,16 +1211,16 @@ class AssertionCredentials(OAuth2Credentials):
         None,
         None,
         token_uri,
-        user_agent)
+        user_agent,
+        revoke_uri=revoke_uri)
     self.assertion_type = assertion_type
 
   def _generate_refresh_request_body(self):
     assertion = self._generate_assertion()
 
     body = urllib.urlencode({
-        'assertion_type': self.assertion_type,
         'assertion': assertion,
-        'grant_type': 'assertion',
+        'grant_type': 'urn:ietf:params:oauth:grant-type:jwt-bearer',
         })
 
     return body
@@ -739,72 +1231,91 @@ class AssertionCredentials(OAuth2Credentials):
     """
     _abstract()
 
-if HAS_OPENSSL:
-  # PyOpenSSL is not a prerequisite for oauth2client, so if it is missing then
-  # don't create the SignedJwtAssertionCredentials or the verify_id_token()
-  # method.
+  def _revoke(self, http_request):
+    """Revokes the access_token and deletes the store if available.
+
+    Args:
+      http_request: callable, a callable that matches the method signature of
+        httplib2.Http.request, used to make the revoke request.
+    """
+    self._do_revoke(http_request, self.access_token)
+
+
+if HAS_CRYPTO:
+  # PyOpenSSL and PyCrypto are not prerequisites for oauth2client, so if it is
+  # missing then don't create the SignedJwtAssertionCredentials or the
+  # verify_id_token() method.
 
   class SignedJwtAssertionCredentials(AssertionCredentials):
     """Credentials object used for OAuth 2.0 Signed JWT assertion grants.
 
-    This credential does not require a flow to instantiate because it
-    represents a two legged flow, and therefore has all of the required
-    information to generate and refresh its own access tokens.
+    This credential does not require a flow to instantiate because it represents
+    a two legged flow, and therefore has all of the required information to
+    generate and refresh its own access tokens.
+
+    SignedJwtAssertionCredentials requires either PyOpenSSL, or PyCrypto 2.6 or
+    later. For App Engine you may also consider using AppAssertionCredentials.
     """
 
-    MAX_TOKEN_LIFETIME_SECS = 3600 # 1 hour in seconds
+    MAX_TOKEN_LIFETIME_SECS = 3600  # 1 hour in seconds
 
+    @util.positional(4)
     def __init__(self,
         service_account_name,
         private_key,
         scope,
         private_key_password='notasecret',
         user_agent=None,
-        token_uri='https://accounts.google.com/o/oauth2/token',
+        token_uri=GOOGLE_TOKEN_URI,
+        revoke_uri=GOOGLE_REVOKE_URI,
         **kwargs):
       """Constructor for SignedJwtAssertionCredentials.
 
       Args:
         service_account_name: string, id for account, usually an email address.
-        private_key: string, private key in P12 format.
-        scope: string or list of strings, scope(s) of the credentials being
+        private_key: string, private key in PKCS12 or PEM format.
+        scope: string or iterable of strings, scope(s) of the credentials being
           requested.
-        private_key_password: string, password for private_key.
+        private_key_password: string, password for private_key, unused if
+          private_key is in PEM format.
         user_agent: string, HTTP User-Agent to provide for this application.
         token_uri: string, URI for token endpoint. For convenience
           defaults to Google's endpoints but any OAuth 2.0 provider can be used.
+        revoke_uri: string, URI for revoke endpoint.
         kwargs: kwargs, Additional parameters to add to the JWT token, for
-          example prn=joe@xample.org."""
+          example sub=joe@xample.org."""
 
       super(SignedJwtAssertionCredentials, self).__init__(
-          'http://oauth.net/grant_type/jwt/1.0/bearer',
-          user_agent,
+          None,
+          user_agent=user_agent,
           token_uri=token_uri,
+          revoke_uri=revoke_uri,
           )
 
-      if type(scope) is list:
-        scope = ' '.join(scope)
-      self.scope = scope
+      self.scope = util.scopes_to_string(scope)
 
-      self.private_key = private_key
+      # Keep base64 encoded so it can be stored in JSON.
+      self.private_key = base64.b64encode(private_key)
+
       self.private_key_password = private_key_password
       self.service_account_name = service_account_name
       self.kwargs = kwargs
 
+    @classmethod
     def from_json(cls, s):
       data = simplejson.loads(s)
       retval = SignedJwtAssertionCredentials(
           data['service_account_name'],
-          data['private_key'],
-          data['private_key_password'],
+          base64.b64decode(data['private_key']),
           data['scope'],
-          data['user_agent'],
-          data['token_uri'],
-          data['kwargs']
+          private_key_password=data['private_key_password'],
+          user_agent=data['user_agent'],
+          token_uri=data['token_uri'],
+          **data['kwargs']
           )
       retval.invalid = data['invalid']
+      retval.access_token = data['access_token']
       return retval
-    from_json = classmethod(from_json)
 
     def _generate_assertion(self):
       """Generate the assertion that will be used in the request."""
@@ -819,17 +1330,21 @@ if HAS_OPENSSL:
       payload.update(self.kwargs)
       logger.debug(str(payload))
 
-      return make_signed_jwt(
-          Signer.from_string(self.private_key, self.private_key_password),
-          payload)
+      private_key = base64.b64decode(self.private_key)
+      return crypt.make_signed_jwt(crypt.Signer.from_string(
+          private_key, self.private_key_password), payload)
 
   # Only used in verify_id_token(), which is always calling to the same URI
   # for the certs.
   _cached_http = httplib2.Http(MemoryCache())
 
+  @util.positional(2)
   def verify_id_token(id_token, audience, http=None,
       cert_uri=ID_TOKEN_VERIFICATON_CERTS):
     """Verifies a signed JWT id_token.
+
+    This function requires PyOpenSSL and because of that it does not work on
+    App Engine.
 
     Args:
       id_token: string, A Signed JWT.
@@ -852,7 +1367,7 @@ if HAS_OPENSSL:
 
     if resp.status == 200:
       certs = simplejson.loads(content)
-      return verify_signed_jwt_with_certs(id_token, certs, audience)
+      return crypt.verify_signed_jwt_with_certs(id_token, certs, audience)
     else:
       raise VerifyJwtTokenError('Status code: %d' % resp.status)
 
@@ -883,16 +1398,47 @@ def _extract_id_token(id_token):
 
   return simplejson.loads(_urlsafe_b64decode(segments[1]))
 
+
+def _parse_exchange_token_response(content):
+  """Parses response of an exchange token request.
+
+  Most providers return JSON but some (e.g. Facebook) return a
+  url-encoded string.
+
+  Args:
+    content: The body of a response
+
+  Returns:
+    Content as a dictionary object. Note that the dict could be empty,
+    i.e. {}. That basically indicates a failure.
+  """
+  resp = {}
+  try:
+    resp = simplejson.loads(content)
+  except StandardError:
+    # different JSON libs raise different exceptions,
+    # so we just do a catch-all here
+    resp = dict(parse_qsl(content))
+
+  # some providers respond with 'expires', others with 'expires_in'
+  if resp and 'expires' in resp:
+    resp['expires_in'] = resp.pop('expires')
+
+  return resp
+
+
+@util.positional(4)
 def credentials_from_code(client_id, client_secret, scope, code,
-                        redirect_uri = 'postmessage',
-                        http=None, user_agent=None,
-                        token_uri='https://accounts.google.com/o/oauth2/token'):
+                          redirect_uri='postmessage', http=None,
+                          user_agent=None, token_uri=GOOGLE_TOKEN_URI,
+                          auth_uri=GOOGLE_AUTH_URI,
+                          revoke_uri=GOOGLE_REVOKE_URI):
   """Exchanges an authorization code for an OAuth2Credentials object.
 
   Args:
     client_id: string, client identifier.
     client_secret: string, client secret.
-    scope: string or list of strings, scope(s) to request.
+    scope: string or iterable of strings, scope(s) to request.
     code: string, An authroization code, most likely passed down from
       the client
     redirect_uri: string, this is generally set to 'postmessage' to match the
@@ -900,6 +1446,11 @@ def credentials_from_code(client_id, client_secret, scope, code,
     http: httplib2.Http, optional http instance to use to do the fetch
     token_uri: string, URI for token endpoint. For convenience
       defaults to Google's endpoints but any OAuth 2.0 provider can be used.
+    auth_uri: string, URI for authorization endpoint. For convenience
+      defaults to Google's endpoints but any OAuth 2.0 provider can be used.
+    revoke_uri: string, URI for revoke endpoint. For convenience
+      defaults to Google's endpoints but any OAuth 2.0 provider can be used.
+
   Returns:
     An OAuth2Credentials object.
 
@@ -907,20 +1458,21 @@ def credentials_from_code(client_id, client_secret, scope, code,
     FlowExchangeError if the authorization code cannot be exchanged for an
      access token
   """
-  flow = OAuth2WebServerFlow(client_id, client_secret, scope, user_agent,
-                             'https://accounts.google.com/o/oauth2/auth',
-                             token_uri)
+  flow = OAuth2WebServerFlow(client_id, client_secret, scope,
+                             redirect_uri=redirect_uri, user_agent=user_agent,
+                             auth_uri=auth_uri, token_uri=token_uri,
+                             revoke_uri=revoke_uri)
 
-  # We primarily make this call to set up the redirect_uri in the flow object
-  uriThatWeDontReallyUse = flow.step1_get_authorize_url(redirect_uri)
-  credentials = flow.step2_exchange(code, http)
+  credentials = flow.step2_exchange(code, http=http)
   return credentials
 
 
+@util.positional(3)
 def credentials_from_clientsecrets_and_code(filename, scope, code,
                                             message = None,
-                                            redirect_uri = 'postmessage',
-                                            http=None):
+                                            redirect_uri='postmessage',
+                                            http=None,
+                                            cache=None):
   """Returns OAuth2Credentials from a clientsecrets file and an auth code.
 
   Will create the right kind of Flow based on the contents of the clientsecrets
@@ -928,8 +1480,8 @@ def credentials_from_clientsecrets_and_code(filename, scope, code,
 
   Args:
     filename: string, File name of clientsecrets.
-    scope: string or list of strings, scope(s) to request.
-    code: string, An authroization code, most likely passed down from
+    scope: string or iterable of strings, scope(s) to request.
+    code: string, An authorization code, most likely passed down from
       the client
     message: string, A friendly string to display to the user if the
       clientsecrets file is missing or invalid. If message is provided then
@@ -938,6 +1490,8 @@ def credentials_from_clientsecrets_and_code(filename, scope, code,
     redirect_uri: string, this is generally set to 'postmessage' to match the
       redirect_uri that the client specified
     http: httplib2.Http, optional http instance to use to do the fetch
+    cache: An optional cache service client that implements get() and set()
+      methods. See clientsecrets.loadfile() for details.
 
   Returns:
     An OAuth2Credentials object.
@@ -949,81 +1503,104 @@ def credentials_from_clientsecrets_and_code(filename, scope, code,
     clientsecrets.InvalidClientSecretsError if the clientsecrets file is
       invalid.
   """
-  flow = flow_from_clientsecrets(filename, scope, message)
-  # We primarily make this call to set up the redirect_uri in the flow object
-  uriThatWeDontReallyUse = flow.step1_get_authorize_url(redirect_uri)
-  credentials = flow.step2_exchange(code, http)
+  flow = flow_from_clientsecrets(filename, scope, message=message, cache=cache,
+                                 redirect_uri=redirect_uri)
+  credentials = flow.step2_exchange(code, http=http)
   return credentials
 
 
 class OAuth2WebServerFlow(Flow):
   """Does the Web Server Flow for OAuth 2.0.
 
-  OAuth2Credentials objects may be safely pickled and unpickled.
+  OAuth2WebServerFlow objects may be safely pickled and unpickled.
   """
 
-  def __init__(self, client_id, client_secret, scope, user_agent=None,
-               auth_uri='https://accounts.google.com/o/oauth2/auth',
-               token_uri='https://accounts.google.com/o/oauth2/token',
+  @util.positional(4)
+  def __init__(self, client_id, client_secret, scope,
+               redirect_uri=None,
+               user_agent=None,
+               auth_uri=GOOGLE_AUTH_URI,
+               token_uri=GOOGLE_TOKEN_URI,
+               revoke_uri=GOOGLE_REVOKE_URI,
+               login_hint=None,
                **kwargs):
     """Constructor for OAuth2WebServerFlow.
+
+    The kwargs argument is used to set extra query parameters on the
+    auth_uri. For example, the access_type and approval_prompt
+    query parameters can be set via kwargs.
 
     Args:
       client_id: string, client identifier.
       client_secret: string client secret.
-      scope: string or list of strings, scope(s) of the credentials being
+      scope: string or iterable of strings, scope(s) of the credentials being
         requested.
+      redirect_uri: string, Either the string 'urn:ietf:wg:oauth:2.0:oob' for
+        a non-web-based application, or a URI that handles the callback from
+        the authorization server.
       user_agent: string, HTTP User-Agent to provide for this application.
       auth_uri: string, URI for authorization endpoint. For convenience
         defaults to Google's endpoints but any OAuth 2.0 provider can be used.
       token_uri: string, URI for token endpoint. For convenience
         defaults to Google's endpoints but any OAuth 2.0 provider can be used.
+      revoke_uri: string, URI for revoke endpoint. For convenience
+        defaults to Google's endpoints but any OAuth 2.0 provider can be used.
+      login_hint: string, Either an email address or domain. Passing this hint
+        will either pre-fill the email box on the sign-in form or select the
+        proper multi-login session, thereby simplifying the login flow.
       **kwargs: dict, The keyword arguments are all optional and required
                         parameters for the OAuth calls.
     """
     self.client_id = client_id
     self.client_secret = client_secret
-    if type(scope) is list:
-      scope = ' '.join(scope)
-    self.scope = scope
+    self.scope = util.scopes_to_string(scope)
+    self.redirect_uri = redirect_uri
+    self.login_hint = login_hint
     self.user_agent = user_agent
     self.auth_uri = auth_uri
     self.token_uri = token_uri
+    self.revoke_uri = revoke_uri
     self.params = {
         'access_type': 'offline',
-        }
+        'response_type': 'code',
+    }
     self.params.update(kwargs)
-    self.redirect_uri = None
 
-  def step1_get_authorize_url(self, redirect_uri=OOB_CALLBACK_URN):
+  @util.positional(1)
+  def step1_get_authorize_url(self, redirect_uri=None):
     """Returns a URI to redirect to the provider.
 
     Args:
       redirect_uri: string, Either the string 'urn:ietf:wg:oauth:2.0:oob' for
-          a non-web-based application, or a URI that handles the callback from
-          the authorization server.
+        a non-web-based application, or a URI that handles the callback from
+        the authorization server. This parameter is deprecated, please move to
+        passing the redirect_uri in via the constructor.
 
-    If redirect_uri is 'urn:ietf:wg:oauth:2.0:oob' then pass in the
-    generated verification code to step2_exchange,
-    otherwise pass in the query parameters received
-    at the callback uri to step2_exchange.
+    Returns:
+      A URI as a string to redirect the user to begin the authorization flow.
     """
+    if redirect_uri is not None:
+      logger.warning(('The redirect_uri parameter for'
+          'OAuth2WebServerFlow.step1_get_authorize_url is deprecated. Please'
+          'move to passing the redirect_uri in via the constructor.'))
+      self.redirect_uri = redirect_uri
 
-    self.redirect_uri = redirect_uri
-    query = {
-        'response_type': 'code',
+    if self.redirect_uri is None:
+      raise ValueError('The value of redirect_uri must not be None.')
+
+    query_params = {
         'client_id': self.client_id,
-        'redirect_uri': redirect_uri,
+        'redirect_uri': self.redirect_uri,
         'scope': self.scope,
-        }
-    query.update(self.params)
-    parts = list(urlparse.urlparse(self.auth_uri))
-    query.update(dict(parse_qsl(parts[4]))) # 4 is the index of the query part
-    parts[4] = urllib.urlencode(query)
-    return urlparse.urlunparse(parts)
+    }
+    if self.login_hint is not None:
+      query_params['login_hint'] = self.login_hint
+    query_params.update(self.params)
+    return _update_query_params(self.auth_uri, query_params)
 
+  @util.positional(2)
   def step2_exchange(self, code, http=None):
-    """Exhanges a code for OAuth2Credentials.
+    """Exchanges a code for OAuth2Credentials.
 
     Args:
       code: string or dict, either the code as a string, or a dictionary
@@ -1039,7 +1616,7 @@ class OAuth2WebServerFlow(Flow):
       refresh_token.
     """
 
-    if not (isinstance(code, str) or isinstance(code, unicode)):
+    if not isinstance(code, basestring):
       if 'code' not in code:
         if 'error' in code:
           error_msg = code['error']
@@ -1069,11 +1646,14 @@ class OAuth2WebServerFlow(Flow):
 
     resp, content = http.request(self.token_uri, method='POST', body=body,
                                  headers=headers)
-    if resp.status == 200:
-      # TODO(jcgregorio) Raise an error if simplejson.loads fails?
-      d = simplejson.loads(content)
+    d = _parse_exchange_token_response(content)
+    if resp.status == 200 and 'access_token' in d:
       access_token = d['access_token']
       refresh_token = d.get('refresh_token', None)
+      if not refresh_token:
+        logger.info(
+          'Received token response with no refresh_token. Consider '
+          "reauthenticating with approval_prompt='force'.")
       token_expiry = None
       if 'expires_in' in d:
         token_expiry = datetime.datetime.utcnow() + datetime.timedelta(
@@ -1082,24 +1662,26 @@ class OAuth2WebServerFlow(Flow):
       if 'id_token' in d:
         d['id_token'] = _extract_id_token(d['id_token'])
 
-      logger.debug('Successfully retrieved access token: %s' % content)
+      logger.info('Successfully retrieved access token')
       return OAuth2Credentials(access_token, self.client_id,
                                self.client_secret, refresh_token, token_expiry,
                                self.token_uri, self.user_agent,
-                               id_token=d.get('id_token', None))
+                               revoke_uri=self.revoke_uri,
+                               id_token=d.get('id_token', None),
+                               token_response=d)
     else:
-      logger.debug('Failed to retrieve access token: %s' % content)
-      error_msg = 'Invalid response %s.' % resp['status']
-      try:
-        d = simplejson.loads(content)
-        if 'error' in d:
-          error_msg = d['error']
-      except:
-        pass
-
+      logger.info('Failed to retrieve access token: %s' % content)
+      if 'error' in d:
+        # you never know what those providers got to say
+        error_msg = unicode(d['error'])
+      else:
+        error_msg = 'Invalid response: %s.' % str(resp.status)
       raise FlowExchangeError(error_msg)
 
-def flow_from_clientsecrets(filename, scope, message=None):
+
+@util.positional(2)
+def flow_from_clientsecrets(filename, scope, redirect_uri=None,
+                            message=None, cache=None, login_hint=None):
   """Create a Flow from a clientsecrets file.
 
   Will create the right kind of Flow based on the contents of the clientsecrets
@@ -1107,11 +1689,19 @@ def flow_from_clientsecrets(filename, scope, message=None):
 
   Args:
     filename: string, File name of client secrets.
-    scope: string or list of strings, scope(s) to request.
+    scope: string or iterable of strings, scope(s) to request.
+    redirect_uri: string, Either the string 'urn:ietf:wg:oauth:2.0:oob' for
+      a non-web-based application, or a URI that handles the callback from
+      the authorization server.
     message: string, A friendly string to display to the user if the
       clientsecrets file is missing or invalid. If message is provided then
       sys.exit will be called in the case of an error. If message in not
       provided then clientsecrets.InvalidClientSecretsError will be raised.
+    cache: An optional cache service client that implements get() and set()
+      methods. See clientsecrets.loadfile() for details.
+    login_hint: string, Either an email address or domain. Passing this hint
+      will either pre-fill the email box on the sign-in form or select the
+      proper multi-login session, thereby simplifying the login flow.
 
   Returns:
     A Flow object.
@@ -1122,15 +1712,21 @@ def flow_from_clientsecrets(filename, scope, message=None):
       invalid.
   """
   try:
-    client_type, client_info = clientsecrets.loadfile(filename)
-    if client_type in [clientsecrets.TYPE_WEB, clientsecrets.TYPE_INSTALLED]:
-        return OAuth2WebServerFlow(
-            client_info['client_id'],
-            client_info['client_secret'],
-            scope,
-            None, # user_agent
-            client_info['auth_uri'],
-            client_info['token_uri'])
+    client_type, client_info = clientsecrets.loadfile(filename, cache=cache)
+    if client_type in (clientsecrets.TYPE_WEB, clientsecrets.TYPE_INSTALLED):
+      constructor_kwargs = {
+          'redirect_uri': redirect_uri,
+          'auth_uri': client_info['auth_uri'],
+          'token_uri': client_info['token_uri'],
+          'login_hint': login_hint,
+      }
+      revoke_uri = client_info.get('revoke_uri')
+      if revoke_uri is not None:
+        constructor_kwargs['revoke_uri'] = revoke_uri
+      return OAuth2WebServerFlow(
+          client_info['client_id'], client_info['client_secret'],
+          scope, **constructor_kwargs)
+
   except clientsecrets.InvalidClientSecretsError:
     if message:
       sys.exit(message)
@@ -1138,4 +1734,4 @@ def flow_from_clientsecrets(filename, scope, message=None):
       raise
   else:
     raise UnknownClientSecretsFlowError(
-        'This OAuth 2.0 flow is unsupported: "%s"' * client_type)
+        'This OAuth 2.0 flow is unsupported: %r' % client_type)
