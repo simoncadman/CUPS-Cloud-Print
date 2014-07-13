@@ -278,7 +278,7 @@ class Utils(object):
 
     @staticmethod
     def StdInToTempFile(jobID, userName, stdin=None):
-        if stdin == None:
+        if stdin is None:
             stdin = sys.stdin
 
         tmpDir = os.getenv('TMPDIR')
