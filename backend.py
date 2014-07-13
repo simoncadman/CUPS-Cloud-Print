@@ -42,7 +42,7 @@ if __name__ == '__main__':  # pragma: no cover
     Utils.SetupLogging()
 
     # line below is replaced on commit
-    CCPVersion = "20140705 153312"
+    CCPVersion = "20140713 215426"
     Utils.ShowVersion(CCPVersion)
 
     if len(sys.argv) != 1 and len(sys.argv) < 6 or len(sys.argv) > 7:
@@ -84,24 +84,8 @@ if __name__ == '__main__':  # pragma: no cover
 
     # if no printfile, put stdin to a temp file
     if printFile is None:
-        tmpDir = os.getenv('TMPDIR')
-        if not tmpDir:
-            tmpDir = "/tmp"
-        tempFile = '%s/%s-%s-cupsjob-%s' % \
-            (tmpDir, jobID, userName, str(os.getpid()))
-
-        OUT = open(tempFile, 'w')
-
-        if not OUT:
-            print "ERROR: Cannot write " + tempFile
-            sys.exit(1)
-
-        for line in sys.stdin:
-            OUT.write(line)
-
-        OUT.close()
-
-        printFile = tempFile
+        logging.info("Reading file from stdin")
+        printFile = Utils.StdInToTempFile(jobID, userName)
 
         # Backends should only produce multiple copies if a file name is
         # supplied (see CUPS Software Programmers Manual)

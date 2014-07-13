@@ -275,3 +275,26 @@ class Utils(object):
         if height > 0 and width > 0:
             return height, width
         return None
+
+    @staticmethod
+    def StdInToTempFile(jobID, userName, stdin=None):
+        if stdin == None:
+            stdin = sys.stdin
+
+        tmpDir = os.getenv('TMPDIR')
+        if not tmpDir:
+            tmpDir = "/tmp"
+        tempFile = '%s/%s-%s-cupsjob-%s' % \
+            (tmpDir, jobID, userName, str(os.getpid()))
+        OUT = open(tempFile, 'w')
+
+        if not OUT:
+            logging.error("Cannot write temp file: %s", tempFile)
+            print "ERROR: Cannot write " + tempFile
+            sys.exit(1)
+
+        for line in stdin:
+            OUT.write(line)
+
+        OUT.close()
+        return tempFile

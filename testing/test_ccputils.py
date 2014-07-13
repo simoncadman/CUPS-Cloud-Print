@@ -171,3 +171,15 @@ def test_GetWindowSize():
     # ensure window size of 0x0 returns none
     dummywinsize = struct.pack('HHHH', 0, 0, 0, 0)
     assert Utils.GetWindowSize(dummywinsize) == None
+
+def test_StdInToTempFile():
+    testdata = 'oux3ooquoideereeng5A'
+    mockstdin = open('/tmp/stdintest', 'wb')
+    mockstdin.write(testdata)
+    mockstdin.close()
+    mockstdin = open('/tmp/stdintest', 'r')
+    tempfile = Utils.StdInToTempFile(1, 'testuser', stdin=mockstdin)
+    assert Utils.ReadFile(tempfile) == testdata
+    mockstdin.close()
+    os.unlink('/tmp/stdintest')
+    os.unlink(tempfile)
