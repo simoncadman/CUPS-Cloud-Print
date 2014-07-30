@@ -96,7 +96,7 @@ class Auth(object):
                                               client_secret=Auth.clientsecret,
                                               scope=permissions,
                                               user_agent=userid)
-            auth_uri = flow.step1_get_authorize_url('urn:ietf:wg:oauth:2.0:oob')
+            auth_uri = flow.step1_get_authorize_url()
             message = "Open this URL, grant access to CUPS Cloud Print,"
             message += "then provide the code displayed : \n\n"
             message += auth_uri + "\n"
