@@ -90,14 +90,14 @@ class Auth(object):
         if userid is None:
             userid = raw_input(
                 "Name for this user account ( eg something@gmail.com )? ")
-            
-        if storage == None:
+
+        if storage is None:
             storage = multistore_file.get_credential_storage(
                 Auth.config,
                 Auth.clientid,
                 userid,
                 permissions)
-                
+
         while True:
             flow = client.OAuth2WebServerFlow(client_id=Auth.clientid,
                                               client_secret=Auth.clientsecret,
@@ -144,7 +144,7 @@ class Auth(object):
         # parse config file and extract useragents, which we use for account
         # names
         userids = []
-        if testUserIds != None:
+        if testUserIds is not None:
             userids = testUserIds
         if os.path.exists(Auth.config):
             content_file = open(Auth.config, 'r')
@@ -162,7 +162,7 @@ class Auth(object):
         storage = None
         credentials = None
         for userid in userids:
-            if userid != None:
+            if userid is not None:
                 storage = multistore_file.get_credential_storage(
                     Auth.config,
                     Auth.clientid,
