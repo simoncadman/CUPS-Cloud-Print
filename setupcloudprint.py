@@ -71,7 +71,7 @@ if __name__ == '__main__':  # pragma: no cover
     Utils.SetupLogging()
 
     # line below is replaced on commit
-    CCPVersion = "20140705 163713"
+    CCPVersion = "20140805 203535"
     Utils.ShowVersion(CCPVersion)
 
     unattended = False
@@ -102,7 +102,7 @@ if __name__ == '__main__':  # pragma: no cover
         if not answer.lower().startswith("y"):
             break
         else:
-            Auth.AddAccount(storage)
+            Auth.AddAccount(None)
 
     for requestor in requestors:
         addedCount = 0
