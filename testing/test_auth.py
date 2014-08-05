@@ -82,9 +82,14 @@ def test_fixConfigOwnerships():
 def test_setupAuth():
     testUserName = 'testaccount1'
 
-    # create initial file
+    # ensure setup with no details doesnt create file
     assert os.path.exists(Auth.config) == False
     assert Auth.SetupAuth(False) == (False, False)
+    assert os.path.exists(Auth.config) == False
+    
+    # create initial file
+    assert os.path.exists(Auth.config) == False
+    assert Auth.SetupAuth(False,testUserIds=['test']) == (False, False)
     assert os.path.exists(Auth.config) == True
 
     # ensure permissions are correct after creating config
@@ -146,7 +151,7 @@ def test_renewToken():
     grp.getgrnam('lp').gr_gid not in (os.getgroups()) and os.getuid() != 0,
     reason="will only pass if running user part of lp group or root")
 def test_setupAuthOwnership():
-    assert Auth.SetupAuth(False) == (False, False)
+    assert Auth.SetupAuth(False,testUserIds=['test']) == (False, False)
 
     # ensure ownership is correct after creating config
     assert Utils.GetLPID() == os.stat(Auth.config).st_gid

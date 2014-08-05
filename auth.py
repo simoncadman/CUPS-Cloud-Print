@@ -90,7 +90,14 @@ class Auth(object):
         if userid is None:
             userid = raw_input(
                 "Name for this user account ( eg something@gmail.com )? ")
-
+            
+        if storage == None:
+            storage = multistore_file.get_credential_storage(
+                Auth.config,
+                Auth.clientid,
+                userid,
+                permissions)
+                
         while True:
             flow = client.OAuth2WebServerFlow(client_id=Auth.clientid,
                                               client_secret=Auth.clientsecret,
@@ -118,7 +125,8 @@ class Auth(object):
 
     @staticmethod
     def SetupAuth(interactive=False,
-                  permissions=None):
+                  permissions=None,
+                  testUserIds=None):
         """Sets up requestors with authentication tokens
 
         Args:
@@ -136,6 +144,8 @@ class Auth(object):
         # parse config file and extract useragents, which we use for account
         # names
         userids = []
+        if testUserIds != None:
+            userids = testUserIds
         if os.path.exists(Auth.config):
             content_file = open(Auth.config, 'r')
             content = content_file.read()
@@ -149,13 +159,16 @@ class Auth(object):
             userids = [None]
 
         requestors = []
+        storage = None
+        credentials = None
         for userid in userids:
-            storage = multistore_file.get_credential_storage(
-                Auth.config,
-                Auth.clientid,
-                userid,
-                permissions)
-            credentials = storage.get()
+            if userid != None:
+                storage = multistore_file.get_credential_storage(
+                    Auth.config,
+                    Auth.clientid,
+                    userid,
+                    permissions)
+                credentials = storage.get()
 
             if not credentials and interactive:
                 credentials = Auth.AddAccount(storage, userid, permissions)
