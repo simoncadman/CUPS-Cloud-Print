@@ -104,9 +104,10 @@ if __name__ == '__main__':  # pragma: no cover
         else:
             Auth.AddAccount(None)
 
+    connection = cups.Connection()
+
     for requestor in requestors:
         addedCount = 0
-        connection = cups.Connection()
         cupsprinters = connection.getPrinters()
         prefix = ""
         printer_manager = PrinterManager(requestor)
@@ -224,7 +225,6 @@ if __name__ == '__main__':  # pragma: no cover
 
     # check for printers to prune
     prunePrinters = []
-    connection = cups.Connection()
     cupsprinters = connection.getPrinters()
 
     for cupsprinter in cupsprinters:
