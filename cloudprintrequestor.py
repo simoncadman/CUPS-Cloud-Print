@@ -96,4 +96,4 @@ class CloudPrintRequestor(httplib2.Http):
         return self.doRequest('printer?printerid=%s&use_cdd=false' % printerid)
 
     def submit(self, edata, boundary):
-        return self.doRequest('submit?use_cdd=false', data=edata, boundary=boundary)
+        return self.doRequest('submit', data=edata, boundary=boundary)

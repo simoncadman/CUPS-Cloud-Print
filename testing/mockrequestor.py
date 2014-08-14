@@ -55,6 +55,6 @@ class MockRequestor(CloudPrintRequestor):
             return json.loads(self.mockSearch(path, headers, data, boundary))
         if (path.startswith('printer?')):
             return json.loads(self.mockPrinter(path, headers, data, boundary))
-        if (path.startswith('submit?')):
+        if (path.startswith('submit')):
             return json.loads(self.mockSubmit(path, headers, data, boundary))
         return None
