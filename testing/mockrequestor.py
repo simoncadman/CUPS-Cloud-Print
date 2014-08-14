@@ -37,7 +37,7 @@ class MockRequestor(CloudPrintRequestor):
         return json.dumps(result)
 
     def mockPrinter(self, path, headers, data, boundary):
-        printername = path.split('=')[1]
+        printername = path.split('=')[1].split('&')[0]
         foundPrinter = None
         for printer in self.printers:
             if printer['id'] == printername:
@@ -55,6 +55,6 @@ class MockRequestor(CloudPrintRequestor):
             return json.loads(self.mockSearch(path, headers, data, boundary))
         if (path.startswith('printer?')):
             return json.loads(self.mockPrinter(path, headers, data, boundary))
-        if (path == 'submit'):
+        if (path.startswith('submit?')):
             return json.loads(self.mockSubmit(path, headers, data, boundary))
         return None
