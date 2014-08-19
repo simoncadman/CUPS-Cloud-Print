@@ -125,6 +125,9 @@ fi
 %doc %{_usr}/share/cloudprint-cups/README.md
 
 %changelog
+* Thu Aug 14 2014 Simon Cadman <src@niftiestsoftware.com> (20140814-1)
+- Fix: Issue #71 on Github, always send use_cdd=false param with every request
+
 * Wed Jul 02 2014 Simon Cadman <src@niftiestsoftware.com> (20140702-1)
 - New: Split printer class into seperate Printer and PrinterManager classes
 - New: OS X package support

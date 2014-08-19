@@ -1,3 +1,9 @@
+cupscloudprint (20140814-1) precise; urgency=high
+
+  * Fix: Issue #71 on Github, always send use_cdd=false param with every request
+
+ -- simon cadman <src@niftiestsoftware.com>  Thu, 08 Aug 2014 15:25:22 +0000
+
 cupscloudprint (20140702-1) precise; urgency=high
 
   * New: Split printer class into seperate Printer and PrinterManager classes

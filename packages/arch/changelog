@@ -1,3 +1,10 @@
+2014-08-14 Simon Cadman <src@niftiestsoftware.com>
+
+        * 20140814 :
+          Fix: Issue #71 on Github, always send use_cdd=false param with every request
+
+ -- simon cadman <src@niftiestsoftware.com>  Thu, 08 Aug 2014 15:25:22 +0000
+
 2014-07-02 Simon Cadman <src@niftiestsoftware.com>
 
         * 20140702 :
