@@ -27,7 +27,6 @@ class PrinterManager(object):
     BOUNDARY = mimetools.choose_boundary()
     CRLF = '\r\n'
     requestors = None
-    requestor = None
     cachedPrinterDetails = {}
     reservedCapabilityWords = set((
         'Duplex', 'Resolution', 'Attribute', 'Choice', 'ColorDevice', 'ColorModel', 'ColorProfile',
@@ -123,13 +122,15 @@ class PrinterManager(object):
         """
         return re.sub('[^a-zA-Z0-9\-_]', '', name.encode('ascii', 'replace').replace(' ', '_'))
 
-    def addPrinter(self, printername, printer, connection, ppd=None):
+    def addPrinter(self, printername, printer, connection, location=None, ppd=None):
         """Adds a printer to CUPS
 
         Args:
           printername: string, name of the printer to add
+          printer: Printer, CCP Printer object
           uri: string, uri of the Cloud Print device
-          connection: connection, CUPS connection
+          connection: Connection, CUPS connection
+          location: string, location of printer
 
         Returns:
           None
@@ -143,7 +144,8 @@ class PrinterManager(object):
                 printerppdname = printer.getPPDName()
             else:
                 printerppdname = ppd
-            location = printer.getLocation()
+            if not location:
+                location = printer.getLocation()
             if not location:
                 location = 'Google Cloud Print'
 
