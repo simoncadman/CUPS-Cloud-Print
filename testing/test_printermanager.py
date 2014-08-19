@@ -159,6 +159,7 @@ def test_getCUPSPrintersForAccount():
         printer['name'],
         printer,
         connection,
+        "test location",
         printerppdname) is not None
     foundprinters, newconnection = printerManagerInstance.getCUPSPrintersForAccount(
         requestors[1].getAccount())
@@ -265,6 +266,7 @@ def test_printers():
             printer['name'],
             printer,
             connection,
+            "test location",
             printerppdname) is not None
         testprintername = printerManagerInstance.sanitizePrinterName(printer['name'])
 

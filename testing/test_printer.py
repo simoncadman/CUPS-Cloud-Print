@@ -283,6 +283,7 @@ def test_getCapabilities():
         printer['name'],
         printer,
         connection,
+        "test location",
         printerppdname) is not None
     emptyoptions = printer._getCapabilities(printerManagerInstance.sanitizePrinterName(printer['name']),"landscape")
     assert isinstance(emptyoptions, dict)
@@ -305,6 +306,7 @@ def test_submitJob():
         printer['name'],
         printer,
         connection,
+        "test location",
         printerppdname) is not None
     
     # test submitting job
@@ -418,6 +420,7 @@ def test_submitJobFileCreationFails():
         printer['name'],
         printer,
         connection,
+        "test location",
         printerppdname) is not None
     
     # test failure of print job because b64 version of file exists

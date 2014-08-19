@@ -85,7 +85,10 @@ def test_setupAuth():
     # ensure setup with no details doesnt create file
     assert os.path.exists(Auth.config) == False
     assert Auth.SetupAuth(False) == (False, False)
-    assert os.path.exists(Auth.config) == False
+    assert os.path.exists(Auth.config) == True
+    assert Utils.ReadFile(Auth.config) == "{}"
+    
+    os.unlink(Auth.config)
     
     # create initial file
     assert os.path.exists(Auth.config) == False
