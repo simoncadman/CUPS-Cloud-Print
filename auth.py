@@ -240,4 +240,3 @@ class Auth(object):
         for requestor in requestors:
             requestorAccounts.append(requestor.getAccount())
         return requestorAccounts
-

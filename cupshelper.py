@@ -18,6 +18,7 @@ from ccputils import Utils
 
 import cups
 
+
 class CUPSHelper(object):
     def __init__(self):
         self._connection = cups.Connection()
@@ -104,4 +105,3 @@ class CUPSHelper(object):
                 continue
             name += letter
         return name[:127]
-

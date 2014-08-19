@@ -37,6 +37,7 @@ import ttk
 import urllib
 import webbrowser
 
+
 class PrinterNameLocationDialog(Tkinter.Toplevel):
     def __init__(self, master, uri, name, location, callback):
         Tkinter.Toplevel.__init__(self, master)
@@ -44,7 +45,7 @@ class PrinterNameLocationDialog(Tkinter.Toplevel):
         self.uri = uri
         self.callback = callback
 
-        self.transient(master) # don't create an icon in the system tray, etc
+        self.transient(master)  # don't create an icon in the system tray, etc
         self.title('printer name, location')
 
         ttk.Label(self, text='printer name:').grid(column=0, row=0, sticky='w')
@@ -81,6 +82,7 @@ class PrinterNameLocationDialog(Tkinter.Toplevel):
         self.master.focus_set()
         self.destroy()
 
+
 class PrintersTab(ttk.Frame):
     def __init__(self, master, window, **kw):
         ttk.Frame.__init__(self, master, **kw)
@@ -90,18 +92,18 @@ class PrintersTab(ttk.Frame):
         self.rowconfigure(0, weight=1)
 
         self.tree = ttk.Treeview(self,
-            columns=('name', 'location'),
-            displaycolumns=('name', 'location'),
-            height=20,
-            selectmode='browse',
-            show='headings')
+                                 columns=('name', 'location'),
+                                 displaycolumns=('name', 'location'),
+                                 height=20,
+                                 selectmode='browse',
+                                 show='headings')
 
         self.tree.heading('name', text='name', anchor='w')
         self.tree.column('name', width=200, anchor='w')
         self.tree.heading('location', text='location', anchor='w')
         self.tree.column('location', width=300, anchor='w')
 
-        self.tree.grid(column=0, row=0, sticky='nwes', pady=(6,6))
+        self.tree.grid(column=0, row=0, sticky='nwes', pady=(6, 6))
 
         box = ttk.Frame(self)
         ttk.Button(box, text='rename', command=self._invokeRenameDialog, default='active').pack(
@@ -112,7 +114,7 @@ class PrintersTab(ttk.Frame):
     def _initPrinters(self):
         for printer in self.window.getCUPSHelper().getPrinters().values():
             self.tree.insert('', 'end', printer['device-uri'],
-                values=(printer['printer-info'], printer['printer-location']))
+                             values=(printer['printer-info'], printer['printer-location']))
 
     def _clearPrinters(self):
         for child in self.tree.get_children():
@@ -127,16 +129,18 @@ class PrintersTab(ttk.Frame):
         printer = self.window.getCUPSHelper().getPrinter(uri)
         if printer is not None:
             PrinterNameLocationDialog(self,
-                uri, printer['printer-info'], printer['printer-location'], self._rename)
+                                      uri, printer['printer-info'], printer['printer-location'],
+                                      self._rename)
 
     def _rename(self, uri, name, location):
         self.window.getCUPSHelper().renamePrinter(uri, name, location)
-        self.handleSelected() # refresh the UI with new name, location
+        self.handleSelected()  # refresh the UI with new name, location
 
     def _remove(self):
         uri = self.tree.focus()
         self.window.getCUPSHelper().deletePrinter(uri)
-        self.handleSelected() # refresh the UI without the removed printer
+        self.handleSelected()  # refresh the UI without the removed printer
+
 
 class AddPrinterDialogPrinter(object):
     def __init__(self, uri, display_name, location, searchable_str, ccp_printer):
@@ -153,6 +157,7 @@ class AddPrinterDialogPrinter(object):
             return 1
         return cmp(self.location.lower(), other.location.lower())
 
+
 class AddPrinterTab(ttk.Frame):
     def __init__(self, master, window, **kw):
         ttk.Frame.__init__(self, master, **kw)
@@ -162,24 +167,24 @@ class AddPrinterTab(ttk.Frame):
         self.rowconfigure(1, weight=1)
 
         self.tree = ttk.Treeview(self,
-            columns=('name', 'location'),
-            displaycolumns=('name', 'location'),
-            height=20,
-            selectmode='browse',
-            show='headings')
+                                 columns=('name', 'location'),
+                                 displaycolumns=('name', 'location'),
+                                 height=20,
+                                 selectmode='browse',
+                                 show='headings')
 
         self.tree.heading('name', text='name', anchor='w')
         self.tree.column('name', width=200, anchor='w')
         self.tree.heading('location', text='location', anchor='w')
         self.tree.column('location', width=300, anchor='w')
 
-        self.tree.grid(column=0, row=1, columnspan=2, sticky='nwes', pady=(6,6))
+        self.tree.grid(column=0, row=1, columnspan=2, sticky='nwes', pady=(6, 6))
 
         search_label = ttk.Label(self, text='search: ')
         search_label.grid(column=0, row=0, sticky='w')
 
         self.search = ttk.Entry(self, exportselection=False, validate='key',
-            validatecommand=(self.register(self._filterPrinters), '%P'))
+                                validatecommand=(self.register(self._filterPrinters), '%P'))
         self.search.grid(column=1, row=0, sticky='we')
 
         self.add_button = ttk.Button(self, text='add this printer', command=self._invokeAddDialog)
@@ -251,13 +256,14 @@ class AddPrinterTab(ttk.Frame):
     def handleSelected(self):
         self.search.focus()
 
+
 class NewAccountDialogStep1(Tkinter.Toplevel):
     def __init__(self, master, callback):
         Tkinter.Toplevel.__init__(self, master)
         self.master = master
         self.callback = callback
 
-        self.transient(master) # don't create an icon in the system tray, etc
+        self.transient(master)  # don't create an icon in the system tray, etc
         self.title('new account, step 1')
 
         box = ttk.Frame(self)
@@ -291,6 +297,7 @@ class NewAccountDialogStep1(Tkinter.Toplevel):
         self.master.focus_set()
         self.destroy()
 
+
 class NewAccountDialogStep2(Tkinter.Toplevel):
     def __init__(self, master, account_name, flow, auth_uri, callback):
         Tkinter.Toplevel.__init__(self, master)
@@ -300,7 +307,7 @@ class NewAccountDialogStep2(Tkinter.Toplevel):
         self.auth_uri = auth_uri
         self.callback = callback
 
-        self.transient(master) # don't create an icon in the system tray, etc
+        self.transient(master)  # don't create an icon in the system tray, etc
         self.title('new account, step 2')
 
         message = 'Visit this URL to grant printer access to CUPS Cloud Print'
@@ -359,6 +366,7 @@ class NewAccountDialogStep2(Tkinter.Toplevel):
         self.master.focus_set()
         self.destroy()
 
+
 class AccountsTab(ttk.Frame):
     def __init__(self, master, window, **kw):
         ttk.Frame.__init__(self, master, **kw)
@@ -368,16 +376,16 @@ class AccountsTab(ttk.Frame):
         self.rowconfigure(0, weight=1)
 
         self.tree = ttk.Treeview(self,
-            columns=('account',),
-            displaycolumns=('account',),
-            height=20,
-            selectmode='browse',
-            show='headings')
+                                 columns=('account',),
+                                 displaycolumns=('account',),
+                                 height=20,
+                                 selectmode='browse',
+                                 show='headings')
 
         self.tree.heading('account', text='account name', anchor='w')
         self.tree.column('account', width=200, anchor='w')
 
-        self.tree.grid(column=0, row=0, sticky='nwes', pady=(6,6))
+        self.tree.grid(column=0, row=0, sticky='nwes', pady=(6, 6))
 
         box = ttk.Frame(self)
         self.add_button = ttk.Button(box, text='add an account', command=self._showStep1)
@@ -407,7 +415,7 @@ class AccountsTab(ttk.Frame):
         if not account_name:
             return
 
-        #remove printers belonging to the deleted account
+        # remove printers belonging to the deleted account
         uri_prefix = Utils.PROTOCOL + urllib.quote(account_name.encode('ascii', 'replace')) + '/'
         for cups_printer in self.window.getCUPSHelper().getPrinters().values():
             if cups_printer['device-uri'].startswith(uri_prefix):
@@ -431,6 +439,7 @@ class AccountsTab(ttk.Frame):
     def handleSelected(self):
         self._clearAccounts()
         self._initAccounts()
+
 
 class Window(object):
     def __init__(self):
@@ -497,4 +506,3 @@ class Window(object):
 if __name__ == '__main__':
     Utils.SetupLogging()
     Window()
-
