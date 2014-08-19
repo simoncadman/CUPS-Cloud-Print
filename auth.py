@@ -28,6 +28,7 @@ class Auth(object):
     clientid = "843805314553.apps.googleusercontent.com"
     clientsecret = 'MzTBsY4xlrD_lxkmwFbBrvBv'
     config = '/etc/cloudprint.conf'
+    normal_permissions = 'https://www.googleapis.com/auth/cloudprint'
 
     @staticmethod
     def RenewToken(interactive, requestor, credentials, storage, userid):
@@ -55,11 +56,10 @@ class Auth(object):
         return credentials
 
     @staticmethod
-    def DeleteAccount(userid=None):
+    def DeleteAccount(userid):
         """Delete an account from the configuration file
 
         Args:
-          storage: storage, instance of storage to store credentials in.
           userid: string, reference for the account
 
         Returns:
@@ -69,53 +69,37 @@ class Auth(object):
             Auth.config,
             Auth.clientid,
             userid,
-            ['https://www.googleapis.com/auth/cloudprint'])
+            Auth.normal_permissions)
         return storage.delete()
 
     @staticmethod
-    def AddAccount(storage, userid=None,
-                   permissions=None):
-        """Adds an account to the configuration file
+    def AddAccount(storage, userid=None, permissions=None):
+        """Adds an account to the configuration file with an interactive dialog.
 
         Args:
           storage: storage, instance of storage to store credentials in.
           userid: string, reference for the account
+          permissions: string or iterable of strings, scope(s) of the credentials being requested
 
         Returns:
           credentials: A credentials instance with the account details
         """
         if permissions is None:
-            permissions = ['https://www.googleapis.com/auth/cloudprint']
+            permissions = Auth.normal_permissions
 
         if userid is None:
             userid = raw_input(
                 "Name for this user account ( eg something@gmail.com )? ")
 
-        if storage is None:
-            storage = multistore_file.get_credential_storage(
-                Auth.config,
-                Auth.clientid,
-                userid,
-                permissions)
-
         while True:
-            flow = client.OAuth2WebServerFlow(client_id=Auth.clientid,
-                                              client_secret=Auth.clientsecret,
-                                              scope=permissions,
-                                              user_agent=userid)
-            auth_uri = flow.step1_get_authorize_url('urn:ietf:wg:oauth:2.0:oob')
-            message = "Open this URL, grant access to CUPS Cloud Print,"
+            flow, auth_uri = Auth.AddAccountStep1(userid, permissions)
+            message = "Open this URL, grant access to CUPS Cloud Print, "
             message += "then provide the code displayed : \n\n"
             message += auth_uri + "\n"
             print message
             code = raw_input('Code from Google: ')
             try:
-                print ""
-                credentials = flow.step2_exchange(code)
-                storage.put(credentials)
-
-                # fix permissions
-                Utils.FixFilePermissions(Auth.config)
+                credentials = Auth.AddAccountStep2(userid, flow, code, storage, permissions)
 
                 return credentials
             except Exception as e:
@@ -124,9 +108,62 @@ class Auth(object):
                 print message
 
     @staticmethod
-    def SetupAuth(interactive=False,
-                  permissions=None,
-                  testUserIds=None):
+    def AddAccountStep1(userid, permissions=None):
+        """Executes step 1 of OAuth2WebServerFlow, without interaction.
+
+        Args:
+          userid: string, reference for the account
+          permissions: string or iterable of strings, scope(s) of the credentials being requested
+
+        Returns:
+          tuple of:
+            OAuth2WebServerFlow instance
+            string auth_uri for user to visit
+        """
+        if permissions is None:
+            permissions = Auth.normal_permissions
+        flow = client.OAuth2WebServerFlow(
+            Auth.clientid,
+            Auth.clientsecret,
+            permissions,
+            'urn:ietf:wg:oauth:2.0:oob',
+            userid)
+        auth_uri = flow.step1_get_authorize_url()
+        return flow, auth_uri
+
+    @staticmethod
+    def AddAccountStep2(userid, flow, code, storage=None, permissions=None):
+        """Executes step 2 of OAuth2WebServerFlow, without interaction.
+
+        Args:
+          userid: string, reference for the account
+          permissions: string or iterable of strings, scope(s) of the credentials being requested
+          storage: storage, instance of storage to store credentials in.
+          flow: OAuth2WebServerFlow, flow instance
+          code: string, code representing user granting CCP permission to call GCP API for user
+
+        Returns:
+          credentials: A credentials instance with the account details
+        """
+        if permissions is None:
+            permissions = Auth.normal_permissions
+
+        if storage is None:
+            storage = multistore_file.get_credential_storage(
+                Auth.config,
+                Auth.clientid,
+                userid,
+                permissions)
+
+        credentials = flow.step2_exchange(code)
+        storage.put(credentials)
+
+        Utils.FixFilePermissions(Auth.config)
+
+        return credentials
+
+    @staticmethod
+    def SetupAuth(interactive=False, permissions=None, testUserIds=None):
         """Sets up requestors with authentication tokens
 
         Args:
@@ -138,7 +175,7 @@ class Auth(object):
                               of storage
         """
         if permissions is None:
-            permissions = ['https://www.googleapis.com/auth/cloudprint']
+            permissions = Auth.normal_permissions
         modifiedconfig = False
 
         # parse config file and extract useragents, which we use for account
@@ -147,12 +184,15 @@ class Auth(object):
         if testUserIds is not None:
             userids = testUserIds
         if os.path.exists(Auth.config):
-            content_file = open(Auth.config, 'r')
-            content = content_file.read()
+            with open(Auth.config, 'r') as content_file:
+                content = content_file.read()
             data = json.loads(content)
-            for user in data['data']:
-                userids.append(str(user['credential']['user_agent']))
+            if 'data' in data:
+                for user in data['data']:
+                    userids.append(str(user['credential']['user_agent']))
         else:
+            open(Auth.config, 'w').write('{}')
+            Utils.FixFilePermissions(Auth.config)
             modifiedconfig = True
 
         if len(userids) == 0:
@@ -200,3 +240,4 @@ class Auth(object):
         for requestor in requestors:
             requestorAccounts.append(requestor.getAccount())
         return requestorAccounts
+
