@@ -184,14 +184,12 @@ class Auth(object):
         if testUserIds is not None:
             userids = testUserIds
         if os.path.exists(Auth.config):
-            with open(Auth.config, 'r') as content_file:
-                content = content_file.read()
-            data = json.loads(content)
+            data = json.loads(Utils.ReadFile(Auth.config))
             if 'data' in data:
                 for user in data['data']:
                     userids.append(str(user['credential']['user_agent']))
         else:
-            open(Auth.config, 'w').write('{}')
+            Utils.WriteFile(Auth.config, '{}')
             Utils.FixFilePermissions(Auth.config)
             modifiedconfig = True
 
