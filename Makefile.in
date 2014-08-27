@@ -10,36 +10,36 @@ cupsgroup = @cupsgroup@
 all: backend.py
 
 install: all
-	mkdir -p ${prefix}/share/cloudprint-cups/oauth2client
-	mkdir -p ${prefix}/share/cloudprint-cups/selinux
-	mkdir -p ${prefix}/share/cloudprint-cups/testing/testfiles
-	${INSTALL} ${srcdir}/.coveragerc ${prefix}/share/cloudprint-cups/
-	${INSTALL} ${srcdir}/*.py ${prefix}/share/cloudprint-cups/
-	${INSTALL} -m 644 ${srcdir}/ccputils.py ${prefix}/share/cloudprint-cups/
-	${INSTALL} -m 644 ${srcdir}/cloudprintrequestor.py ${prefix}/share/cloudprint-cups/
-	${INSTALL} -m 644 ${srcdir}/printermanager.py ${prefix}/share/cloudprint-cups/
-	${INSTALL} -m 644 ${srcdir}/printer.py ${prefix}/share/cloudprint-cups/
-	${INSTALL} -m 644 ${srcdir}/auth.py ${prefix}/share/cloudprint-cups/
-	${INSTALL} -m 644 ${srcdir}/.coveragerc ${prefix}/share/cloudprint-cups/
-	unlink ${prefix}/share/cloudprint-cups/pre-commit.py
-	${INSTALL} -m 755 ${srcdir}/testing/*.sh ${prefix}/share/cloudprint-cups/testing/
-	${INSTALL} -m 644 ${srcdir}/testing/*.py ${prefix}/share/cloudprint-cups/testing/
-	${INSTALL} -m 755 ${srcdir}/testing/listdrivefiles.py ${prefix}/share/cloudprint-cups/testing/
-	${INSTALL} -m 644 ${srcdir}/testing/testfiles/* ${prefix}/share/cloudprint-cups/testing/testfiles/
-	${INSTALL} -m 644 ${srcdir}/selinux/* ${prefix}/share/cloudprint-cups/selinux/
-	${INSTALL} -m 644 ${srcdir}/oauth2client/*.py ${prefix}/share/cloudprint-cups/oauth2client/
-	mkdir -p ${cupsbackend}
-	mkdir -p ${cupsdriver}
-	mkdir -p ${cupsmodel}
+	mkdir -p "${prefix}"/share/cloudprint-cups/oauth2client
+	mkdir -p "${prefix}"/share/cloudprint-cups/selinux
+	mkdir -p "${prefix}"/share/cloudprint-cups/testing/testfiles
+	${INSTALL} "${srcdir}"/.coveragerc "${prefix}"/share/cloudprint-cups/
+	${INSTALL} "${srcdir}"/*.py "${prefix}"/share/cloudprint-cups/
+	${INSTALL} -m 644 "${srcdir}"/ccputils.py "${prefix}"/share/cloudprint-cups/
+	${INSTALL} -m 644 "${srcdir}"/cloudprintrequestor.py "${prefix}"/share/cloudprint-cups/
+	${INSTALL} -m 644 "${srcdir}"/printermanager.py "${prefix}"/share/cloudprint-cups/
+	${INSTALL} -m 644 "${srcdir}"/printer.py "${prefix}"/share/cloudprint-cups/
+	${INSTALL} -m 644 "${srcdir}"/auth.py "${prefix}"/share/cloudprint-cups/
+	${INSTALL} -m 644 "${srcdir}"/.coveragerc "${prefix}"/share/cloudprint-cups/
+	unlink "${prefix}"/share/cloudprint-cups/pre-commit.py
+	${INSTALL} -m 755 "${srcdir}"/testing/*.sh "${prefix}"/share/cloudprint-cups/testing/
+	${INSTALL} -m 644 "${srcdir}"/testing/*.py "${prefix}"/share/cloudprint-cups/testing/
+	${INSTALL} -m 755 "${srcdir}"/testing/listdrivefiles.py "${prefix}"/share/cloudprint-cups/testing/
+	${INSTALL} -m 644 "${srcdir}"/testing/testfiles/* "${prefix}"/share/cloudprint-cups/testing/testfiles/
+	${INSTALL} -m 644 "${srcdir}"/selinux/* "${prefix}"/share/cloudprint-cups/selinux/
+	${INSTALL} -m 644 "${srcdir}"/oauth2client/*.py "${prefix}"/share/cloudprint-cups/oauth2client/
+	mkdir -p "${cupsbackend}"
+	mkdir -p "${cupsdriver}"
+	mkdir -p "${cupsmodel}"
 ifeq ($(NOPERMS),1)
-	   ${INSTALL} ${srcdir}/backend.py ${cupsbackend}gcp
-	   ${INSTALL} ${srcdir}/dynamicppd.py ${cupsdriver}cupscloudprint
+	   ${INSTALL} "${srcdir}"/backend.py "${cupsbackend}"gcp
+	   ${INSTALL} "${srcdir}"/dynamicppd.py "${cupsdriver}"cupscloudprint
 else
-	   ${INSTALL} -g `groups root | cut -d' ' -f1` -o root -m 755  ${srcdir}/backend.py ${cupsbackend}gcp
-	   ${INSTALL} -g `groups root | cut -d' ' -f1` -o root -m 755  ${srcdir}/dynamicppd.py ${cupsdriver}cupscloudprint
+	   ${INSTALL} -g `groups root | cut -d' ' -f1` -o root -m 755 "${srcdir}"/backend.py "${cupsbackend}"gcp
+	   ${INSTALL} -g `groups root | cut -d' ' -f1` -o root -m 755 "${srcdir}"/dynamicppd.py "${cupsdriver}"cupscloudprint
 endif
-	${INSTALL} -m 644 ${srcdir}/README.md ${prefix}/share/cloudprint-cups/README.md
-	${INSTALL} -m 644 ${srcdir}/COPYING ${prefix}/share/cloudprint-cups/COPYING
+	${INSTALL} -m 644 "${srcdir}"/README.md "${prefix}"/share/cloudprint-cups/README.md
+	${INSTALL} -m 644 "${srcdir}"/COPYING "${prefix}"/share/cloudprint-cups/COPYING
 ifneq ($(NOPERMS),1)
-	chown -R root:${cupsgroup} ${prefix}/share/cloudprint-cups/
+	chown -R root:${cupsgroup} "${prefix}"/share/cloudprint-cups/
 endif
