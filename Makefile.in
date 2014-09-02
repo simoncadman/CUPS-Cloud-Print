@@ -6,6 +6,7 @@ cupsdriver = ${DESTDIR}@cupsserverpath@/driver/
 cupsbackend = ${DESTDIR}@cupsserverpath@/backend/
 cupsmodel = ${DESTDIR}@cupsdatapath@/model/
 cupsgroup = @cupsgroup@
+enablegui = @enable_gui@
 
 all: backend.py
 
@@ -15,6 +16,9 @@ install: all
 	mkdir -p "${prefix}"/share/cloudprint-cups/testing/testfiles
 	${INSTALL} "${srcdir}"/.coveragerc "${prefix}"/share/cloudprint-cups/
 	${INSTALL} "${srcdir}"/*.py "${prefix}"/share/cloudprint-cups/
+ifneq ($(enablegui),"yes")
+	unlink "${prefix}"/share/cloudprint-cups/setupcloudprintgui.py
+endif
 	${INSTALL} -m 644 "${srcdir}"/ccputils.py "${prefix}"/share/cloudprint-cups/
 	${INSTALL} -m 644 "${srcdir}"/cloudprintrequestor.py "${prefix}"/share/cloudprint-cups/
 	${INSTALL} -m 644 "${srcdir}"/printermanager.py "${prefix}"/share/cloudprint-cups/

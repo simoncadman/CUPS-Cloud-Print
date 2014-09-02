@@ -591,6 +591,7 @@ cupsgroupexists
 lpgroupexists
 cupsdatapath
 cupsserverpath
+enable_gui
 cupsconfpath
 INSTALL_DATA
 INSTALL_SCRIPT
@@ -637,6 +638,7 @@ SHELL'
 ac_subst_files=''
 ac_user_opts='
 enable_option_checking
+enable_X
 '
       ac_precious_vars='build_alias
 host_alias
@@ -1247,6 +1249,13 @@ if test -n "$ac_init_help"; then
    esac
   cat <<\_ACEOF
 
+Optional Features:
+  --disable-option-checking  ignore unrecognized --enable/--with options
+  --disable-FEATURE       do not include FEATURE (same as --enable-FEATURE=no)
+  --enable-FEATURE[=ARG]  include FEATURE [ARG=yes]
+  --enable-X              enable GUI tools
+
+
 Some influential environment variables:
   cupsgroup   Name of the cups system group
 
@@ -1849,6 +1858,13 @@ fi
 if test "${cupsconfpath}" = "missing"; then
 	as_fn_error $? "cannot find cups-config" "$LINENO" 5
 fi
+# Check whether --enable-X was given.
+if test "${enable_X+set}" = set; then :
+  enableval=$enable_X;
+fi
+
+enable_gui=${enable_X}
+
 
 cupsserverpath=`cups-config --serverbin`
 

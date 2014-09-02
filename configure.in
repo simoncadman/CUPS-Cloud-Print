@@ -10,7 +10,12 @@ AC_PATH_PROG(cupsconfpath,cups-config,[missing])
 if test "${cupsconfpath}" = "missing"; then
 	AC_MSG_ERROR([cannot find cups-config])
 fi
-
+AC_ARG_ENABLE([X],
+  AS_HELP_STRING([--enable-X],
+    [enable GUI tools])
+)
+AC_SUBST(enable_gui, ${enable_X})
+  
 AC_SUBST(cupsserverpath, [`cups-config --serverbin`])
 AC_SUBST(cupsdatapath, [`cups-config --datadir`])
 
