@@ -1,19 +1,19 @@
 # Maintainer: Simon Cadman <src@niftiestsoftware.com>
 pkgname=cupscloudprint
-pkgver=20140814
+pkgver=20140814.1
 pkgrel=1
 pkgdesc="Print via Google Cloud print using CUPS"
 arch=('any')
 url="http://ccp.niftiestsoftware.com"
 license=('GPL3')
-depends=('cups' 'pycups' 'python2' 'ghostscript' 'python2-httplib2' 'imagemagick')
+depends=('cups' 'python2-pycups' 'python2' 'ghostscript' 'python2-httplib2' 'imagemagick')
 makedepends=('git')
 changelog=changelog
 install=install
 source=()
 md5sums=()
 _gitroot="git://github.com/simoncadman/CUPS-Cloud-Print.git"
-_gitversion="f043bebe8af5217b02429c32ff4c05fbe6f75cf4"
+_gitversion="1df1fa1121b04142c78230cbf0cbf81bd2f6c669"
 
 
 build() {
