@@ -40,7 +40,7 @@ if __name__ == '__main__':  # pragma: no cover
     Utils.SetupLogging()
 
     # line below is replaced on commit
-    CCPVersion = "20140605 200040"
+    CCPVersion = "20141108 123723"
     Utils.ShowVersion(CCPVersion)
 
     requestors, storage = Auth.SetupAuth(True)
@@ -57,16 +57,11 @@ if __name__ == '__main__':  # pragma: no cover
         print printer['capabilities']
         print "\n"
         ppdname = printer.getPPDName()
-        p = subprocess.Popen(
+        p1 = subprocess.Popen(
             (os.path.join(libpath, 'dynamicppd.py'), 'cat', ppdname.lstrip('-')),
             stdout=subprocess.PIPE)
-        ppddata = p.communicate()[0]
-        result = p.returncode
-        tempfile = open('/tmp/.ppdfile', 'w')
-        tempfile.write(ppddata)
-        tempfile.close()
 
-        p = subprocess.Popen(['cupstestppd', '/tmp/.ppdfile'], stdout=subprocess.PIPE)
+        p = subprocess.Popen(['cupstestppd', '-'], stdout=subprocess.PIPE, stdin=p1.stdout)
         testdata = p.communicate()[0]
         result = p.returncode
         print "Result of cupstestppd was " + str(result)
@@ -75,5 +70,3 @@ if __name__ == '__main__':  # pragma: no cover
             print "cupstestppd errored: "
             print ppddata
             print "\n"
-
-        os.unlink('/tmp/.ppdfile')
