@@ -1700,5 +1700,18 @@ psk:TwoSidedLongEdge
 psk:TwoSidedShortEdge
 psk:Uncollated
 reverse
+cupsFilter
+cupsColorProfile
+cupsICCProfile
+cupsICCQualifier1
+APCustomColorMatchingName
+APCustomColorMatchingProfile
+APDefaultCustomColorMatchingProfile
+APSupportsCustomColorMatching
+cupsUIResolver
+cups:dksajdksa
+APPrinterLowInkTool
+APScanAppBundleID
+APHelpBook
 sRGB
 Константин Зайцев

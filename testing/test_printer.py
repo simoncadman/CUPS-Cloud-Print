@@ -209,14 +209,16 @@ def test_getInternalName():
 
     for internalTest in internalCapabilityTests:
         assert printerItem._getInternalName(internalTest, 'capability') not in printerItem._RESERVED_CAPABILITY_WORDS
+        assert not printerItem._getInternalName(internalTest, 'capability').startswith(printerItem._RESERVED_CAPABILITY_PREFIXES)
         assert ':' not in printerItem._getInternalName(internalTest, 'capability')
         assert ' ' not in printerItem._getInternalName(internalTest, 'capability')
         assert len(printerItem._getInternalName(internalTest,'capability')) <= 30
         assert len(printerItem._getInternalName(internalTest,'capability')) >= 1
 
     for internalTest in internalCapabilityTests:
-        for capabilityName in ["psk:JobDuplexAllDocumentsContiguously","other", "psk:PageOrientation"]:
+        for capabilityName in ["psk:JobDuplexAllDocumentsContiguously","other", "psk:PageOrientation", "cupsFilter"]:
             assert printerItem._getInternalName(internalTest,'option',capabilityName) not in printerItem._RESERVED_CAPABILITY_WORDS
+            assert not printerItem._getInternalName(internalTest,'option',capabilityName).startswith(printerItem._RESERVED_CAPABILITY_PREFIXES)
             assert ':' not in printerItem._getInternalName(internalTest,'option',capabilityName)
             assert ' ' not in printerItem._getInternalName(internalTest,'option')
             assert len(printerItem._getInternalName(internalTest,'option',capabilityName)) <= 30
