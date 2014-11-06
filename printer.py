@@ -139,11 +139,12 @@ class Printer(object):
         'LocAttribute', 'ManualCopies', 'Manufacturer', 'MaxSize', 'MediaSize', 'MediaType',
         'MinSize', 'ModelName', 'ModelNumber', 'Option', 'PCFileName', 'SimpleColorProfile',
         'Throughput', 'UIConstraints', 'VariablePaperSize', 'Version', 'Color', 'Background',
-        'Stamp', 'DestinationColorProfile', 'JCLToPDFInterpreter', 'APAutoSetupTool', 'APDialogExtension',
-        'APHelpBook', 'APICADriver', 'APPrinterIconPath', 'APPrinterLowInkTool', 'APPrinterPreset',
-        'APPrinterUtilityPath', 'APScannerOnly', 'APScanAppBundleID'
+        'Stamp', 'DestinationColorProfile', 'JCLToPDFInterpreter', 'APAutoSetupTool',
+        'APDialogExtension', 'APHelpBook', 'APICADriver', 'APPrinterIconPath',
+        'APPrinterLowInkTool', 'APPrinterPreset', 'APPrinterUtilityPath', 'APScannerOnly',
+        'APScanAppBundleID'
     ))
-    
+
     _RESERVED_CAPABILITY_PREFIXES = (
         'cups'
     )
@@ -323,7 +324,8 @@ class Printer(object):
     @staticmethod
     def _sanitizeText(text, checkReserved=False):
         sanitisedName = re.sub(r'(:|;| )', '_', text).replace('/', '-').encode('utf8', 'ignore')
-        if checkReserved and ( sanitisedName in Printer._RESERVED_CAPABILITY_WORDS ) or sanitisedName.startswith( Printer._RESERVED_CAPABILITY_PREFIXES ) :
+        if checkReserved and (sanitisedName in Printer._RESERVED_CAPABILITY_WORDS or
+                              sanitisedName.startswith(Printer._RESERVED_CAPABILITY_PREFIXES)):
             sanitisedName = 'GCP_' + sanitisedName
         return sanitisedName
 
