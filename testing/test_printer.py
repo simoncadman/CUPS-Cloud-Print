@@ -194,10 +194,14 @@ def test_sanitizeText():
         assert printers[0]._sanitizeText("TESTSTRING",checkReserved) == "TESTSTRING"
         assert printers[0]._sanitizeText("TEST:; STRING /2",checkReserved) == "TEST___STRING_-2"
         assert printers[0]._sanitizeText("TEST:; STRING /2",checkReserved) == "TEST___STRING_-2"
-    
+
     assert printers[0]._sanitizeText("Duplex") == "Duplex"
     assert printers[0]._sanitizeText("Duplex",True) == "GCP_Duplex"
-    
+
+    # ensure strips newlines
+    assert printers[0]._sanitizeText("Test\ntest2") == "Testtest2"
+    assert printers[0]._sanitizeText("Test\r\ntest2") == "Testtest2"
+
 def test_getInternalName():
     global printers
     printerItem = printers[0]

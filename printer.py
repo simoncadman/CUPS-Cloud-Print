@@ -23,6 +23,7 @@ import os
 import re
 import urllib
 import subprocess
+import unicodedata
 
 from ccputils import Utils
 
@@ -324,6 +325,7 @@ class Printer(object):
     @staticmethod
     def _sanitizeText(text, checkReserved=False):
         sanitisedName = re.sub(r'(:|;| )', '_', text).replace('/', '-').encode('utf8', 'ignore')
+        sanitisedName = "".join(ch for ch in unicode(sanitisedName, errors='ignore') if unicodedata.category(ch)[0]!="C")
         if checkReserved and (sanitisedName in Printer._RESERVED_CAPABILITY_WORDS or
                               sanitisedName.startswith(Printer._RESERVED_CAPABILITY_PREFIXES)):
             sanitisedName = 'GCP_' + sanitisedName
