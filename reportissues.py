@@ -40,7 +40,7 @@ if __name__ == '__main__':  # pragma: no cover
     Utils.SetupLogging()
 
     # line below is replaced on commit
-    CCPVersion = "20141108 123723"
+    CCPVersion = "20141108 195634"
     Utils.ShowVersion(CCPVersion)
 
     requestors, storage = Auth.SetupAuth(True)
@@ -60,9 +60,9 @@ if __name__ == '__main__':  # pragma: no cover
         p1 = subprocess.Popen(
             (os.path.join(libpath, 'dynamicppd.py'), 'cat', ppdname.lstrip('-')),
             stdout=subprocess.PIPE)
-
-        p = subprocess.Popen(['cupstestppd', '-'], stdout=subprocess.PIPE, stdin=p1.stdout)
-        testdata = p.communicate()[0]
+        ppddata = p1.communicate()[0]
+        p = subprocess.Popen(['cupstestppd', '-'], stdout=subprocess.PIPE, stdin=subprocess.PIPE)
+        testdata = p.communicate(ppddata)[0]
         result = p.returncode
         print "Result of cupstestppd was " + str(result)
         print "".join(testdata)
