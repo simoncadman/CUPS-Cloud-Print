@@ -134,16 +134,8 @@ def test_writeFile():
 
 def test_base64encode():
     Utils.WriteFile('/tmp/testfile', 'data') == True
-    assert Utils.Base64Encode('/tmp/testfile') == '/tmp/testfile.b64'
-    assert Utils.ReadFile(
-        '/tmp/testfile.b64') == 'data:application/octet-stream;base64,ZGF0YQ=='
-    os.unlink('/tmp/testfile.b64')
-
-    os.mkdir('/tmp/testfile.b64')
-    assert Utils.Base64Encode('/tmp/testfile') is None
-    os.unlink('/tmp/testfile')
-    os.rmdir('/tmp/testfile.b64')
-
+    assert Utils.Base64Encode('/tmp/testfile') == 'data:application/octet-stream;base64,ZGF0YQ=='
+    assert os.path.exists('/tmp/testfile.b64') == False
     assert Utils.Base64Encode('/tmp/testfile/dsiahdisa') is None
 
 def test_GetLanguage():

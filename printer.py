@@ -536,19 +536,17 @@ class Printer(object):
                     logging.error("Rotated PDF, but resulting file was not a PDF")
                     logging.error(output)
                     return False
-            b64file = Utils.Base64Encode(jobfile)
-            if b64file is None:
-                print "ERROR: Cannot write to file: " + jobfile + ".b64"
-                return False
-            fdata = Utils.ReadFile(b64file)
-            os.unlink(b64file)
         elif jobtype in ['png', 'jpeg']:
             if not os.path.exists(jobfile):
                 sys.stderr.write("ERROR: File doesnt exist\n")
                 return False
-            fdata = Utils.ReadFile(jobfile)
         else:
             sys.stderr.write("ERROR: Unknown job type\n")
+            return False
+
+        b64data = Utils.Base64Encode(jobfile)
+        if b64data is None:
+            sys.stderr.write("ERROR: Failed to base64 encode %s" % jobfile)
             return False
 
         if jobname == "":
@@ -562,7 +560,7 @@ class Printer(object):
         headers = [
             ('printerid', self['id']),
             ('title', title),
-            ('content', fdata),
+            ('content', b64data),
             ('contentType', content_type[jobtype]),
             ('capabilities', json.dumps(self._getCapabilities(cupsprintername, options)))
         ]

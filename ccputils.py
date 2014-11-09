@@ -215,11 +215,10 @@ class Utils:
         Args:
           pathname: path name of file to base64 encode..
         Returns:
-          string, name of base64 encoded file.
+          string, base64 encoded string.
         For more info on data urls, see:
           http://en.wikipedia.org/wiki/Data_URI_scheme
         """
-        b64_pathname = pathname + '.b64'
         file_type = mimetypes.guess_type(
             pathname)[0] or 'application/octet-stream'
         data = Utils.ReadFile(pathname)
@@ -228,12 +227,7 @@ class Utils:
 
         # Convert binary data to base64 encoded data.
         header = 'data:%s;base64,' % file_type
-        b64data = header + base64.b64encode(data)
-
-        if Utils.WriteFile(b64_pathname, b64data):
-            return b64_pathname
-        else:
-            return None
+        return header + base64.b64encode(data)
 
     @staticmethod
     def GetLanguage(locale):
