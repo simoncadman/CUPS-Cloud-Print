@@ -24,6 +24,7 @@ import re
 import urllib
 import subprocess
 import unicodedata
+import sys
 
 from ccputils import Utils
 
@@ -523,7 +524,7 @@ class Printer(object):
 
         if jobtype == 'pdf':
             if not os.path.exists(jobfile):
-                print "ERROR: PDF doesnt exist"
+                sys.stderr.write("ERROR: PDF doesnt exist\n")
                 return False
             if rotate > 0:
                 command = [self._CONVERTCOMMAND, '-density', '300x300', jobfile.lstrip('-'),
@@ -531,7 +532,7 @@ class Printer(object):
                 p = subprocess.Popen(command, stdout=subprocess.PIPE)
                 output = p.communicate()[0]
                 if not Utils.fileIsPDF(jobfile):
-                    print "ERROR: Failed to rotate PDF"
+                    sys.stderr.write("ERROR: Failed to rotate PDF\n")
                     logging.error("Rotated PDF, but resulting file was not a PDF")
                     logging.error(output)
                     return False
@@ -543,18 +544,17 @@ class Printer(object):
             os.unlink(b64file)
         elif jobtype in ['png', 'jpeg']:
             if not os.path.exists(jobfile):
-                print "ERROR: File doesnt exist"
+                sys.stderr.write("ERROR: File doesnt exist\n")
                 return False
             fdata = Utils.ReadFile(jobfile)
         else:
-            print "ERROR: Unknown job type"
+            sys.stderr.write("ERROR: Unknown job type\n")
             return False
 
         if jobname == "":
             title = "Untitled page"
         else:
             title = jobname
-
         content = {'pdf': fdata,
                    'jpeg': jobfile,
                    'png': jobfile,
@@ -578,10 +578,10 @@ class Printer(object):
             if responseobj['success']:
                 return True
             else:
-                print 'ERROR: Error response from Cloud Print for type %s: %s' %\
-                    (jobtype, responseobj['message'])
+                sys.stderr.write("ERROR: Error response from Cloud Print for type %s: %s\n" %\
+                    (jobtype, responseobj['message']))
                 return False
 
         except Exception as error_msg:
-            print 'ERROR: Print job %s failed with %s' % (jobtype, error_msg)
+            sys.stderr.write("ERROR: Print job %s failed with %s\n" % (jobtype, error_msg))
             return False

@@ -42,7 +42,7 @@ if __name__ == '__main__':  # pragma: no cover
     Utils.SetupLogging()
 
     # line below is replaced on commit
-    CCPVersion = "20140628 144005"
+    CCPVersion = "20141109 213452"
     Utils.ShowVersion(CCPVersion)
 
     if len(sys.argv) != 1 and len(sys.argv) < 6 or len(sys.argv) > 7:
@@ -150,13 +150,13 @@ if __name__ == '__main__':  # pragma: no cover
 
         printer = printer_manager.getPrinterByURI(uri)
         if printer is None:
-            print "ERROR: PrinterManager '%s' not found" % uri
+            sys.stderr.write("ERROR: PrinterManager '%s' not found\n" % uri)
             result = 1
         elif printer.submitJob('pdf', pdfFile, jobTitle, cupsprintername, printOptions):
-            print "INFO: Successfully printed"
+            sys.stderr.write("INFO: Successfully printed\n")
             result = 0
         else:
-            print "ERROR: Failed to submit job to cloud print"
+            sys.stderr.write("ERROR: Failed to submit job to cloud print\n")
             result = 1
 
         logging.info(pdfFile + " sent to cloud print, deleting")
