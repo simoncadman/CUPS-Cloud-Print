@@ -555,10 +555,6 @@ class Printer(object):
             title = "Untitled page"
         else:
             title = jobname
-        content = {'pdf': fdata,
-                   'jpeg': jobfile,
-                   'png': jobfile,
-                   }
         content_type = {'pdf': 'dataUrl',
                         'jpeg': 'image/jpeg',
                         'png': 'image/png',
@@ -566,7 +562,7 @@ class Printer(object):
         headers = [
             ('printerid', self['id']),
             ('title', title),
-            ('content', content[jobtype]),
+            ('content', fdata),
             ('contentType', content_type[jobtype]),
             ('capabilities', json.dumps(self._getCapabilities(cupsprintername, options)))
         ]
