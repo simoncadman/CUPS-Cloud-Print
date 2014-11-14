@@ -42,7 +42,7 @@ if __name__ == '__main__':  # pragma: no cover
     Utils.SetupLogging()
 
     # line below is replaced on commit
-    CCPVersion = "20141109 213452"
+    CCPVersion = "20141114 230805"
     Utils.ShowVersion(CCPVersion)
 
     if len(sys.argv) != 1 and len(sys.argv) < 6 or len(sys.argv) > 7:
@@ -51,7 +51,7 @@ if __name__ == '__main__':  # pragma: no cover
         sys.exit(0)
 
     if len(sys.argv) >= 4 and sys.argv[3] == "Set Default Options":
-        print "ERROR: Unimplemented command: " + sys.argv[3]
+        sys.stderr.write("ERROR: Unimplemented command: " + sys.argv[3] + "\n")
         logging.error("Unimplemented command: " + sys.argv[3])
         sys.exit(0)
 
@@ -93,7 +93,7 @@ if __name__ == '__main__':  # pragma: no cover
         OUT = open(tempFile, 'w')
 
         if not OUT:
-            print "ERROR: Cannot write " + tempFile
+            sys.stderr.write("ERROR: Cannot write " + tempFile + "\n")
             sys.exit(1)
 
         for line in sys.stdin:
