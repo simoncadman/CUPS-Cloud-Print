@@ -42,7 +42,7 @@ if __name__ == '__main__':  # pragma: no cover
     Utils.SetupLogging()
 
     # line below is replaced on commit
-    CCPVersion = "20141115 151318"
+    CCPVersion = "20141115 151528"
     Utils.ShowVersion(CCPVersion)
 
     if len(sys.argv) != 1 and len(sys.argv) < 6 or len(sys.argv) > 7:
@@ -81,7 +81,7 @@ if __name__ == '__main__':  # pragma: no cover
                 logging.error(error)
                 sys.exit(1)
         sys.exit(0)
-        
+
     filedata = None
 
     # if no printfile, put stdin to a temp file
@@ -110,16 +110,16 @@ if __name__ == '__main__':  # pragma: no cover
     optionsstring = ' '.join(["'%s'" % option for option in sys.argv])
     logging.info("Device is %s , printername is %s, params are: %s" %
                  (uri, cupsprintername, optionsstring))
-    
-    # setup 
+
+    # setup
     convertToPDFParams = ["ps2pdf", "-dPDFSETTINGS=/printer",
-                            "-dUseCIEColor", printFile, "-"]
+                          "-dUseCIEColor", printFile, "-"]
     if Utils.which("ps2pdf") is None:
         convertToPDFParams = ["pstopdf", printFile, "-"]
 
     logging.debug('is this a pdf? ' + printFile)
     result = 0
-    
+
     if not Utils.fileIsPDF(filedata):
         # read file as pdf
         sys.stderr.write("INFO: Converting print job to PDF\n")
@@ -132,8 +132,8 @@ if __name__ == '__main__':  # pragma: no cover
             logging.info("Converted to PDF - %s bytes" % str(len(filedata)))
     else:
         # read file normally
-        logging.info("Using %s as is already PDF - %s bytes" % ( printFile , len(filedata) ))
-        
+        logging.info("Using %s as is already PDF - %s bytes" % (printFile, len(filedata)))
+
     # send pdf data to GCP
     if result == 0:
         sys.stderr.write("INFO: Sending document to Cloud Print\n")

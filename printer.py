@@ -510,7 +510,7 @@ class Printer(object):
           True if submitted, False otherwise
         """
         rotate = 0
-        
+
         # refuse to submit empty jobdata
         if len(jobdata) == 0:
             sys.stderr.write("ERROR: Job data is empty\n")
