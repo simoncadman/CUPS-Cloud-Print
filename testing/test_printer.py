@@ -312,16 +312,19 @@ def test_submitJob():
     assert printer.submitJob(
         'pdf',
         'testing/testfiles/Test Page.pdf',
+        open('testing/testfiles/Test Page.pdf').read(),
         'Test Page',
         testprintername) == True
     assert printer.submitJob(
         'pdf',
         'testing/testfiles/Test Page Doesnt Exist.pdf',
+        '',
         'Test Page',
         testprintername) == False
     assert printer.submitJob(
         'pdf',
         'testing/testfiles/Test Page Corrupt.pdf',
+        open('testing/testfiles/Test Page Corrupt.pdf').read(),
         'Test Page',
         testprintername, 'landscape') == False
 
@@ -336,12 +339,14 @@ def test_submitJob():
     assert printer.submitJob(
         'pdf',
         tmpFile,
+        open(tmpFile).read(),
         'Test Page',
         testprintername,
         "landscape") == True
     assert printer.submitJob(
         'pdf',
         tmpFile,
+        open(tmpFile).read(),
         'Test Page',
         testprintername,
         "nolandscape") == True
@@ -352,11 +357,13 @@ def test_submitJob():
     assert printer.submitJob(
         'pdf',
         'testing/testfiles/Test Page.pdf',
+        open('testing/testfiles/Test Page.pdf').read(),
         '',
         testprintername) == True
     assert printer.submitJob(
         'pdf',
         'testing/testfiles/Test Page Doesnt Exist.pdf',
+        '',
         '',
         testprintername) == False
 
@@ -364,11 +371,13 @@ def test_submitJob():
     assert printer.submitJob(
         'png',
         'testing/testfiles/Test Page.png',
+        open('testing/testfiles/Test Page.png').read(),
         'Test Page',
         testprintername) == True
     assert printer.submitJob(
         'png',
         'testing/testfiles/Test Page Doesnt Exist.png',
+        '',
         'Test Page',
         testprintername) == False
 
@@ -376,11 +385,13 @@ def test_submitJob():
     assert printer.submitJob(
         'ps',
         'testing/testfiles/Test Page.ps',
+        open('testing/testfiles/Test Page.ps').read(),
         'Test Page',
         testprintername) == False
     assert printer.submitJob(
         'ps',
         'testing/testfiles/Test Page Doesnt Exist.ps',
+        '',
         'Test Page',
         testprintername) == False
 
@@ -388,6 +399,7 @@ def test_submitJob():
     assert printer.submitJob(
         'pdf',
         'testing/testfiles/Test Page.pdf',
+        open('testing/testfiles/Test Page.pdf').read(),
         'FAIL PAGE',
         testprintername) == False
 
@@ -395,6 +407,7 @@ def test_submitJob():
     assert printer.submitJob(
         'pdf',
         'testing/testfiles/Test Page.pdf',
+        open('testing/testfiles/Test Page.pdf').read(),
         'TEST PAGE WITH EXCEPTION',
         testprintername) == False
 

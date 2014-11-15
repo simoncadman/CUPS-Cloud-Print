@@ -93,7 +93,7 @@ class Utils:
         return returnValue
 
     @staticmethod
-    def fileIsPDF(filename):
+    def fileIsPDF(filedata):
         """Check if a file is or isnt a PDF
 
         Args:
@@ -101,8 +101,8 @@ class Utils:
         Returns:
         boolean: True = is a PDF, False = not a PDF.
         """
-        p = subprocess.Popen(["file", filename.lstrip('-')], stdout=subprocess.PIPE)
-        output = p.communicate()[0]
+        p = subprocess.Popen(["file", '-'], stdout=subprocess.PIPE, stdin=subprocess.PIPE)
+        output = p.communicate(filedata)[0]
         logging.debug("File output was: " + output)
         return "PDF document" in output
 
@@ -209,7 +209,7 @@ class Utils:
         return status
 
     @staticmethod
-    def Base64Encode(pathname):
+    def Base64Encode(data, pathname):
         """Convert a file to a base64 encoded file.
 
         Args:
@@ -221,10 +221,6 @@ class Utils:
         """
         file_type = mimetypes.guess_type(
             pathname)[0] or 'application/octet-stream'
-        data = Utils.ReadFile(pathname)
-        if data is None:
-            return None
-
         # Convert binary data to base64 encoded data.
         header = 'data:%s;base64,' % file_type
         return header + base64.b64encode(data)

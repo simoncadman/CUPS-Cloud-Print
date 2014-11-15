@@ -42,7 +42,7 @@ if __name__ == '__main__':  # pragma: no cover
     Utils.SetupLogging()
 
     # line below is replaced on commit
-    CCPVersion = "20141114 230805"
+    CCPVersion = "20141115 151318"
     Utils.ShowVersion(CCPVersion)
 
     if len(sys.argv) != 1 and len(sys.argv) < 6 or len(sys.argv) > 7:
@@ -81,31 +81,23 @@ if __name__ == '__main__':  # pragma: no cover
                 logging.error(error)
                 sys.exit(1)
         sys.exit(0)
+        
+    filedata = None
 
     # if no printfile, put stdin to a temp file
     if printFile is None:
-        tmpDir = os.getenv('TMPDIR')
-        if not tmpDir:
-            tmpDir = "/tmp"
-        tempFile = '%s/%s-%s-cupsjob-%s' % \
-            (tmpDir, jobID, userName, str(os.getpid()))
-
-        OUT = open(tempFile, 'w')
-
-        if not OUT:
-            sys.stderr.write("ERROR: Cannot write " + tempFile + "\n")
-            sys.exit(1)
-
+        filedata = ""
         for line in sys.stdin:
-            OUT.write(line)
-
-        OUT.close()
-
-        printFile = tempFile
+            filedata += line
 
         # Backends should only produce multiple copies if a file name is
         # supplied (see CUPS Software Programmers Manual)
         copies = 1
+    elif not os.path.exists(printFile):
+        sys.stderr.write('ERROR: file "%s" not found\n' % printFile)
+        sys.exit(1)
+    else:
+        filedata = Utils.ReadFile(printFile)
 
     uri = os.getenv('DEVICE_URI')
     cupsprintername = os.getenv('PRINTER')
@@ -118,55 +110,51 @@ if __name__ == '__main__':  # pragma: no cover
     optionsstring = ' '.join(["'%s'" % option for option in sys.argv])
     logging.info("Device is %s , printername is %s, params are: %s" %
                  (uri, cupsprintername, optionsstring))
-
-    pdfFile = printFile + ".pdf"
+    
+    # setup 
+    convertToPDFParams = ["ps2pdf", "-dPDFSETTINGS=/printer",
+                            "-dUseCIEColor", printFile, "-"]
     if Utils.which("ps2pdf") is None:
-        convertToPDFParams = ["pstopdf", printFile, pdfFile]
-    else:
-        convertToPDFParams = ["ps2pdf", "-dPDFSETTINGS=/printer",
-                              "-dUseCIEColor", printFile, pdfFile]
-
-    result = 0
+        convertToPDFParams = ["pstopdf", printFile, "-"]
 
     logging.debug('is this a pdf? ' + printFile)
-    if not os.path.exists(printFile):
-        sys.stderr.write('ERROR: file "%s" not found\n' % printFile)
-        result = 1
-    elif not Utils.fileIsPDF(printFile):
+    result = 0
+    
+    if not Utils.fileIsPDF(filedata):
+        # read file as pdf
         sys.stderr.write("INFO: Converting print job to PDF\n")
-        if subprocess.call(convertToPDFParams) != 0:
+        p = subprocess.Popen(convertToPDFParams, stdout=subprocess.PIPE, stdin=p1.stdout)
+        filedata = p.communicate()[0]
+        if p.returncode != 0:
             sys.stderr.write("ERROR: Failed to convert file to pdf\n")
             result = 1
         else:
-            logging.info("Converted to PDF as " + pdfFile)
+            logging.info("Converted to PDF - %s bytes" % str(len(filedata)))
     else:
-        pdfFile = printFile + '.pdf'
-        os.rename(printFile, pdfFile)
-        logging.info("Using %s as is already PDF" % pdfFile)
-
+        # read file normally
+        logging.info("Using %s as is already PDF - %s bytes" % ( printFile , len(filedata) ))
+        
+    # send pdf data to GCP
     if result == 0:
         sys.stderr.write("INFO: Sending document to Cloud Print\n")
-        logging.info("Sending %s to cloud" % pdfFile)
+        logging.info("Sending %s to cloud" % printFile)
 
         printer = printer_manager.getPrinterByURI(uri)
         if printer is None:
             sys.stderr.write("ERROR: PrinterManager '%s' not found\n" % uri)
             result = 1
-        elif printer.submitJob('pdf', pdfFile, jobTitle, cupsprintername, printOptions):
+        elif printer.submitJob('pdf', printFile, filedata, jobTitle, cupsprintername, printOptions):
             sys.stderr.write("INFO: Successfully printed\n")
             result = 0
         else:
             sys.stderr.write("ERROR: Failed to submit job to cloud print\n")
             result = 1
 
-        logging.info(pdfFile + " sent to cloud print, deleting")
+        logging.info(printFile + " sent to cloud print, deleting")
+        sys.stderr.write("INFO: Cleaning up temporary files\n")
         if os.path.exists(printFile):
             os.unlink(printFile)
-        sys.stderr.write("INFO: Cleaning up temporary files\n")
-        logging.info("Deleted " + printFile)
-        if os.path.exists(pdfFile):
-            os.unlink(pdfFile)
-        logging.info("Deleted " + pdfFile)
+            logging.info("Deleted " + printFile)
         if result != 0:
             sys.stderr.write("INFO: Printing Failed\n")
             logging.info("Failed printing")

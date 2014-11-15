@@ -496,12 +496,13 @@ class Printer(object):
         attrArray = self._attrListToArray(attrs)
         return self._getCapabilitiesDict(attrArray, self['capabilities'], overridecapabilities)
 
-    def submitJob(self, jobtype, jobfile, jobname, cupsprintername, options=""):
+    def submitJob(self, jobtype, jobfile, jobdata, jobname, cupsprintername, options=""):
         """Submits a job to printerid with content of dataUrl.
 
         Args:
           jobtype: string, must match the dictionary keys in content and content_type.
           jobfile: string, points to source for job. Could be a pathname or id string.
+          jobdata: string, data for print job
           jobname: string, name of the print job ( usually page name ).
           options: string, key-value pair of options from print job.
 
@@ -509,6 +510,11 @@ class Printer(object):
           True if submitted, False otherwise
         """
         rotate = 0
+        
+        # refuse to submit empty jobdata
+        if len(jobdata) == 0:
+            sys.stderr.write("ERROR: Job data is empty\n")
+            return False
 
         for optiontext in options.split(' '):
 
@@ -522,31 +528,24 @@ class Printer(object):
                 # rotate back
                 rotate = 270
 
-        if jobtype == 'pdf':
-            if not os.path.exists(jobfile):
-                sys.stderr.write("ERROR: PDF doesnt exist\n")
-                return False
-            if rotate > 0:
-                command = [self._CONVERTCOMMAND, '-density', '300x300', jobfile.lstrip('-'),
-                           '-rotate', str(rotate), jobfile.lstrip('-')]
-                p = subprocess.Popen(command, stdout=subprocess.PIPE)
-                output = p.communicate()[0]
-                if not Utils.fileIsPDF(jobfile):
-                    sys.stderr.write("ERROR: Failed to rotate PDF\n")
-                    logging.error("Rotated PDF, but resulting file was not a PDF")
-                    logging.error(output)
-                    return False
-        elif jobtype in ['png', 'jpeg']:
-            if not os.path.exists(jobfile):
-                sys.stderr.write("ERROR: File doesnt exist\n")
-                return False
-        else:
-            sys.stderr.write("ERROR: Unknown job type\n")
+        if jobtype not in ['png', 'jpeg', 'pdf']:
+            sys.stderr.write("ERROR: Unknown job type: %s\n" % jobtype)
             return False
+        else:
+            if rotate != 0:
+                command = [self._CONVERTCOMMAND, '-density', '300x300', '-',
+                           '-rotate', str(rotate), '-']
+                p = subprocess.Popen(command, stdout=subprocess.PIPE, stdin=subprocess.PIPE)
+                newjobdata = p.communicate(jobdata)[0]
+                if p.returncode == 0:
+                    jobdata = newjobdata
+                else:
+                    logging.error("Failed to rotate")
+                    return False
 
-        b64data = Utils.Base64Encode(jobfile)
+        b64data = Utils.Base64Encode(jobdata, jobfile)
         if b64data is None:
-            sys.stderr.write("ERROR: Failed to base64 encode %s" % jobfile)
+            sys.stderr.write("ERROR: Failed to base64 encode data")
             return False
 
         if jobname == "":
