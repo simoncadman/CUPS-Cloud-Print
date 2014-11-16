@@ -546,11 +546,6 @@ class Printer(object):
                     logging.error("Failed to rotate")
                     return False
 
-        b64data = Utils.Base64Encode(jobdata, jobtype)
-        if b64data is None:
-            sys.stderr.write("ERROR: Failed to base64 encode data")
-            return False
-
         if jobname == "":
             title = "Untitled page"
         else:
@@ -558,7 +553,7 @@ class Printer(object):
         headers = [
             ('printerid', self['id']),
             ('title', title),
-            ('content', b64data),
+            ('content', Utils.Base64Encode(jobdata, jobtype)),
             ('contentType', 'dataUrl'),
             ('capabilities', json.dumps(self._getCapabilities(cupsprintername, options)))
         ]
