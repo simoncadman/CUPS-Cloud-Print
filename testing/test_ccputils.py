@@ -53,7 +53,7 @@ def test_fileIsPDFFails():
     assert Utils.fileIsPDF(open('testing/testfiles/NotPdf.txt').read()) == False
 
 def test_fileIsPDFSucceeds():
-    assert Utils.fileIsPDF(open('testing/testfiles/Test Page.pdf').read()) == True
+    assert Utils.fileIsPDF(open('testing/testfiles/Test Page.pdf').read(128)) == True
 
 def test_fileIsPDFErrors():
     assert Utils.fileIsPDF("testdata") == False
