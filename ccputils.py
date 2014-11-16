@@ -19,7 +19,6 @@ import os
 import logging
 import sys
 import grp
-import mimetypes
 import base64
 import fcntl
 import termios
