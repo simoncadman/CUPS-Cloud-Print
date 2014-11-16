@@ -36,6 +36,10 @@ class Utils:
     _PROTOCOL = _PROTOCOL_NAME + '://'
     _OLD_PROTOCOL_NAME = 'cloudprint'
     _OLD_PROTOCOL = _OLD_PROTOCOL_NAME + '://'
+    _MIMETYPES_JOBTYPES = {'pdf': 'application/pdf',
+                           'other': 'application/octet-stream',
+                           'jpg': 'image/jpeg',
+                           'png': 'image/png'}
 
     @staticmethod
     def FixFilePermissions(filename):
@@ -209,20 +213,22 @@ class Utils:
         return status
 
     @staticmethod
-    def Base64Encode(data, pathname):
+    def Base64Encode(data, jobtype):
         """Convert a file to a base64 encoded file.
 
         Args:
-          pathname: path name of file to base64 encode..
+          pathname: data to base64 encode
+          jobtype: job type being encoded - pdf, jpg etc
         Returns:
           string, base64 encoded string.
         For more info on data urls, see:
           http://en.wikipedia.org/wiki/Data_URI_scheme
         """
-        file_type = mimetypes.guess_type(
-            pathname)[0] or 'application/octet-stream'
         # Convert binary data to base64 encoded data.
-        header = 'data:%s;base64,' % file_type
+        mimetype = Utils._MIMETYPES_JOBTYPES['other']
+        if jobtype in Utils._MIMETYPES_JOBTYPES:
+            mimetype = Utils._MIMETYPES_JOBTYPES[jobtype]
+        header = 'data:%s;base64,' % mimetype
         return header + base64.b64encode(data)
 
     @staticmethod

@@ -42,7 +42,7 @@ if __name__ == '__main__':  # pragma: no cover
     Utils.SetupLogging()
 
     # line below is replaced on commit
-    CCPVersion = "20141115 151528"
+    CCPVersion = "20141116 192655"
     Utils.ShowVersion(CCPVersion)
 
     if len(sys.argv) != 1 and len(sys.argv) < 6 or len(sys.argv) > 7:
@@ -55,11 +55,15 @@ if __name__ == '__main__':  # pragma: no cover
         logging.error("Unimplemented command: " + sys.argv[3])
         sys.exit(0)
 
+    printFile = None
+    givenFile = False
+
     if len(sys.argv) == 7:
         prog, jobID, userName, jobTitle, copies, printOptions, printFile = sys.argv
+        givenFile = True
     if len(sys.argv) == 6:
         prog, jobID, userName, jobTitle, copies, printOptions = sys.argv
-        printFile = None
+        printFile = jobTitle
 
     requestors, storage = Auth.SetupAuth(False)
     if not requestors:
@@ -85,7 +89,7 @@ if __name__ == '__main__':  # pragma: no cover
     filedata = None
 
     # if no printfile, put stdin to a temp file
-    if printFile is None:
+    if not givenFile:
         filedata = ""
         for line in sys.stdin:
             filedata += line
@@ -106,25 +110,25 @@ if __name__ == '__main__':  # pragma: no cover
         sys.stdout.write(message)
         sys.exit(255)
 
-    logging.info("Printing file " + printFile)
+    logging.info("Printing file " + str(printFile))
     optionsstring = ' '.join(["'%s'" % option for option in sys.argv])
     logging.info("Device is %s , printername is %s, params are: %s" %
                  (uri, cupsprintername, optionsstring))
 
     # setup
     convertToPDFParams = ["ps2pdf", "-dPDFSETTINGS=/printer",
-                          "-dUseCIEColor", printFile, "-"]
+                          "-dUseCIEColor", "-", "-"]
     if Utils.which("ps2pdf") is None:
-        convertToPDFParams = ["pstopdf", printFile, "-"]
+        convertToPDFParams = ["pstopdf", "-", "-"]
 
-    logging.debug('is this a pdf? ' + printFile)
+    logging.debug('is this a pdf? ' + str(printFile))
     result = 0
 
     if not Utils.fileIsPDF(filedata):
         # read file as pdf
         sys.stderr.write("INFO: Converting print job to PDF\n")
-        p = subprocess.Popen(convertToPDFParams, stdout=subprocess.PIPE, stdin=p1.stdout)
-        filedata = p.communicate()[0]
+        p = subprocess.Popen(convertToPDFParams, stdout=subprocess.PIPE, stdin=subprocess.PIPE)
+        filedata = p.communicate(filedata)[0]
         if p.returncode != 0:
             sys.stderr.write("ERROR: Failed to convert file to pdf\n")
             result = 1
@@ -150,11 +154,13 @@ if __name__ == '__main__':  # pragma: no cover
             sys.stderr.write("ERROR: Failed to submit job to cloud print\n")
             result = 1
 
-        logging.info(printFile + " sent to cloud print, deleting")
-        sys.stderr.write("INFO: Cleaning up temporary files\n")
-        if os.path.exists(printFile):
-            os.unlink(printFile)
-            logging.info("Deleted " + printFile)
+        logging.info(str(printFile) + " sent to cloud print")
+
+        if givenFile:
+            sys.stderr.write("INFO: Cleaning up temporary files\n")
+            if os.path.exists(printFile):
+                os.unlink(printFile)
+                logging.info("Deleted " + printFile)
         if result != 0:
             sys.stderr.write("INFO: Printing Failed\n")
             logging.info("Failed printing")

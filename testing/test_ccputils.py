@@ -133,8 +133,9 @@ def test_writeFile():
     os.unlink('/tmp/testfile')
 
 def test_base64encode():
-    Utils.WriteFile('/tmp/testfile', 'data') == True
-    assert Utils.Base64Encode('data', '/tmp/testfile') == 'data:application/octet-stream;base64,ZGF0YQ=='
+    assert Utils.Base64Encode('data', 'pdf') == 'data:application/pdf;base64,ZGF0YQ=='
+    assert Utils.Base64Encode('data', 'other') == 'data:application/octet-stream;base64,ZGF0YQ=='
+    assert Utils.Base64Encode('data', 'something') == 'data:application/octet-stream;base64,ZGF0YQ=='
 
 def test_GetLanguage():
     assert Utils.GetLanguage(['en_GB',]) == "en"

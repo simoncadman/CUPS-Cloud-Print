@@ -516,6 +516,9 @@ class Printer(object):
             sys.stderr.write("ERROR: Job data is empty\n")
             return False
 
+        if jobfile is None or jobfile == "":
+            jobfile = "Unknown"
+
         for optiontext in options.split(' '):
 
             # landscape
@@ -543,7 +546,7 @@ class Printer(object):
                     logging.error("Failed to rotate")
                     return False
 
-        b64data = Utils.Base64Encode(jobdata, jobfile)
+        b64data = Utils.Base64Encode(jobdata, jobtype)
         if b64data is None:
             sys.stderr.write("ERROR: Failed to base64 encode data")
             return False
@@ -552,19 +555,15 @@ class Printer(object):
             title = "Untitled page"
         else:
             title = jobname
-        content_type = {'pdf': 'dataUrl',
-                        'jpeg': 'image/jpeg',
-                        'png': 'image/png',
-                        }
         headers = [
             ('printerid', self['id']),
             ('title', title),
             ('content', b64data),
-            ('contentType', content_type[jobtype]),
+            ('contentType', 'dataUrl'),
             ('capabilities', json.dumps(self._getCapabilities(cupsprintername, options)))
         ]
         logging.info('Capability headers are: %s', headers[4])
-        data = self._encodeMultiPart(headers, content_type[jobtype])
+        data = self._encodeMultiPart(headers, 'dataUrl')
 
         try:
             responseobj = self.getRequestor().submit(data, self._getMimeBoundary())
