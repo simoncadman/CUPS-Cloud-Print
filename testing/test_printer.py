@@ -352,7 +352,15 @@ def test_submitJob():
         "nolandscape") == True
 
     os.unlink(tmpFile)
-
+    
+    # test submitting job with no filename
+    assert printer.submitJob(
+        'pdf',
+        '',
+        'data',
+        '',
+        testprintername) == True
+    
     # test submitting job with no name
     assert printer.submitJob(
         'pdf',
