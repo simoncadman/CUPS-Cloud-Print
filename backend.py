@@ -42,7 +42,7 @@ if __name__ == '__main__':  # pragma: no cover
     Utils.SetupLogging()
 
     # line below is replaced on commit
-    CCPVersion = "20141116 192655"
+    CCPVersion = "20141119 225314"
     Utils.ShowVersion(CCPVersion)
 
     if len(sys.argv) != 1 and len(sys.argv) < 6 or len(sys.argv) > 7:
@@ -56,11 +56,10 @@ if __name__ == '__main__':  # pragma: no cover
         sys.exit(0)
 
     printFile = None
-    givenFile = False
 
     if len(sys.argv) == 7:
-        prog, jobID, userName, jobTitle, copies, printOptions, printFile = sys.argv
-        givenFile = True
+        sys.stderr.write("ERROR: Sorry, CUPS Cloud Print no longer supports printing files directly for security reasons\n")
+        sys.exit(1)
     if len(sys.argv) == 6:
         prog, jobID, userName, jobTitle, copies, printOptions = sys.argv
         printFile = jobTitle
@@ -86,22 +85,13 @@ if __name__ == '__main__':  # pragma: no cover
                 sys.exit(1)
         sys.exit(0)
 
-    filedata = None
+    filedata = ""
+    for line in sys.stdin:
+        filedata += line
 
-    # if no printfile, put stdin to a temp file
-    if not givenFile:
-        filedata = ""
-        for line in sys.stdin:
-            filedata += line
-
-        # Backends should only produce multiple copies if a file name is
-        # supplied (see CUPS Software Programmers Manual)
-        copies = 1
-    elif not os.path.exists(printFile):
-        sys.stderr.write('ERROR: file "%s" not found\n' % printFile)
-        sys.exit(1)
-    else:
-        filedata = Utils.ReadFile(printFile)
+    # Backends should only produce multiple copies if a file name is
+    # supplied (see CUPS Software Programmers Manual)
+    copies = 1
 
     uri = os.getenv('DEVICE_URI')
     cupsprintername = os.getenv('PRINTER')
@@ -156,11 +146,6 @@ if __name__ == '__main__':  # pragma: no cover
 
         logging.info(str(printFile) + " sent to cloud print")
 
-        if givenFile:
-            sys.stderr.write("INFO: Cleaning up temporary files\n")
-            if os.path.exists(printFile):
-                os.unlink(printFile)
-                logging.info("Deleted " + printFile)
         if result != 0:
             sys.stderr.write("INFO: Printing Failed\n")
             logging.info("Failed printing")
