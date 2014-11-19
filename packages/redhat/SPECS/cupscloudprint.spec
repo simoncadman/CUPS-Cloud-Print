@@ -77,8 +77,8 @@ fi
 %dir %{_usr}/share/cloudprint-cups/testing
 %dir %{_usr}/share/cloudprint-cups/selinux
 %docdir %{_usr}/share/cloudprint-cups/testing/testfiles
-%{_usr}/%{_lib}/cups/backend/gcp
-%{_usr}/%{_lib}/cups/driver/cupscloudprint
+%{_usr}/lib/cups/backend/gcp
+%{_usr}/lib/cups/driver/cupscloudprint
 %attr(644, root, lp) %{_usr}/share/cloudprint-cups/.coveragerc
 %attr(644, root, lp) %{_usr}/share/cloudprint-cups/auth.py
 %attr(644, root, lp) %{_usr}/share/cloudprint-cups/cloudprintrequestor.py
