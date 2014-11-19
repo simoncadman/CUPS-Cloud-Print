@@ -42,7 +42,7 @@ if __name__ == '__main__':  # pragma: no cover
     Utils.SetupLogging()
 
     # line below is replaced on commit
-    CCPVersion = "20141119 225314"
+    CCPVersion = "20141119 225352"
     Utils.ShowVersion(CCPVersion)
 
     if len(sys.argv) != 1 and len(sys.argv) < 6 or len(sys.argv) > 7:
@@ -58,7 +58,8 @@ if __name__ == '__main__':  # pragma: no cover
     printFile = None
 
     if len(sys.argv) == 7:
-        sys.stderr.write("ERROR: Sorry, CUPS Cloud Print no longer supports printing files directly for security reasons\n")
+        sys.stderr.write("ERROR: Sorry, CUPS Cloud Print no longer supports printing\
+                          files directly for security reasons\n")
         sys.exit(1)
     if len(sys.argv) == 6:
         prog, jobID, userName, jobTitle, copies, printOptions = sys.argv
