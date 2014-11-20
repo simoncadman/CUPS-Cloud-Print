@@ -29,6 +29,7 @@ rm -rf $RPM_BUILD_ROOT
 make install DESTDIR=$RPM_BUILD_ROOT NOPERMS=1
 %{__install} -Dp -m0744 cron.daily/cupscloudprint %{buildroot}%{_sysconfdir}/cron.daily/cupscloudprint
 cd "$RPM_BUILD_ROOT"
+python2 -m compileall -q -f .
 python2 -OO -m compileall -q -f .
 
 %post
