@@ -230,7 +230,7 @@ success=0
 for i in {1..30}
 do
    echo "Waiting for files to exist: $i of 30 tries"
-   if [[ `./testing/listdrivefiles.py "$psreaderjobname"` != "" && `./testing/listdrivefiles.py "$psjobname"` != "" && `/testing/listdrivefiles.py "$pdfjobname"` != "" ]]; then
+   if [[ `./testing/listdrivefiles.py "$psreaderjobname"` != "" && `./testing/listdrivefiles.py "$psjobname"` != "" && `./testing/listdrivefiles.py "$pdfjobname"` != "" ]]; then
         break
    fi
    sleep 1
