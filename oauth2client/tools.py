@@ -30,10 +30,7 @@ import sys
 import webbrowser
 
 from six.moves import BaseHTTPServer
-try:
-    from six.moves import urllib
-except ImportError:
-    import urllib
+from six.moves import urllib
 
 from oauth2client import client
 from oauth2client import util
