@@ -18,7 +18,8 @@ net-print/cups
 app-text/ghostscript-gpl
 dev-python/pycups
 dev-python/httplib2
-media-gfx/imagemagick[postscript,jpeg,png]"
+media-gfx/imagemagick[postscript,jpeg,png]
+dev-python/six"
 S=${WORKDIR}/${P}
 
 src_install() {
