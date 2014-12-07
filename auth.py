@@ -95,7 +95,8 @@ class Auth:
             flow = client.OAuth2WebServerFlow(client_id=Auth.clientid,
                                               client_secret=Auth.clientsecret,
                                               scope=permissions,
-                                              user_agent=userid)
+                                              user_agent=userid,
+                                              redirect_uri='urn:ietf:wg:oauth:2.0:oob')
             auth_uri = flow.step1_get_authorize_url()
             message = "Open this URL, grant access to CUPS Cloud Print,"
             message += "then provide the code displayed : \n\n"
