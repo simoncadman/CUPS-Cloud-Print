@@ -29,10 +29,7 @@ import os
 import sys
 import time
 import six
-try:
-    from six.moves import urllib
-except ImportError:
-    import urllib
+from six.moves import urllib
 
 import httplib2
 from oauth2client import clientsecrets
