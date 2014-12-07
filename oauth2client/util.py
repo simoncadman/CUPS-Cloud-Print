@@ -35,7 +35,10 @@ import sys
 import types
 
 import six
-from six.moves import urllib
+try:
+    from six.moves import urllib
+except ImportError:
+    import urllib
 
 
 logger = logging.getLogger(__name__)
