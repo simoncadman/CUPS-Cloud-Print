@@ -1,4 +1,5 @@
 *.pyc
+*.pyo
 cloudprint.ppd
 test-capabilities.serial
 .coverage
@@ -8,3 +9,4 @@ config.log
 config.status
 .DS_Store
 .*swp
+autom4te.cache
