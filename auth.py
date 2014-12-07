@@ -104,10 +104,10 @@ class Auth:
 
             # setup storage again if just got userid now
             storage = multistore_file.get_credential_storage(
-                        Auth.config,
-                        Auth.clientid,
-                        userid,
-                        permissions)
+                Auth.config,
+                Auth.clientid,
+                userid,
+                permissions)
 
         while True:
             flow = client.OAuth2WebServerFlow(client_id=Auth.clientid,
