@@ -21,6 +21,7 @@ import sys
 try:
     from six.moves import urllib
 except ImportError:
+    import six
     import urllib
     import urlparse
     six.moves.urllib = urllib
