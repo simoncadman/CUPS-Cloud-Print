@@ -29,7 +29,12 @@ import os
 import sys
 import time
 import six
-from six.moves import urllib
+try:
+    from six.moves import urllib
+except ImportError:
+    import urllib
+    import urlparse
+    urllib.parse = urlparse
 
 import httplib2
 from oauth2client import clientsecrets
