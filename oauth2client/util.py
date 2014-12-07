@@ -41,7 +41,7 @@ except ImportError:
     import urllib
     import urlparse
     urllib.parse = urlparse
-    urllib.parse.urlencode = urlparse.urlencode
+    urllib.parse.urlencode = urllib.urlencode
 
 
 logger = logging.getLogger(__name__)
