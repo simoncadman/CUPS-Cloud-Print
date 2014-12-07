@@ -36,6 +36,7 @@ except ImportError:
     import urllib
     import urlparse
     urllib.parse = urlparse
+    urllib.parse.urlencode = urlparse.urlencode
 
 from oauth2client import client
 from oauth2client import util
