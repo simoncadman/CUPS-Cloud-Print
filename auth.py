@@ -26,7 +26,7 @@ except ImportError:
     six.moves.urllib = urllib
     six.moves.urllib.parse = urlparse
     six.moves.urllib.parse.urlencode = urllib.urlencode
-    
+
 from oauth2client import client
 from oauth2client import multistore_file
 from cloudprintrequestor import CloudPrintRequestor
