@@ -21,13 +21,7 @@ __author__ = 'jcgregorio@google.com (Joe Gregorio)'
 
 import json
 import logging
-try:
-    from six.moves import urllib
-except ImportError:
-    import urllib
-    import urlparse
-    urllib.parse = urlparse
-    urllib.parse.urlencode = urllib.urlencode
+from six.moves import urllib
 
 from oauth2client import util
 from oauth2client.client import AccessTokenRefreshError

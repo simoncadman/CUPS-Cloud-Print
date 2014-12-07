@@ -17,6 +17,16 @@
 import json
 import os
 import sys
+# workaround for ubuntu 12.04 / older python-six version
+try:
+    from six.moves import urllib
+except ImportError:
+    import urllib
+    import urlparse
+    six.moves.urllib = urllib
+    six.moves.urllib.parse = urlparse
+    six.moves.urllib.parse.urlencode = urllib.urlencode
+    
 from oauth2client import client
 from oauth2client import multistore_file
 from cloudprintrequestor import CloudPrintRequestor
