@@ -69,13 +69,13 @@ class CloudPrintRequestor(httplib2.Http):
         # use test response for testing
         if testResponse is None:
             if data is None:
-                headers, response = self.request(url, "GET", headers=headers)
+                headers, response = self.request(url, method="GET", headers=headers)
             else:
                 headers['Content-Length'] = str(len(data))
                 contenttype = 'multipart/form-data;boundary=%s' % boundary
                 headers['Content-Type'] = contenttype
                 headers, response = self.request(
-                    url, "POST", body=data, headers=headers)
+                    url, method="POST", body=data, headers=headers)
         else:
             response = testResponse
 
