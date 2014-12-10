@@ -19,7 +19,6 @@ import json
 import locale
 import logging
 import mimetools
-import os
 import re
 import urllib
 import subprocess
