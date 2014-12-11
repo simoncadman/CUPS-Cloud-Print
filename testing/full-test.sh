@@ -40,7 +40,7 @@ if [[ "`whoami`" == "root"  ]]; then
        hash systemctl && ( systemctl start cups || cupsd )
        
        # start via 'start' if exists
-       hash start && ( ( start cups && restart dbus ) || cupsd )
+       hash start && ( ( start cups ; restart dbus ) || cupsd )
        
 fi
 
