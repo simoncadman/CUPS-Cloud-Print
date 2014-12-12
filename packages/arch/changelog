@@ -1,3 +1,20 @@
+2014-12-13 Simon Cadman <src@niftiestsoftware.com>
+
+        * 20140814.2 :
+          Fix: Upgrade script error no longer prevents Mac OS X installation
+          Fix: Strip control chars when sanitising text
+          Fix: Fixed printing from stdin, detect mimetypes from job types
+          Change: Upgraded oauth2client to v1.4.2
+          Change: Stop writing temp files to disk
+          Change: Stop writing base64 encoded files to disk
+          Change: Require 'which' and 'file' packages in rpm ( dummy 'which' package added for OpenSUSE )
+          Change: Require python-six for latest oauth2client version
+          Change: Prevent capabilities prefixed with 'cups', or other ones that could point to binaries being used to populate ppd with potentially arbitrary commands from GCP
+          Change: Dont write temp ppd files in reportissues.py script
+          Change: Backend now only accepts data from stdin, and refuses to read files passed in
+
+ -- simon cadman <src@niftiestsoftware.com>  Sat, 13 Dec 2014 00:01:12 +0000
+
 2014-10-22 Simon Cadman <src@niftiestsoftware.com>
 
         * 20140814.1 :

@@ -1,7 +1,7 @@
 # $FreeBSD$
 
 PORTNAME=	cupscloudprint
-PORTVERSION=	20140814
+PORTVERSION=	20140814.2
 CATEGORIES=	print
 
 MAINTAINER=	src@niftiestsoftware.com

@@ -124,6 +124,19 @@ fi
 %doc %{_usr}/share/cloudprint-cups/README.md
 
 %changelog
+* Sat Dec 13 2014 Simon Cadman <src@niftiestsoftware.com> (20140814.2-1)
+- Fix: Upgrade script error no longer prevents Mac OS X installation
+- Fix: Strip control chars when sanitising text
+- Fix: Fixed printing from stdin, detect mimetypes from job types
+- Change: Upgraded oauth2client to v1.4.2
+- Change: Stop writing temp files to disk
+- Change: Stop writing base64 encoded files to disk
+- Change: Require 'which' and 'file' packages in rpm ( dummy 'which' package added for OpenSUSE )
+- Change: Require python-six for latest oauth2client version
+- Change: Prevent capabilities prefixed with 'cups', or other ones that could point to binaries being used to populate ppd with potentially arbitrary commands from GCP
+- Change: Dont write temp ppd files in reportissues.py script
+- Change: Backend now only accepts data from stdin, and refuses to read files passed in
+
 * Thu Aug 14 2014 Simon Cadman <src@niftiestsoftware.com> (20140814-1)
 - Fix: Issue #71 on Github, always send use_cdd=false param with every request
 

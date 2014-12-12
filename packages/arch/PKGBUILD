@@ -1,6 +1,6 @@
 # Maintainer: Simon Cadman <src@niftiestsoftware.com>
 pkgname=cupscloudprint
-pkgver=20140814.1
+pkgver=20140814.2
 pkgrel=1
 pkgdesc="Print via Google Cloud print using CUPS"
 arch=('any')
