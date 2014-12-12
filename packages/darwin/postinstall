@@ -1,4 +1,4 @@
 #! /bin/sh
 
 # run upgrade script
-sudo /usr/local/share/cloudprint-cups/upgrade.py
+sudo /usr/local/share/cloudprint-cups/upgrade.py || echo "Failed to run upgrade script."
