@@ -1,4 +1,5 @@
 ignore-paths:
     - testing
+    - oauth2client
 max-line-length: 100
 strictness: medium
