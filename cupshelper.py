@@ -46,11 +46,8 @@ class CUPSHelper(object):
 
     def getPrinters(self):
         printers = self._connection.getPrinters()
-        return {
-            cups_queue_name: printer
-            for cups_queue_name, printer in printers.items()
-            if printer['device-uri'].startswith(Utils.PROTOCOL)
-            }
+        return dict((name, printer) for (name, printer) in printers.iteritems()
+                    if printer['device-uri'].startswith(Utils.PROTOCOL))
 
     def deletePrinter(self, uri):
         cups_queue_name = self._getCUPSQueueName(uri)
