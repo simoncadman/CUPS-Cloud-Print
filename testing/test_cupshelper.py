@@ -26,13 +26,17 @@ global helperinstance
 def setup_function(function):
     # setup mock helper
     global helperinstance
-    helperinstance = CUPSHelper(MockCUPS())
+    global mockcups
+    mockcups = MockCUPS()
+    helperinstance = CUPSHelper(mockcups)
 
 def test_init():
     global helperinstance
     assert isinstance(helperinstance, CUPSHelper)
 
 def test_getPrinters():
+    global mockcups
+    
     assert isinstance(helperinstance.getPrinters(), dict)
     assert len(helperinstance.getPrinters()) == 0
     
@@ -44,6 +48,19 @@ def test_getPrinters():
                                         'capabilities': [{'name': 'ns1:Colors',
                                                           'type': 'Feature'}]}, requestor)
     helperinstance.addPrinter(printerinstance, "test")
+    
+    # also add dummy instance with non-gcp uri
+    mockcups._printers["test-dummy-non-gcp-printer"] = {'printer-is-shared': False,
+                                'printer-info': "test info",
+                                'printer-state-message': '',
+                                'printer-type': 1,
+                                'printer-state-reasons': ['none'],
+                                'printer-uri-supported': 'ipp://localhost/printers/test',
+                                'printer-state': 3,
+                                'printer-location': "test location",
+                                'device-uri': "test://test/test"}
+    
+    assert len(mockcups._printers) == 2
     
     # test count of printers returned has increased by 1
     assert len(helperinstance.getPrinters()) == 1
