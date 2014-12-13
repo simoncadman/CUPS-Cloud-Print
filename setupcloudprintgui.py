@@ -27,7 +27,6 @@ exit $?
 from auth import Auth
 from ccputils import Utils
 from cupshelper import CUPSHelper
-from printer import Printer
 from printermanager import PrinterManager
 
 import Tkinter
