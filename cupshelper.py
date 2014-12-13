@@ -20,8 +20,11 @@ import cups
 
 
 class CUPSHelper(object):
-    def __init__(self):
-        self._connection = cups.Connection()
+    def __init__(self, connection=None):
+        if connection is None:
+            self._connection = cups.Connection()
+        else:
+            self._connection = connection
 
     def _getCUPSQueueName(self, uri):
         for cups_queue_name, printer in self.getPrinters().items():
