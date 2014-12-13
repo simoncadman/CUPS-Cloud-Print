@@ -6,7 +6,7 @@ python:
 before_install:
  - sudo apt-get update -qq
  - sudo apt-get install -qq debhelper autotools-dev cups-ppdc libcups2-dev cups imagemagick ghostscript
- - pip install httplib2 pycups==1.9.68 pytest-cov python-coveralls pyOpenSSL six
+ - pip install httplib2 pycups==1.9.68 pytest-cov python-coveralls pyOpenSSL six pyttk
 install:
  - ./configure
  - sudo gpasswd -a `whoami` lpadmin
