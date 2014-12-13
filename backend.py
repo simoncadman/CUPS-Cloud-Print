@@ -42,7 +42,7 @@ if __name__ == '__main__':  # pragma: no cover
     Utils.SetupLogging()
 
     # line below is replaced on commit
-    CCPVersion = "20140713 215426"
+    CCPVersion = "20140814.2 000000"
     Utils.ShowVersion(CCPVersion)
 
     if len(sys.argv) != 1 and len(sys.argv) < 6 or len(sys.argv) > 7:
@@ -51,15 +51,19 @@ if __name__ == '__main__':  # pragma: no cover
         sys.exit(0)
 
     if len(sys.argv) >= 4 and sys.argv[3] == "Set Default Options":
-        print "ERROR: Unimplemented command: " + sys.argv[3]
-        logging.error("Unimplemented command: %s", sys.argv[3])
+        sys.stderr.write("ERROR: Unimplemented command: " + sys.argv[3] + "\n")
+        logging.error("Unimplemented command: " + sys.argv[3])
         sys.exit(0)
 
+    printFile = None
+
     if len(sys.argv) == 7:
-        prog, jobID, userName, jobTitle, copies, printOptions, printFile = sys.argv[0:7]
+        sys.stderr.write("ERROR: Sorry, CUPS Cloud Print no longer supports printing\
+                          files directly for security reasons\n")
+        sys.exit(1)
     if len(sys.argv) == 6:
-        prog, jobID, userName, jobTitle, copies, printOptions = sys.argv[0:6]
-        printFile = None
+        prog, jobID, userName, jobTitle, copies, printOptions = sys.argv
+        printFile = jobTitle
 
     requestors, storage = Auth.SetupAuth(False)
     if not requestors:
@@ -82,14 +86,13 @@ if __name__ == '__main__':  # pragma: no cover
                 sys.exit(1)
         sys.exit(0)
 
-    # if no printfile, put stdin to a temp file
-    if printFile is None:
-        logging.info("Reading file from stdin")
-        printFile = Utils.StdInToTempFile(jobID, userName)
+    filedata = ""
+    for line in sys.stdin:
+        filedata += line
 
-        # Backends should only produce multiple copies if a file name is
-        # supplied (see CUPS Software Programmers Manual)
-        copies = 1
+    # Backends should only produce multiple copies if a file name is
+    # supplied (see CUPS Software Programmers Manual)
+    copies = 1
 
     uri = os.getenv('DEVICE_URI')
     cupsprintername = os.getenv('PRINTER')
@@ -98,59 +101,51 @@ if __name__ == '__main__':  # pragma: no cover
         sys.stdout.write(message)
         sys.exit(255)
 
-    logging.info("Printing file %s", printFile)
+    logging.info("Printing file %s" , str(printFile))
     optionsstring = ' '.join(["'%s'" % option for option in sys.argv])
     logging.info("Device is %s , printername is %s, params are: %s",
                  uri, cupsprintername, optionsstring)
 
-    pdfFile = printFile + ".pdf"
+    # setup
+    convertToPDFParams = ["ps2pdf", "-dPDFSETTINGS=/printer",
+                          "-dUseCIEColor", "-", "-"]
     if Utils.which("ps2pdf") is None:
-        convertToPDFParams = ["pstopdf", printFile, pdfFile]
-    else:
-        convertToPDFParams = ["ps2pdf", "-dPDFSETTINGS=/printer",
-                              "-dUseCIEColor", printFile, pdfFile]
+        convertToPDFParams = ["pstopdf", "-", "-"]
 
+    logging.debug('is this a pdf? ' + str(printFile))
     result = 0
 
-    logging.debug('is this a pdf? %s', printFile)
-    if not os.path.exists(printFile):
-        sys.stderr.write('ERROR: file "%s" not found\n', printFile)
-        result = 1
-    elif not Utils.fileIsPDF(printFile):
+    if not Utils.fileIsPDF(filedata):
+        # read file as pdf
         sys.stderr.write("INFO: Converting print job to PDF\n")
-        if subprocess.call(convertToPDFParams) != 0:
+        p = subprocess.Popen(convertToPDFParams, stdout=subprocess.PIPE, stdin=subprocess.PIPE)
+        filedata = p.communicate(filedata)[0]
+        if p.returncode != 0:
             sys.stderr.write("ERROR: Failed to convert file to pdf\n")
             result = 1
         else:
-            logging.info("Converted to PDF as %s", pdfFile)
+            logging.info("Converted to PDF - %s bytes" % str(len(filedata)))
     else:
-        pdfFile = printFile + '.pdf'
-        os.rename(printFile, pdfFile)
-        logging.info("Using %s as is already PDF", pdfFile)
+        # read file normally
+        logging.info("Using %s as is already PDF - %s bytes" % (printFile, len(filedata)))
 
+    # send pdf data to GCP
     if result == 0:
         sys.stderr.write("INFO: Sending document to Cloud Print\n")
-        logging.info("Sending %s to cloud", pdfFile)
+        logging.info("Sending %s to cloud" % printFile)
 
         printer = printer_manager.getPrinterByURI(uri)
         if printer is None:
-            print "ERROR: PrinterManager '%s' not found" % uri
+            sys.stderr.write("ERROR: PrinterManager '%s' not found\n" % uri)
             result = 1
-        elif printer.submitJob('pdf', pdfFile, jobTitle, cupsprintername, printOptions):
-            print "INFO: Successfully printed"
+        elif printer.submitJob('pdf', printFile, filedata, jobTitle, cupsprintername, printOptions):
+            sys.stderr.write("INFO: Successfully printed\n")
             result = 0
         else:
-            print "ERROR: Failed to submit job to cloud print"
+            sys.stderr.write("ERROR: Failed to submit job to cloud print\n")
             result = 1
+        logging.info(str(printFile) + " sent to cloud print")
 
-        logging.info("%s sent to cloud print, deleting", pdfFile)
-        if os.path.exists(printFile):
-            os.unlink(printFile)
-        sys.stderr.write("INFO: Cleaning up temporary files\n")
-        logging.info("Deleted %s", printFile)
-        if os.path.exists(pdfFile):
-            os.unlink(pdfFile)
-        logging.info("Deleted %s", pdfFile)
         if result != 0:
             sys.stderr.write("INFO: Printing Failed\n")
             logging.info("Failed printing")

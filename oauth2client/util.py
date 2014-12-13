@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 #
-# Copyright 2010 Google Inc.
+# Copyright 2014 Google Inc. All rights reserved.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -17,26 +17,26 @@
 
 """Common utility library."""
 
-__author__ = ['rafek@google.com (Rafe Kaplan)',
-              'guido@google.com (Guido van Rossum)',
+__author__ = [
+    'rafek@google.com (Rafe Kaplan)',
+    'guido@google.com (Guido van Rossum)',
 ]
+
 __all__ = [
-  'positional',
-  'POSITIONAL_WARNING',
-  'POSITIONAL_EXCEPTION',
-  'POSITIONAL_IGNORE',
+    'positional',
+    'POSITIONAL_WARNING',
+    'POSITIONAL_EXCEPTION',
+    'POSITIONAL_IGNORE',
 ]
 
 import inspect
 import logging
+import sys
 import types
-import urllib
-import urlparse
 
-try:
-  from urlparse import parse_qsl
-except ImportError:
-  from cgi import parse_qsl
+import six
+from six.moves import urllib
+
 
 logger = logging.getLogger(__name__)
 
@@ -132,7 +132,7 @@ def positional(max_positional_args):
       return wrapped(*args, **kwargs)
     return positional_wrapper
 
-  if isinstance(max_positional_args, (int, long)):
+  if isinstance(max_positional_args, six.integer_types):
     return positional_decorator
   else:
     args, _, _, defaults = inspect.getargspec(max_positional_args)
@@ -152,7 +152,7 @@ def scopes_to_string(scopes):
   Returns:
     The scopes formatted as a single string.
   """
-  if isinstance(scopes, types.StringTypes):
+  if isinstance(scopes, six.string_types):
     return scopes
   else:
     return ' '.join(scopes)
@@ -189,8 +189,8 @@ def _add_query_parameter(url, name, value):
   if value is None:
     return url
   else:
-    parsed = list(urlparse.urlparse(url))
-    q = dict(parse_qsl(parsed[4]))
+    parsed = list(urllib.parse.urlparse(url))
+    q = dict(urllib.parse.parse_qsl(parsed[4]))
     q[name] = value
-    parsed[4] = urllib.urlencode(q)
-    return urlparse.urlunparse(parsed)
+    parsed[4] = urllib.parse.urlencode(q)
+    return urllib.parse.urlunparse(parsed)

@@ -3,6 +3,7 @@
 # Installs the Python packages required by CUPS Cloud Print.
 
 sudo /usr/bin/easy_install httplib2
+sudo /usr/bin/easy_install six
 
 # A bug in Xcode-plus-Python prevents pycups from building without these env args.
 export CFLAGS=-Qunused-arguments

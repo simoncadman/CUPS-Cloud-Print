@@ -17,6 +17,17 @@
 import json
 import os
 import sys
+# workaround for ubuntu 12.04 / older python-six version
+try:
+    from six.moves import urllib
+except ImportError:
+    import six
+    import urllib
+    import urlparse
+    six.moves.urllib = urllib
+    six.moves.urllib.parse = urlparse
+    six.moves.urllib.parse.urlencode = urllib.urlencode
+
 from oauth2client import client
 from oauth2client import multistore_file
 from cloudprintrequestor import CloudPrintRequestor
@@ -91,6 +102,13 @@ class Auth(object):
             userid = raw_input(
                 "Name for this user account ( eg something@gmail.com )? ")
 
+            # setup storage again if just got userid now
+            storage = multistore_file.get_credential_storage(
+                Auth.config,
+                Auth.clientid,
+                userid,
+                permissions)
+
         while True:
             flow, auth_uri = Auth.AddAccountStep1(userid, permissions)
             message = "Open this URL, grant access to CUPS Cloud Print, "
@@ -123,11 +141,11 @@ class Auth(object):
         if permissions is None:
             permissions = Auth.normal_permissions
         flow = client.OAuth2WebServerFlow(
-            Auth.clientid,
-            Auth.clientsecret,
-            permissions,
-            'urn:ietf:wg:oauth:2.0:oob',
-            userid)
+            client_id=Auth.clientid,
+            client_secret=Auth.clientsecret,
+            scope=permissions,
+            user_agent=userid,
+            redirect_uri='urn:ietf:wg:oauth:2.0:oob')
         auth_uri = flow.step1_get_authorize_url()
         return flow, auth_uri
 

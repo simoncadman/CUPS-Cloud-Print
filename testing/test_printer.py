@@ -199,10 +199,14 @@ def test_sanitizeText():
         assert printers[0]._sanitizeText("TESTSTRING",checkReserved) == "TESTSTRING"
         assert printers[0]._sanitizeText("TEST:; STRING /2",checkReserved) == "TEST___STRING_-2"
         assert printers[0]._sanitizeText("TEST:; STRING /2",checkReserved) == "TEST___STRING_-2"
-    
+
     assert printers[0]._sanitizeText("Duplex") == "Duplex"
     assert printers[0]._sanitizeText("Duplex",True) == "GCP_Duplex"
-    
+
+    # ensure strips newlines
+    assert printers[0]._sanitizeText("Test\ntest2") == "Testtest2"
+    assert printers[0]._sanitizeText("Test\r\ntest2") == "Testtest2"
+
 def test_getInternalName():
     global printers
     printerItem = printers[0]
@@ -214,14 +218,16 @@ def test_getInternalName():
 
     for internalTest in internalCapabilityTests:
         assert printerItem._getInternalName(internalTest, 'capability') not in printerItem._RESERVED_CAPABILITY_WORDS
+        assert not printerItem._getInternalName(internalTest, 'capability').startswith(printerItem._RESERVED_CAPABILITY_PREFIXES)
         assert ':' not in printerItem._getInternalName(internalTest, 'capability')
         assert ' ' not in printerItem._getInternalName(internalTest, 'capability')
         assert len(printerItem._getInternalName(internalTest,'capability')) <= 30
         assert len(printerItem._getInternalName(internalTest,'capability')) >= 1
 
     for internalTest in internalCapabilityTests:
-        for capabilityName in ["psk:JobDuplexAllDocumentsContiguously","other", "psk:PageOrientation"]:
+        for capabilityName in ["psk:JobDuplexAllDocumentsContiguously","other", "psk:PageOrientation", "cupsFilter"]:
             assert printerItem._getInternalName(internalTest,'option',capabilityName) not in printerItem._RESERVED_CAPABILITY_WORDS
+            assert not printerItem._getInternalName(internalTest,'option',capabilityName).startswith(printerItem._RESERVED_CAPABILITY_PREFIXES)
             assert ':' not in printerItem._getInternalName(internalTest,'option',capabilityName)
             assert ' ' not in printerItem._getInternalName(internalTest,'option')
             assert len(printerItem._getInternalName(internalTest,'option',capabilityName)) <= 30
@@ -313,16 +319,19 @@ def test_submitJob():
     assert printer.submitJob(
         'pdf',
         'testing/testfiles/Test Page.pdf',
+        open('testing/testfiles/Test Page.pdf').read(),
         'Test Page',
         testprintername) == True
     assert printer.submitJob(
         'pdf',
         'testing/testfiles/Test Page Doesnt Exist.pdf',
+        '',
         'Test Page',
         testprintername) == False
     assert printer.submitJob(
         'pdf',
         'testing/testfiles/Test Page Corrupt.pdf',
+        open('testing/testfiles/Test Page Corrupt.pdf').read(),
         'Test Page',
         testprintername, 'landscape') == False
 
@@ -337,27 +346,39 @@ def test_submitJob():
     assert printer.submitJob(
         'pdf',
         tmpFile,
+        open(tmpFile).read(),
         'Test Page',
         testprintername,
         "landscape") == True
     assert printer.submitJob(
         'pdf',
         tmpFile,
+        open(tmpFile).read(),
         'Test Page',
         testprintername,
         "nolandscape") == True
 
     os.unlink(tmpFile)
-
+    
+    # test submitting job with no filename
+    assert printer.submitJob(
+        'pdf',
+        '',
+        'data',
+        '',
+        testprintername) == True
+    
     # test submitting job with no name
     assert printer.submitJob(
         'pdf',
         'testing/testfiles/Test Page.pdf',
+        open('testing/testfiles/Test Page.pdf').read(),
         '',
         testprintername) == True
     assert printer.submitJob(
         'pdf',
         'testing/testfiles/Test Page Doesnt Exist.pdf',
+        '',
         '',
         testprintername) == False
 
@@ -365,11 +386,13 @@ def test_submitJob():
     assert printer.submitJob(
         'png',
         'testing/testfiles/Test Page.png',
+        open('testing/testfiles/Test Page.png').read(),
         'Test Page',
         testprintername) == True
     assert printer.submitJob(
         'png',
         'testing/testfiles/Test Page Doesnt Exist.png',
+        '',
         'Test Page',
         testprintername) == False
 
@@ -377,11 +400,13 @@ def test_submitJob():
     assert printer.submitJob(
         'ps',
         'testing/testfiles/Test Page.ps',
+        open('testing/testfiles/Test Page.ps').read(),
         'Test Page',
         testprintername) == False
     assert printer.submitJob(
         'ps',
         'testing/testfiles/Test Page Doesnt Exist.ps',
+        '',
         'Test Page',
         testprintername) == False
 
@@ -389,6 +414,7 @@ def test_submitJob():
     assert printer.submitJob(
         'pdf',
         'testing/testfiles/Test Page.pdf',
+        open('testing/testfiles/Test Page.pdf').read(),
         'FAIL PAGE',
         testprintername) == False
 
@@ -396,6 +422,7 @@ def test_submitJob():
     assert printer.submitJob(
         'pdf',
         'testing/testfiles/Test Page.pdf',
+        open('testing/testfiles/Test Page.pdf').read(),
         'TEST PAGE WITH EXCEPTION',
         testprintername) == False
 
@@ -422,16 +449,6 @@ def test_submitJobFileCreationFails():
         connection,
         "test location",
         printerppdname) is not None
-    
-    # test failure of print job because b64 version of file exists
-    Utils.WriteFile('testing/testfiles/Test Page.pdf.b64', 'test')
-    os.chmod('testing/testfiles/Test Page.pdf.b64',0)
-    assert printer.submitJob(
-        'pdf',
-        'testing/testfiles/Test Page.pdf',
-        'Test Page',
-        testprintername) == False
-    os.unlink('testing/testfiles/Test Page.pdf.b64')
     
     # delete test printer
     connection.deletePrinter(testprintername)

@@ -9,7 +9,7 @@ Source0:        http://ccp.niftiestsoftware.com/cupscloudprint-%{_version}.tar.b
 
 BuildArch:      noarch
 BuildRequires:  python2-devel,cups-devel,cups,make
-Requires:       cups,system-config-printer-libs,python-httplib2,ghostscript,ImageMagick
+Requires:       cups,system-config-printer-libs,python-httplib2,ghostscript,ImageMagick,which,file,python-six
 
 %description
 Google Cloud Print driver for UNIX-like operating systems.
@@ -30,6 +30,7 @@ make install DESTDIR=$RPM_BUILD_ROOT NOPERMS=1
 %{__install} -Dp -m0744 cron.daily/cupscloudprint %{buildroot}%{_sysconfdir}/cron.daily/cupscloudprint
 cd "$RPM_BUILD_ROOT"
 python2 -m compileall -q -f .
+python2 -OO -m compileall -q -f .
 
 %post
 %{_usr}/share/cloudprint-cups/upgrade.py
@@ -77,15 +78,14 @@ fi
 %dir %{_usr}/share/cloudprint-cups/testing
 %dir %{_usr}/share/cloudprint-cups/selinux
 %docdir %{_usr}/share/cloudprint-cups/testing/testfiles
-%{_usr}/%{_lib}/cups/backend/gcp
-%{_usr}/%{_lib}/cups/driver/cupscloudprint
+%{_usr}/lib/cups/backend/gcp
+%{_usr}/lib/cups/driver/cupscloudprint
 %attr(644, root, lp) %{_usr}/share/cloudprint-cups/.coveragerc
 %attr(644, root, lp) %{_usr}/share/cloudprint-cups/auth.py
 %attr(644, root, lp) %{_usr}/share/cloudprint-cups/cloudprintrequestor.py
 %attr(644, root, lp) %{_usr}/share/cloudprint-cups/printer.py
 %attr(644, root, lp) %{_usr}/share/cloudprint-cups/printermanager.py
 %attr(644, root, lp) %{_usr}/share/cloudprint-cups/oauth2client/__init__.py
-%attr(644, root, lp) %{_usr}/share/cloudprint-cups/oauth2client/anyjson.py
 %attr(644, root, lp) %{_usr}/share/cloudprint-cups/oauth2client/appengine.py
 %attr(644, root, lp) %{_usr}/share/cloudprint-cups/oauth2client/client.py
 %attr(644, root, lp) %{_usr}/share/cloudprint-cups/oauth2client/clientsecrets.py
@@ -96,7 +96,6 @@ fi
 %attr(644, root, lp) %{_usr}/share/cloudprint-cups/oauth2client/keyring_storage.py
 %attr(644, root, lp) %{_usr}/share/cloudprint-cups/oauth2client/locked_file.py
 %attr(644, root, lp) %{_usr}/share/cloudprint-cups/oauth2client/multistore_file.py
-%attr(644, root, lp) %{_usr}/share/cloudprint-cups/oauth2client/old_run.py
 %attr(644, root, lp) %{_usr}/share/cloudprint-cups/oauth2client/service_account.py
 %attr(644, root, lp) %{_usr}/share/cloudprint-cups/oauth2client/tools.py
 %attr(644, root, lp) %{_usr}/share/cloudprint-cups/oauth2client/util.py
@@ -125,6 +124,19 @@ fi
 %doc %{_usr}/share/cloudprint-cups/README.md
 
 %changelog
+* Sat Dec 13 2014 Simon Cadman <src@niftiestsoftware.com> (20140814.2-1)
+- Fix: Upgrade script error no longer prevents Mac OS X installation
+- Fix: Strip control chars when sanitising text
+- Fix: Fixed printing from stdin, detect mimetypes from job types
+- Change: Upgraded oauth2client to v1.4.2
+- Change: Stop writing temp files to disk
+- Change: Stop writing base64 encoded files to disk
+- Change: Require 'which' and 'file' packages in rpm ( dummy 'which' package added for OpenSUSE )
+- Change: Require python-six for latest oauth2client version
+- Change: Prevent capabilities prefixed with 'cups', or other ones that could point to binaries being used to populate ppd with potentially arbitrary commands from GCP
+- Change: Dont write temp ppd files in reportissues.py script
+- Change: Backend now only accepts data from stdin, and refuses to read files passed in
+
 * Thu Aug 14 2014 Simon Cadman <src@niftiestsoftware.com> (20140814-1)
 - Fix: Issue #71 on Github, always send use_cdd=false param with every request
 

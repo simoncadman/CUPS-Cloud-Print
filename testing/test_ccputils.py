@@ -50,13 +50,13 @@ def test_SetupLoggingFails():
     assert os.path.exists(testLogFile) == False
 
 def test_fileIsPDFFails():
-    assert Utils.fileIsPDF('testing/testfiles/NotPdf.txt') == False
+    assert Utils.fileIsPDF(open('testing/testfiles/NotPdf.txt').read()) == False
 
 def test_fileIsPDFSucceeds():
-    assert Utils.fileIsPDF('testing/testfiles/Test Page.pdf') == True
+    assert Utils.fileIsPDF(open('testing/testfiles/Test Page.pdf').read(128)) == True
 
 def test_fileIsPDFErrors():
-    assert Utils.fileIsPDF("-dsadsa") == False
+    assert Utils.fileIsPDF("testdata") == False
 
 def test_whichFails():
     assert Utils.which('dsaph9oaghd9ahdsadsadsadsadasd') is None
@@ -133,18 +133,9 @@ def test_writeFile():
     os.unlink('/tmp/testfile')
 
 def test_base64encode():
-    Utils.WriteFile('/tmp/testfile', 'data') == True
-    assert Utils.Base64Encode('/tmp/testfile') == '/tmp/testfile.b64'
-    assert Utils.ReadFile(
-        '/tmp/testfile.b64') == 'data:application/octet-stream;base64,ZGF0YQ=='
-    os.unlink('/tmp/testfile.b64')
-
-    os.mkdir('/tmp/testfile.b64')
-    assert Utils.Base64Encode('/tmp/testfile') is None
-    os.unlink('/tmp/testfile')
-    os.rmdir('/tmp/testfile.b64')
-
-    assert Utils.Base64Encode('/tmp/testfile/dsiahdisa') is None
+    assert Utils.Base64Encode('data', 'pdf') == 'data:application/pdf;base64,ZGF0YQ=='
+    assert Utils.Base64Encode('data', 'other') == 'data:application/octet-stream;base64,ZGF0YQ=='
+    assert Utils.Base64Encode('data', 'something') == 'data:application/octet-stream;base64,ZGF0YQ=='
 
 def test_GetLanguage():
     assert Utils.GetLanguage(['en_GB',]) == "en"

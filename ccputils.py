@@ -19,7 +19,6 @@ import os
 import logging
 import sys
 import grp
-import mimetypes
 import base64
 import fcntl
 import termios
@@ -36,6 +35,10 @@ class Utils(object):
     PROTOCOL = PROTOCOL_NAME + '://'
     OLD_PROTOCOL_NAME = 'cloudprint'
     OLD_PROTOCOL = OLD_PROTOCOL_NAME + '://'
+    _MIMETYPES_JOBTYPES = {'pdf': 'application/pdf',
+                           'other': 'application/octet-stream',
+                           'jpg': 'image/jpeg',
+                           'png': 'image/png'}
 
     @staticmethod
     def FixFilePermissions(filename):
@@ -91,7 +94,7 @@ class Utils(object):
         return returnValue
 
     @staticmethod
-    def fileIsPDF(filename):
+    def fileIsPDF(filedata):
         """Check if a file is or isnt a PDF
 
         Args:
@@ -99,8 +102,8 @@ class Utils(object):
         Returns:
         boolean: True = is a PDF, False = not a PDF.
         """
-        p = subprocess.Popen(["file", filename.lstrip('-')], stdout=subprocess.PIPE)
-        output = p.communicate()[0]
+        p = subprocess.Popen(["file", '-'], stdout=subprocess.PIPE, stdin=subprocess.PIPE)
+        output = p.communicate(filedata)[0]
         logging.debug("File output was: " + output)
         return "PDF document" in output
 
@@ -207,31 +210,23 @@ class Utils(object):
         return status
 
     @staticmethod
-    def Base64Encode(pathname):
+    def Base64Encode(data, jobtype):
         """Convert a file to a base64 encoded file.
 
         Args:
-          pathname: path name of file to base64 encode..
+          pathname: data to base64 encode
+          jobtype: job type being encoded - pdf, jpg etc
         Returns:
-          string, name of base64 encoded file.
+          string, base64 encoded string.
         For more info on data urls, see:
           http://en.wikipedia.org/wiki/Data_URI_scheme
         """
-        b64_pathname = pathname + '.b64'
-        file_type = mimetypes.guess_type(
-            pathname)[0] or 'application/octet-stream'
-        data = Utils.ReadFile(pathname)
-        if data is None:
-            return None
-
         # Convert binary data to base64 encoded data.
-        header = 'data:%s;base64,' % file_type
-        b64data = header + base64.b64encode(data)
-
-        if Utils.WriteFile(b64_pathname, b64data):
-            return b64_pathname
-        else:
-            return None
+        mimetype = Utils._MIMETYPES_JOBTYPES['other']
+        if jobtype in Utils._MIMETYPES_JOBTYPES:
+            mimetype = Utils._MIMETYPES_JOBTYPES[jobtype]
+        header = 'data:%s;base64,' % mimetype
+        return header + base64.b64encode(data)
 
     @staticmethod
     def GetLanguage(locale):

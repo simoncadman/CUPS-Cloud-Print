@@ -1,4 +1,4 @@
-# Copyright (C) 2010 Google Inc.
+# Copyright 2014 Google Inc. All rights reserved.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -19,14 +19,14 @@ Utilities for making it easier to use OAuth 2.0 on Google App Engine.
 
 __author__ = 'jcgregorio@google.com (Joe Gregorio)'
 
-import base64
 import cgi
-import httplib2
+import json
 import logging
 import os
 import pickle
 import threading
-import time
+
+import httplib2
 
 from google.appengine.api import app_identity
 from google.appengine.api import memcache
@@ -41,7 +41,6 @@ from oauth2client import GOOGLE_TOKEN_URI
 from oauth2client import clientsecrets
 from oauth2client import util
 from oauth2client import xsrfutil
-from oauth2client.anyjson import simplejson
 from oauth2client.client import AccessTokenRefreshError
 from oauth2client.client import AssertionCredentials
 from oauth2client.client import Credentials
@@ -159,7 +158,7 @@ class AppAssertionCredentials(AssertionCredentials):
     Args:
       scope: string or iterable of strings, scope(s) of the credentials being
         requested.
-      kwargs: optional keyword args, including:
+      **kwargs: optional keyword args, including:
         service_account_id: service account id of the application. If None or
           unspecified, the default service account for the app is used.
     """
@@ -171,8 +170,8 @@ class AppAssertionCredentials(AssertionCredentials):
     super(AppAssertionCredentials, self).__init__(None)
 
   @classmethod
-  def from_json(cls, json):
-    data = simplejson.loads(json)
+  def from_json(cls, json_data):
+    data = json.loads(json_data)
     return AppAssertionCredentials(data['scope'])
 
   def _refresh(self, http_request):
@@ -193,7 +192,7 @@ class AppAssertionCredentials(AssertionCredentials):
       scopes = self.scope.split()
       (token, _) = app_identity.get_access_token(
           scopes, service_account_id=self.service_account_id)
-    except app_identity.Error, e:
+    except app_identity.Error as e:
       raise AccessTokenRefreshError(str(e))
     self.access_token = token
 
@@ -826,8 +825,8 @@ class OAuth2Decorator(object):
     returns True.
 
     Args:
-        args: Positional arguments passed to httplib2.Http constructor.
-        kwargs: Positional arguments passed to httplib2.Http constructor.
+        *args: Positional arguments passed to httplib2.Http constructor.
+        **kwargs: Positional arguments passed to httplib2.Http constructor.
     """
     return self.credentials.authorize(httplib2.Http(*args, **kwargs))
 
@@ -882,7 +881,7 @@ class OAuth2Decorator(object):
                                             user)
 
           if decorator._token_response_param and credentials.token_response:
-            resp_json = simplejson.dumps(credentials.token_response)
+            resp_json = json.dumps(credentials.token_response)
             redirect_uri = util._add_query_parameter(
                 redirect_uri, decorator._token_response_param, resp_json)
 
@@ -951,9 +950,9 @@ class OAuth2DecoratorFromClientSecrets(OAuth2Decorator):
           "OAuth2Decorator doesn't support this OAuth 2.0 flow.")
     constructor_kwargs = dict(kwargs)
     constructor_kwargs.update({
-      'auth_uri': client_info['auth_uri'],
-      'token_uri': client_info['token_uri'],
-      'message': message,
+        'auth_uri': client_info['auth_uri'],
+        'token_uri': client_info['token_uri'],
+        'message': message,
     })
     revoke_uri = client_info.get('revoke_uri')
     if revoke_uri is not None:

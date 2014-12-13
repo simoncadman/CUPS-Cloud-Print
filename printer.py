@@ -19,10 +19,11 @@ import json
 import locale
 import logging
 import mimetools
-import os
 import re
 import urllib
 import subprocess
+import unicodedata
+import sys
 
 from ccputils import Utils
 
@@ -139,22 +140,30 @@ class Printer(object):
         'LocAttribute', 'ManualCopies', 'Manufacturer', 'MaxSize', 'MediaSize', 'MediaType',
         'MinSize', 'ModelName', 'ModelNumber', 'Option', 'PCFileName', 'SimpleColorProfile',
         'Throughput', 'UIConstraints', 'VariablePaperSize', 'Version', 'Color', 'Background',
-        'Stamp', 'DestinationColorProfile'
+        'Stamp', 'DestinationColorProfile', 'JCLToPDFInterpreter', 'APAutoSetupTool',
+        'APDialogExtension', 'APHelpBook', 'APICADriver', 'APPrinterIconPath',
+        'APPrinterLowInkTool', 'APPrinterPreset', 'APPrinterUtilityPath', 'APScannerOnly',
+        'APScanAppBundleID'
     ))
 
-    _FIXED_OPTION_MAPPINGS = {'psk:JobDuplexAllDocumentsContiguously':
-                              {'psk:OneSided': 'None',
-                               'psk:TwoSidedShortEdge': 'DuplexTumble',
-                               'psk:TwoSidedLongEdge': 'DuplexNoTumble'},
-                              'psk:PageOrientation':
-                              {'psk:Landscape': 'Landscape',
-                               'psk:Portrait': 'Portrait'}}
+    _RESERVED_CAPABILITY_PREFIXES = (
+        'cups'
+    )
 
-    _FIXED_CAPABILITY_MAPPINGS = {'ns1:Colors': 'ColorModel',
-                                  'ns1:PrintQualities': 'OutputMode',
-                                  'ns1:InputBins': 'InputSlot',
-                                  'psk:JobDuplexAllDocumentsContiguously': 'Duplex',
-                                  'psk:PageOrientation': 'Orientation'}
+    _FIXED_OPTION_MAPPINGS = {"psk:JobDuplexAllDocumentsContiguously":
+                              {'psk:OneSided': "None",
+                                  'psk:TwoSidedShortEdge': "DuplexTumble",
+                                  'psk:TwoSidedLongEdge': "DuplexNoTumble"},
+                              "psk:PageOrientation":
+                              {'psk:Landscape': "Landscape",
+                               'psk:Portrait': "Portrait"}
+                              }
+
+    _FIXED_CAPABILITY_MAPPINGS = {'ns1:Colors': "ColorModel",
+                                  'ns1:PrintQualities': "OutputMode",
+                                  'ns1:InputBins': "InputSlot",
+                                  'psk:JobDuplexAllDocumentsContiguously': "Duplex",
+                                  'psk:PageOrientation': "Orientation"}
 
     _CONVERTCOMMAND = 'convert'
 
@@ -319,7 +328,10 @@ class Printer(object):
     @staticmethod
     def _sanitizeText(text, checkReserved=False):
         sanitisedName = re.sub(r'(:|;| )', '_', text).replace('/', '-').encode('utf8', 'ignore')
-        if checkReserved and sanitisedName in Printer._RESERVED_CAPABILITY_WORDS:
+        sanitisedName = "".join(ch for ch in unicode(sanitisedName, errors='ignore')
+                                if unicodedata.category(ch)[0] != "C")
+        if checkReserved and (sanitisedName in Printer._RESERVED_CAPABILITY_WORDS or
+                              sanitisedName.startswith(Printer._RESERVED_CAPABILITY_PREFIXES)):
             sanitisedName = 'GCP_' + sanitisedName
         return sanitisedName
 
@@ -483,12 +495,13 @@ class Printer(object):
         attrArray = self._attrListToArray(attrs)
         return self._getCapabilitiesDict(attrArray, self['capabilities'], overridecapabilities)
 
-    def submitJob(self, jobtype, jobfile, jobname, cupsprintername, options=""):
+    def submitJob(self, jobtype, jobfile, jobdata, jobname, cupsprintername, options=""):
         """Submits a job to printerid with content of dataUrl.
 
         Args:
           jobtype: string, must match the dictionary keys in content and content_type.
           jobfile: string, points to source for job. Could be a pathname or id string.
+          jobdata: string, data for print job
           jobname: string, name of the print job ( usually page name ).
           options: string, key-value pair of options from print job.
 
@@ -496,6 +509,14 @@ class Printer(object):
           True if submitted, False otherwise
         """
         rotate = 0
+
+        # refuse to submit empty jobdata
+        if len(jobdata) == 0:
+            sys.stderr.write("ERROR: Job data is empty\n")
+            return False
+
+        if jobfile is None or jobfile == "":
+            jobfile = "Unknown"
 
         for optiontext in options.split(' '):
 
@@ -509,51 +530,30 @@ class Printer(object):
                 # rotate back
                 rotate = 270
 
-        if jobtype == 'pdf':
-            if not os.path.exists(jobfile):
-                print "ERROR: PDF doesnt exist"
-                return False
-            if rotate > 0:
-                command = [self._CONVERTCOMMAND, '-density', '300x300', jobfile.lstrip('-'),
-                           '-rotate', str(rotate), jobfile.lstrip('-')]
-                p = subprocess.Popen(command, stdout=subprocess.PIPE)
-                output = p.communicate()[0]
-                if not Utils.fileIsPDF(jobfile):
-                    print "ERROR: Failed to rotate PDF"
-                    logging.error("Rotated PDF, but resulting file was not a PDF")
-                    logging.error(output)
-                    return False
-            b64file = Utils.Base64Encode(jobfile)
-            if b64file is None:
-                print "ERROR: Cannot write to file: " + jobfile + ".b64"
-                return False
-            fdata = Utils.ReadFile(b64file)
-            os.unlink(b64file)
-        elif jobtype in ['png', 'jpeg']:
-            if not os.path.exists(jobfile):
-                print "ERROR: File doesnt exist"
-                return False
-            fdata = Utils.ReadFile(jobfile)
-        else:
-            print "ERROR: Unknown job type"
+        if jobtype not in ['png', 'jpeg', 'pdf']:
+            sys.stderr.write("ERROR: Unknown job type: %s\n" % jobtype)
             return False
+        else:
+            if rotate != 0:
+                command = [self._CONVERTCOMMAND, '-density', '300x300', '-',
+                           '-rotate', str(rotate), '-']
+                p = subprocess.Popen(command, stdout=subprocess.PIPE, stdin=subprocess.PIPE)
+                newjobdata = p.communicate(jobdata)[0]
+                if p.returncode == 0:
+                    jobdata = newjobdata
+                else:
+                    logging.error("Failed to rotate")
+                    return False
 
         if jobname == "":
             title = "Untitled page"
         else:
             title = jobname
-
-        content = {'pdf': fdata,
-                   'jpeg': jobfile,
-                   'png': jobfile}
-        content_type = {'pdf': 'dataUrl',
-                        'jpeg': 'image/jpeg',
-                        'png': 'image/png'}
         headers = [
             ('printerid', self['id']),
             ('title', title),
-            ('content', content[jobtype]),
-            ('contentType', content_type[jobtype]),
+            ('content', Utils.Base64Encode(jobdata, jobtype)),
+            ('contentType', 'dataUrl'),
             ('capabilities', json.dumps(self._getCapabilities(cupsprintername, options)))
         ]
         logging.info('Capability headers are: %s', headers[4])
@@ -564,10 +564,10 @@ class Printer(object):
             if responseobj['success']:
                 return True
             else:
-                print 'ERROR: Error response from Cloud Print for type %s: %s' %\
-                    (jobtype, responseobj['message'])
+                sys.stderr.write("ERROR: Error response from Cloud Print for type %s: %s\n" %
+                                 (jobtype, responseobj['message']))
                 return False
 
         except Exception as error_msg:
-            print 'ERROR: Print job %s failed with %s' % (jobtype, error_msg)
+            sys.stderr.write("ERROR: Print job %s failed with %s\n" % (jobtype, error_msg))
             return False

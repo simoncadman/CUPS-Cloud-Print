@@ -40,7 +40,8 @@ if [[ "`whoami`" == "root"  ]]; then
        hash systemctl && ( systemctl start cups || cupsd )
        
        # start via 'start' if exists
-       hash start && ( start cups || cupsd )
+       hash start && ( ( start cups ; restart dbus ) || cupsd )
+       
 fi
 
 if [[ "`whoami`" == "root"  ]]; then
@@ -224,6 +225,17 @@ if [[ $testconfig != "" ]]; then
             sudo scp $testconfig.drive /etc/cloudprint.conf
     fi
 fi
+
+# wait until files exist
+success=0
+for i in {1..30}
+do
+   echo "Waiting for files to exist: $i of 30 tries"
+   if [[ `./testing/listdrivefiles.py "$psreaderjobname"` != "" && `./testing/listdrivefiles.py "$psjobname"` != "" && `./testing/listdrivefiles.py "$pdfjobname"` != "" ]]; then
+        break
+   fi
+   sleep 1
+done
 
 if [[ `./testing/listdrivefiles.py "$pdfjobname"` -lt 100000 ]]; then
     echo "Uploaded pdf file does not match expected size:"
