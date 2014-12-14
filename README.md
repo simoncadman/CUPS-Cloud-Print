@@ -54,9 +54,12 @@ ln -s ../../pre-commit.py .git/hooks/pre-commit
 Copyright and Trademark Information
 ===================================
 
-Printer part of icon from Oxygen Iconset ( http://www.oxygen-icons.org/ ) and licenced under GNU LGPL v3 ( http://www.gnu.org/licenses/lgpl.html ).
+Icon is licensed as Creative Commons - Attribution (CC BY 3.0) - http://creativecommons.org/licenses/by/3.0/us/, as are all original parts of the icon, which are combined to create the CUPS Cloud Print icon:
+    - Cup icon ( http://thenounproject.com/term/cup/6566/ ) created by Monika Ciapala ( http://thenounproject.com/merdesign/ , http://www.merdesign.co.uk/ )
+    - Cloud icon ( http://thenounproject.com/term/cloud/2788/ ) created by P.J. Onori ( http://thenounproject.com/somerandomdude/ , http://somerandomdude.com/ )
+    - Printer icon ( http://thenounproject.com/term/printer/5043/ ) created by Dmitry Baranovskiy ( http://thenounproject.com/DmitryBaranovskiy/ , http://dmitry.baranovskiy.com/ )
 
-Software and icon are copyright Simon Cadman and licenced under GNU GPL v3 ( http://www.gnu.org/licenses/gpl.html ).
+Software copyright Simon Cadman and licenced under GNU GPL v3 ( http://www.gnu.org/licenses/gpl.html ).
 
 Google is a trademark of Google Inc, and the software is unaffiliated with Google in any way.
 
