@@ -18,6 +18,9 @@ class MockCUPS():
     
     _printers = {}
     
+    def __init__(self):
+        self._printers = {}
+    
     def getPrinters(self):
         return self._printers
     
@@ -43,3 +46,15 @@ class MockCUPS():
     
     def setPrinterShared(self, name, status):
         self._printers[name]['printer-is-shared'] = status
+        
+    def setPrinterInfo(self, queue, name):
+        if queue in self._printers:
+            self._printers[queue]['printer-info'] = name
+            return True
+        return False
+    
+    def setPrinterLocation(self, queue, location):
+        if queue in self._printers:
+            self._printers[queue]['printer-location'] = location
+            return True
+        return False
