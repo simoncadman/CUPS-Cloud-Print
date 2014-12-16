@@ -124,15 +124,15 @@ if __name__ == '__main__':  # pragma: no cover
             sys.stderr.write("ERROR: Failed to convert file to pdf\n")
             result = 1
         else:
-            logging.info("Converted to PDF - %s bytes" % str(len(filedata)))
+            logging.info("Converted to PDF - %s bytes", str(len(filedata)))
     else:
         # read file normally
-        logging.info("Using %s as is already PDF - %s bytes" % (printFile, len(filedata)))
+        logging.info("Using %s as is already PDF - %s bytes", (printFile, len(filedata)))
 
     # send pdf data to GCP
     if result == 0:
         sys.stderr.write("INFO: Sending document to Cloud Print\n")
-        logging.info("Sending %s to cloud" % printFile)
+        logging.info("Sending %s to cloud", printFile)
 
         printer = printer_manager.getPrinterByURI(uri)
         if printer is None:
