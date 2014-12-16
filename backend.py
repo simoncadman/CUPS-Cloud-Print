@@ -58,11 +58,11 @@ if __name__ == '__main__':  # pragma: no cover
     printFile = None
 
     if len(sys.argv) == 7:
-        sys.stderr.write("ERROR: Sorry, CUPS Cloud Print no longer supports printing\
-                          files directly for security reasons\n")
+        sys.stderr.write("ERROR: Sorry, CUPS Cloud Print no longer supports printing" +
+                         " files directly for security reasons\n")
         sys.exit(1)
     if len(sys.argv) == 6:
-        prog, jobID, userName, jobTitle, copies, printOptions = sys.argv
+        prog, jobID, userName, jobTitle, copies, printOptions = sys.argv[0:6]
         printFile = jobTitle
 
     requestors, storage = Auth.SetupAuth(False)
@@ -101,7 +101,7 @@ if __name__ == '__main__':  # pragma: no cover
         sys.stdout.write(message)
         sys.exit(255)
 
-    logging.info("Printing file %s" , str(printFile))
+    logging.info("Printing file %s", str(printFile))
     optionsstring = ' '.join(["'%s'" % option for option in sys.argv])
     logging.info("Device is %s , printername is %s, params are: %s",
                  uri, cupsprintername, optionsstring)
