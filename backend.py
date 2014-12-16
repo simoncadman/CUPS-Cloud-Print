@@ -127,7 +127,7 @@ if __name__ == '__main__':  # pragma: no cover
             logging.info("Converted to PDF - %s bytes", str(len(filedata)))
     else:
         # read file normally
-        logging.info("Using %s as is already PDF - %s bytes", (printFile, len(filedata)))
+        logging.info("Using %s as is already PDF - %s bytes", printFile, len(filedata))
 
     # send pdf data to GCP
     if result == 0:
