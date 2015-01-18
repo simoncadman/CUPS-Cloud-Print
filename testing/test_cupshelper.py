@@ -67,7 +67,8 @@ def test_getPrinters():
                                                         'printer-state-message': '',
                                                         'printer-type': 1,
                                                         'printer-state-reasons': ['none'],
-                                                        'printer-uri-supported': 'ipp://localhost/printers/test',
+                                                        'printer-uri-supported':
+                                                            'ipp://localhost/printers/test',
                                                         'printer-state': 3,
                                                         'printer-location': "test location",
                                                         'device-uri': "test://test/test"}
@@ -80,7 +81,7 @@ def test_getPrinters():
     for printername in helperinstance.getPrinters():
         assert printername == 'test'
         printer = helperinstance.getPrinters()[printername]
-        assert printer['printer-is-shared'] == False
+        assert printer['printer-is-shared'] is False
         assert printer['device-uri'] == 'gcp://test/__test_printer'
 
     # delete printer
@@ -103,14 +104,15 @@ def test_addGetPrinter():
     printerdetails = helperinstance.getPrinter('gcp://test/__test_printer')
     assert printerdetails['device-uri'] == 'gcp://test/__test_printer'
 
-    assert helperinstance.getPrinter('invalid uri') == None
+    assert helperinstance.getPrinter('invalid uri') is None
 
     assert len(helperinstance.getPrinters()) == 1
 
     printerinstance2 = Printer({'name': 'Testing Printer 2',
                                         'id': '__test_printer_2',
                                         'capabilities': [{'name': 'ns1:Colors',
-                                                          'type': 'Feature'}]}, requestor, helperinstance)
+                                                          'type': 'Feature'}]},
+                               requestor, helperinstance)
     helperinstance.addPrinter(
         printerinstance2, "test2", "test-location", printerinstance.getPPDName())
     printerdetails = helperinstance.getPrinter('gcp://test/__test_printer_2')
@@ -123,7 +125,8 @@ def test_addGetPrinter():
                                         'id': '__test_printer_3',
                                         'capabilities': [{'name': 'ns1:Colors',
                                                           'type': 'Feature'}],
-                                        'tags': ['location=Test Location']}, requestor, helperinstance)
+                                        'tags': ['location=Test Location']},
+                               requestor, helperinstance)
     helperinstance.addPrinter(printerinstance3, "test3", "")
     printerdetails = helperinstance.getPrinter('gcp://test/__test_printer_3')
     assert printerdetails['device-uri'] == 'gcp://test/__test_printer_3'
@@ -136,9 +139,10 @@ def test_addGetPrinter():
                                         'id': '__test_printer_4',
                                         'capabilities': [{'name': 'ns1:Colors',
                                                           'type': 'Feature'}],
-                                        'tags': ['location=Test Location']}, requestor, helperinstance)
+                                        'tags': ['location=Test Location']},
+                               requestor, helperinstance)
     helperinstance.addPrinter(printerinstance4, "test4", MockCUPS())
-    assert helperinstance.getPrinter('gcp://test/__test_printer_4') == None
+    assert helperinstance.getPrinter('gcp://test/__test_printer_4') is None
 
     assert len(helperinstance.getPrinters()) == 3
 
@@ -180,7 +184,7 @@ def test_deletePrinter():
 
 
 def test__getCUPSQueueName():
-    assert helperinstance._getCUPSQueueName('test') == None
+    assert helperinstance._getCUPSQueueName('test') is None
     requestor = CloudPrintRequestor()
     requestor.setAccount("test")
     printerinstance = Printer({'name': 'Testing Printer',
@@ -193,7 +197,7 @@ def test__getCUPSQueueName():
 
 
 def test__getCUPSQueueNameAndPrinter():
-    assert helperinstance._getCUPSQueueNameAndPrinter('test') == None
+    assert helperinstance._getCUPSQueueNameAndPrinter('test') is None
     requestor = CloudPrintRequestor()
     requestor.setAccount("test")
     printerinstance = Printer({'name': 'Testing Printer',
@@ -202,15 +206,16 @@ def test__getCUPSQueueNameAndPrinter():
                                                  'type': 'Feature'}]}, requestor, helperinstance)
     helperinstance.addPrinter(printerinstance, "test")
 
-    assert helperinstance._getCUPSQueueNameAndPrinter('gcp://test/__test_printer') == ("test", {'device-uri': 'gcp://test/__test_printer',
-                                                                                                'printer-info': 'test',
-                                                                                                                'printer-is-shared': False,
-                                                                                                                'printer-location': 'Google Cloud Print',
-                                                                                                                'printer-state': 3,
-                                                                                                                'printer-state-message': '',
-                                                                                                                'printer-state-reasons': ['none'],
-                                                                                                                'printer-type': 1,
-                                                                                                                'printer-uri-supported': 'ipp://localhost/printers/test'})
+    assert helperinstance._getCUPSQueueNameAndPrinter('gcp://test/__test_printer') == \
+        ("test", {'device-uri': 'gcp://test/__test_printer',
+                  'printer-info': 'test',
+                  'printer-is-shared': False,
+                  'printer-location': 'Google Cloud Print',
+                  'printer-state': 3,
+                  'printer-state-message': '',
+                  'printer-state-reasons': ['none'],
+                  'printer-type': 1,
+                  'printer-uri-supported': 'ipp://localhost/printers/test'})
 
 
 def test_generateCUPSQueueName():
@@ -228,5 +233,6 @@ def test_generateCUPSQueueName():
         printerinstance = Printer({'name': teststring,
                                    'id': '__test_printer',
                                    'capabilities': [{'name': 'ns1:Colors',
-                                                     'type': 'Feature'}]}, requestor, helperinstance)
+                                                     'type': 'Feature'}]},
+                                  requestor, helperinstance)
         assert helperinstance.generateCUPSQueueName(printerinstance) == testdata[teststring]
