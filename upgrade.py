@@ -27,7 +27,6 @@ exit $?
 if __name__ == '__main__':  # pragma: no cover
 
     import sys
-    import cups
     import subprocess
     import os
     import json
@@ -36,6 +35,7 @@ if __name__ == '__main__':  # pragma: no cover
     from auth import Auth
     from ccputils import Utils
     from printermanager import PrinterManager
+    from cupshelper import CUPSHelper
     Utils.SetupLogging()
 
     # line below is replaced on commit
@@ -57,12 +57,13 @@ if __name__ == '__main__':  # pragma: no cover
 
     logging.info("Upgrading to " + CCPVersion)
 
+    cupsHelper = None
     try:
-        connection = cups.Connection()
+        cupsHelper = CUPSHelper()
     except Exception as e:
         sys.stderr.write("Could not connect to CUPS: " + e.message + "\n")
         sys.exit(0)
-    cupsprinters = connection.getPrinters()
+    cupsprinters = cupsHelper.getPrinters()
 
     if os.path.exists(Auth.config):
         Utils.FixFilePermissions(Auth.config)
@@ -95,7 +96,7 @@ if __name__ == '__main__':  # pragma: no cover
 
     try:
         print "Fetching list of available ppds..."
-        allppds = connection.getPPDs()
+        allppds = cupsHelper.getPPDs()
         print "List retrieved successfully"
     except Exception as e:
         sys.stderr.write("Error connecting to CUPS: " + str(e) + "\n")
