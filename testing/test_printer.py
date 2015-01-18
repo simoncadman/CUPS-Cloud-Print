@@ -288,7 +288,6 @@ def test_getCapabilities():
     assert printerManagerInstance.addPrinter(
         printer['name'],
         printer,
-        connection,
         "test location",
         printerppdname) is not None
     emptyoptions = printer._getCapabilities(printerManagerInstance.sanitizePrinterName(printer['name']),"landscape")
@@ -311,7 +310,6 @@ def test_submitJob():
     assert printerManagerInstance.addPrinter(
         printer['name'],
         printer,
-        connection,
         "test location",
         printerppdname) is not None
     
@@ -446,7 +444,6 @@ def test_submitJobFileCreationFails():
     assert printerManagerInstance.addPrinter(
         printer['name'],
         printer,
-        connection,
         "test location",
         printerppdname) is not None
     

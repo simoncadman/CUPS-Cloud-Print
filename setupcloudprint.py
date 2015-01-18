@@ -60,19 +60,26 @@ def printPrinters(printers):
     return len(printers)
 
 if __name__ == '__main__':  # pragma: no cover
-    import cups
     import os
     import json
     import sys
     import math
     from auth import Auth
     from printermanager import PrinterManager
+    from cupshelper import CUPSHelper
     from ccputils import Utils
     Utils.SetupLogging()
 
     # line below is replaced on commit
     CCPVersion = "20140814.2 000000"
     Utils.ShowVersion(CCPVersion)
+
+    cupsHelper = None
+    try:
+        cupsHelper = CUPSHelper()
+    except Exception as e:
+        sys.stderr.write("Could not connect to CUPS: " + e.message + "\n")
+        sys.exit(0)
 
     unattended = False
     answer = ""
@@ -104,11 +111,9 @@ if __name__ == '__main__':  # pragma: no cover
         else:
             Auth.AddAccount(None)
 
-    connection = cups.Connection()
-
     for requestor in requestors:
         addedCount = 0
-        cupsprinters = connection.getPrinters()
+        cupsprinters = cupsHelper.getPrinters()
         prefix = ""
         printer_manager = PrinterManager(requestor)
         printers = printer_manager.getPrinters()
@@ -155,7 +160,7 @@ if __name__ == '__main__':  # pragma: no cover
                 if found:
                     print "\nPrinter with %s already exists\n" % printername
                 else:
-                    printer_manager.addPrinter(printername, ccpprinter, connection)
+                    printer_manager.addPrinter(printername, ccpprinter)
 
             continue
 
@@ -208,8 +213,8 @@ if __name__ == '__main__':  # pragma: no cover
                 printername = ""
 
             if printername != "":
-                printer_manager.addPrinter(printername, ccpprinter, connection)
-                cupsprinters = connection.getPrinters()
+                printer_manager.addPrinter(printername, ccpprinter)
+                cupsprinters = cupsHelper.getPrinters()
                 addedCount += 1
 
         if addedCount > 0:
@@ -225,7 +230,7 @@ if __name__ == '__main__':  # pragma: no cover
 
     # check for printers to prune
     prunePrinters = []
-    cupsprinters = connection.getPrinters()
+    cupsprinters = cupsHelper.getPrinters()
 
     for cupsprinter in cupsprinters:
         if cupsprinters[cupsprinter]['device-uri'].startswith(Utils.PROTOCOL) \
@@ -239,7 +244,7 @@ if __name__ == '__main__':  # pragma: no cover
         answer = raw_input("Remove (Y/N)? ")
         if answer.lower().startswith("y"):
             for printer in prunePrinters:
-                connection.deletePrinter(printer)
+                cupsHelper.deletePrinter(printer)
                 print "Deleted", printer
         else:
             print "Not removing old printers"

@@ -79,16 +79,15 @@ class CUPSHelper(object):
             if location.strip() == '':
                 location = ccp_printer.getLocation()
 
-            cups_queue_name = CUPSHelper.generateCUPSQueueName(ccp_printer)
             error = self._connection.addPrinter(
-                name=cups_queue_name,
+                name=name,
                 ppdname=ppd_name,
                 info=name,
                 location=location,
                 device=ccp_printer.getURI())
-            self._connection.enablePrinter(cups_queue_name)
-            self._connection.acceptJobs(cups_queue_name)
-            self._connection.setPrinterShared(cups_queue_name, False)
+            self._connection.enablePrinter(name)
+            self._connection.acceptJobs(name)
+            self._connection.setPrinterShared(name, False)
 
         except Exception as e:
             error = e

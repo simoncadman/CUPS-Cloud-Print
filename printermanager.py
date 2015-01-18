@@ -122,19 +122,19 @@ class PrinterManager(object):
         """
         return re.sub('[^a-zA-Z0-9\-_]', '', name.encode('ascii', 'replace').replace(' ', '_'))
 
-    def addPrinter(self, printername, printer, connection, location=None, ppd=None):
+    def addPrinter(self, printername, printer, location=None, ppd=None):
         """Adds a printer to CUPS
 
         Args:
           printername: string, name of the printer to add
           printer: Printer, CCP Printer object
           uri: string, uri of the Cloud Print device
-          connection: Connection, CUPS connection
           location: string, location of printer
 
         Returns:
           None
         """
+        errorMessage = ""
         # fix printer name
         printername = self.sanitizePrinterName(printername)
         result = None
@@ -149,19 +149,16 @@ class PrinterManager(object):
             if not location:
                 location = 'Google Cloud Print'
 
-            result = connection.addPrinter(
-                name=printername, ppdname=printerppdname, info=printername,
-                location=location, device=printer.getURI())
-            connection.enablePrinter(printername)
-            connection.acceptJobs(printername)
-            connection.setPrinterShared(printername, False)
+            result = self._cupsHelper.addPrinter(
+                printer, printername, location, printerppdname)
         except Exception as error:
-            result = error
-        if result is None:
+            result = False
+            errorMessage = error
+        if result:
             print "Added " + printername
             return True
         else:
-            print "Error adding: " + printername, result
+            print "Error adding: " + printername, errorMessage
             return False
 
     @staticmethod
