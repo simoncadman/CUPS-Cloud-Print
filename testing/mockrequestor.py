@@ -18,6 +18,7 @@ import sys
 sys.path.insert(0, ".")
 from cloudprintrequestor import CloudPrintRequestor
 
+
 class MockRequestor(CloudPrintRequestor):
 
     printers = []
@@ -32,7 +33,7 @@ class MockRequestor(CloudPrintRequestor):
                 'message': 'FAIL PAGE was in message'}
         elif 'TEST PAGE WITH EXCEPTION' in data:
             raise Exception("Test exception")
-        else:   
+        else:
             result = {'success': True}
         return json.dumps(result)
 
@@ -47,7 +48,7 @@ class MockRequestor(CloudPrintRequestor):
         if foundPrinter is None:
             return json.dumps(None)
 
-        result = {'success' : True, 'printers': [foundPrinter]}
+        result = {'success': True, 'printers': [foundPrinter]}
         return json.dumps(result)
 
     def doRequest(self, path, headers=None, data=None, boundary=None):

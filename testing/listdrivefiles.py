@@ -24,6 +24,7 @@ exit $?
 #    You should have received a copy of the GNU General Public License
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+
 def getDriveFiles(requestors):
     returnValue = []
     for requestor in requestors:
@@ -50,8 +51,10 @@ if __name__ == '__main__':  # pragma: no cover
     CCPVersion = "20140814.2 000000"
     Utils.ShowVersion(CCPVersion)
 
-    requestors, storage = Auth.SetupAuth(True,
-        permissions=['https://www.googleapis.com/auth/cloudprint', 'https://www.googleapis.com/auth/drive.readonly'])
+    requestors, storage = \
+        Auth.SetupAuth(True,
+                       permissions=['https://www.googleapis.com/auth/cloudprint',
+                                    'https://www.googleapis.com/auth/drive.readonly'])
     files = getDriveFiles(requestors)
     if files is None:
         print "No Files Found"

@@ -64,4 +64,3 @@ def test_request():
         requestor.doRequest(path="printers")
     with pytest.raises(ValueError):
         requestor.doRequest(path="submit", data="test")
-    

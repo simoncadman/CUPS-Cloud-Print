@@ -22,9 +22,11 @@ sys.path.insert(0, ".")
 
 from ccputils import Utils
 
+
 def teardown_function(function):
     logging.shutdown()
     reload(logging)
+
 
 def test_SetupLogging():
     testLogFile = '/tmp/testccp.log'
@@ -33,6 +35,7 @@ def test_SetupLogging():
     logging.error('test_setupLogging error test')
     assert os.path.exists(testLogFile) == True
     os.unlink(testLogFile)
+
 
 def test_SetupLoggingDefault():
     testLogFile = '/tmp/testccp.log'
@@ -43,23 +46,29 @@ def test_SetupLoggingDefault():
     assert os.path.exists(testLogFile) == True
     os.unlink(testLogFile)
 
+
 def test_SetupLoggingFails():
     testLogFile = '/tmp/dirthatdoesntexist/testccp.log'
     assert os.path.exists(testLogFile) == False
     assert Utils.SetupLogging(testLogFile) == False
     assert os.path.exists(testLogFile) == False
 
+
 def test_fileIsPDFFails():
     assert Utils.fileIsPDF(open('testing/testfiles/NotPdf.txt').read()) == False
+
 
 def test_fileIsPDFSucceeds():
     assert Utils.fileIsPDF(open('testing/testfiles/Test Page.pdf').read(128)) == True
 
+
 def test_fileIsPDFErrors():
     assert Utils.fileIsPDF("testdata") == False
 
+
 def test_whichFails():
     assert Utils.which('dsaph9oaghd9ahdsadsadsadsadasd') is None
+
 
 def test_whichSucceeds():
     assert Utils.which(
@@ -67,6 +76,7 @@ def test_whichSucceeds():
         '/bin/bash',
         '/usr/bin/bash',
         '/usr/sbin/bash')
+
 
 def test_isExeSucceeds():
     if os.path.exists('/usr/bin/sh'):
@@ -115,11 +125,13 @@ def test_getLPID():
          'root'],
         True) is None
 
+
 def test_showVersion():
     assert Utils.ShowVersion("12345") == False
     sys.argv = ['testfile', 'version']
     with pytest.raises(SystemExit):
         Utils.ShowVersion("12345")
+
 
 def test_readFile():
     Utils.WriteFile('/tmp/testfile', 'data')
@@ -127,29 +139,35 @@ def test_readFile():
     assert Utils.ReadFile('/tmp/filethatdoesntexist') is None
     os.unlink('/tmp/testfile')
 
+
 def test_writeFile():
     Utils.WriteFile('/tmp/testfile', 'data') == True
     Utils.WriteFile('/tmp/testfile/dsadsaasd', 'data') == False
     os.unlink('/tmp/testfile')
 
+
 def test_base64encode():
     assert Utils.Base64Encode('data', 'pdf') == 'data:application/pdf;base64,ZGF0YQ=='
     assert Utils.Base64Encode('data', 'other') == 'data:application/octet-stream;base64,ZGF0YQ=='
-    assert Utils.Base64Encode('data', 'something') == 'data:application/octet-stream;base64,ZGF0YQ=='
+    assert Utils.Base64Encode(
+        'data', 'something') == 'data:application/octet-stream;base64,ZGF0YQ=='
+
 
 def test_GetLanguage():
-    assert Utils.GetLanguage(['en_GB',]) == "en"
-    assert Utils.GetLanguage(['en_US',]) == "en"
-    assert Utils.GetLanguage(['fr_CA',]) == "fr"
-    assert Utils.GetLanguage(['fr_FR',]) == "fr"
-    assert Utils.GetLanguage(['it_IT',]) == "it"
-    assert Utils.GetLanguage(['en',]) == "en"
-    assert Utils.GetLanguage([None,None]) == "en"
-    
+    assert Utils.GetLanguage(['en_GB', ]) == "en"
+    assert Utils.GetLanguage(['en_US', ]) == "en"
+    assert Utils.GetLanguage(['fr_CA', ]) == "fr"
+    assert Utils.GetLanguage(['fr_FR', ]) == "fr"
+    assert Utils.GetLanguage(['it_IT', ]) == "it"
+    assert Utils.GetLanguage(['en', ]) == "en"
+    assert Utils.GetLanguage([None, None]) == "en"
+
+
 def test_GetDefaultPaperType():
-    assert Utils.GetDefaultPaperType(['en_GB',]) == "A4"
-    assert Utils.GetDefaultPaperType(['en_US',]) == "Letter"
-    assert Utils.GetDefaultPaperType([None,None]) == "Letter"
+    assert Utils.GetDefaultPaperType(['en_GB', ]) == "A4"
+    assert Utils.GetDefaultPaperType(['en_US', ]) == "Letter"
+    assert Utils.GetDefaultPaperType([None, None]) == "Letter"
+
 
 def test_GetWindowSize():
     # expect this to fail gracefully if no tty
@@ -157,11 +175,12 @@ def test_GetWindowSize():
 
     # pass in dummy winsize struct
     dummywinsize = struct.pack('HHHH', 800, 600, 0, 0)
-    assert Utils.GetWindowSize(dummywinsize) == (800,600)
+    assert Utils.GetWindowSize(dummywinsize) == (800, 600)
 
     # ensure window size of 0x0 returns none
     dummywinsize = struct.pack('HHHH', 0, 0, 0, 0)
     assert Utils.GetWindowSize(dummywinsize) == None
+
 
 def test_StdInToTempFile():
     testdata = 'oux3ooquoideereeng5A'

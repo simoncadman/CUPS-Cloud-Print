@@ -14,16 +14,17 @@
 #    You should have received a copy of the GNU General Public License
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+
 class MockCUPS():
-    
+
     _printers = {}
-    
+
     def __init__(self):
         self._printers = {}
-    
+
     def getPrinters(self):
         return self._printers
-    
+
     def addPrinter(self, name, ppdname, info, location, device):
         self._printers[name] = {'printer-is-shared': False,
                                 'printer-info': info,
@@ -34,29 +35,29 @@ class MockCUPS():
                                 'printer-state': 3,
                                 'printer-location': location,
                                 'device-uri': device}
-    
+
     def deletePrinter(self, uri):
         for printer in self._printers:
-                if self._printers[printer]['device-uri'] == uri:
-                    del self._printers[printer]
-                    return
+            if self._printers[printer]['device-uri'] == uri:
+                del self._printers[printer]
+                return
         return False
-    
+
     def enablePrinter(self, name):
         self._printers[name]['printer-state'] = 3
-    
+
     def acceptJobs(self, name):
         self._printers[name]['printer-state'] = 3
-    
+
     def setPrinterShared(self, name, status):
         self._printers[name]['printer-is-shared'] = status
-        
+
     def setPrinterInfo(self, queue, name):
         if queue in self._printers:
             self._printers[queue]['printer-info'] = name
             return True
         return False
-    
+
     def setPrinterLocation(self, queue, location):
         if queue in self._printers:
             self._printers[queue]['printer-location'] = location

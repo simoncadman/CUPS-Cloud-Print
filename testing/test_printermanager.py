@@ -65,12 +65,14 @@ def teardown_function(function):
     logging.shutdown()
     reload(logging)
 
+
 def test_parseURI():
     global printerManagerInstance, requestors
     accountName, printerid = printerManagerInstance._getAccountNameAndPrinterIdFromURI(
         Utils.PROTOCOL + "testaccount2%40gmail.com/testid")
     assert printerid == "testid"
     assert accountName == "testaccount2@gmail.com"
+
 
 def test_parseLegacyURI():
     global printerManagerInstance, requestors
@@ -98,7 +100,7 @@ def test_parseLegacyURI():
     assert account == "testaccount2@gmail.com"
     assert printerid == "testid"
     assert printername is None
-    
+
     # 20140621+ format
     account, printername, printerid, formatid = printerManagerInstance.parseLegacyURI(
         Utils.PROTOCOL + "testaccount2%40gmail.com/testid", requestors)
@@ -107,19 +109,20 @@ def test_parseLegacyURI():
     assert printerid == "testid"
     assert printername is None
 
+
 def test_getPrinterIDByDetails():
     printerid, requestor = printerManagerInstance.getPrinterIDByDetails(
         "testaccount2@gmail.com", "testid")
     assert printerid == "testid"
     assert isinstance(requestor, MockRequestor)
     assert requestor.getAccount() == 'testaccount2@gmail.com'
-    
+
     # test fails
     printerid, requestor = printerManagerInstance.getPrinterIDByDetails(
         "accountthatdoesntexist", "testidthatdoesntexist")
     assert printerid is None
     assert requestor is None
-    
+
     printerid, requestor = printerManagerInstance.getPrinterIDByDetails(
         "testaccount2@gmail.com", None)
     assert printerid is None
@@ -169,11 +172,14 @@ def test_getCUPSPrintersForAccount():
     assert len(foundprinters) == 1
     assert isinstance(connection, cups.Connection)
 
+
 def test_getPrinter():
     global requestors, printerManagerInstance
     assert printerManagerInstance.getPrinter('test', 'missingaccount') == None
-    assert isinstance(printerManagerInstance.getPrinter('__test_save_docs', requestors[1].getAccount()),Printer)
+    assert isinstance(printerManagerInstance.getPrinter(
+        '__test_save_docs', requestors[1].getAccount()), Printer)
     assert printerManagerInstance.getPrinter('test', requestors[0].getAccount()) == None
+
 
 def test_instantiate():
     global requestors, printerManagerInstance
@@ -186,6 +192,7 @@ def test_instantiate():
     printerManagerInstance = PrinterManager(requestors)
     assert printerManagerInstance.requestors == requestors
     assert len(printerManagerInstance.requestors) == len(requestors)
+
 
 def test_GetPrinterByURIFails():
     global printerManagerInstance, requestors
@@ -205,9 +212,11 @@ def test_addPrinterFails():
     global printerManagerInstance
     assert printerManagerInstance.addPrinter('', None, '') == False
 
+
 def test_invalidRequest():
     testMock = MockRequestor()
     assert testMock.doRequest('thisrequestisinvalid') is None
+
 
 def test_printers():
     global printerManagerInstance, requestors
@@ -220,38 +229,39 @@ def test_printers():
     totalPrinters = 0
     for requestor in requestors:
         totalPrinters += len(requestor.printers)
-    
+
     # test getting printers for specific account
     printersforaccount = printerManagerInstance.getPrinters(requestors[1].getAccount())
     assert len(printersforaccount) == len(requestors[1].printers)
-    
+
     printers = printerManagerInstance.getPrinters()
     import re
     assert len(printers) == totalPrinters
     for printer in printers:
 
         # name
-        assert isinstance(printer['name'],basestring)
+        assert isinstance(printer['name'], basestring)
         assert len(printer['name']) > 0
 
         # account
-        assert isinstance(printer.getAccount(),basestring)
+        assert isinstance(printer.getAccount(), basestring)
         assert len(printer.getAccount()) > 0
 
         # id
-        assert isinstance(printer['id'],basestring)
+        assert isinstance(printer['id'], basestring)
         assert len(printer['id']) > 0
 
         # test encoding and decoding printer details to/from uri
         uritest = re.compile(
             Utils.PROTOCOL + "(.*)/" + urllib.quote(printer['id']))
-        assert isinstance(printer.getURI(),basestring)
+        assert isinstance(printer.getURI(), basestring)
         assert len(printer.getURI()) > 0
         assert uritest.match(printer.getURI()) is not None
 
-        accountName, printerId = printerManagerInstance._getAccountNameAndPrinterIdFromURI(printer.getURI())
-        assert isinstance(accountName,basestring)
-        assert isinstance(printerId,basestring)
+        accountName, printerId = printerManagerInstance._getAccountNameAndPrinterIdFromURI(
+            printer.getURI())
+        assert isinstance(accountName, basestring)
+        assert isinstance(printerId, basestring)
         assert accountName == printer.getAccount()
         assert printerId == printer['id']
 
@@ -277,6 +287,6 @@ def test_printers():
                 break
 
         assert found == True
-        
+
         # delete test printer
         connection.deletePrinter(testprintername)

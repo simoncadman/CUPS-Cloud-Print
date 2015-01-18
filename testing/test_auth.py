@@ -83,17 +83,17 @@ def test_setupAuth():
     testUserName = 'testaccount1'
 
     # ensure setup with no details doesnt create file
-    assert os.path.exists(Auth.config) == False
+    assert os.path.exists(Auth.config) is False
     assert Auth.SetupAuth(False) == (False, False)
-    assert os.path.exists(Auth.config) == True
+    assert os.path.exists(Auth.config) is True
     assert Utils.ReadFile(Auth.config) == "{}"
-    
+
     os.unlink(Auth.config)
-    
+
     # create initial file
-    assert os.path.exists(Auth.config) == False
-    assert Auth.SetupAuth(False,testUserIds=['test']) == (False, False)
-    assert os.path.exists(Auth.config) == True
+    assert os.path.exists(Auth.config) is False
+    assert Auth.SetupAuth(False, testUserIds=['test']) == (False, False)
+    assert os.path.exists(Auth.config) is True
 
     # ensure permissions are correct after creating config
     assert '0660' == oct(os.stat(Auth.config)[stat.ST_MODE])[-4:]
@@ -107,7 +107,8 @@ def test_setupAuth():
 
     credentials = client.OAuth2Credentials('test', Auth.clientid,
                                            'testsecret', 'testtoken', 1,
-                                           'https://www.googleapis.com/auth/cloudprint', testUserName)
+                                           'https://www.googleapis.com/auth/cloudprint',
+                                           testUserName)
     storage.put(credentials)
 
     # ensure permissions are correct after populating config
@@ -121,14 +122,16 @@ def test_setupAuth():
     # check deleting account
     assert Auth.DeleteAccount(testUserName) is None
     requestors, storage = Auth.SetupAuth(False)
-    assert requestors == False
-    assert storage == False
+    assert requestors is False
+    assert storage is False
+
 
 def test_setupAuthInteractive():
-    
+
     # ensure running setup in interactive mode tries to read stdin
     with pytest.raises(IOError):
         Auth.SetupAuth(True)
+
 
 def test_renewToken():
     global requestors
@@ -137,24 +140,33 @@ def test_renewToken():
         Auth.clientid,
         'testuseraccount',
         ['https://www.googleapis.com/auth/cloudprint'])
-    
-    credentials = client.OAuth2Credentials('test', Auth.clientid,
-                                           'testsecret', 'testtoken', 1,
-                                           'https://www.googleapis.com/auth/cloudprint', 'testaccount1')
-    
+
+    credentials = client.OAuth2Credentials('test',
+                                           Auth.clientid,
+                                           'testsecret',
+                                           'testtoken',
+                                           1,
+                                           'https://www.googleapis.com/auth/cloudprint',
+                                           'testaccount1')
+
     # test renewing token exits in non-interactive mode
     with pytest.raises(SystemExit):
-        Auth.RenewToken(False, requestors[0], credentials,storage, 'test')
-        
+        Auth.RenewToken(False, requestors[0], credentials, storage, 'test')
+
     # test renewing interactively tries to read from stdin
     with pytest.raises(IOError):
-        assert Auth.RenewToken(True, requestors[0], credentials,storage, 'test') == False
+        assert Auth.RenewToken(True,
+                               requestors[0],
+                               credentials,
+                               storage,
+                               'test') is False
+
 
 @pytest.mark.skipif(
     grp.getgrnam('lp').gr_gid not in (os.getgroups()) and os.getuid() != 0,
     reason="will only pass if running user part of lp group or root")
 def test_setupAuthOwnership():
-    assert Auth.SetupAuth(False,testUserIds=['test']) == (False, False)
+    assert Auth.SetupAuth(False, testUserIds=['test']) == (False, False)
 
     # ensure ownership is correct after creating config
     assert Utils.GetLPID() == os.stat(Auth.config).st_gid
@@ -166,9 +178,13 @@ def test_setupAuthOwnership():
         'testuseraccount',
         ['https://www.googleapis.com/auth/cloudprint'])
 
-    credentials = client.OAuth2Credentials('test', Auth.clientid,
-                                           'testsecret', 'testtoken', 1,
-                                           'https://www.googleapis.com/auth/cloudprint', 'testaccount1')
+    credentials = client.OAuth2Credentials('test',
+                                           Auth.clientid,
+                                           'testsecret',
+                                           'testtoken',
+                                           1,
+                                           'https://www.googleapis.com/auth/cloudprint',
+                                           'testaccount1')
     storage.put(credentials)
 
     # ensure ownership is correct after populating config
