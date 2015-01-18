@@ -13,7 +13,6 @@
 #
 #    You should have received a copy of the GNU General Public License
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
-import cups
 import urllib
 import mimetools
 import re
@@ -61,15 +60,14 @@ class PrinterManager(object):
                 self.requestors = [requestors]
 
     def getCUPSPrintersForAccount(self, account):
-        connection = cups.Connection()
-        cupsprinters = connection.getPrinters()
+        cupsprinters = self._cupsHelper.getPrinters()
         accountPrinters = []
         for cupsprinter in cupsprinters:
             printer = self.getPrinterByURI(cupsprinters[cupsprinter]['device-uri'])
             if printer is not None:
                 if printer.getAccount() == account:
                     accountPrinters.append(cupsprinters[cupsprinter])
-        return accountPrinters, connection
+        return accountPrinters
 
     def getPrinter(self, printerId, accountName):
         """Fetch one printer, including capabilities.

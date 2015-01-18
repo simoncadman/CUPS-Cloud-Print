@@ -56,9 +56,7 @@ class CUPSHelper(object):
                     if printer['device-uri'].startswith(Utils.PROTOCOL))
 
     def deletePrinter(self, uri):
-        cups_queue_name = self._getCUPSQueueName(uri)
-        if cups_queue_name is not None:
-            self._connection.deletePrinter(cups_queue_name)
+        return self._connection.deletePrinter(uri)
 
     def renamePrinter(self, uri, name, location):
         cups_queue_name_and_printer = self._getCUPSQueueNameAndPrinter(uri)

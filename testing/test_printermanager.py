@@ -129,10 +129,9 @@ def test_getPrinterIDByDetails():
 def test_getCUPSPrintersForAccount():
     global printerManagerInstance, requestors
 
-    foundprinters, connection = printerManagerInstance.getCUPSPrintersForAccount(
+    foundprinters = printerManagerInstance.getCUPSPrintersForAccount(
         requestors[0].getAccount())
     assert foundprinters == []
-    assert isinstance(connection, cups.Connection)
 
     # total printer
     totalPrinters = 0
@@ -151,6 +150,7 @@ def test_getCUPSPrintersForAccount():
 
     # get ppd
     ppdid = 'MFG:Google;DRV:GCP;CMD:POSTSCRIPT;DES:GoogleCloudPrint;MDL'
+    connection = cups.Connection()
     ppds = connection.getPPDs(ppd_device_id=ppdid)
     printerppdname, printerppd = ppds.popitem()
 
@@ -161,7 +161,7 @@ def test_getCUPSPrintersForAccount():
         connection,
         "test location",
         printerppdname) is not None
-    foundprinters, newconnection = printerManagerInstance.getCUPSPrintersForAccount(
+    foundprinters = printerManagerInstance.getCUPSPrintersForAccount(
         requestors[1].getAccount())
     # delete test printer
     connection.deletePrinter(printerManagerInstance.sanitizePrinterName(printer['name']))

@@ -35,8 +35,12 @@ class MockCUPS():
                                 'printer-location': location,
                                 'device-uri': device}
     
-    def deletePrinter(self, name):
-        del self._printers[name]
+    def deletePrinter(self, uri):
+        for printer in self._printers:
+                if self._printers[printer]['device-uri'] == uri:
+                    del self._printers[printer]
+                    return
+        return False
     
     def enablePrinter(self, name):
         self._printers[name]['printer-state'] = 3

@@ -27,6 +27,13 @@ exit $?
 if __name__ == '__main__':  # pragma: no cover
     from auth import Auth
     from printermanager import PrinterManager
+    from cupshelper import CUPSHelper
+    cupsHelper = None
+    try:
+        cupsHelper = CUPSHelper()
+    except Exception as e:
+        sys.stderr.write("Could not connect to CUPS: " + e.message + "\n")
+        sys.exit(0)
 
     from ccputils import Utils
     Utils.SetupLogging()
@@ -58,14 +65,14 @@ if __name__ == '__main__':  # pragma: no cover
                         "Also delete associated printers? ")
                     if deleteprintersanswer.lower().startswith("y"):
                         printer_manager = PrinterManager(requestors)
-                        printers, connection = \
+                        printers = \
                             printer_manager.getCUPSPrintersForAccount(accounts[int(answer) - 1])
                         if len(printers) == 0:
                             print "No printers to delete"
                         else:
                             for cupsPrinter in printers:
                                 print "Deleting " + cupsPrinter['printer-info']
-                                deleteReturnValue = connection.deletePrinter(
+                                deleteReturnValue = cupsHelper.deletePrinter(
                                     cupsPrinter['printer-info'])
                                 if deleteReturnValue is not None:
                                     errormessage = "Error deleting printer: "
