@@ -25,6 +25,7 @@ exit $?
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 if __name__ == '__main__':  # pragma: no cover
+    import sys
     from auth import Auth
     from printermanager import PrinterManager
     from cupshelper import CUPSHelper
