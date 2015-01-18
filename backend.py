@@ -45,6 +45,8 @@ if __name__ == '__main__':  # pragma: no cover
     CCPVersion = "20140814.2 000000"
     Utils.ShowVersion(CCPVersion)
 
+    copies = 1
+
     if len(sys.argv) != 1 and len(sys.argv) < 6 or len(sys.argv) > 7:
         sys.stderr.write(
             "ERROR: Usage: %s job-id user title copies options [file]\n" % sys.argv[0])
@@ -63,6 +65,7 @@ if __name__ == '__main__':  # pragma: no cover
         sys.exit(1)
     if len(sys.argv) == 6:
         prog, jobID, userName, jobTitle, copies, printOptions = sys.argv[0:6]
+        copies = int(copies)
         printFile = jobTitle
 
     requestors, storage = Auth.SetupAuth(False)
@@ -89,10 +92,6 @@ if __name__ == '__main__':  # pragma: no cover
     filedata = ""
     for line in sys.stdin:
         filedata += line
-
-    # Backends should only produce multiple copies if a file name is
-    # supplied (see CUPS Software Programmers Manual)
-    copies = 1
 
     uri = os.getenv('DEVICE_URI')
     cupsprintername = os.getenv('PRINTER')
@@ -131,26 +130,35 @@ if __name__ == '__main__':  # pragma: no cover
 
     # send pdf data to GCP
     if result == 0:
-        sys.stderr.write("INFO: Sending document to Cloud Print\n")
-        logging.info("Sending %s to cloud", printFile)
+        # print number of copies requested
+        for i in range(0, copies):
+            sys.stderr.write("INFO: Printing copy %i of %i \n" % (i + 1, copies))
+            logging.info("Printing %i of %i", i + 1, copies)
+            sys.stderr.write("INFO: Sending document to Cloud Print\n")
+            logging.info("Sending %s to cloud", printFile)
 
-        printer = printer_manager.getPrinterByURI(uri)
-        if printer is None:
-            sys.stderr.write("ERROR: PrinterManager '%s' not found\n" % uri)
-            result = 1
-        elif printer.submitJob('pdf', printFile, filedata, jobTitle, cupsprintername, printOptions):
-            sys.stderr.write("INFO: Successfully printed\n")
-            result = 0
-        else:
-            sys.stderr.write("ERROR: Failed to submit job to cloud print\n")
-            result = 1
-        logging.info(str(printFile) + " sent to cloud print")
+            printer = printer_manager.getPrinterByURI(uri)
+            if printer is None:
+                sys.stderr.write("ERROR: PrinterManager '%s' not found\n" % uri)
+                result = 1
+            elif printer.submitJob('pdf',
+                                   printFile,
+                                   filedata,
+                                   jobTitle,
+                                   cupsprintername,
+                                   printOptions):
+                sys.stderr.write("INFO: Successfully printed\n")
+                result = 0
+            else:
+                sys.stderr.write("ERROR: Failed to submit job to cloud print\n")
+                result = 1
+            logging.info(str(printFile) + " sent to cloud print")
 
-        if result != 0:
-            sys.stderr.write("INFO: Printing Failed\n")
-            logging.info("Failed printing")
-        else:
-            sys.stderr.write("INFO: Printing Successful\n")
-            logging.info("Completed printing")
+            if result != 0:
+                sys.stderr.write("INFO: Printing Failed\n")
+                logging.info("Failed printing")
+            else:
+                sys.stderr.write("INFO: Printing Successful\n")
+                logging.info("Completed printing")
 
     sys.exit(result)
