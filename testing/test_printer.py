@@ -32,28 +32,34 @@ testCapabilities1 = [{'name': 'ns1:Colors',
                       'displayName': 'Colors',
                       'type': 'Feature',
                       'options':
-                      [{'default': True, 'name': 'test', 'displayName': 'testdisplay'}, {'name': 'test2'}]},
+                      [{'default': True, 'name': 'test', 'displayName': 'testdisplay'},
+                       {'name': 'test2'}]},
                      {'name': 'ns1:Size',
                       'psk:DisplayName': 'Size',
                       'type': 'Feature',
                       'options':
-                      [{'default': True, 'name': 'big', 'psk:DisplayName': 'testdisplay big'}, {'name': 'small'}]},
+                      [{'default': True, 'name': 'big', 'psk:DisplayName': 'testdisplay big'},
+                       {'name': 'small'}]},
                      {'name': 'ns1:Something',
                       'type': 'Feature',
                       'options':
-                      [{'default': True, 'name': 'one'}, {'name': 'two', 'ppd:value': 'testval'}]},
+                      [{'default': True, 'name': 'one'},
+                       {'name': 'two', 'ppd:value': 'testval'}]},
                      {'name': 'ns1:TestReservedWord',
                       'type': 'Feature',
                       'options':
-                      [{'default': True, 'name': 'Resolution'}, {'name': 'two', 'ppd:value': 'testval'}]},
+                      [{'default': True, 'name': 'Resolution'},
+                       {'name': 'two', 'ppd:value': 'testval'}]},
                      {'name': 'ns1:TestReservedWord',
                       'type': 'Feature',
                       'options':
-                      [{'default': True, 'name': 'Resolution'}, {'name': 'two', 'ppd:value': 'testval'}]},
+                      [{'default': True, 'name': 'Resolution'},
+                       {'name': 'two', 'ppd:value': 'testval'}]},
                      {'name': 'ns1:TestReservedWord',
                       'type': 'Feature',
                       'options':
-                      [{'default': True, 'name': 'Resolution'}, {'name': 'two', 'ppd:value': 'testval'}]}]
+                      [{'default': True, 'name': 'Resolution'},
+                       {'name': 'two', 'ppd:value': 'testval'}]}]
 
 
 def setup_function(function):
@@ -128,7 +134,7 @@ def test_getCapabilitiesItemsMissing():
     global printers
     printer = printers[1]
     assert 'capabilities' not in printer._fields
-    assert printer['capabilities'] == None
+    assert printer['capabilities'] is None
 
 
 def test_contains():
@@ -147,7 +153,9 @@ def test_fetchDetails():
                                            'id': '__test_save_docs',
                                            'capabilities': testCapabilities1}
     assert printers[1]._fetchDetails() == {
-        'displayName': 'Save to Google Drive 2 DisplayName', 'id': '__test_save_docs_2', 'name': 'Save to Google Drive 2'}
+        'displayName': 'Save to Google Drive 2 DisplayName',
+        'id': '__test_save_docs_2',
+        'name': 'Save to Google Drive 2'}
 
 
 def test_getURI():
@@ -259,10 +267,16 @@ def test_getInternalName():
         assert len(printerItem._getInternalName(internalTest, 'capability')) >= 1
 
     for internalTest in internalCapabilityTests:
-        for capabilityName in ["psk:JobDuplexAllDocumentsContiguously", "other", "psk:PageOrientation", "cupsFilter"]:
+        for capabilityName in ["psk:JobDuplexAllDocumentsContiguously",
+                               "other",
+                               "psk:PageOrientation",
+                               "cupsFilter"]:
             assert printerItem._getInternalName(
-                internalTest, 'option', capabilityName) not in printerItem._RESERVED_CAPABILITY_WORDS
-            assert not printerItem._getInternalName(internalTest, 'option', capabilityName).startswith(
+                internalTest, 'option', capabilityName) not in \
+                printerItem._RESERVED_CAPABILITY_WORDS
+            assert not printerItem._getInternalName(internalTest,
+                                                    'option',
+                                                    capabilityName).startswith(
                 printerItem._RESERVED_CAPABILITY_PREFIXES)
             assert ':' not in printerItem._getInternalName(internalTest, 'option', capabilityName)
             assert ' ' not in printerItem._getInternalName(internalTest, 'option')
@@ -272,12 +286,16 @@ def test_getInternalName():
     # ensure fixed mappings works correctly
     for fixedCapabilityName in printerItem._FIXED_CAPABILITY_MAPPINGS:
         assert printerItem._getInternalName(
-            {'name': fixedCapabilityName}, 'capability') == printerItem._FIXED_CAPABILITY_MAPPINGS[fixedCapabilityName]
+            {'name': fixedCapabilityName}, 'capability') == \
+            printerItem._FIXED_CAPABILITY_MAPPINGS[fixedCapabilityName]
 
     for fixedCapabilityName in printerItem._FIXED_OPTION_MAPPINGS:
         for fixedOptionName in printerItem._FIXED_OPTION_MAPPINGS[fixedCapabilityName]:
-            assert printerItem._getInternalName({'name': fixedOptionName}, 'option', fixedCapabilityName) == printerItem._FIXED_OPTION_MAPPINGS[
-                fixedCapabilityName][fixedOptionName]
+            assert printerItem._getInternalName({'name': fixedOptionName},
+                                                'option',
+                                                fixedCapabilityName) \
+                == printerItem._FIXED_OPTION_MAPPINGS[
+                    fixedCapabilityName][fixedOptionName]
 
 
 def test_encodeMultiPart():
@@ -306,14 +324,32 @@ def test_GetCapabilitiesDict():
     printerItem = printers[0]
     assert printerItem._getCapabilitiesDict({}, {}, {}) == {"capabilities": []}
     assert printerItem._getCapabilitiesDict([{'name': 'test'}], {}, {}) == {"capabilities": []}
-    assert printerItem._getCapabilitiesDict([{'name': 'Default' + 'test', 'value': 'test'}], [{'name': printerItem._getInternalName({'name': "test"}, 'capability'), 'value': printerItem._getInternalName({'name': "test123"},
-                                                                                                                                                                                                           'option', printerItem._getInternalName({'name': "Defaulttest"}, 'capability'), []),
-                                                                                               'options': [{'name': 'test'}, {'name': 'test2'}]}], {}) == {'capabilities': [{'name': 'test', 'options': [{'name': 'test'}], 'type': 'Feature'}]}
     assert printerItem._getCapabilitiesDict([{'name': 'Default' + 'test', 'value': 'test'}],
-                                            [{'name': printerItem._getInternalName({'name': "test"}, 'capability'),
-                                              'value': printerItem._getInternalName({'name': "test123"},
-                                                                                    'option', printerItem._getInternalName({'name': "Defaulttest"}, 'capability'), []),
-                                              'options': [{'name': 'test'}, {'name': 'test2'}]}], {'test': 'test2'}) == {'capabilities': [{'name': 'test', 'options': [{'name': 'test2'}], 'type': 'Feature'}]}
+                                            [{'name': printerItem._getInternalName({'name': "test"},
+                                                                                   'capability'),
+                                              'value':
+                                                  printerItem._getInternalName(
+                                                      {'name':
+                                                       "test123"},
+                                                'option',
+                                                printerItem._getInternalName(
+                                                          {'name':
+                                                           "Defaulttest"},
+                                                          'capability'), []),
+                                              'options': [{'name': 'test'}, {'name': 'test2'}]}], {}) == \
+        {'capabilities':
+         [{'name': 'test', 'options': [{'name': 'test'}], 'type': 'Feature'}]}
+    assert printerItem._getCapabilitiesDict([{'name': 'Default' + 'test', 'value': 'test'}],
+                                            [{'name': printerItem._getInternalName({'name': "test"},
+                                                                                   'capability'),
+                                              'value': printerItem._getInternalName(
+                                                {'name': "test123"},
+                                                'option',
+                                                printerItem._getInternalName(
+                                                    {'name': "Defaulttest"},
+                                                    'capability'), []),
+                                              'options': [{'name': 'test'}, {'name': 'test2'}]}], {'test': 'test2'}) == \
+        {'capabilities': [{'name': 'test', 'options': [{'name': 'test2'}], 'type': 'Feature'}]}
 
 
 def test_attrListToArray():
@@ -367,19 +403,19 @@ def test_submitJob():
         'testing/testfiles/Test Page.pdf',
         open('testing/testfiles/Test Page.pdf').read(),
         'Test Page',
-        testprintername) == True
+        testprintername) is True
     assert printer.submitJob(
         'pdf',
         'testing/testfiles/Test Page Doesnt Exist.pdf',
         '',
         'Test Page',
-        testprintername) == False
+        testprintername) is False
     assert printer.submitJob(
         'pdf',
         'testing/testfiles/Test Page Corrupt.pdf',
         open('testing/testfiles/Test Page Corrupt.pdf').read(),
         'Test Page',
-        testprintername, 'landscape') == False
+        testprintername, 'landscape') is False
 
     # copy for rotating
     tmpDir = os.getenv('TMPDIR')
@@ -395,14 +431,14 @@ def test_submitJob():
         open(tmpFile).read(),
         'Test Page',
         testprintername,
-        "landscape") == True
+        "landscape") is True
     assert printer.submitJob(
         'pdf',
         tmpFile,
         open(tmpFile).read(),
         'Test Page',
         testprintername,
-        "nolandscape") == True
+        "nolandscape") is True
 
     os.unlink(tmpFile)
 
@@ -412,7 +448,7 @@ def test_submitJob():
         '',
         'data',
         '',
-        testprintername) == True
+        testprintername) is True
 
     # test submitting job with no name
     assert printer.submitJob(
@@ -420,13 +456,13 @@ def test_submitJob():
         'testing/testfiles/Test Page.pdf',
         open('testing/testfiles/Test Page.pdf').read(),
         '',
-        testprintername) == True
+        testprintername) is True
     assert printer.submitJob(
         'pdf',
         'testing/testfiles/Test Page Doesnt Exist.pdf',
         '',
         '',
-        testprintername) == False
+        testprintername) is False
 
     # png
     assert printer.submitJob(
@@ -434,13 +470,13 @@ def test_submitJob():
         'testing/testfiles/Test Page.png',
         open('testing/testfiles/Test Page.png').read(),
         'Test Page',
-        testprintername) == True
+        testprintername) is True
     assert printer.submitJob(
         'png',
         'testing/testfiles/Test Page Doesnt Exist.png',
         '',
         'Test Page',
-        testprintername) == False
+        testprintername) is False
 
     # ps
     assert printer.submitJob(
@@ -448,13 +484,13 @@ def test_submitJob():
         'testing/testfiles/Test Page.ps',
         open('testing/testfiles/Test Page.ps').read(),
         'Test Page',
-        testprintername) == False
+        testprintername) is False
     assert printer.submitJob(
         'ps',
         'testing/testfiles/Test Page Doesnt Exist.ps',
         '',
         'Test Page',
-        testprintername) == False
+        testprintername) is False
 
     # test failure of print job
     assert printer.submitJob(
@@ -462,7 +498,7 @@ def test_submitJob():
         'testing/testfiles/Test Page.pdf',
         open('testing/testfiles/Test Page.pdf').read(),
         'FAIL PAGE',
-        testprintername) == False
+        testprintername) is False
 
     # test failure of print job with exception
     assert printer.submitJob(
@@ -470,7 +506,7 @@ def test_submitJob():
         'testing/testfiles/Test Page.pdf',
         open('testing/testfiles/Test Page.pdf').read(),
         'TEST PAGE WITH EXCEPTION',
-        testprintername) == False
+        testprintername) is False
 
     # delete test printer
     connection.deletePrinter(testprintername)
