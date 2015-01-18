@@ -58,6 +58,8 @@ Icon is licensed as Creative Commons - Attribution (CC BY 3.0) - http://creative
     - Cup icon ( http://thenounproject.com/term/cup/6566/ ) created by Monika Ciapala ( http://thenounproject.com/merdesign/ , http://www.merdesign.co.uk/ )
     - Cloud icon ( http://thenounproject.com/term/cloud/2788/ ) created by P.J. Onori ( http://thenounproject.com/somerandomdude/ , http://somerandomdude.com/ )
     - Printer icon ( http://thenounproject.com/term/printer/5043/ ) created by Dmitry Baranovskiy ( http://thenounproject.com/DmitryBaranovskiy/ , http://dmitry.baranovskiy.com/ )
+    - Printer icon ( http://thenounproject.com/term/printer/5043/ ) created by Dmitry Baranovskiy ( http://thenounproject.com/DmitryBaranovskiy/ , http://dmitry.baranovskiy.com/ )
+    - Arrow icon ( http://thenounproject.com/term/arrow/5449/ ) created by Jamison Wieser ( http://thenounproject.com/jamison/ , http://jamisonwieser.com/ )
 
 Software copyright Simon Cadman and licenced under GNU GPL v3 ( http://www.gnu.org/licenses/gpl.html ).
 
