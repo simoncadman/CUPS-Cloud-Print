@@ -13,7 +13,6 @@
 #
 #    You should have received a copy of the GNU General Public License
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
-import cups
 import hashlib
 import json
 import locale
@@ -167,9 +166,10 @@ class Printer(object):
 
     _CONVERTCOMMAND = 'convert'
 
-    def __init__(self, fields, requestor):
+    def __init__(self, fields, requestor, cupsHelper):
         self._fields = fields
         self._requestor = requestor
+        self._cupsHelper = cupsHelper
 
     def getFields(self):
         return self._fields
@@ -484,14 +484,13 @@ class Printer(object):
         Returns:
           List of capabilities
         """
-        connection = cups.Connection()
         overridecapabilities = self._getOverrideCapabilities(overrideoptionsstring)
         overrideDefaultDefaults = {'Duplex': 'None'}
 
         for capability in overrideDefaultDefaults:
             if capability not in overridecapabilities:
                 overridecapabilities[capability] = overrideDefaultDefaults[capability]
-        attrs = cups.PPD(connection.getPPD(cupsprintername)).attributes
+        attrs = self._cupsHelper.getPPDAttributes(cupsprintername)
         attrArray = self._attrListToArray(attrs)
         return self._getCapabilitiesDict(attrArray, self['capabilities'], overridecapabilities)
 

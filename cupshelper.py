@@ -41,6 +41,9 @@ class CUPSHelper(object):
     def getPPDs(self):
         return self._connection.getPPDs()
 
+    def getPPDAttributes(self, name):
+        return cups.PPD(self._connection.getPPD(name)).attributes
+
     def getPrinter(self, uri):
         for cups_queue_name, printer in self.getPrinters().items():
             if printer['device-uri'] == uri:

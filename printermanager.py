@@ -20,6 +20,7 @@ import re
 from auth import Auth
 from urlparse import urlparse
 from printer import Printer
+from cupshelper import CUPSHelper
 from ccputils import Utils
 
 
@@ -52,6 +53,7 @@ class PrinterManager(object):
           requestors, or a single requestor to use for all Cloud Print
           requests.
         """
+        self._cupsHelper = CUPSHelper()
         if requestors is not None:
             if isinstance(requestors, list):
                 self.requestors = requestors
@@ -88,7 +90,7 @@ class PrinterManager(object):
                     or 'printers' not in response or not response['printers']:
                 break
 
-            return Printer(response['printers'][0], requestor)
+            return Printer(response['printers'][0], requestor, self._cupsHelper)
 
         return None
 
@@ -107,7 +109,7 @@ class PrinterManager(object):
                 responseobj = requestor.search()
                 if 'printers' in responseobj:
                     for printer_info in responseobj['printers']:
-                        self._printers.append(Printer(printer_info, requestor))
+                        self._printers.append(Printer(printer_info, requestor, self._cupsHelper))
 
         return self._printers
 

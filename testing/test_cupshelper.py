@@ -55,7 +55,7 @@ def test_getPrinters():
     printerinstance = Printer({'name': 'Testing Printer',
                                         'id': '__test_printer',
                                         'capabilities': [{'name': 'ns1:Colors',
-                                                          'type': 'Feature'}]}, requestor)
+                                                          'type': 'Feature'}]}, requestor, helperinstance)
     helperinstance.addPrinter(printerinstance, "test")
     
     # also add dummy instance with non-gcp uri
@@ -93,7 +93,7 @@ def test_addGetPrinter():
     printerinstance = Printer({'name': 'Testing Printer',
                                         'id': '__test_printer',
                                         'capabilities': [{'name': 'ns1:Colors',
-                                                          'type': 'Feature'}]}, requestor)
+                                                          'type': 'Feature'}]}, requestor, helperinstance)
     helperinstance.addPrinter(printerinstance, "test")
     
     printerdetails = helperinstance.getPrinter('gcp://test/__test_printer')
@@ -106,7 +106,7 @@ def test_addGetPrinter():
     printerinstance2 = Printer({'name': 'Testing Printer 2',
                                         'id': '__test_printer_2',
                                         'capabilities': [{'name': 'ns1:Colors',
-                                                          'type': 'Feature'}]}, requestor)
+                                                          'type': 'Feature'}]}, requestor, helperinstance)
     helperinstance.addPrinter(printerinstance2, "test2", "test-location", printerinstance.getPPDName())
     printerdetails = helperinstance.getPrinter('gcp://test/__test_printer_2')
     assert printerdetails['device-uri'] == 'gcp://test/__test_printer_2'
@@ -119,7 +119,7 @@ def test_addGetPrinter():
                                         'id': '__test_printer_3',
                                         'capabilities': [{'name': 'ns1:Colors',
                                                           'type': 'Feature'}],
-                                        'tags' : ['location=Test Location']}, requestor)
+                                        'tags' : ['location=Test Location']}, requestor, helperinstance)
     helperinstance.addPrinter(printerinstance3, "test3", "")
     printerdetails = helperinstance.getPrinter('gcp://test/__test_printer_3')
     assert printerdetails['device-uri'] == 'gcp://test/__test_printer_3'
@@ -132,7 +132,7 @@ def test_addGetPrinter():
                                         'id': '__test_printer_4',
                                         'capabilities': [{'name': 'ns1:Colors',
                                                           'type': 'Feature'}],
-                                        'tags' : ['location=Test Location']}, requestor)
+                                        'tags' : ['location=Test Location']}, requestor, helperinstance)
     helperinstance.addPrinter(printerinstance4, "test4", MockCUPS())
     assert helperinstance.getPrinter('gcp://test/__test_printer_4') == None
     
@@ -145,7 +145,7 @@ def test_renamePrinter():
     printerinstance = Printer({'name': 'Testing Printer',
                                         'id': '__test_printer',
                                         'capabilities': [{'name': 'ns1:Colors',
-                                                          'type': 'Feature'}]}, requestor)
+                                                          'type': 'Feature'}]}, requestor, helperinstance)
     helperinstance.addPrinter(printerinstance, "test")
     
     helperinstance.renamePrinter('gcp://test/__test_printer', 'Testing Printer 2', 'test location')
@@ -162,7 +162,7 @@ def test_deletePrinter():
     printerinstance = Printer({'name': 'Testing Printer',
                                         'id': '__test_printer',
                                         'capabilities': [{'name': 'ns1:Colors',
-                                                          'type': 'Feature'}]}, requestor)
+                                                          'type': 'Feature'}]}, requestor, helperinstance)
     helperinstance.addPrinter(printerinstance, "test")
     helperinstance.deletePrinter("printer that doesnt exist")
     
@@ -179,7 +179,7 @@ def test__getCUPSQueueName():
     printerinstance = Printer({'name': 'Testing Printer',
                                         'id': '__test_printer',
                                         'capabilities': [{'name': 'ns1:Colors',
-                                                          'type': 'Feature'}]}, requestor)
+                                                          'type': 'Feature'}]}, requestor, helperinstance)
     helperinstance.addPrinter(printerinstance, "test")
     
     assert helperinstance._getCUPSQueueName('gcp://test/__test_printer') == "TestingPrinter-test"
@@ -191,7 +191,7 @@ def test__getCUPSQueueNameAndPrinter():
     printerinstance = Printer({'name': 'Testing Printer',
                                         'id': '__test_printer',
                                         'capabilities': [{'name': 'ns1:Colors',
-                                                          'type': 'Feature'}]}, requestor)
+                                                          'type': 'Feature'}]}, requestor, helperinstance)
     helperinstance.addPrinter(printerinstance, "test")
     
     assert helperinstance._getCUPSQueueNameAndPrinter('gcp://test/__test_printer') == ("TestingPrinter-test", {'device-uri': 'gcp://test/__test_printer',
@@ -220,5 +220,5 @@ def test_generateCUPSQueueName():
         printerinstance = Printer({'name': teststring,
                                    'id': '__test_printer',
                                    'capabilities': [{'name': 'ns1:Colors',
-                                                   'type': 'Feature'}]}, requestor)
+                                                   'type': 'Feature'}]}, requestor, helperinstance)
         assert helperinstance.generateCUPSQueueName(printerinstance) == testdata[teststring]
