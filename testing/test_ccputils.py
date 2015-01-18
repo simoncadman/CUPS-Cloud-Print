@@ -30,40 +30,40 @@ def teardown_function(function):
 
 def test_SetupLogging():
     testLogFile = '/tmp/testccp.log'
-    assert os.path.exists(testLogFile) == False
-    assert Utils.SetupLogging(testLogFile) == True
+    assert os.path.exists(testLogFile) is False
+    assert Utils.SetupLogging(testLogFile) is True
     logging.error('test_setupLogging error test')
-    assert os.path.exists(testLogFile) == True
+    assert os.path.exists(testLogFile) is True
     os.unlink(testLogFile)
 
 
 def test_SetupLoggingDefault():
     testLogFile = '/tmp/testccp.log'
-    assert os.path.exists(testLogFile) == False
+    assert os.path.exists(testLogFile) is False
     Utils.logpath = testLogFile
-    assert Utils.SetupLogging() == True
+    assert Utils.SetupLogging() is True
     logging.error('test_setupLogging error test')
-    assert os.path.exists(testLogFile) == True
+    assert os.path.exists(testLogFile) is True
     os.unlink(testLogFile)
 
 
 def test_SetupLoggingFails():
     testLogFile = '/tmp/dirthatdoesntexist/testccp.log'
-    assert os.path.exists(testLogFile) == False
-    assert Utils.SetupLogging(testLogFile) == False
-    assert os.path.exists(testLogFile) == False
+    assert os.path.exists(testLogFile) is False
+    assert Utils.SetupLogging(testLogFile) is False
+    assert os.path.exists(testLogFile) is False
 
 
 def test_fileIsPDFFails():
-    assert Utils.fileIsPDF(open('testing/testfiles/NotPdf.txt').read()) == False
+    assert Utils.fileIsPDF(open('testing/testfiles/NotPdf.txt').read()) is False
 
 
 def test_fileIsPDFSucceeds():
-    assert Utils.fileIsPDF(open('testing/testfiles/Test Page.pdf').read(128)) == True
+    assert Utils.fileIsPDF(open('testing/testfiles/Test Page.pdf').read(128)) is True
 
 
 def test_fileIsPDFErrors():
-    assert Utils.fileIsPDF("testdata") == False
+    assert Utils.fileIsPDF("testdata") is False
 
 
 def test_whichFails():
@@ -80,13 +80,13 @@ def test_whichSucceeds():
 
 def test_isExeSucceeds():
     if os.path.exists('/usr/bin/sh'):
-        assert Utils.is_exe("/usr/bin/sh") == True
+        assert Utils.is_exe("/usr/bin/sh") is True
     else:
-        assert Utils.is_exe("/bin/sh") == True
+        assert Utils.is_exe("/bin/sh") is True
 
 
 def test_isExeFails():
-    assert Utils.is_exe("/dev/null") == False
+    assert Utils.is_exe("/dev/null") is False
 
 
 def test_getLPID():
@@ -127,7 +127,7 @@ def test_getLPID():
 
 
 def test_showVersion():
-    assert Utils.ShowVersion("12345") == False
+    assert Utils.ShowVersion("12345") is False
     sys.argv = ['testfile', 'version']
     with pytest.raises(SystemExit):
         Utils.ShowVersion("12345")
@@ -141,8 +141,8 @@ def test_readFile():
 
 
 def test_writeFile():
-    Utils.WriteFile('/tmp/testfile', 'data') == True
-    Utils.WriteFile('/tmp/testfile/dsadsaasd', 'data') == False
+    Utils.WriteFile('/tmp/testfile', 'data') is True
+    Utils.WriteFile('/tmp/testfile/dsadsaasd', 'data') is False
     os.unlink('/tmp/testfile')
 
 
@@ -171,7 +171,7 @@ def test_GetDefaultPaperType():
 
 def test_GetWindowSize():
     # expect this to fail gracefully if no tty
-    assert Utils.GetWindowSize() == None
+    assert Utils.GetWindowSize() is None
 
     # pass in dummy winsize struct
     dummywinsize = struct.pack('HHHH', 800, 600, 0, 0)
@@ -179,7 +179,7 @@ def test_GetWindowSize():
 
     # ensure window size of 0x0 returns none
     dummywinsize = struct.pack('HHHH', 0, 0, 0, 0)
-    assert Utils.GetWindowSize(dummywinsize) == None
+    assert Utils.GetWindowSize(dummywinsize) is None
 
 
 def test_StdInToTempFile():

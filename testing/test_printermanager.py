@@ -175,10 +175,10 @@ def test_getCUPSPrintersForAccount():
 
 def test_getPrinter():
     global requestors, printerManagerInstance
-    assert printerManagerInstance.getPrinter('test', 'missingaccount') == None
+    assert printerManagerInstance.getPrinter('test', 'missingaccount') is None
     assert isinstance(printerManagerInstance.getPrinter(
         '__test_save_docs', requestors[1].getAccount()), Printer)
-    assert printerManagerInstance.getPrinter('test', requestors[0].getAccount()) == None
+    assert printerManagerInstance.getPrinter('test', requestors[0].getAccount()) is None
 
 
 def test_instantiate():
@@ -210,7 +210,7 @@ def test_GetPrinterByURIFails():
 
 def test_addPrinterFails():
     global printerManagerInstance
-    assert printerManagerInstance.addPrinter('', None, '') == False
+    assert printerManagerInstance.addPrinter('', None, '') is False
 
 
 def test_invalidRequest():
@@ -286,7 +286,7 @@ def test_printers():
                 found = True
                 break
 
-        assert found == True
+        assert found is True
 
         # delete test printer
         connection.deletePrinter(testprintername)
