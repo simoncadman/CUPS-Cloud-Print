@@ -47,8 +47,8 @@ class Auth(object):
             credentials.refresh(requestor)
         except AccessTokenRefreshError as e:
             if not interactive:
-                message = "ERROR: Failed to renew token "
-                message += "(error: "
+                message = "ERROR: Failed to renew token for " + str(userid)
+                message += " (error: "
                 message += str(e)
                 message += "), "
                 message += "please re-run "
@@ -57,7 +57,7 @@ class Auth(object):
                 sys.stderr.write(message)
                 sys.exit(1)
             else:
-                message = "Failed to renew token (error: "
+                message = "Failed to renew token for " + str(userid) + " (error: "
                 message += str(e) + "), "
                 message += "authentication needs to be "
                 message += "setup again:\n"
