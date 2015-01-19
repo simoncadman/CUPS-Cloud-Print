@@ -111,7 +111,8 @@ class Auth(object):
 
         while True:
             flow, auth_uri = Auth.AddAccountStep1(userid, permissions)
-            message = "Open this URL, grant access to CUPS Cloud Print, "
+            message = "Open this URL, grant access to CUPS Cloud Print "
+            message += "( for the " + userid + " account ), "
             message += "then provide the code displayed : \n\n"
             message += auth_uri + "\n"
             print message
