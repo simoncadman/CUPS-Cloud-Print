@@ -139,7 +139,7 @@ if __name__ == '__main__':  # pragma: no cover
 
             printer = printer_manager.getPrinterByURI(uri)
             if printer is None:
-                sys.stderr.write("ERROR: PrinterManager '%s' not found\n" % uri)
+                sys.stderr.write("ERROR: Printer '%s' not found\n" % uri)
                 result = 1
             elif printer.submitJob('pdf',
                                    printFile,
