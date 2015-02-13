@@ -166,6 +166,10 @@ def test_GetLanguage():
 def test_GetDefaultPaperType():
     assert Utils.GetDefaultPaperType(['en_GB', ]) == "A4"
     assert Utils.GetDefaultPaperType(['en_US', ]) == "Letter"
+    assert Utils.GetDefaultPaperType(['en_gb', ]) == "A4"
+    assert Utils.GetDefaultPaperType(['en_us', ]) == "Letter"
+    assert Utils.GetDefaultPaperType(['de_DE', ]) == "A4"
+    assert Utils.GetDefaultPaperType(['es_MX', ]) == "Letter"
     assert Utils.GetDefaultPaperType([None, None]) == "Letter"
 
 

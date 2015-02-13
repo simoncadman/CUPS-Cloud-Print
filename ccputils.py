@@ -244,7 +244,8 @@ class Utils(object):
         defaultpapertype = "Letter"
         if len(locale) < 1 or locale[0] is None:
             return defaultpapertype
-        if len(locale[0].split('_')) > 1 and locale[0].split('_')[1] not in Utils._LETTER_COUNTRIES:
+        if len(locale[0].split('_')) > 1 and \
+                locale[0].split('_')[1].upper() not in Utils._LETTER_COUNTRIES:
             defaultpapertype = "A4"
         return defaultpapertype
 
