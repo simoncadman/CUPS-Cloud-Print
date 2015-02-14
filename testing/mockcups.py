@@ -63,3 +63,6 @@ class MockCUPS():
             self._printers[queue]['printer-location'] = location
             return True
         return False
+
+    def adminGetServerSettings(self):
+        return {'itemthatdoesexist': 'GeeR2Ieh6Ok5Aep8Ahha'}

@@ -236,3 +236,8 @@ def test_generateCUPSQueueName():
                                                      'type': 'Feature'}]},
                                   requestor, helperinstance)
         assert helperinstance.generateCUPSQueueName(printerinstance) == testdata[teststring]
+
+
+def test_getServerSetting():
+    assert helperinstance.getServerSetting('settingthatshouldntexist') == None
+    assert helperinstance.getServerSetting('itemthatdoesexist') == 'GeeR2Ieh6Ok5Aep8Ahha'
