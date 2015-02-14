@@ -270,8 +270,8 @@ class Printer(object):
     def generatePPD(self):
         """Generates a PPD string for this printer."""
         defaultlocale = locale.getdefaultlocale()
-        language = Utils.GetLanguage(defaultlocale)
-        defaultpapertype = Utils.GetDefaultPaperType(defaultlocale)
+        language, newlocale = Utils.GetLanguage(defaultlocale, self._cupsHelper)
+        defaultpapertype = Utils.GetDefaultPaperType(newlocale)
         ppd = self._PPD_TEMPLATE_HEAD % {
             'language': language, 'defaultpapertype': defaultpapertype,
             'ieee1284': self.getIEEE1284(), 'ppdname': self.getPPDName()}

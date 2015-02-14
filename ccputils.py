@@ -229,23 +229,27 @@ class Utils(object):
         return header + base64.b64encode(data)
 
     @staticmethod
-    def GetLanguage(locale):
-        language = 'en'
-        if len(locale) < 1 or locale[0] is None:
-            return language
-        defaultlocale = locale[0]
-        language = defaultlocale
-        if '_' in language:
-            language = language.split("_")[0]
-        return language
+    def GetLanguage(locale, cupshelper=None):
+        newlocale = None
+        if cupshelper is not None:
+            newlocale = cupshelper.getServerSetting('DefaultLanguage')
+
+        if newlocale is None:
+            if len(locale) < 1 or locale[0] is None:
+                return ('en', 'en')
+            defaultlocale = locale[0]
+            newlocale = defaultlocale
+
+        language = newlocale
+        if '_' in newlocale:
+            language = newlocale.split("_")[0]
+        return (language, newlocale)
 
     @staticmethod
     def GetDefaultPaperType(locale):
         defaultpapertype = "Letter"
-        if len(locale) < 1 or locale[0] is None:
-            return defaultpapertype
-        if len(locale[0].split('_')) > 1 and \
-                locale[0].split('_')[1].upper() not in Utils._LETTER_COUNTRIES:
+        if len(locale.split('_')) > 1 and \
+                locale.split('_')[1].upper() not in Utils._LETTER_COUNTRIES:
             defaultpapertype = "A4"
         return defaultpapertype
 

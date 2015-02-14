@@ -99,6 +99,12 @@ class CUPSHelper(object):
 
         return True
 
+    def getServerSetting(self, name):
+        settings = self._connection.adminGetServerSettings()
+        if name in settings:
+            return settings[name]
+        return None
+
     @staticmethod
     def generateCUPSQueueName(ccp_printer):
         """Generates a queue name that complies to validate_name() in lpadmin.c"""

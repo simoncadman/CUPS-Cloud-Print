@@ -21,6 +21,7 @@ import struct
 sys.path.insert(0, ".")
 
 from ccputils import Utils
+from cupshelper import CUPSHelper
 
 
 def teardown_function(function):
@@ -154,23 +155,36 @@ def test_base64encode():
 
 
 def test_GetLanguage():
-    assert Utils.GetLanguage(['en_GB', ]) == "en"
-    assert Utils.GetLanguage(['en_US', ]) == "en"
-    assert Utils.GetLanguage(['fr_CA', ]) == "fr"
-    assert Utils.GetLanguage(['fr_FR', ]) == "fr"
-    assert Utils.GetLanguage(['it_IT', ]) == "it"
-    assert Utils.GetLanguage(['en', ]) == "en"
-    assert Utils.GetLanguage([None, None]) == "en"
+    assert Utils.GetLanguage(['en_GB', ]) == ("en", "en_GB")
+    assert Utils.GetLanguage(['en_US', ]) == ("en", "en_US")
+    assert Utils.GetLanguage(['fr_CA', ]) == ("fr", "fr_CA")
+    assert Utils.GetLanguage(['fr_FR', ]) == ("fr", "fr_FR")
+    assert Utils.GetLanguage(['it_IT', ]) == ("it", "it_IT")
+    assert Utils.GetLanguage(['en', ]) == ("en", "en")
+    assert Utils.GetLanguage([None, None]) == ("en", "en")
+
+    # also test with helper
+    helper = CUPSHelper()
+    if helper.getServerSetting('DefaultLanguage') is not None:
+        # if set
+        locale = helper.getServerSetting('DefaultLanguage')
+        lang = locale.split('_')[0]
+        assert Utils.GetLanguage([None, None], helper) == (lang, locale)
+        assert Utils.GetLanguage(['fr_CA', ], helper) == (lang, locale)
+    else:
+        # if not set
+        assert Utils.GetLanguage([None, None], helper) == ("en", "en")
+        assert Utils.GetLanguage(['fr_CA', ], helper) == ("fr", "fr_CA")
 
 
 def test_GetDefaultPaperType():
-    assert Utils.GetDefaultPaperType(['en_GB', ]) == "A4"
-    assert Utils.GetDefaultPaperType(['en_US', ]) == "Letter"
-    assert Utils.GetDefaultPaperType(['en_gb', ]) == "A4"
-    assert Utils.GetDefaultPaperType(['en_us', ]) == "Letter"
-    assert Utils.GetDefaultPaperType(['de_DE', ]) == "A4"
-    assert Utils.GetDefaultPaperType(['es_MX', ]) == "Letter"
-    assert Utils.GetDefaultPaperType([None, None]) == "Letter"
+    assert Utils.GetDefaultPaperType('en_GB') == "A4"
+    assert Utils.GetDefaultPaperType('en_US') == "Letter"
+    assert Utils.GetDefaultPaperType('en_gb') == "A4"
+    assert Utils.GetDefaultPaperType('en_us') == "Letter"
+    assert Utils.GetDefaultPaperType('de_DE') == "A4"
+    assert Utils.GetDefaultPaperType('es_MX') == "Letter"
+    assert Utils.GetDefaultPaperType('') == "Letter"
 
 
 def test_GetWindowSize():
