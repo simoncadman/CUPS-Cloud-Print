@@ -25,7 +25,7 @@ script:
  - cd $TRAVIS_BUILD_DIR
  - ./upgrade.py
  - sudo python -m compileall .
- - py.test -rxs --cov . --doctest-modules -v --cov-report term-missing --ignore=oauth2client
+ - py.test -rfEsxw --cov . --doctest-modules -v --cov-report term-missing --ignore=oauth2client
  - ls -al /tmp/
  - sudo cat /var/log/cups/cloudprint_log /var/log/cups/error_log
  - sudo unlink /usr/share/cups/model/testppd.ppd

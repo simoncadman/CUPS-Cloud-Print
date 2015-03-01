@@ -49,7 +49,11 @@ DEVELOPING
 
 Before commiting to the git repository you should set up the pre-commit hook, this ensures the version numbers in the scripts are updated:
 
-ln -s ../../pre-commit.py .git/hooks/pre-commit
+    ln -s ../../pre-commit.py .git/hooks/pre-commit
+
+To run unit tests with a coverage report ( output into the htmlcov dir ) run this from within the CUPS Cloud Print directory:
+    
+    py.test -rfEsxw --cov . --cov-report html --ignore=oauth2client
 
 Copyright and Trademark Information
 ===================================
