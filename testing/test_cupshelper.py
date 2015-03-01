@@ -197,7 +197,7 @@ def test__getCUPSQueueName():
 
 
 def test__getCUPSQueueNameAndPrinter():
-    assert helperinstance._getCUPSQueueNameAndPrinter('test') is None
+    assert helperinstance._getCUPSQueueNameAndPrinter('test') == (None, None)
     requestor = CloudPrintRequestor()
     requestor.setAccount("test")
     printerinstance = Printer({'name': 'Testing Printer',

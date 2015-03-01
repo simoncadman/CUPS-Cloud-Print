@@ -36,7 +36,7 @@ class CUPSHelper(object):
         for cups_queue_name, printer in self.getPrinters().items():
             if printer['device-uri'] == uri:
                 return cups_queue_name, printer
-        return None
+        return None, None
 
     def getPPDs(self):
         return self._connection.getPPDs()
@@ -59,9 +59,8 @@ class CUPSHelper(object):
         return self._connection.deletePrinter(uri)
 
     def renamePrinter(self, uri, name, location):
-        cups_queue_name_and_printer = self._getCUPSQueueNameAndPrinter(uri)
-        if cups_queue_name_and_printer is not None:
-            cups_queue_name, printer = cups_queue_name_and_printer
+        cups_queue_name, printer = self._getCUPSQueueNameAndPrinter(uri)
+        if cups_queue_name is not None:
             if printer['printer-info'] != name:
                 self._connection.setPrinterInfo(cups_queue_name, name)
             if printer['printer-location'] != location:
