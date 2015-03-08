@@ -150,7 +150,10 @@ class Auth(object):
             message += "then provide the code displayed : \n\n"
             message += auth_uri + "\n"
             print message
-            subprocess.Popen(['open', auth_uri])
+            if sys.platform == "darwin":
+                subprocess.Popen(['open', auth_uri])
+            else:
+                subprocess.Popen(['xdg-open', auth_uri])
             from select import select
             print 'Code from Google: '
             while (Auth.code == None):
