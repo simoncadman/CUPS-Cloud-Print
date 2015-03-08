@@ -68,25 +68,26 @@ if __name__ == '__main__':  # pragma: no cover
     from printermanager import PrinterManager
     from cupshelper import CUPSHelper
     from ccputils import Utils
+    import argparse
     Utils.SetupLogging()
 
     # line below is replaced on commit
     CCPVersion = "20140814.2 000000"
     Utils.ShowVersion(CCPVersion)
 
+    common_parser = argparse.ArgumentParser()
+    common_parser.add_argument("--add-all", default="Y", help="Add all printer from Google Account.")
+    common_parser.add_argument("--prefix", default="GCP-", help="Prefix printer name by.")
+    common_parser.add_argument("--auto-clean", default="Y", help="Remove deleted printer automatically")
+    common_parser.add_argument("--user", default=None, help="Use this account to map")
+
+    options = common_parser.parse_args(sys.argv[1:])
     cupsHelper = None
     try:
         cupsHelper = CUPSHelper()
     except Exception as e:
         sys.stderr.write("Could not connect to CUPS: " + e.message + "\n")
         sys.exit(0)
-
-    unattended = False
-    answer = ""
-
-    if len(sys.argv) == 2 and sys.argv[1] == 'unattended':
-        print "Running unattended, setting up all printers"
-        unattended = True
 
     if os.path.exists(Auth.config):
         try:
@@ -99,17 +100,22 @@ if __name__ == '__main__':  # pragma: no cover
             os.remove(Auth.config)
 
     while True:
-        requestors, storage = Auth.SetupAuth(True)
-        print "You currently have these accounts configured: "
-        for requestor in requestors:
-            print requestor.getAccount()
-        if unattended:
-            break
-        answer = raw_input("Add more accounts (Y/N)? ")
-        if not answer.lower().startswith("y"):
-            break
+        requestors, storage = Auth.SetupAuth(interactive=False)
+        if storage != False:
+            print "You currently have these accounts configured: "
+            for requestor in requestors:
+                print requestor.getAccount()
+            add_account = len(requestors) == 0
         else:
-            Auth.AddAccount(None)
+            add_account = True
+        if not add_account:
+            answer = raw_input("Add more accounts (Y/N)? ")
+            if answer.lower().startswith("y"):
+                add_account = True
+            else:
+                break
+        if add_account:
+            Auth.AddAccount(None, userid=options.user)
 
     for requestor in requestors:
         addedCount = 0
@@ -121,7 +127,7 @@ if __name__ == '__main__':  # pragma: no cover
             print "Sorry, no printers were found on your Google Cloud Print account."
             continue
 
-        if unattended:
+        if options.add_all.lower() == "y":
             answer = "y"
         else:
             answer = raw_input("Add all Google Cloud Print printers from %s to CUPS (Y/N)? " %
@@ -146,13 +152,7 @@ if __name__ == '__main__':  # pragma: no cover
 
                 ccpprinter = printers[answer - 1]
                 print "Adding " + printers[answer - 1]['displayName']
-                prefixanswer = raw_input("Use a prefix for name of printer (Y/N)? ")
-                if prefixanswer.lower().startswith("y"):
-                    prefix = raw_input("Prefix ( e.g. GCP- )? ")
-                    if prefix == "":
-                        print "Not using prefix"
-
-                printername = prefix + ccpprinter.getDisplayName().encode('ascii', 'replace')
+                printername = options.prefix + ccpprinter.getDisplayName().encode('ascii', 'replace')
                 found = False
                 for cupsprinter in cupsprinters:
                     if cupsprinters[cupsprinter]['device-uri'] == ccpprinter.getURI():
@@ -164,22 +164,6 @@ if __name__ == '__main__':  # pragma: no cover
 
             continue
 
-        prefixanswer = ""
-        if unattended:
-            prefixanswer = "Y"
-        else:
-            prefixanswer = raw_input("Use a prefix for names of created printers (Y/N)? ")
-
-        if prefixanswer.lower().startswith("y"):
-            prefix = ""
-            if unattended:
-                prefix = "GCP-"
-            else:
-                prefix = raw_input("Prefix ( e.g. GCP- )? ")
-
-            if prefix == "":
-                print "Not using prefix"
-
         for ccpprinter in printers:
             found = False
             for cupsprinter in cupsprinters:
@@ -189,7 +173,7 @@ if __name__ == '__main__':  # pragma: no cover
             if found:
                 continue
 
-            printername = prefix + ccpprinter.getDisplayName()
+            printername = options.prefix + ccpprinter.getDisplayName()
 
             # check if printer name already exists
             foundbyname = False
@@ -198,7 +182,7 @@ if __name__ == '__main__':  # pragma: no cover
                 if printer_manager.sanitizePrinterName(printerinfo) == \
                         printer_manager.sanitizePrinterName(printername):
                     foundbyname = True
-            if foundbyname and not unattended:
+            if foundbyname:
                 answer = raw_input('Printer %s already exists, supply another name (Y/N)? ' %
                                    printer_manager.sanitizePrinterName(printername))
                 if answer.startswith("Y") or answer.startswith("y"):
@@ -208,7 +192,7 @@ if __name__ == '__main__':  # pragma: no cover
                                        printer_manager.sanitizePrinterName(printername))
                     if answer.lower().startswith("n"):
                         printername = ""
-            elif foundbyname and unattended:
+            elif foundbyname:
                 print "Not adding printer %s, as already exists" % printername
                 printername = ""
 
@@ -241,7 +225,10 @@ if __name__ == '__main__':  # pragma: no cover
         print "Found %d printers which no longer exist on cloud print:" % len(prunePrinters)
         for printer in prunePrinters:
             print printer
-        answer = raw_input("Remove (Y/N)? ")
+        if options.auto_clean.lower() == "y":
+            answer = "y"
+        else:
+            answer = raw_input("Remove (Y/N)? ")
         if answer.lower().startswith("y"):
             for printer in prunePrinters:
                 cupsHelper.deletePrinter(printer)

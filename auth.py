@@ -17,6 +17,7 @@
 import json
 import os
 import sys
+import subprocess
 # workaround for ubuntu 12.04 / older python-six version
 try:
     from six.moves import urllib
@@ -38,8 +39,10 @@ from oauth2client.client import AccessTokenRefreshError
 class Auth(object):
     clientid = "843805314553.apps.googleusercontent.com"
     clientsecret = 'MzTBsY4xlrD_lxkmwFbBrvBv'
-    config = '/etc/cloudprint.conf'
+    config = os.path.expanduser('~/.cloudprint')
     normal_permissions = 'https://www.googleapis.com/auth/cloudprint'
+    http_thread = None
+    code = None
 
     @staticmethod
     def RenewToken(interactive, requestor, credentials, storage, userid):
@@ -84,6 +87,32 @@ class Auth(object):
         return storage.delete()
 
     @staticmethod
+    def SetupHttpReturnServer():
+        import BaseHTTPServer
+        import random
+        import SocketServer
+        from threading import Thread
+        httpd = None
+        handler = BaseHTTPServer.BaseHTTPRequestHandler
+
+        def do_GET(self):
+            self.send_response(200)
+            if "code=" in self.path:
+                Auth.code = self.path[self.path.index('code=')+5:]
+        handler.do_GET = do_GET
+        while (httpd == None):
+            try:
+                port = random.randint(12000, 20000)
+                httpd = SocketServer.TCPServer(("", port), handler)
+            except:
+                pass
+        def http_server():
+            httpd.serve_forever(0.5)
+        Auth.http_thread = Thread(target=http_server)
+        Auth.http_thread.start()
+        return "http://localhost:%d/" % port
+
+    @staticmethod
     def AddAccount(storage, userid=None, permissions=None):
         """Adds an account to the configuration file with an interactive dialog.
 
@@ -109,17 +138,26 @@ class Auth(object):
                 userid,
                 permissions)
 
+        url = Auth.SetupHttpReturnServer()
         while True:
-            flow, auth_uri = Auth.AddAccountStep1(userid, permissions)
-            message = "Open this URL, grant access to CUPS Cloud Print "
+            Auth.code = None
+            flow, auth_uri = Auth.AddAccountStep1(userid, permissions, redirect_uri=url)
+            message = "Open this URL if it doesn't, grant access to CUPS Cloud Print "
             message += "( for the " + userid + " account ), "
             message += "then provide the code displayed : \n\n"
             message += auth_uri + "\n"
             print message
-            code = raw_input('Code from Google: ')
+            subprocess.Popen(['open', auth_uri])
+            from select import select
+            print 'Code from Google: '
+            while (Auth.code == None):
+                result, _, _ = select([sys.stdin], [], [], 0.5)
+                if result and Auth.code is None:
+                    s = sys.stdin.readline()
+                    if s != "":
+                        Auth.code = s
             try:
-                credentials = Auth.AddAccountStep2(userid, flow, code, storage, permissions)
-
+                credentials = Auth.AddAccountStep2(userid, flow, Auth.code, storage, permissions)
                 return credentials
             except Exception as e:
                 message = "\nThe code does not seem to be valid ( "
@@ -127,7 +165,7 @@ class Auth(object):
                 print message
 
     @staticmethod
-    def AddAccountStep1(userid, permissions=None):
+    def AddAccountStep1(userid, permissions=None, redirect_uri='urn:ietf:wg:oauth:2.0:oob'):
         """Executes step 1 of OAuth2WebServerFlow, without interaction.
 
         Args:
@@ -146,7 +184,7 @@ class Auth(object):
             client_secret=Auth.clientsecret,
             scope=permissions,
             user_agent=userid,
-            redirect_uri='urn:ietf:wg:oauth:2.0:oob')
+            redirect_uri=redirect_uri)
         auth_uri = flow.step1_get_authorize_url()
         return flow, auth_uri
 
