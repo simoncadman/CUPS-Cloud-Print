@@ -80,6 +80,9 @@ if __name__ == '__main__':  # pragma: no cover
     common_parser.add_argument("--prefix", default="GCP-", help="Prefix printer name by.")
     common_parser.add_argument("--auto-clean", default="Y", help="Remove deleted printer automatically")
     common_parser.add_argument("--user", default=None, help="Use this account to map")
+    common_parser.add_argument("--no-interactive", dest='interactive', help="Don't ask any question ( by default )")
+    common_parser.add_argument("--interactive", dest='interactive', help="Set interactive mode")
+    common_parser.set_defaults(interactive=False)
 
     options = common_parser.parse_args(sys.argv[1:])
     cupsHelper = None
@@ -109,6 +112,8 @@ if __name__ == '__main__':  # pragma: no cover
         else:
             add_account = True
         if not add_account:
+            if not options.interactive:
+                break
             answer = raw_input("Add more accounts (Y/N)? ")
             if answer.lower().startswith("y"):
                 add_account = True

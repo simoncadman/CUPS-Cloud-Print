@@ -99,6 +99,9 @@ class Auth(object):
             self.send_response(200)
             if "code=" in self.path:
                 Auth.code = self.path[self.path.index('code=')+5:]
+                self.send_header("Content-type", "text/html")
+                self.end_headers()
+                self.wfile.write("<html><head></head><body>Thank you ! Your Google printers will be added, you can now close this window</body></html>")
         handler.do_GET = do_GET
         while (httpd == None):
             try:
