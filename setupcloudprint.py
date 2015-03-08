@@ -76,12 +76,18 @@ if __name__ == '__main__':  # pragma: no cover
     Utils.ShowVersion(CCPVersion)
 
     common_parser = argparse.ArgumentParser()
-    common_parser.add_argument("--add-all", default="Y", help="Add all printer from Google Account.")
-    common_parser.add_argument("--prefix", default="GCP-", help="Prefix printer name by.")
-    common_parser.add_argument("--auto-clean", default="Y", help="Remove deleted printer automatically")
-    common_parser.add_argument("--user", default=None, help="Use this account to map")
-    common_parser.add_argument("--no-interactive", dest='interactive', help="Don't ask any question ( by default )")
-    common_parser.add_argument("--interactive", dest='interactive', help="Set interactive mode")
+    common_parser.add_argument("--add-all", default="Y",
+                               help="Add all printer from Google Account.")
+    common_parser.add_argument("--prefix", default="GCP-",
+                               help="Prefix printer name by.")
+    common_parser.add_argument("--auto-clean", default="Y",
+                               help="Remove deleted printer automatically")
+    common_parser.add_argument("--user", default=None,
+                               help="Use this account to map")
+    common_parser.add_argument("--no-interactive", dest='interactive',
+                               help="Don't ask any question ( by default )")
+    common_parser.add_argument("--interactive", dest='interactive',
+                               help="Set interactive mode")
     common_parser.set_defaults(interactive=False)
 
     options = common_parser.parse_args(sys.argv[1:])

@@ -101,13 +101,15 @@ class Auth(object):
                 Auth.code = self.path[self.path.index('code=')+5:]
                 self.send_header("Content-type", "text/html")
                 self.end_headers()
-                self.wfile.write("<html><head></head><body>Thank you ! Your Google printers will be added, you can now close this window</body></html>")
+                self.wfile.write("<html><head></head><body>Thank you !"
+                        + " Your Google printers will be added, you can "
+                        + "now close this window</body></html>")
         handler.do_GET = do_GET
         while (httpd == None):
             try:
                 port = random.randint(12000, 20000)
                 httpd = SocketServer.TCPServer(("", port), handler)
-            except:
+            except Exception:
                 pass
         def http_server():
             httpd.serve_forever(0.5)
