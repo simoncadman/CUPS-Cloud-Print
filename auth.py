@@ -42,6 +42,7 @@ class Auth(object):
     config = '/etc/cloudprint.conf'
     normal_permissions = 'https://www.googleapis.com/auth/cloudprint'
     http_thread = None
+    httpd = None
     code = None
 
     @staticmethod
@@ -92,7 +93,6 @@ class Auth(object):
         import random
         import SocketServer
         from threading import Thread
-        httpd = None
         handler = BaseHTTPServer.BaseHTTPRequestHandler
 
         def do_GET(self):
@@ -105,15 +105,15 @@ class Auth(object):
                                  " Your Google printers will be added, you can " +
                                  "now close this window</body></html>")
         handler.do_GET = do_GET
-        while (httpd is None):
+        while (Auth.httpd is None):
             try:
                 port = random.randint(12000, 20000)
-                httpd = SocketServer.TCPServer(("", port), handler)
+                Auth.httpd = SocketServer.TCPServer(("", port), handler)
             except Exception:
                 pass
 
         def http_server():
-            httpd.serve_forever(0.5)
+            Auth.httpd.serve_forever(0.5)
         Auth.http_thread = Thread(target=http_server)
         Auth.http_thread.start()
         return "http://localhost:%d/" % port
@@ -144,9 +144,9 @@ class Auth(object):
                 userid,
                 permissions)
         url = None
-        if Utils.hasGUI():
-            url = Auth.SetupHttpReturnServer()
         while True:
+            if Utils.hasGUI():
+                url = Auth.SetupHttpReturnServer()
             Auth.code = None
             flow, auth_uri = Auth.AddAccountStep1(userid, permissions, url)
             message = "Open this URL if it doesn't, grant access to CUPS Cloud Print "
@@ -164,6 +164,7 @@ class Auth(object):
                         s = sys.stdin.readline()
                         if s != "":
                             Auth.code = s
+                Auth.httpd.shutdown()
             else:
                 Auth.code = raw_input('Code from Google: ')
 
