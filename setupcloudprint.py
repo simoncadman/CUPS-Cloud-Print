@@ -110,7 +110,7 @@ if __name__ == '__main__':  # pragma: no cover
 
     while True:
         requestors, storage = Auth.SetupAuth(interactive=False)
-        if storage != False:
+        if storage is not False:
             print "You currently have these accounts configured: "
             for requestor in requestors:
                 print requestor.getAccount()
@@ -163,7 +163,8 @@ if __name__ == '__main__':  # pragma: no cover
 
                 ccpprinter = printers[answer - 1]
                 print "Adding " + printers[answer - 1]['displayName']
-                printername = options.prefix + ccpprinter.getDisplayName().encode('ascii', 'replace')
+                printername = options.prefix + \
+                    ccpprinter.getDisplayName().encode('ascii', 'replace')
                 found = False
                 for cupsprinter in cupsprinters:
                     if cupsprinters[cupsprinter]['device-uri'] == ccpprinter.getURI():

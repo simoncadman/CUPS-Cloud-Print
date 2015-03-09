@@ -98,19 +98,20 @@ class Auth(object):
         def do_GET(self):
             self.send_response(200)
             if "code=" in self.path:
-                Auth.code = self.path[self.path.index('code=')+5:]
+                Auth.code = self.path[self.path.index('code=') + 5:]
                 self.send_header("Content-type", "text/html")
                 self.end_headers()
-                self.wfile.write("<html><head></head><body>Thank you !"
-                        + " Your Google printers will be added, you can "
-                        + "now close this window</body></html>")
+                self.wfile.write("<html><head></head><body>Thank you !" +
+                                 " Your Google printers will be added, you can " +
+                                 "now close this window</body></html>")
         handler.do_GET = do_GET
-        while (httpd == None):
+        while (httpd is None):
             try:
                 port = random.randint(12000, 20000)
                 httpd = SocketServer.TCPServer(("", port), handler)
             except Exception:
                 pass
+
         def http_server():
             httpd.serve_forever(0.5)
         Auth.http_thread = Thread(target=http_server)
@@ -158,7 +159,7 @@ class Auth(object):
                 subprocess.Popen(['xdg-open', auth_uri])
             from select import select
             print 'Code from Google: '
-            while (Auth.code == None):
+            while (Auth.code is None):
                 result, _, _ = select([sys.stdin], [], [], 0.5)
                 if result and Auth.code is None:
                     s = sys.stdin.readline()
