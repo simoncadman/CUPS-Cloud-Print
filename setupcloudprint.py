@@ -85,12 +85,19 @@ if __name__ == '__main__':  # pragma: no cover
     common_parser.add_argument("--user", default=None,
                                help="Use this account to map")
     common_parser.add_argument("--no-interactive", dest='interactive',
-                               help="Don't ask any question ( by default )")
+                               help="Don't ask any question ( by default )",
+                               action='store_false')
     common_parser.add_argument("--interactive", dest='interactive',
-                               help="Set interactive mode")
+                               help="Set interactive mode",
+                               action='store_true')
+    common_parser.add_argument("--gui", dest='gui',
+                               help="Launch the browser",
+                               action='store_true')
     common_parser.set_defaults(interactive=False)
 
     options = common_parser.parse_args(sys.argv[1:])
+    if options.gui:
+        Utils.GUI = True
     cupsHelper = None
     try:
         cupsHelper = CUPSHelper()
