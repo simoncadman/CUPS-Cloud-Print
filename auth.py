@@ -39,7 +39,7 @@ from oauth2client.client import AccessTokenRefreshError
 class Auth(object):
     clientid = "843805314553.apps.googleusercontent.com"
     clientsecret = 'MzTBsY4xlrD_lxkmwFbBrvBv'
-    config = os.path.expanduser('~/.cloudprint')
+    config = '/etc/cloudprint.conf'
     normal_permissions = 'https://www.googleapis.com/auth/cloudprint'
     http_thread = None
     code = None
