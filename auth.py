@@ -17,6 +17,7 @@
 import json
 import os
 import sys
+import subprocess
 # workaround for ubuntu 12.04 / older python-six version
 try:
     from six.moves import urllib
@@ -40,6 +41,9 @@ class Auth(object):
     clientsecret = 'MzTBsY4xlrD_lxkmwFbBrvBv'
     config = '/etc/cloudprint.conf'
     normal_permissions = 'https://www.googleapis.com/auth/cloudprint'
+    http_thread = None
+    httpd = None
+    code = None
 
     @staticmethod
     def RenewToken(interactive, requestor, credentials, storage, userid):
@@ -84,6 +88,37 @@ class Auth(object):
         return storage.delete()
 
     @staticmethod
+    def SetupHttpReturnServer():
+        import BaseHTTPServer
+        import random
+        import SocketServer
+        from threading import Thread
+        handler = BaseHTTPServer.BaseHTTPRequestHandler
+
+        def do_GET(self):
+            self.send_response(200)
+            if "code=" in self.path:
+                Auth.code = self.path[self.path.index('code=') + 5:]
+                self.send_header("Content-type", "text/html")
+                self.end_headers()
+                self.wfile.write("<html><head></head><body>Thank you !" +
+                                 " Your Google printers will be added, you can " +
+                                 "now close this window</body></html>")
+        handler.do_GET = do_GET
+        while (Auth.httpd is None):
+            try:
+                port = random.randint(12000, 20000)
+                Auth.httpd = SocketServer.TCPServer(("", port), handler)
+            except Exception:
+                pass
+
+        def http_server():
+            Auth.httpd.serve_forever(0.5)
+        Auth.http_thread = Thread(target=http_server)
+        Auth.http_thread.start()
+        return "http://localhost:%d/" % port
+
+    @staticmethod
     def AddAccount(storage, userid=None, permissions=None):
         """Adds an account to the configuration file with an interactive dialog.
 
@@ -108,18 +143,33 @@ class Auth(object):
                 Auth.clientid,
                 userid,
                 permissions)
-
+        url = None
         while True:
-            flow, auth_uri = Auth.AddAccountStep1(userid, permissions)
-            message = "Open this URL, grant access to CUPS Cloud Print "
+            if Utils.hasGUI():
+                url = Auth.SetupHttpReturnServer()
+            Auth.code = None
+            flow, auth_uri = Auth.AddAccountStep1(userid, permissions, url)
+            message = "Open this URL if it doesn't, grant access to CUPS Cloud Print "
             message += "( for the " + userid + " account ), "
             message += "then provide the code displayed : \n\n"
             message += auth_uri + "\n"
             print message
-            code = raw_input('Code from Google: ')
-            try:
-                credentials = Auth.AddAccountStep2(userid, flow, code, storage, permissions)
+            Utils.openBrowserWithUrl(auth_uri)
+            if url is not None:
+                from select import select
+                print 'Code from Google: '
+                while (Auth.code is None):
+                    result, _, _ = select([sys.stdin], [], [], 0.5)
+                    if result and Auth.code is None:
+                        s = sys.stdin.readline()
+                        if s != "":
+                            Auth.code = s
+                Auth.httpd.shutdown()
+            else:
+                Auth.code = raw_input('Code from Google: ')
 
+            try:
+                credentials = Auth.AddAccountStep2(userid, flow, Auth.code, storage, permissions)
                 return credentials
             except Exception as e:
                 message = "\nThe code does not seem to be valid ( "
@@ -127,7 +177,7 @@ class Auth(object):
                 print message
 
     @staticmethod
-    def AddAccountStep1(userid, permissions=None):
+    def AddAccountStep1(userid, permissions=None, redirect_uri=None):
         """Executes step 1 of OAuth2WebServerFlow, without interaction.
 
         Args:
@@ -139,6 +189,8 @@ class Auth(object):
             OAuth2WebServerFlow instance
             string auth_uri for user to visit
         """
+        if redirect_uri is None:
+            redirect_uri = 'urn:ietf:wg:oauth:2.0:oob'
         if permissions is None:
             permissions = Auth.normal_permissions
         flow = client.OAuth2WebServerFlow(
@@ -146,7 +198,7 @@ class Auth(object):
             client_secret=Auth.clientsecret,
             scope=permissions,
             user_agent=userid,
-            redirect_uri='urn:ietf:wg:oauth:2.0:oob')
+            redirect_uri=redirect_uri)
         auth_uri = flow.step1_get_authorize_url()
         return flow, auth_uri
 
