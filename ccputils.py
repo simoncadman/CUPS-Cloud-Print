@@ -298,3 +298,22 @@ class Utils(object):
 
         OUT.close()
         return tempFile
+
+    @staticmethod
+    def hasGUI():
+        return False
+
+    @staticmethod
+    def openBrowserWithUrl(url):
+        if not Utils.hasGUI():
+            return False
+
+        try:
+            if sys.platform == "darwin":
+                subprocess.Popen(['open', url])
+            else:
+                subprocess.Popen(['xdg-open', url])
+        except Exception:
+            return False
+
+        return True

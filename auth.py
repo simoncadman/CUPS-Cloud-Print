@@ -143,28 +143,30 @@ class Auth(object):
                 Auth.clientid,
                 userid,
                 permissions)
-
-        url = Auth.SetupHttpReturnServer()
+        url = None
+        if Utils.hasGUI():
+            url = Auth.SetupHttpReturnServer()
         while True:
             Auth.code = None
-            flow, auth_uri = Auth.AddAccountStep1(userid, permissions, redirect_uri=url)
+            flow, auth_uri = Auth.AddAccountStep1(userid, permissions, url)
             message = "Open this URL if it doesn't, grant access to CUPS Cloud Print "
             message += "( for the " + userid + " account ), "
             message += "then provide the code displayed : \n\n"
             message += auth_uri + "\n"
             print message
-            if sys.platform == "darwin":
-                subprocess.Popen(['open', auth_uri])
+            Utils.openBrowserWithUrl(auth_uri)
+            if url is not None:
+                from select import select
+                print 'Code from Google: '
+                while (Auth.code is None):
+                    result, _, _ = select([sys.stdin], [], [], 0.5)
+                    if result and Auth.code is None:
+                        s = sys.stdin.readline()
+                        if s != "":
+                            Auth.code = s
             else:
-                subprocess.Popen(['xdg-open', auth_uri])
-            from select import select
-            print 'Code from Google: '
-            while (Auth.code is None):
-                result, _, _ = select([sys.stdin], [], [], 0.5)
-                if result and Auth.code is None:
-                    s = sys.stdin.readline()
-                    if s != "":
-                        Auth.code = s
+                Auth.code = raw_input('Code from Google: ')
+
             try:
                 credentials = Auth.AddAccountStep2(userid, flow, Auth.code, storage, permissions)
                 return credentials
@@ -174,7 +176,7 @@ class Auth(object):
                 print message
 
     @staticmethod
-    def AddAccountStep1(userid, permissions=None, redirect_uri='urn:ietf:wg:oauth:2.0:oob'):
+    def AddAccountStep1(userid, permissions=None, redirect_uri=None):
         """Executes step 1 of OAuth2WebServerFlow, without interaction.
 
         Args:
@@ -186,6 +188,8 @@ class Auth(object):
             OAuth2WebServerFlow instance
             string auth_uri for user to visit
         """
+        if redirect_uri is None:
+            redirect_uri = 'urn:ietf:wg:oauth:2.0:oob'
         if permissions is None:
             permissions = Auth.normal_permissions
         flow = client.OAuth2WebServerFlow(
