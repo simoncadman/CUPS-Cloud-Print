@@ -32,6 +32,7 @@ class Utils(object):
     # http://en.wikipedia.org/wiki/Letter_(paper_size)
     _LETTER_COUNTRIES = set(('US', 'CA', 'MX', 'BO', 'CO', 'VE', 'PH', 'CL'))
     PROTOCOL_NAME = 'gcp'
+    GUI = False
     PROTOCOL = PROTOCOL_NAME + '://'
     OLD_PROTOCOL_NAME = 'cloudprint'
     OLD_PROTOCOL = OLD_PROTOCOL_NAME + '://'
@@ -301,7 +302,7 @@ class Utils(object):
 
     @staticmethod
     def hasGUI():
-        return False
+        return Utils.GUI
 
     @staticmethod
     def openBrowserWithUrl(url):
