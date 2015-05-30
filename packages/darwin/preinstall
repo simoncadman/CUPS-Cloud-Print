@@ -10,3 +10,8 @@ export CFLAGS=-Qunused-arguments
 export CPPFLAGS=-Qunused-arguments
 sudo -E /usr/bin/easy_install pycups
 
+# workaround for https://github.com/jcgregorio/httplib2/issues/252
+CACERTSPATH="/Library/Python/2.7/site-packages/httplib2-*/httplib2/cacerts.txt"
+for file in "$CACERTSPATH"; do
+	sudo chmod 644 $file
+done
