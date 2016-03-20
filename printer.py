@@ -168,9 +168,9 @@ class Printer(object):
     _CONVERTCOMMAND = 'convert'
 
     _IGNORED_CAPABILITIES = [
-                              'supported_content_type',
-                              'vendor_capability'
-                            ]
+        'supported_content_type',
+        'vendor_capability'
+    ]
 
     def __init__(self, fields, requestor):
         self._fields = fields
@@ -294,7 +294,7 @@ class Printer(object):
                         originCapabilityName = self._sanitizeText(capability['psk:DisplayName'])
                     else:
                         originCapabilityName = self._sanitizeText(capability['name'])
-                        
+
                     newppddata = '*OpenUI *%s/%s: PickOne\n' % \
                         (internalCapabilityName, internalCapabilityName)
                     # translation of capability, allows use of 8
@@ -302,13 +302,14 @@ class Printer(object):
                     newppddata += '*%s.Translation %s/%s: ""\n' % \
                         (language, internalCapabilityName, originCapabilityName)
                     addedOptions = []
-                    
+
                     if 'options' in capability and 'option' in capability['options']:
                         for option in capability['options']['option']:
                             originOptionName = None
                             if 'display_name' in option and len(option['display_name']) > 0:
                                 originOptionName = self._sanitizeText(option['display_name'])
-                            elif 'custom_display_name' in option and len(option['custom_display_name']) > 0:
+                            elif 'custom_display_name' in option \
+                                    and len(option['custom_display_name']) > 0:
                                 originOptionName = self._sanitizeText(option['custom_display_name'])
                             elif 'name' in option and len(option['name']) > 0:
                                 originOptionName = self._sanitizeText(option['name'])
@@ -320,7 +321,8 @@ class Printer(object):
                                 option, 'option', capability['name'], addedOptions)
                             addedOptions.append(internalOptionName)
                             if 'is_default' in option and option['is_default']:
-                                newppddata += '*Default%s: %s\n' % (internalCapabilityName, internalOptionName)
+                                newppddata += '*Default%s: %s\n' % (
+                                    internalCapabilityName, internalOptionName)
                             newppddata += '*%s %s:%s\n' % \
                                 (internalCapabilityName, internalOptionName, internalOptionName)
                             # translation of option, allows use of 8
@@ -329,7 +331,10 @@ class Printer(object):
                             if 'ppd:value' in option:
                                 value = option['ppd:value']
                             newppddata += '*%s.%s %s/%s: "%s"\n' % (
-                                language, internalCapabilityName, internalOptionName, originOptionName,
+                                language,
+                                internalCapabilityName,
+                                internalOptionName,
+                                originOptionName,
                                 value)
 
                         newppddata += '*CloseUI: *%s\n' % internalCapabilityName
@@ -517,7 +522,9 @@ class Printer(object):
                 overridecapabilities[capability] = overrideDefaultDefaults[capability]
         attrs = cups.PPD(connection.getPPD(cupsprintername)).attributes
         attrArray = self._attrListToArray(attrs)
-        return self._getCapabilitiesDict(attrArray, self['capabilities']['printer'], overridecapabilities)
+        return self._getCapabilitiesDict(attrArray,
+                                         self['capabilities']['printer'],
+                                         overridecapabilities)
 
     def submitJob(self, jobtype, jobfile, jobdata, jobname, cupsprintername, options=""):
         """Submits a job to printerid with content of dataUrl.
