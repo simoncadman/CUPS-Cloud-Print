@@ -57,8 +57,8 @@ testCapabilities1 = {'printer':
                      {
                           'option':
                           [
-                              {'is_default': True, 'type': 'PORTRAIT'},
-                              {'type': 'LANDSCAPE'},
+                              {'is_default': True, 'type': 'PORTRAIT', 'display_name' : 'portrait'},
+                              {'type': 'LANDSCAPE', 'custom_display_name' : 'landscape'},
                               {'type': 'AUTO'}
                           ]
                      },
