@@ -167,6 +167,11 @@ class Printer(object):
 
     _CONVERTCOMMAND = 'convert'
 
+    _IGNORED_CAPABILITIES = [
+                              'supported_content_type',
+                              'vendor_capability'
+                            ]
+
     def __init__(self, fields, requestor):
         self._fields = fields
         self._requestor = requestor
@@ -274,18 +279,22 @@ class Printer(object):
             'ieee1284': self.getIEEE1284(), 'ppdname': self.getPPDName()}
         if self['capabilities'] is not None:
             addedCapabilities = []
-            for capability in self['capabilities']:
-                originCapabilityName = None
-                internalCapabilityName = \
-                    self._getInternalName(capability, 'capability', None, addedCapabilities)
-                addedCapabilities.append(internalCapabilityName)
-                if 'displayName' in capability and len(capability['displayName']) > 0:
-                    originCapabilityName = self._sanitizeText(capability['displayName'])
-                elif 'psk:DisplayName' in capability and len(capability['psk:DisplayName']) > 0:
-                    originCapabilityName = self._sanitizeText(capability['psk:DisplayName'])
-                else:
-                    originCapabilityName = self._sanitizeText(capability['name'])
-                if capability['type'] == 'Feature':
+            for capabilityname in self['capabilities']['printer']:
+                if capabilityname not in self._IGNORED_CAPABILITIES:
+                    capability = {}
+                    capability['options'] = self['capabilities']['printer'][capabilityname]
+                    capability['name'] = capabilityname
+                    originCapabilityName = None
+                    internalCapabilityName = \
+                        self._getInternalName(capability, 'capability', None, addedCapabilities)
+                    addedCapabilities.append(internalCapabilityName)
+                    if 'displayName' in capability and len(capability['displayName']) > 0:
+                        originCapabilityName = self._sanitizeText(capability['displayName'])
+                    elif 'psk:DisplayName' in capability and len(capability['psk:DisplayName']) > 0:
+                        originCapabilityName = self._sanitizeText(capability['psk:DisplayName'])
+                    else:
+                        originCapabilityName = self._sanitizeText(capability['name'])
+                        
                     ppd += '*OpenUI *%s/%s: PickOne\n' % \
                         (internalCapabilityName, internalCapabilityName)
                     # translation of capability, allows use of 8
@@ -293,31 +302,37 @@ class Printer(object):
                     ppd += '*%s.Translation %s/%s: ""\n' % \
                         (language, internalCapabilityName, originCapabilityName)
                     addedOptions = []
-                    for option in capability['options']:
-                        originOptionName = None
-                        if 'displayName' in option and len(option['displayName']) > 0:
-                            originOptionName = self._sanitizeText(option['displayName'])
-                        elif 'psk:DisplayName' in option and len(option['psk:DisplayName']) > 0:
-                            originOptionName = self._sanitizeText(option['psk:DisplayName'])
-                        else:
-                            originOptionName = self._sanitizeText(option['name'])
-                        internalOptionName = self._getInternalName(
-                            option, 'option', capability['name'], addedOptions)
-                        addedOptions.append(internalOptionName)
-                        if 'default' in option and option['default']:
-                            ppd += '*Default%s: %s\n' % (internalCapabilityName, internalOptionName)
-                        ppd += '*%s %s:%s\n' % \
-                            (internalCapabilityName, internalOptionName, internalOptionName)
-                        # translation of option, allows use of 8
-                        # bit chars
-                        value = ''
-                        if 'ppd:value' in option:
-                            value = option['ppd:value']
-                        ppd += '*%s.%s %s/%s: "%s"\n' % (
-                            language, internalCapabilityName, internalOptionName, originOptionName,
-                            value)
+                    
+                    if 'options' in capability and 'option' in capability['options']:
+                        for option in capability['options']['option']:
+                            originOptionName = None
+                            if 'display_name' in option and len(option['display_name']) > 0:
+                                originOptionName = self._sanitizeText(option['display_name'])
+                            elif 'custom_display_name' in option and len(option['custom_display_name']) > 0:
+                                originOptionName = self._sanitizeText(option['custom_display_name'])
+                            elif 'name' in option and len(option['name']) > 0:
+                                originOptionName = self._sanitizeText(option['name'])
+                            elif 'type' in option and len(option['type']) > 0:
+                                originOptionName = self._sanitizeText(option['type'])
+                            else:
+                                continue
+                            internalOptionName = self._getInternalName(
+                                option, 'option', capability['name'], addedOptions)
+                            addedOptions.append(internalOptionName)
+                            if 'is_default' in option and option['is_default']:
+                                ppd += '*Default%s: %s\n' % (internalCapabilityName, internalOptionName)
+                            ppd += '*%s %s:%s\n' % \
+                                (internalCapabilityName, internalOptionName, internalOptionName)
+                            # translation of option, allows use of 8
+                            # bit chars
+                            value = ''
+                            if 'ppd:value' in option:
+                                value = option['ppd:value']
+                            ppd += '*%s.%s %s/%s: "%s"\n' % (
+                                language, internalCapabilityName, internalOptionName, originOptionName,
+                                value)
 
-                    ppd += '*CloseUI: *%s\n' % internalCapabilityName
+                        ppd += '*CloseUI: *%s\n' % internalCapabilityName
 
         ppd += self._PPD_TEMPLATE_FOOT
         return ppd
@@ -353,12 +368,14 @@ class Printer(object):
                 returnValue = fixedNameMap[itemName]
                 break
 
-        if 'displayName' in details and len(details['displayName']) > 0:
-            name = details['displayName']
-        elif 'psk:DisplayName' in details and len(details['psk:DisplayName']) > 0:
-            name = details['psk:DisplayName']
-        else:
+        if 'display_name' in details and len(details['display_name']) > 0:
+            name = details['display_name']
+        elif 'custom_display_name' in details and len(details['custom_display_name']) > 0:
+            name = details['custom_display_name']
+        elif 'name' in details and len(details['name']) > 0:
             name = details['name']
+        else:
+            name = details['type']
 
         sanitisedName = Printer._sanitizeText(name, True)
 

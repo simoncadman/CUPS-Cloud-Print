@@ -90,10 +90,10 @@ class CloudPrintRequestor(httplib2.Http):
         return decodedresponse
 
     def search(self):
-        return self.doRequest('search?connection_status=ALL&client=webui&use_cdd=false')
+        return self.doRequest('search?connection_status=ALL&client=webui')
 
     def printer(self, printerid):
-        return self.doRequest('printer?printerid=%s&use_cdd=false' % printerid)
+        return self.doRequest('printer?printerid=%s' % printerid)
 
     def submit(self, edata, boundary):
         return self.doRequest('submit', data=edata, boundary=boundary)
