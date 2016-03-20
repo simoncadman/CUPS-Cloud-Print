@@ -295,11 +295,11 @@ class Printer(object):
                     else:
                         originCapabilityName = self._sanitizeText(capability['name'])
                         
-                    ppd += '*OpenUI *%s/%s: PickOne\n' % \
+                    newppddata = '*OpenUI *%s/%s: PickOne\n' % \
                         (internalCapabilityName, internalCapabilityName)
                     # translation of capability, allows use of 8
                     # bit chars
-                    ppd += '*%s.Translation %s/%s: ""\n' % \
+                    newppddata += '*%s.Translation %s/%s: ""\n' % \
                         (language, internalCapabilityName, originCapabilityName)
                     addedOptions = []
                     
@@ -320,19 +320,21 @@ class Printer(object):
                                 option, 'option', capability['name'], addedOptions)
                             addedOptions.append(internalOptionName)
                             if 'is_default' in option and option['is_default']:
-                                ppd += '*Default%s: %s\n' % (internalCapabilityName, internalOptionName)
-                            ppd += '*%s %s:%s\n' % \
+                                newppddata += '*Default%s: %s\n' % (internalCapabilityName, internalOptionName)
+                            newppddata += '*%s %s:%s\n' % \
                                 (internalCapabilityName, internalOptionName, internalOptionName)
                             # translation of option, allows use of 8
                             # bit chars
                             value = ''
                             if 'ppd:value' in option:
                                 value = option['ppd:value']
-                            ppd += '*%s.%s %s/%s: "%s"\n' % (
+                            newppddata += '*%s.%s %s/%s: "%s"\n' % (
                                 language, internalCapabilityName, internalOptionName, originOptionName,
                                 value)
 
-                        ppd += '*CloseUI: *%s\n' % internalCapabilityName
+                        newppddata += '*CloseUI: *%s\n' % internalCapabilityName
+                    if len(addedOptions) > 0:
+                        ppd += newppddata
 
         ppd += self._PPD_TEMPLATE_FOOT
         return ppd
@@ -374,8 +376,10 @@ class Printer(object):
             name = details['custom_display_name']
         elif 'name' in details and len(details['name']) > 0:
             name = details['name']
-        else:
+        elif 'type' in details and len(details['type']) > 0:
             name = details['type']
+        else:
+            return None
 
         sanitisedName = Printer._sanitizeText(name, True)
 
@@ -458,27 +462,30 @@ class Printer(object):
                 # find item name from hashes
                 gcpoption = None
                 addedCapabilities = []
-                for capability in printercapabilities:
+                for capabilityname in printercapabilities:
+                    capability = {}
+                    capability['options'] = printercapabilities[capabilityname]
+                    capability['name'] = capabilityname
                     if hashname == Printer._getInternalName(capability, 'capability'):
                         gcpname = capability['name']
-                        for option in capability['options']:
+                        for option in capability['options']['option']:
                             internalCapability = Printer._getInternalName(
                                 option, 'option', gcpname, addedCapabilities)
                             addedCapabilities.append(internalCapability)
                             if attr['value'] == internalCapability:
-                                gcpoption = option['name']
+                                gcpoption = option['type']
                                 break
                         addedOptions = []
                         for overridecapability in overridecapabilities:
                             if 'Default' + overridecapability == attr['name']:
                                 selectedoption = overridecapabilities[
                                     overridecapability]
-                                for option in capability['options']:
+                                for option in capability['options']['option']:
                                     internalOption = Printer._getInternalName(
                                         option, 'option', gcpname, addedOptions)
                                     addedOptions.append(internalOption)
                                     if selectedoption == internalOption:
-                                        gcpoption = option['name']
+                                        gcpoption = option['type']
                                         break
                                 break
                         break
@@ -510,7 +517,7 @@ class Printer(object):
                 overridecapabilities[capability] = overrideDefaultDefaults[capability]
         attrs = cups.PPD(connection.getPPD(cupsprintername)).attributes
         attrArray = self._attrListToArray(attrs)
-        return self._getCapabilitiesDict(attrArray, self['capabilities'], overridecapabilities)
+        return self._getCapabilitiesDict(attrArray, self['capabilities']['printer'], overridecapabilities)
 
     def submitJob(self, jobtype, jobfile, jobdata, jobname, cupsprintername, options=""):
         """Submits a job to printerid with content of dataUrl.
