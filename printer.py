@@ -457,7 +457,7 @@ class Printer(object):
 
     @staticmethod
     def _getCapabilitiesDict(attrs, printercapabilities, overridecapabilities):
-        capabilities = {"capabilities": []}
+        capabilities = { "version": "1.0", "print": { "vendor_ticket_item": [] } }
         for attr in attrs:
             if attr['name'].startswith('Default'):
                 # gcp setting, reverse back to GCP capability
@@ -495,10 +495,8 @@ class Printer(object):
                                 break
                         break
 
-                # hardcoded to feature type temporarily
                 if gcpname is not None and gcpoption is not None:
-                    capabilities['capabilities'].append(
-                        {'type': 'Feature', 'name': gcpname, 'options': [{'name': gcpoption}]})
+                    capabilities['print'][gcpname] = { 'type': gcpoption }
         return capabilities
 
     @staticmethod
@@ -585,7 +583,7 @@ class Printer(object):
             ('title', title),
             ('content', Utils.Base64Encode(jobdata, jobtype)),
             ('contentType', 'dataUrl'),
-            ('capabilities', json.dumps(self._getCapabilities(cupsprintername, options)))
+            ('ticket', json.dumps(self._getCapabilities(cupsprintername, options)))
         ]
         logging.info('Capability headers are: %s', headers[4])
         data = self._encodeMultiPart(headers, 'dataUrl')

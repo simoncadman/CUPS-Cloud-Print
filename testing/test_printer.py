@@ -345,8 +345,8 @@ def test_getOverrideCapabilities():
 def test_GetCapabilitiesDict():
     global printers
     printerItem = printers[0]
-    assert printerItem._getCapabilitiesDict({}, {}, {}) == {"capabilities": []}
-    assert printerItem._getCapabilitiesDict([{'name': 'test'}], {}, {}) == {"capabilities": []}
+    assert printerItem._getCapabilitiesDict({}, {}, {}) == {'print': {'vendor_ticket_item': []}, 'version': '1.0'}
+    assert printerItem._getCapabilitiesDict([{'name': 'test'}], {}, {}) == {'print': {'vendor_ticket_item': []}, 'version': '1.0'}
     assert printerItem._getCapabilitiesDict([{'name': 'Default' + 'test123', 'value': 'STANDARD_MONOCHROME'}],
                                             {'test123':
                       {
@@ -355,7 +355,13 @@ def test_GetCapabilitiesDict():
                               {'is_default': True, 'vendor_id': '2', 'type': 'STANDARD_COLOR'},
                               {'vendor_id': '1', 'type': 'STANDARD_MONOCHROME'}
                           ]
-                     }}, {'test123': 'STANDARD_MONOCHROME'}) == {'capabilities': [{'name': 'test123', 'options': [{'name': 'STANDARD_MONOCHROME'}], 'type': 'Feature'}]}
+                     }}, {'test123': 'STANDARD_MONOCHROME'}) == {
+                                                                "version": "1.0",
+                                                                    "print": {
+                                                                        "vendor_ticket_item": [],
+                                                                        "test123": {"type": "STANDARD_MONOCHROME"}
+                                                                    }
+                                                                }
 
 
 def test_attrListToArray():
@@ -381,8 +387,8 @@ def test_getCapabilities():
     emptyoptions = printer._getCapabilities(
         printerManagerInstance.sanitizePrinterName(printer['name']), "landscape")
     assert isinstance(emptyoptions, dict)
-    assert isinstance(emptyoptions['capabilities'], list)
-    assert len(emptyoptions['capabilities']) == 0
+    assert isinstance(emptyoptions['print'], dict)
+    assert len(emptyoptions['print']) == 1
     connection.deletePrinter(printerManagerInstance.sanitizePrinterName(printer['name']))
 
 
