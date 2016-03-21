@@ -474,24 +474,26 @@ class Printer(object):
                     if hashname == Printer._getInternalName(capability, 'capability'):
                         gcpname = capability['name']
                         for option in capability['options']['option']:
-                            internalCapability = Printer._getInternalName(
-                                option, 'option', gcpname, addedCapabilities)
-                            addedCapabilities.append(internalCapability)
-                            if attr['value'] == internalCapability:
-                                gcpoption = option['type']
-                                break
+                            if 'type' in option:
+                                internalCapability = Printer._getInternalName(
+                                    option, 'option', gcpname, addedCapabilities)
+                                addedCapabilities.append(internalCapability)
+                                if attr['value'] == internalCapability:
+                                    gcpoption = option['type']
+                                    break
                         addedOptions = []
                         for overridecapability in overridecapabilities:
                             if 'Default' + overridecapability == attr['name']:
                                 selectedoption = overridecapabilities[
                                     overridecapability]
                                 for option in capability['options']['option']:
-                                    internalOption = Printer._getInternalName(
-                                        option, 'option', gcpname, addedOptions)
-                                    addedOptions.append(internalOption)
-                                    if selectedoption == internalOption:
-                                        gcpoption = option['type']
-                                        break
+                                    if 'type' in option:
+                                        internalOption = Printer._getInternalName(
+                                            option, 'option', gcpname, addedOptions)
+                                        addedOptions.append(internalOption)
+                                        if selectedoption == internalOption:
+                                            gcpoption = option['type']
+                                            break
                                 break
                         break
 

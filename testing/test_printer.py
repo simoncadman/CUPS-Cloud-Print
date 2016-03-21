@@ -349,19 +349,29 @@ def test_GetCapabilitiesDict():
     assert printerItem._getCapabilitiesDict([{'name': 'test'}], {}, {}) == {'print': {'vendor_ticket_item': []}, 'version': '1.0'}
     assert printerItem._getCapabilitiesDict([{'name': 'Default' + 'test123', 'value': 'STANDARD_MONOCHROME'}],
                                             {'test123':
-                      {
-                          'option':
-                          [
-                              {'is_default': True, 'vendor_id': '2', 'type': 'STANDARD_COLOR'},
-                              {'vendor_id': '1', 'type': 'STANDARD_MONOCHROME'}
-                          ]
-                     }}, {'test123': 'STANDARD_MONOCHROME'}) == {
-                                                                "version": "1.0",
-                                                                    "print": {
-                                                                        "vendor_ticket_item": [],
-                                                                        "test123": {"type": "STANDARD_MONOCHROME"}
-                                                                    }
-                                                                }
+                                                        {
+                                                            'option':
+                                                            [
+                                                                {'is_default': True, 'vendor_id': '2', 'type': 'STANDARD_COLOR'},
+                                                                {'vendor_id': '1', 'type': 'STANDARD_MONOCHROME'}
+                                                            ]
+                                                        },
+                                             'testnooption':
+                                                        {
+                                                            'option':
+                                                            [
+                                                                {'is_default': True, 'vendor_id': '2', 'horizontal_dpi': 300, 'vertical_dpi' : 300 },
+                                                                {'vendor_id': '2', 'horizontal_dpi': 400, 'vertical_dpi' : 400 }
+                                                            ]
+                                                        }
+                                                            
+                                                            }, {'test123': 'STANDARD_MONOCHROME'}) == {
+                                                                                                    "version": "1.0",
+                                                                                                        "print": {
+                                                                                                            "vendor_ticket_item": [],
+                                                                                                            "test123": {"type": "STANDARD_MONOCHROME"}
+                                                                                                        }
+                                                                                                    }
 
 
 def test_attrListToArray():
