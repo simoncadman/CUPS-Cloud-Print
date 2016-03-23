@@ -463,6 +463,7 @@ class Printer(object):
                 # gcp setting, reverse back to GCP capability
                 gcpname = None
                 hashname = attr['name'].replace('Default', '')
+                parammap = {}
 
                 # find item name from hashes
                 gcpoption = None
@@ -474,12 +475,17 @@ class Printer(object):
                     if hashname == Printer._getInternalName(capability, 'capability'):
                         gcpname = capability['name']
                         for option in capability['options']['option']:
-                            if 'type' in option:
+                            paramname = 'type'
+                            if 'type' not in option:
+                                if 'name' in option:
+                                    paramname = 'name'
+                            if paramname in option:
                                 internalCapability = Printer._getInternalName(
                                     option, 'option', gcpname, addedCapabilities)
                                 addedCapabilities.append(internalCapability)
                                 if attr['value'] == internalCapability:
-                                    gcpoption = option['type']
+                                    gcpoption = option[paramname]
+                                    parammap[gcpoption] = paramname
                                     break
                         addedOptions = []
                         for overridecapability in overridecapabilities:
@@ -487,18 +493,23 @@ class Printer(object):
                                 selectedoption = overridecapabilities[
                                     overridecapability]
                                 for option in capability['options']['option']:
-                                    if 'type' in option:
+                                    paramname = 'type'
+                                    if 'type' not in option:
+                                        if 'name' in option:
+                                            paramname = 'name'
+                                    if paramname in option:
                                         internalOption = Printer._getInternalName(
                                             option, 'option', gcpname, addedOptions)
                                         addedOptions.append(internalOption)
                                         if selectedoption == internalOption:
-                                            gcpoption = option['type']
+                                            gcpoption = option[paramname]
+                                            parammap[gcpoption] = paramname
                                             break
                                 break
                         break
 
                 if gcpname is not None and gcpoption is not None:
-                    capabilities['print'][gcpname] = { 'type': gcpoption }
+                    capabilities['print'][gcpname] = { parammap[gcpoption]: gcpoption }
         return capabilities
 
     @staticmethod

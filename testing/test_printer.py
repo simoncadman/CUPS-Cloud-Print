@@ -347,13 +347,21 @@ def test_GetCapabilitiesDict():
     printerItem = printers[0]
     assert printerItem._getCapabilitiesDict({}, {}, {}) == {'print': {'vendor_ticket_item': []}, 'version': '1.0'}
     assert printerItem._getCapabilitiesDict([{'name': 'test'}], {}, {}) == {'print': {'vendor_ticket_item': []}, 'version': '1.0'}
-    assert printerItem._getCapabilitiesDict([{'name': 'Default' + 'test123', 'value': 'STANDARD_MONOCHROME'}],
+    assert printerItem._getCapabilitiesDict([{'name': 'Default' + 'test123', 'value': 'STANDARD_MONOCHROME'}, { 'name' : 'Defaulttestname', 'value': 'test1' }],
                                             {'test123':
                                                         {
                                                             'option':
                                                             [
                                                                 {'is_default': True, 'vendor_id': '2', 'type': 'STANDARD_COLOR'},
                                                                 {'vendor_id': '1', 'type': 'STANDARD_MONOCHROME'}
+                                                            ]
+                                                        },
+                                             'testname':
+                                                        {
+                                                            'option':
+                                                            [
+                                                                {'is_default': True, 'vendor_id': '2', 'name': 'test1'},
+                                                                {'vendor_id': '1', 'name': 'test2'}
                                                             ]
                                                         },
                                              'testnooption':
@@ -369,7 +377,8 @@ def test_GetCapabilitiesDict():
                                                                                                     "version": "1.0",
                                                                                                         "print": {
                                                                                                             "vendor_ticket_item": [],
-                                                                                                            "test123": {"type": "STANDARD_MONOCHROME"}
+                                                                                                            "test123": {"type": "STANDARD_MONOCHROME"},
+                                                                                                            "testname": {"name": "test1"}
                                                                                                         }
                                                                                                     }
 
