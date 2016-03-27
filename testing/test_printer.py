@@ -376,9 +376,8 @@ def test_GetCapabilitiesDict():
                                                             }, {'test123': 'STANDARD_MONOCHROME'}) == {
                                                                                                     "version": "1.0",
                                                                                                         "print": {
-                                                                                                            "vendor_ticket_item": [],
-                                                                                                            "test123": {"type": "STANDARD_MONOCHROME"},
-                                                                                                            "testname": {"name": "test1"}
+                                                                                                            'vendor_ticket_item': [{'id': 'testname', 'value': '2'}],
+                                                                                                            "test123": {"type": "STANDARD_MONOCHROME"}
                                                                                                         }
                                                                                                     }
 

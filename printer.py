@@ -477,8 +477,8 @@ class Printer(object):
                         for option in capability['options']['option']:
                             paramname = 'type'
                             if 'type' not in option:
-                                if 'name' in option:
-                                    paramname = 'name'
+                                if 'vendor_id' in option:
+                                    paramname = 'vendor_id'
                             if paramname in option:
                                 internalCapability = Printer._getInternalName(
                                     option, 'option', gcpname, addedCapabilities)
@@ -495,8 +495,8 @@ class Printer(object):
                                 for option in capability['options']['option']:
                                     paramname = 'type'
                                     if 'type' not in option:
-                                        if 'name' in option:
-                                            paramname = 'name'
+                                        if 'vendor_id' in option:
+                                            paramname = 'vendor_id'
                                     if paramname in option:
                                         internalOption = Printer._getInternalName(
                                             option, 'option', gcpname, addedOptions)
@@ -509,7 +509,10 @@ class Printer(object):
                         break
 
                 if gcpname is not None and gcpoption is not None:
-                    capabilities['print'][gcpname] = { parammap[gcpoption]: gcpoption }
+                    if parammap[gcpoption] == 'vendor_id':
+                        capabilities['print']['vendor_ticket_item'].append( { 'id': gcpname, 'value' : gcpoption }  )
+                    else:
+                        capabilities['print'][gcpname] = { parammap[gcpoption]: gcpoption }
         return capabilities
 
     @staticmethod
