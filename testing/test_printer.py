@@ -345,8 +345,8 @@ def test_getOverrideCapabilities():
 def test_GetCapabilitiesDict():
     global printers
     printerItem = printers[0]
-    assert printerItem._getCapabilitiesDict({}, {}, {}) == {'print': {'vendor_ticket_item': []}, 'version': '1.0'}
-    assert printerItem._getCapabilitiesDict([{'name': 'test'}], {}, {}) == {'print': {'vendor_ticket_item': []}, 'version': '1.0'}
+    assert printerItem._getCapabilitiesDict({}, {}, {}) == {'print': {}, 'version': '1.0'}
+    assert printerItem._getCapabilitiesDict([{'name': 'test'}], {}, {}) == {'print': {}, 'version': '1.0'}
     assert printerItem._getCapabilitiesDict([{'name': 'Default' + 'test123', 'value': 'STANDARD_MONOCHROME'}, { 'name' : 'Defaulttestname', 'value': 'test1' }],
                                             {'test123':
                                                         {
@@ -360,8 +360,8 @@ def test_GetCapabilitiesDict():
                                                         {
                                                             'option':
                                                             [
-                                                                {'is_default': True, 'vendor_id': '2', 'name': 'test1'},
-                                                                {'vendor_id': '1', 'name': 'test2'}
+                                                                {'is_default': True, 'vendor_id': '2', 'name': 'test1', "test_param_1" : "test123", "test_param_2" : "test456"},
+                                                                {'vendor_id': '1', 'name': 'test2', "test_param_1" : "test1", "test_param_2" : "test2"}
                                                             ]
                                                         },
                                              'testnooption':
@@ -376,7 +376,7 @@ def test_GetCapabilitiesDict():
                                                             }, {'test123': 'STANDARD_MONOCHROME'}) == {
                                                                                                     "version": "1.0",
                                                                                                         "print": {
-                                                                                                            'vendor_ticket_item': [{'id': 'testname', 'value': '2'}],
+                                                                                                            "testname":{"vendor_id":"2", "test_param_1" : "test123", "test_param_2" : "test456", 'name': 'test1', 'is_default': True},
                                                                                                             "test123": {"type": "STANDARD_MONOCHROME"}
                                                                                                         }
                                                                                                     }
@@ -406,7 +406,7 @@ def test_getCapabilities():
         printerManagerInstance.sanitizePrinterName(printer['name']), "landscape")
     assert isinstance(emptyoptions, dict)
     assert isinstance(emptyoptions['print'], dict)
-    assert len(emptyoptions['print']) == 1
+    assert len(emptyoptions['print']) == 0
     connection.deletePrinter(printerManagerInstance.sanitizePrinterName(printer['name']))
 
 
