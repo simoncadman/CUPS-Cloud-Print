@@ -457,8 +457,9 @@ class Printer(object):
 
     @staticmethod
     def _getCapabilitiesDict(attrs, printercapabilities, overridecapabilities):
-        # example: {"version":"1.0","print":{"media_size":{"width_microns":215000,"height_microns":275000,"vendor_id":"15"}}}
-        capabilities = { "version": "1.0", "print": { } }
+        # example:
+        # {"version":"1.0","print":{"media_size":{"width_microns":215000,"height_microns":275000,"vendor_id":"15"}}}
+        capabilities = {"version": "1.0", "print": {}}
         for attr in attrs:
             if attr['name'].startswith('Default'):
                 # gcp setting, reverse back to GCP capability
@@ -466,7 +467,8 @@ class Printer(object):
                 hashname = attr['name'].replace('Default', '')
                 parammap = {}
                 valuemap = {}
-		deleteparams = [ 'name', 'custom_name', 'is_default', 'display_name', 'custom_display_name' ]
+                deleteparams = ['name', 'custom_name', 'is_default',
+                                'display_name', 'custom_display_name']
 
                 # find item name from hashes
                 gcpoption = None
@@ -514,9 +516,9 @@ class Printer(object):
                                             gcpoption = option[paramname]
                                             parammap[gcpoption] = paramname
 
-		 		            for deleteparam in deleteparams:
-	                                        if deleteparam in option:
-        	                                    del option[deleteparam]
+                                            for deleteparam in deleteparams:
+                                                if deleteparam in option:
+                                                    del option[deleteparam]
 
                                             valuemap[gcpoption] = option
                                             break
@@ -527,7 +529,7 @@ class Printer(object):
                     if parammap[gcpoption] == 'vendor_id':
                         capabilities['print'][gcpname] = valuemap[gcpoption]
                     else:
-                        capabilities['print'][gcpname] = { parammap[gcpoption]: gcpoption }
+                        capabilities['print'][gcpname] = {parammap[gcpoption]: gcpoption}
         return capabilities
 
     @staticmethod
