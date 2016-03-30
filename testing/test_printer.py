@@ -368,15 +368,15 @@ def test_GetCapabilitiesDict():
                                                         {
                                                             'option':
                                                             [
-                                                                {'is_default': True, 'vendor_id': '2', 'horizontal_dpi': 300, 'vertical_dpi' : 300 },
-                                                                {'vendor_id': '2', 'horizontal_dpi': 400, 'vertical_dpi' : 400 }
+                                                                {'is_default': True, 'vendor_id': '2', 'horizontal_dpi': 300, 'vertical_dpi' : 300, 'display_name': 'test' },
+                                                                {'vendor_id': '2', 'horizontal_dpi': 400, 'vertical_dpi' : 400, 'display_name': 'test123' }
                                                             ]
                                                         }
                                                             
                                                             }, {'test123': 'STANDARD_MONOCHROME'}) == {
                                                                                                     "version": "1.0",
                                                                                                         "print": {
-                                                                                                            "testname":{"vendor_id":"2", "test_param_1" : "test123", "test_param_2" : "test456", 'name': 'test1', 'is_default': True},
+                                                                                                            "testname":{"vendor_id":"2", "test_param_1" : "test123", "test_param_2" : "test456"},
                                                                                                             "test123": {"type": "STANDARD_MONOCHROME"}
                                                                                                         }
                                                                                                     }

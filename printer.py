@@ -466,6 +466,7 @@ class Printer(object):
                 hashname = attr['name'].replace('Default', '')
                 parammap = {}
                 valuemap = {}
+		deleteparams = [ 'name', 'custom_name', 'is_default', 'display_name', 'custom_display_name' ]
 
                 # find item name from hashes
                 gcpoption = None
@@ -488,6 +489,11 @@ class Printer(object):
                                 if attr['value'] == internalCapability:
                                     gcpoption = option[paramname]
                                     parammap[gcpoption] = paramname
+
+                                    for deleteparam in deleteparams:
+                                        if deleteparam in option:
+                                            del option[deleteparam]
+
                                     valuemap[gcpoption] = option
                                     break
                         addedOptions = []
@@ -507,6 +513,11 @@ class Printer(object):
                                         if selectedoption == internalOption:
                                             gcpoption = option[paramname]
                                             parammap[gcpoption] = paramname
+
+		 		            for deleteparam in deleteparams:
+	                                        if deleteparam in option:
+        	                                    del option[deleteparam]
+
                                             valuemap[gcpoption] = option
                                             break
                                 break
