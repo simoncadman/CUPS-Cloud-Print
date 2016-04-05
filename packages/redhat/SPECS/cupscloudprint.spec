@@ -7,6 +7,7 @@ License:        GPLv3+
 URL:            http://ccp.niftiestsoftware.com
 Source0:        http://ccp.niftiestsoftware.com/cupscloudprint-%{_version}.tar.bz2
 
+Group:          System Environment/Libraries
 BuildArch:      noarch
 BuildRequires:  python2-devel,cups-devel,cups,make
 Requires:       cups,system-config-printer-libs,python-httplib2,ghostscript,ImageMagick,which,file,python-six
