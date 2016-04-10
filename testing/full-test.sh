@@ -64,6 +64,9 @@ ls -al /var/log/cups/
 
 export PYTHONDONTWRITEBYTECODE=1
 
+pwd
+cat .coveragerc
+
 set +e
 py.test2 -rfEsxw --cov-report xml  --cov . || py.test -rfEsxw --cov-report xml --cov .
 testresult=$?
