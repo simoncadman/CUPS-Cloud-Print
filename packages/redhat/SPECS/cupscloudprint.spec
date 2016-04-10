@@ -81,6 +81,7 @@ fi
 %docdir %{_usr}/share/cloudprint-cups/testing/testfiles
 %{_usr}/lib/cups/backend/gcp
 %{_usr}/lib/cups/driver/cupscloudprint
+%attr(644, root, lp) %{_usr}/share/cloudprint-cups/.coveragerc
 %attr(644, root, lp) %{_usr}/share/cloudprint-cups/auth.py
 %attr(644, root, lp) %{_usr}/share/cloudprint-cups/cloudprintrequestor.py
 %attr(644, root, lp) %{_usr}/share/cloudprint-cups/printer.py
