@@ -65,7 +65,7 @@ ls -al /var/log/cups/
 export PYTHONDONTWRITEBYTECODE=1
 
 set +e
-py.test2 -rfEsxw --cov-report xml  --cov --ignore=oauth2client . || py.test -rfEsxw --cov-report xml --cov --ignore=oauth2client .
+py.test2 -rfEsxw --cov-report xml  --cov . || py.test -rfEsxw --cov-report xml --cov .
 testresult=$?
 ls -al /var/log/cups
 cat /var/log/cups/cloudprint_log
