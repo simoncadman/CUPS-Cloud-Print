@@ -13,12 +13,14 @@ install: all
 	mkdir -p ${prefix}/share/cloudprint-cups/oauth2client
 	mkdir -p ${prefix}/share/cloudprint-cups/selinux
 	mkdir -p ${prefix}/share/cloudprint-cups/testing/testfiles
+	${INSTALL} ${srcdir}/.coveragerc ${prefix}/share/cloudprint-cups/
 	${INSTALL} ${srcdir}/*.py ${prefix}/share/cloudprint-cups/
 	${INSTALL} -m 644 ${srcdir}/ccputils.py ${prefix}/share/cloudprint-cups/
 	${INSTALL} -m 644 ${srcdir}/cloudprintrequestor.py ${prefix}/share/cloudprint-cups/
 	${INSTALL} -m 644 ${srcdir}/printermanager.py ${prefix}/share/cloudprint-cups/
 	${INSTALL} -m 644 ${srcdir}/printer.py ${prefix}/share/cloudprint-cups/
 	${INSTALL} -m 644 ${srcdir}/auth.py ${prefix}/share/cloudprint-cups/
+	${INSTALL} -m 644 ${srcdir}/.coveragerc ${prefix}/share/cloudprint-cups/
 	unlink ${prefix}/share/cloudprint-cups/pre-commit.py
 	${INSTALL} -m 755 ${srcdir}/testing/*.sh ${prefix}/share/cloudprint-cups/testing/
 	${INSTALL} -m 644 ${srcdir}/testing/*.py ${prefix}/share/cloudprint-cups/testing/
