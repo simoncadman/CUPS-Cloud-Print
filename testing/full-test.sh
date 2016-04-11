@@ -69,8 +69,11 @@ cat .coveragerc
 
 set +e
 
+skipcoverage=0
+
 if [[ "`cat /etc/*release* | fgrep -c 'CentOS release 6.'`" -gt "0"  ]]; then
         py.test2 -rfEsxw . | py.test -rfEsxw .
+	skipcoverage=1
 else
 	py.test2 -rfEsxw --cov-report xml  --cov . || py.test -rfEsxw --cov-report xml --cov .
 fi
@@ -87,18 +90,21 @@ if [[ $testresult != 0 ]]; then
     exit 1
 fi
 
-codecoverage=`fgrep "<coverage" coverage.xml | grep -Po 'line-rate="(.*?)"' | cut -d'"' -f2`
-codecoveragepercent="`echo $codecoverage*100 | bc | cut -d'.' -f1`"
-if [[ $codecoveragepercent -lt 85 ]]; then
-    echo "Code coverage is only $codecoveragepercent , aborting"
-    cat coverage.xml
-    exit 1
-else
-    echo "Code coverage is $codecoveragepercent , continuing"
+if [[ $skipcoverage == 0 ]]; then
+
+	codecoverage=`fgrep "<coverage" coverage.xml | grep -Po 'line-rate="(.*?)"' | cut -d'"' -f2`
+	codecoveragepercent="`echo $codecoverage*100 | bc | cut -d'.' -f1`"
+	if [[ $codecoveragepercent -lt 85 ]]; then
+	    echo "Code coverage is only $codecoveragepercent , aborting"
+	    cat coverage.xml
+	    exit 1
+	else
+	    echo "Code coverage is $codecoveragepercent , continuing"
+	fi
+	unlink coverage.xml
+	unlink .coverage
 fi
 
-unlink .coverage
-unlink coverage.xml
 
 export PYTHONDONTWRITEBYTECODE=0
 
