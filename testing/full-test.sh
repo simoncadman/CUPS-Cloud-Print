@@ -68,7 +68,12 @@ pwd
 cat .coveragerc
 
 set +e
-py.test2 -rfEsxw --cov-report xml  --cov . || py.test -rfEsxw --cov-report xml --cov .
+
+if [[ "`cat /etc/*release* | fgrep -c 'CentOS release 6.'`" -gt "0"  ]]; then
+        py.test2 -rfEsxw . | py.test -rfEsxw .
+else
+	py.test2 -rfEsxw --cov-report xml  --cov . || py.test -rfEsxw --cov-report xml --cov .
+fi
 testresult=$?
 ls -al /var/log/cups
 cat /var/log/cups/cloudprint_log
