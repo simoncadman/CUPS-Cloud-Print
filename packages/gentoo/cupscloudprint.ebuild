@@ -35,3 +35,7 @@ src_install() {
 pkg_postinst() {
        /usr/share/cloudprint-cups/upgrade.py
 }
+
+pkg_prerm() {
+       rm -rf /usr/share/cloudprint-cups/.cache
+}
