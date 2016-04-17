@@ -122,8 +122,6 @@ if __name__ == '__main__':  # pragma: no cover
         filedata = p.communicate(filedata)[0]
         if p.returncode != 0:
             sys.stderr.write("ERROR: Failed to convert file to pdf\n")
-            logging.error("Failed to convert file %s to pdf" % printFile)
-            logging.error(filedata)
             result = 1
         else:
             logging.info("Converted to PDF - %s bytes" % str(len(filedata)))
