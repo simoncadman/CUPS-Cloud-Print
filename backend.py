@@ -121,7 +121,7 @@ if __name__ == '__main__':  # pragma: no cover
         p = subprocess.Popen(convertToPDFParams, stdout=subprocess.PIPE, stdin=subprocess.PIPE)
         filedata = p.communicate(filedata)[0]
         if p.returncode != 0:
-            sys.stderr.write("ERROR: Failed to convert file to pdf\n")
+            sys.stderr.write("ERROR: Failed to convert file to pdf, returncode: %s\n" % str(p.returncode))
             result = 1
         else:
             logging.info("Converted to PDF - %s bytes" % str(len(filedata)))
