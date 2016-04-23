@@ -1,7 +1,7 @@
 #! /bin/sh
 
 # run upgrade script
-sudo /usr/local/share/cloudprint-cups/upgrade.py || echo "Failed to run upgrade script."
+sudo /usr/share/cloudprint-cups/upgrade.py || echo "Failed to run upgrade script."
 
 sudo launchctl load /Library/LaunchDaemons/cupscloudprint.plist || echo "Unable to load launchd"
 sudo launchctl start com.niftiestsoftware.ccp || echo "Unable to start launchd"
