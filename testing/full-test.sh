@@ -85,6 +85,8 @@ set +e
 
 skipcoverage=0
 
+export PATH="$PATH:/usr/local/bin"
+
 if [[ "`cat /etc/*release* | fgrep -c 'CentOS release 6.'`" -gt "0"  ]]; then
         py.test2 -rfEsxw . | py.test -rfEsxw .
 	skipcoverage=1
