@@ -607,8 +607,8 @@ class Printer(object):
                     else:
                         logging.error("Failed to rotate")
                         return False
-                except Exception:
-                    logging.error("Convert command errored when rotating")
+                except Exception as error_msg:
+                    logging.error("Convert command errored when rotating: %s" % str(error_msg))
                     return False
 
         if jobname == "":
