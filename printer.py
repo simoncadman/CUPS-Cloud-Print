@@ -597,14 +597,18 @@ class Printer(object):
             return False
         else:
             if rotate != 0:
-                command = [self._CONVERTCOMMAND, '-density', '300x300', '-',
-                           '-rotate', str(rotate), '-']
-                p = subprocess.Popen(command, stdout=subprocess.PIPE, stdin=subprocess.PIPE)
-                newjobdata = p.communicate(jobdata)[0]
-                if p.returncode == 0:
-                    jobdata = newjobdata
-                else:
-                    logging.error("Failed to rotate")
+                try:
+                    command = [self._CONVERTCOMMAND, '-density', '300x300', '-',
+                               '-rotate', str(rotate), '-']
+                    p = subprocess.Popen(command, stdout=subprocess.PIPE, stdin=subprocess.PIPE)
+                    newjobdata = p.communicate(jobdata)[0]
+                    if p.returncode == 0:
+                        jobdata = newjobdata
+                    else:
+                        logging.error("Failed to rotate")
+                        return False
+                except Exception:
+                    logging.error("Convert command errored when rotating")
                     return False
 
         if jobname == "":
