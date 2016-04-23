@@ -31,6 +31,7 @@ install: all
 	${INSTALL} -m 644 ${srcdir}/selinux/* ${prefix}/share/cloudprint-cups/selinux/
 	${INSTALL} -m 644 ${srcdir}/oauth2client/*.py ${prefix}/share/cloudprint-cups/oauth2client/
 ifeq ($(UNAME_S),Darwin)
+	mkdir -p ${destdir}/Library/LaunchDaemons/
 	${INSTALL} -m 644 ${srcdir}/launchd/* ${destdir}/Library/LaunchDaemons/
 endif
 	mkdir -p ${cupsbackend}
