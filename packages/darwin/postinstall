@@ -2,3 +2,7 @@
 
 # run upgrade script
 sudo /usr/local/share/cloudprint-cups/upgrade.py || echo "Failed to run upgrade script."
+
+launchctl load /Library/LaunchDaemons/cupscloudprint.plist
+launchctl start com.niftiestsoftware.ccp
+

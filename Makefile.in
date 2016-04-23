@@ -1,4 +1,5 @@
 prefix = $(DESTDIR)@prefix@
+destdir = $(DESTDIR)
 destprefix = @prefix@
 srcdir = @srcdir@
 INSTALL = @INSTALL@
@@ -28,6 +29,9 @@ install: all
 	${INSTALL} -m 644 ${srcdir}/testing/testfiles/* ${prefix}/share/cloudprint-cups/testing/testfiles/
 	${INSTALL} -m 644 ${srcdir}/selinux/* ${prefix}/share/cloudprint-cups/selinux/
 	${INSTALL} -m 644 ${srcdir}/oauth2client/*.py ${prefix}/share/cloudprint-cups/oauth2client/
+ifeq ($(UNAME_S),Darwin)
+	${INSTALL} -m 644 ${srcdir}/launchd/* ${destdir}/Library/LaunchDaemons/
+endif
 	mkdir -p ${cupsbackend}
 	mkdir -p ${cupsdriver}
 	mkdir -p ${cupsmodel}

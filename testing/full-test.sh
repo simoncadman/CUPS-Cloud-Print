@@ -23,9 +23,6 @@ if [[ "`uname`" == "Darwin"  && ! -f /Library/LaunchDaemons/cupscloudprint.plist
         echo "Launchd entry in /Library/LaunchDaemons/cupscloudprint.plist is missing:"
         ls -al /Library/LaunchDaemons/
         exit 1
-elif [[ "`uname`" == "Darwin" ]]; then
-	launchctl load /Library/LaunchDaemons/cupscloudprint.plist
-	launchctl start com.niftiestsoftware.ccp
 fi
 
 if [[ ! -f /etc/cloudprint.conf ]]; then
