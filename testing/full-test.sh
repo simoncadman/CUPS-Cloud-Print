@@ -25,6 +25,9 @@ if [[ "`uname`" == "Darwin"  && ! -f /Library/LaunchDaemons/cupscloudprint.plist
         exit 1
 fi
 
+echo "Listing /etc/:"
+ls -al /etc/
+
 if [[ ! -f /etc/cloudprint.conf ]]; then
         if [[ "`whoami`" == "root"  ]]; then
                 scp -v $testconfig /etc/cloudprint.conf
