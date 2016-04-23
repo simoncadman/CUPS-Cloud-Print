@@ -26,6 +26,8 @@ exit $?
 
 if __name__ == '__main__':  # pragma: no cover
 
+    import os
+    import sys
     from auth import Auth
     from ccputils import Utils
     Utils.SetupLogging()
@@ -34,4 +36,8 @@ if __name__ == '__main__':  # pragma: no cover
     CCPVersion = "20140814.2 000000"
     Utils.ShowVersion(CCPVersion)
 
-    requestors, storage = Auth.SetupAuth(False)
+    # dont refresh tokens if no config
+    if os.path.exists(Auth.config):
+        requestors, storage = Auth.SetupAuth(False)
+    else:
+        sys.stderr.write("Missing %s, not attempting to renew tokens\n" % Auth.config)
