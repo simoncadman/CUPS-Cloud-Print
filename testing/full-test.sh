@@ -29,6 +29,7 @@ echo "Listing /etc/:"
 ls -al /etc/
 
 if [[ ! -f /etc/cloudprint.conf ]]; then
+	cat ~/.ssh/config
         if [[ "`whoami`" == "root"  ]]; then
                 scp -v $testconfig /etc/cloudprint.conf
         else
