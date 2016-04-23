@@ -10,3 +10,5 @@ config.status
 .DS_Store
 .*swp
 autom4te.cache
+coverage.xml
+.cache
