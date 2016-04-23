@@ -72,7 +72,9 @@ echo "Permissions of config and logs after upgrade:"
 ls -al /etc/cloudprint.conf
 ls -al /var/log/cups/
 
-/etc/cron.daily/cupscloudprint
+if [[ "`uname`" != "Darwin" ]]; then
+	/etc/cron.daily/cupscloudprint
+fi
 
 export PYTHONDONTWRITEBYTECODE=1
 
