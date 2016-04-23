@@ -76,7 +76,7 @@ def test_isExeSucceeds():
 
 
 def test_isExeFails():
-    assert Utils.is_exe("/dev/null") == False
+    assert Utils.is_exe("/etc/passwd") == False
 
 
 def test_getLPID():
