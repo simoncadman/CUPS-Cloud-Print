@@ -13,10 +13,19 @@ export name="$1"
 export category="$2"
 export testconfig="$5"
 
-if [[ ! -f /etc/cron.daily/cupscloudprint ]]; then
+if [[ "`uname`" != "Darwin"  && ! -f /etc/cron.daily/cupscloudprint ]]; then
         echo "Crontab entry in /etc/cron.daily/cupscloudprint is missing:"
         ls -al /etc/cron.daily/
         exit 1
+fi
+
+if [[ "`uname`" == "Darwin"  && ! -f /Library/LaunchDaemons/cupscloudprint.plist ]]; then
+        echo "Launchd entry in /Library/LaunchDaemons/cupscloudprint.plist is missing:"
+        ls -al /Library/LaunchDaemons/
+        exit 1
+elif [[ "`uname`" == "Darwin" ]]; then
+	launchctl load /Library/LaunchDaemons/cupscloudprint.plist
+	launchctl start com.niftiestsoftware.ccp
 fi
 
 if [[ ! -f /etc/cloudprint.conf ]]; then
