@@ -37,7 +37,11 @@ if [[ ! -f /etc/cloudprint.conf ]]; then
 fi
 
 if [[ "`whoami`" == "root"  ]]; then
-       sed -i '.backup' 's/LogLevel warn/LogLevel debug/g' /etc/cups/cupsd.conf 
+       if [[ "`uname`" == "Darwin" ]]; then
+           sed -i '.backup' 's/LogLevel warn/LogLevel debug/g' /etc/cups/cupsd.conf 
+       else
+           sed -i 's/LogLevel warn/LogLevel debug/g' /etc/cups/cupsd.conf 
+       fi
        
        # ensure cups running
        if [[ -f /etc/init.d/cupsd ]]; then
