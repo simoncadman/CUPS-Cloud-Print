@@ -52,7 +52,12 @@ if [[ "`whoami`" == "root"  ]]; then
 fi
 
 if [[ "`whoami`" == "root"  ]]; then
-    python2 -m compileall .
+    if command -v python2 > /dev/null; then
+      python2 -m compileall .
+    else
+      python -m compileall .
+    fi
+
 else
     sudo python2 -m compileall .
 fi
