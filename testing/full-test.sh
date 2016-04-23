@@ -34,7 +34,7 @@ if [[ ! -f /etc/cloudprint.conf ]]; then
 fi
 
 if [[ "`whoami`" == "root"  ]]; then
-       sed -i 's/LogLevel warn/LogLevel debug/g' /etc/cups/cupsd.conf 
+       sed -i '.backup' 's/LogLevel warn/LogLevel debug/g' /etc/cups/cupsd.conf 
        
        # ensure cups running
        if [[ -f /etc/init.d/cupsd ]]; then
@@ -48,6 +48,7 @@ if [[ "`whoami`" == "root"  ]]; then
        # start via 'start' if exists
        hash start && ( ( start cups ; restart dbus ) || cupsd )
        
+       hash launchctl && ( launchctl stop org.cups.cupsd; launchctl start org.cups.cupsd )
 fi
 
 if [[ "`whoami`" == "root"  ]]; then
