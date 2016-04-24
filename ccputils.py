@@ -115,6 +115,7 @@ class Utils:
 
     @staticmethod
     def which(program):
+        logging.info("Checking path is %s" % os.environ["PATH"])
         for path in os.environ["PATH"].split(os.pathsep):
             exe_file = os.path.join(path, program)
             if Utils.is_exe(exe_file):
