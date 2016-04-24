@@ -26,7 +26,6 @@ exit $?
 
 if __name__ == '__main__':  # pragma: no cover
     import sys
-    import platform
     import os
     import subprocess
     import logging
@@ -112,8 +111,6 @@ if __name__ == '__main__':  # pragma: no cover
                           "-dUseCIEColor", "-", "-"]
     if Utils.which("ps2pdf") is None:
         convertToPDFParams = ["pstopdf", "-", "-"]
-        if platform.system() == 'Darwin':
-            convertToPDFParams = ["pstopdf", '-i', '-o','-']
 
     logging.debug('is this a pdf? ' + str(printFile))
     result = 0
