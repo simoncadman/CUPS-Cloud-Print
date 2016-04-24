@@ -162,7 +162,6 @@ fi
 echo "Printing: $printfilepath"
 ls -al "$printfilepath"
 file "$printfilepath"
-md5sum "$printfilepath"
 lp "$printfilepath" -d 'GCP-Save_to_Google_Drive' -t "$pdfjobname"
 echo "Submitted job $pdfjobname"
 
@@ -196,7 +195,6 @@ fi
 echo "Printing: $printfilepath"
 ls -al "$printfilepath"
 file "$printfilepath"
-md5sum "$printfilepath"
 lp "$printfilepath" -d 'GCP-Save_to_Google_Drive' -t "$psjobname"
 echo "Submitted job $psjobname"
 
@@ -230,7 +228,6 @@ fi
 echo "Printing: $printfilepath"
 ls -al "$printfilepath"
 file "$printfilepath"
-md5sum "$printfilepath"
 lp "$printfilepath" -d 'GCP-Save_to_Google_Drive' -t "$psreaderjobname"
 echo "Submitted job $psreaderjobname"
 
