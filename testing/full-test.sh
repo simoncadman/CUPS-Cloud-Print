@@ -171,6 +171,8 @@ do
    echo "Waiting for job to complete: $i of 60 tries"
    echo "lpstat -W not-completed:"
    lpstat -W not-completed
+   echo "count:"
+   lpstat -W not-completed | wc -l
    jobcount="`lpstat -W not-completed | wc -l`"
    if [[ $jobcount == 0 ]]; then
         success=1
