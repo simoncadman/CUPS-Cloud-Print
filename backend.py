@@ -123,7 +123,8 @@ if __name__ == '__main__':  # pragma: no cover
         filedata = processdata[0]
         if p.returncode != 0:
             sys.stderr.write("ERROR: Failed to convert file to pdf, returncode: %s\n" % str(p.returncode))
-            logging.error("Error from convering file to pdf: %s" % processdata[1])
+            logging.error("Using these params %s", " ".join(convertToPDFParams))
+            logging.error("Error from converting file to pdf: %s" % processdata[1])
             result = 1
         else:
             logging.info("Converted to PDF - %s bytes" % str(len(filedata)))
