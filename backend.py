@@ -110,7 +110,9 @@ if __name__ == '__main__':  # pragma: no cover
     convertToPDFParams = ["ps2pdf", "-dPDFSETTINGS=/printer",
                           "-dUseCIEColor", "-", "-"]
     if Utils.which("ps2pdf") is None:
-        convertToPDFParams = ["pstopdf", "-", "-"]
+        convertToPDFParams = [Utils.which("pstopdf"), "-", "-"]
+    else:
+        convertToPDFParams[0] = Utils.which("ps2pdf")
 
     logging.debug('is this a pdf? ' + str(printFile))
     result = 0

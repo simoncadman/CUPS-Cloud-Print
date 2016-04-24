@@ -115,8 +115,10 @@ class Utils:
 
     @staticmethod
     def which(program):
-        logging.info("Checking path is %s" % os.environ["PATH"])
-        for path in os.environ["PATH"].split(os.pathsep):
+        p = subprocess.Popen(["/bin/bash","-c","echo $PATH"], stdout=subprocess.PIPE, stdin=subprocess.PIPE)
+        shellpath = p.communicate()[0]
+        logging.info("Checking path is %s" % shellpath)
+        for path in shellpath.split(os.pathsep):
             exe_file = os.path.join(path, program)
             if Utils.is_exe(exe_file):
                 return exe_file
