@@ -115,8 +115,12 @@ class Utils:
 
     @staticmethod
     def getPath():
-        p = subprocess.Popen(["/bin/bash","-c","echo $PATH"], stdout=subprocess.PIPE, stdin=subprocess.PIPE)
-        shellpath = p.communicate()[0]
+        shellpath = os.environ["PATH"]
+        # add dirs to path if exist
+        extrapaths = ['/opt/Ghostscript/bin','/opt/ImageMagick/bin']
+        for extrapath in extrapaths:
+            if os.path.exists(extrapath)
+                shellpath = shellpath + os.pathsep + extrapath
         return shellpath
 
     @staticmethod
