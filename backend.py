@@ -107,12 +107,12 @@ if __name__ == '__main__':  # pragma: no cover
                  (uri, cupsprintername, optionsstring))
 
     # setup
-    convertToPDFParams = ["ps2pdf14", "-dPDFSETTINGS=/printer",
+    convertToPDFParams = ["ps2pdf", "-dPDFSETTINGS=/printer",
                           "-dUseCIEColor", "-", "-"]
-    if Utils.which("ps2pdf14") is None:
+    if Utils.which("ps2pdf") is None:
         convertToPDFParams = [Utils.which("pstopdf"), "-", "-"]
     else:
-        convertToPDFParams[0] = Utils.which("ps2pdf14")
+        convertToPDFParams[0] = Utils.which("ps2pdf")
 
     logging.debug('is this a pdf? ' + str(printFile))
     result = 0
