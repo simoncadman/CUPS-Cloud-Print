@@ -114,9 +114,14 @@ class Utils:
         return os.path.exists(fpath) and os.access(fpath, os.X_OK)
 
     @staticmethod
-    def which(program):
+    def getPath():
         p = subprocess.Popen(["/bin/bash","-c","echo $PATH"], stdout=subprocess.PIPE, stdin=subprocess.PIPE)
         shellpath = p.communicate()[0]
+        return shellpath
+
+    @staticmethod
+    def which(program):
+        shellpath = Utils.getPath()
         logging.info("Checking path is %s" % shellpath)
         for path in shellpath.split(os.pathsep):
             exe_file = os.path.join(path, program)
