@@ -119,7 +119,7 @@ class Utils:
         # add dirs to path if exist
         extrapaths = ['/opt/Ghostscript/bin','/opt/ImageMagick/bin']
         for extrapath in extrapaths:
-            if os.path.exists(extrapath):
+            if os.path.exists(extrapath) and ( os.pathsep + extrapath + os.pathsep ) not in shellpath:
                 shellpath = shellpath + os.pathsep + extrapath
         return shellpath
 
