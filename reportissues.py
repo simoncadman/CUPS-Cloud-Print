@@ -59,9 +59,10 @@ if __name__ == '__main__':  # pragma: no cover
         ppdname = printer.getPPDName()
         p1 = subprocess.Popen(
             (os.path.join(libpath, 'dynamicppd.py'), 'cat', ppdname.lstrip('-')),
+            stderr=subprocess.PIPE,
             stdout=subprocess.PIPE)
         ppddata = p1.communicate()[0]
-        p = subprocess.Popen(['cupstestppd', '-'], stdout=subprocess.PIPE, stdin=subprocess.PIPE)
+        p = subprocess.Popen(['cupstestppd', '-'], stdout=subprocess.PIPE, stdin=subprocess.PIPE, stderr=subprocess.PIPE)
         testdata = p.communicate(ppddata)[0]
         result = p.returncode
         print "Result of cupstestppd was " + str(result)

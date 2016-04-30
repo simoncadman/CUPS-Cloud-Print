@@ -104,7 +104,7 @@ class Utils:
         Returns:
         boolean: True = is a PDF, False = not a PDF.
         """
-        p = subprocess.Popen(["file", '-'], stdout=subprocess.PIPE, stdin=subprocess.PIPE)
+        p = subprocess.Popen(["file", '-'], stdout=subprocess.PIPE, stdin=subprocess.PIPE, stderr=subprocess.PIPE)
         output = p.communicate(filedata)[0]
         logging.debug("File output was: " + output)
         return "PDF document" in output

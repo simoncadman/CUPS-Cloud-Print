@@ -42,7 +42,8 @@ if __name__ == '__main__':  # pragma: no cover
          "diff",
          "--cached",
          "--name-only"],
-        stdout=subprocess.PIPE)
+        stdout=subprocess.PIPE,
+        stderr=subprocess.PIPE)
     output = p.communicate()[0]
     result = p.returncode
     if result != 0:
@@ -54,6 +55,7 @@ if __name__ == '__main__':  # pragma: no cover
                 ["pep8",
                  "--max-line-length=100",
                  file],
+                stderr=subprocess.PIPE,
                 stdout=subprocess.PIPE)
             pep8output = p2.communicate()[0].strip()
             if p2.returncode != 0:
@@ -82,7 +84,8 @@ if __name__ == '__main__':  # pragma: no cover
                     ["git",
                      "add",
                      file.lstrip('-')],
-                    stdout=subprocess.PIPE)
+                    stdout=subprocess.PIPE,
+                    stderr=subprocess.PIPE)
                 output = p.communicate()[0]
                 result = p.returncode
                 if result != 0:

@@ -130,6 +130,7 @@ if __name__ == '__main__':  # pragma: no cover
                              cupsprinters[device]["printer-info"].lstrip('-'),
                                 "-v",
                                 tempprinter.getURI()],
+                            stderr=subprocess.PIPE,
                             stdout=subprocess.PIPE)
                         output = p.communicate()[0]
                         result = p.returncode
@@ -159,6 +160,7 @@ if __name__ == '__main__':  # pragma: no cover
                          cupsprinters[device]["printer-info"].lstrip('-'),
                             "-m",
                             printerppdname.lstrip('-')],
+                        stderr=subprocess.PIPE,
                         stdout=subprocess.PIPE)
                     output = p.communicate()[0]
                     result = p.returncode

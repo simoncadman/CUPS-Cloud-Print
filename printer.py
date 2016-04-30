@@ -600,7 +600,7 @@ class Printer(object):
                 try:
                     command = [self._CONVERTCOMMAND, '-density', '300x300', '-',
                                '-rotate', str(rotate), '-']
-                    p = subprocess.Popen(command, stdout=subprocess.PIPE, stdin=subprocess.PIPE)
+                    p = subprocess.Popen(command, stdout=subprocess.PIPE, stdin=subprocess.PIPE, stderr=subprocess.PIPE)
                     newjobdata = p.communicate(jobdata)[0]
                     if p.returncode == 0:
                         jobdata = newjobdata

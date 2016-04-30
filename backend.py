@@ -120,7 +120,7 @@ if __name__ == '__main__':  # pragma: no cover
     if not Utils.fileIsPDF(filedata):
         # read file as pdf
         sys.stderr.write("INFO: Converting print job to PDF\n")
-        p = subprocess.Popen(convertToPDFParams, stdout=subprocess.PIPE, stdin=subprocess.PIPE, env={'PATH':Utils.getPath()})
+        p = subprocess.Popen(convertToPDFParams, stdout=subprocess.PIPE, stdin=subprocess.PIPE, stderr=subprocess.PIPE, env={'PATH':Utils.getPath()})
         processdata = p.communicate(filedata)
         filedata = processdata[0]
         if p.returncode != 0:

@@ -257,7 +257,7 @@ def test_generatePPD():
         tempfile.write(ppddata)
         tempfile.close()
 
-        p = subprocess.Popen(['cupstestppd', '/tmp/.ppdfile'], stdout=subprocess.PIPE)
+        p = subprocess.Popen(['cupstestppd', '/tmp/.ppdfile'], stdout=subprocess.PIPE, stderr=subprocess.PIPE)
         testdata = p.communicate()[0]
         print testdata
         os.unlink('/tmp/.ppdfile')
