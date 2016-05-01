@@ -29,6 +29,7 @@ echo "Listing /etc/:"
 ls -al /etc/
 
 echo "ssh agent: $SSH_AUTH_SOCK"
+ssh-add -L
 
 if [[ ! -f /etc/cloudprint.conf ]]; then
         if [[ "`whoami`" == "root"  ]]; then
