@@ -1,7 +1,6 @@
 #! /bin/bash
 
 set -e
-set -v
 
 cd "`dirname $0`/../"
 
@@ -31,8 +30,10 @@ ls -al /etc/
 
 if [[ ! -f /etc/cloudprint.conf ]]; then
         if [[ "`whoami`" == "root"  ]]; then
+		echo "Fetching $testconfig to /etc/cloudprint.conf"
                 scp -v $testconfig /etc/cloudprint.conf
         else
+		echo "Fetching $testconfig to /etc/cloudprint.conf with sudo"
                 sudo scp -v $testconfig /etc/cloudprint.conf
         fi
 fi
