@@ -1,6 +1,7 @@
 #! /bin/bash
 
 set -e
+set -v
 
 cd "`dirname $0`/../"
 
