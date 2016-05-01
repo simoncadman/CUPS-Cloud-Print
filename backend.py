@@ -132,7 +132,7 @@ if __name__ == '__main__':  # pragma: no cover
             tempFileNameOut = Utils.GetTempFileName()
             convertToPDFParams[1] = tempFileNameOut
             sys.stderr.write("INFO: Using temp files: %s %s\n" % (tempFileNameIn, tempFileNameOut))
-            sys.stderr.write("INFO: Command is: %s\n" % (" ".join(convertToPDFParams))
+            sys.stderr.write("INFO: Command is: %s\n" % (" ".join(convertToPDFParams)))
 
         # read file as pdf
         sys.stderr.write("INFO: Converting print job to PDF\n")
