@@ -127,7 +127,7 @@ if __name__ == '__main__':  # pragma: no cover
         if useTempFile:
             tempFileNameIn = Utils.GetTempFileName()
             if not Utils.WriteFile(tempFileNameIn, filedata):
-                sys.stderr.write("ERROR: Failed to write file\n")
+                sys.stderr.write("ERROR: Failed to write file %s \n" % tempFileNameIn)
                 sys.exit(1)
             convertToPDFParams[1] = tempFileNameIn
 
@@ -143,6 +143,9 @@ if __name__ == '__main__':  # pragma: no cover
         processdata=p.communicate(filedata)
         if useTempFile:
             filedata=Utils.ReadFile(tempFileNameOut)
+            if filedata is None:
+                sys.stderr.write("ERROR: Failed to read file %s\n" % tempFileNameOut)
+                sys.exit(1)
         else:
             filedata=processdata[0]
         if p.returncode != 0:
