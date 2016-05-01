@@ -107,7 +107,8 @@ class Utils:
         Returns:
         boolean: True = is a PDF, False = not a PDF.
         """
-        p = subprocess.Popen(["file", '-'], stdout=subprocess.PIPE, stdin=subprocess.PIPE, stderr=subprocess.PIPE)
+        p = subprocess.Popen(["file", '-'], stdout=subprocess.PIPE,
+                             stdin=subprocess.PIPE, stderr=subprocess.PIPE)
         output = p.communicate(filedata)[0]
         logging.debug("File output was: " + output)
         return "PDF document" in output
@@ -294,7 +295,6 @@ class Utils:
     @staticmethod
     def GetTempFileName():
         tempdir = '/tmp/'
-        if tempfile.tempdir != None:
+        if tempfile.tempdir:
             tempdir = tempfile.tempdir
-        return os.path.join(tempdir,( ''.join(random.choice(string.ascii_uppercase + string.digits) for _ in range(32)) ))
-
+        return os.path.join(tempdir, (''.join(random.choice(string.ascii_uppercase + string.digits) for _ in range(32))))

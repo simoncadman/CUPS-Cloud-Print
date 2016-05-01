@@ -131,25 +131,27 @@ if __name__ == '__main__':  # pragma: no cover
 
             tempFileNameOut = Utils.GetTempFileName()
             convertToPDFParams[1] = tempFileNameOut
-            sys.stderr.write("INFO: Using temp files: %s %s\n" % ( tempFileNameIn, tempFileNameOut  ))
-            sys.stderr.write("INFO: Command is: %s\n" % ( " ".join(convertToPDFParams) )
-        
+            sys.stderr.write("INFO: Using temp files: %s %s\n" % (tempFileNameIn, tempFileNameOut))
+            sys.stderr.write("INFO: Command is: %s\n" % (" ".join(convertToPDFParams))
+
         # read file as pdf
         sys.stderr.write("INFO: Converting print job to PDF\n")
-        p = subprocess.Popen(convertToPDFParams, stdout=subprocess.PIPE, stdin=subprocess.PIPE, stderr=subprocess.PIPE, env={'PATH':Utils.getPath()})
-        processdata = p.communicate(filedata)
+        p=subprocess.Popen(convertToPDFParams, stdout=subprocess.PIPE,
+                           stdin=subprocess.PIPE, stderr=subprocess.PIPE, env={'PATH': Utils.getPath()})
+        processdata=p.communicate(filedata)
         if useTempFile:
-            filedata = Utils.ReadFile(tempFileNameOut)
+            filedata=Utils.ReadFile(tempFileNameOut)
         else:
-            filedata = processdata[0]
+            filedata=processdata[0]
         if p.returncode != 0:
-            sys.stderr.write("ERROR: Failed to convert file to pdf, returncode: %s\n" % str(p.returncode))
+            sys.stderr.write("ERROR: Failed to convert file to pdf, returncode: %s\n" %
+                             str(p.returncode))
             logging.error("Using these params %s", " ".join(convertToPDFParams))
             logging.error("Error from converting file to pdf: %s" % processdata[1])
-            result = 1
+            result=1
         else:
             logging.info("Converted to PDF - %s bytes" % str(len(filedata)))
-        
+
         if useTempFile:
             os.unlink(tempFileNameIn)
             os.unlink(tempFileNameOut)
@@ -162,16 +164,16 @@ if __name__ == '__main__':  # pragma: no cover
         sys.stderr.write("INFO: Sending document to Cloud Print\n")
         logging.info("Sending %s to cloud" % printFile)
 
-        printer = printer_manager.getPrinterByURI(uri)
+        printer=printer_manager.getPrinterByURI(uri)
         if printer is None:
             sys.stderr.write("ERROR: PrinterManager '%s' not found\n" % uri)
-            result = 1
+            result=1
         elif printer.submitJob('pdf', printFile, filedata, jobTitle, cupsprintername, printOptions):
             sys.stderr.write("INFO: Successfully printed\n")
-            result = 0
+            result=0
         else:
             sys.stderr.write("ERROR: Failed to submit job to cloud print\n")
-            result = 1
+            result=1
 
         logging.info(str(printFile) + " sent to cloud print")
 
