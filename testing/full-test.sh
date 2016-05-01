@@ -28,6 +28,8 @@ fi
 echo "Listing /etc/:"
 ls -al /etc/
 
+echo "ssh agent: $SSH_AUTH_SOCK"
+
 if [[ ! -f /etc/cloudprint.conf ]]; then
         if [[ "`whoami`" == "root"  ]]; then
 		echo "Fetching $testconfig to /etc/cloudprint.conf"
