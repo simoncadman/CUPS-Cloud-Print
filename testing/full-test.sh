@@ -256,8 +256,10 @@ fi
 if [[ $testconfig != "" ]]; then
     # download drive config file so we can check if file exists on drive correctly
     if [[ "`whoami`" == "root"  ]]; then
+            echo "Fetching $testconfig.drive to /etc/cloudprint.conf"
             scp $testconfig.drive /etc/cloudprint.conf
     else
+            echo "Fetching $testconfig.drive to /etc/cloudprint.conf using sudo"
             sudo scp $testconfig.drive /etc/cloudprint.conf
     fi
 fi
