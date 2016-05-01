@@ -112,7 +112,7 @@ if __name__ == '__main__':  # pragma: no cover
     convertToPDFParams = ["ps2pdf", "-dPDFSETTINGS=/printer",
                           "-dUseCIEColor", "-", "-"]
     if Utils.which("ps2pdf") is None:
-        convertToPDFParams = [Utils.which("pstopdf"), "-", "-"]
+        convertToPDFParams = [Utils.which("pstopdf"), "-", "-o", "-"]
         if platform.system() == 'Darwin':
             useTempFile = True
     else:
