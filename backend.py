@@ -126,7 +126,9 @@ if __name__ == '__main__':  # pragma: no cover
         tempFileNameOut = None
         if useTempFile:
             tempFileNameIn = Utils.GetTempFileName()
-            Utils.WriteFile(tempFileNameIn, filedata)
+            if not Utils.WriteFile(tempFileNameIn, filedata):
+                sys.stderr.write("ERROR: Failed to write file\n")
+                sys.exit(1)
             convertToPDFParams[1] = tempFileNameIn
 
             tempFileNameOut = Utils.GetTempFileName()
