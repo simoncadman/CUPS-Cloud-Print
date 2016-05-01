@@ -297,4 +297,6 @@ class Utils:
         tempdir = '/tmp/'
         if tempfile.tempdir:
             tempdir = tempfile.tempdir
+        if 'TMPDIR' in os.environ:
+            tempdir = os.environ['TMPDIR']
         return os.path.join(tempdir, (''.join(random.choice(string.ascii_uppercase + string.digits) for _ in range(32))))
