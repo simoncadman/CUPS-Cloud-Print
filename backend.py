@@ -29,6 +29,7 @@ if __name__ == '__main__':  # pragma: no cover
     import os
     import subprocess
     import logging
+    import platform
 
     libpath = "/usr/local/share/cloudprint-cups/"
     if not os.path.exists(libpath):
@@ -107,10 +108,13 @@ if __name__ == '__main__':  # pragma: no cover
                  (uri, cupsprintername, optionsstring))
 
     # setup
+    useTempFile = False
     convertToPDFParams = ["ps2pdf", "-dPDFSETTINGS=/printer",
                           "-dUseCIEColor", "-", "-"]
     if Utils.which("ps2pdf") is None:
         convertToPDFParams = [Utils.which("pstopdf"), "-", "-"]
+        if platform.system() == 'Darwin':
+            useTempFile = True
     else:
         convertToPDFParams[0] = Utils.which("ps2pdf")
 
@@ -118,11 +122,24 @@ if __name__ == '__main__':  # pragma: no cover
     result = 0
 
     if not Utils.fileIsPDF(filedata):
+        tempFileNameIn = None
+        tempFileNameOut = None
+        if useTempFile:
+            tempFileNameIn = Utils.GetTempFileName()
+            Utils.WriteFile(tempFileNameIn, filedata)
+            convertToPDFParams[0] = tempFileNameIn
+
+            tempFileNameOut = Utils.GetTempFileName()
+            convertToPDFParams[1] = tempFileNameOut
+        
         # read file as pdf
         sys.stderr.write("INFO: Converting print job to PDF\n")
         p = subprocess.Popen(convertToPDFParams, stdout=subprocess.PIPE, stdin=subprocess.PIPE, stderr=subprocess.PIPE, env={'PATH':Utils.getPath()})
         processdata = p.communicate(filedata)
-        filedata = processdata[0]
+        if useTempFile:
+            filedata = Utils.ReadFile(tempFileNameOut)
+        else:
+            filedata = processdata[0]
         if p.returncode != 0:
             sys.stderr.write("ERROR: Failed to convert file to pdf, returncode: %s\n" % str(p.returncode))
             logging.error("Using these params %s", " ".join(convertToPDFParams))
@@ -130,6 +147,10 @@ if __name__ == '__main__':  # pragma: no cover
             result = 1
         else:
             logging.info("Converted to PDF - %s bytes" % str(len(filedata)))
+        
+        if useTempFile:
+            os.unlink(tempFileNameIn)
+            os.unlink(tempFileNameOut)
     else:
         # read file normally
         logging.info("Using %s as is already PDF - %s bytes" % (printFile, len(filedata)))

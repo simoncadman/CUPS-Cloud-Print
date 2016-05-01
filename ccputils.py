@@ -23,6 +23,9 @@ import base64
 import fcntl
 import termios
 import struct
+import string
+import random
+import tempfile
 
 
 class Utils:
@@ -287,3 +290,11 @@ class Utils:
         if height > 0 and width > 0:
             return height, width
         return None
+
+    @staticmethod
+    def GetTempFileName():
+        tempdir = '/tmp/'
+        if tempfile.tempdir != None:
+            tempdir = tempfile.tempdir
+        return os.path.join(tempdir,( ''.join(random.choice(string.ascii_uppercase + string.digits) for _ in range(32)) ))
+

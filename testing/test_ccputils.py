@@ -162,3 +162,7 @@ def test_GetWindowSize():
     # ensure window size of 0x0 returns none
     dummywinsize = struct.pack('HHHH', 0, 0, 0, 0)
     assert Utils.GetWindowSize(dummywinsize) == None
+
+def test_GetTempFileName():
+    assert Utils.GetTempFileName() != None
+    assert Utils.GetTempFileName().count('/') == 2
