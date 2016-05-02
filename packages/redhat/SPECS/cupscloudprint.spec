@@ -130,7 +130,7 @@ fi
 %doc %{_usr}/share/cloudprint-cups/README.md
 
 %changelog
-* Mon May 02 2016 Simon Cadman <src@niftiestsoftware.com> (20160502)
+* Mon May 02 2016 Simon Cadman <src@niftiestsoftware.com> (20160502-1)
 - New: Use CCD instead of ( now broken ) old legacy format
 - Fix: Add refresh tokens to launchd on Darwin package
 - Fix: Suggest installing texlive-lang-cjk in debian package
