@@ -1,4 +1,4 @@
-cupscloudprint (20160502) precise; urgency=high
+cupscloudprint (20160502-1) precise; urgency=high
 
   * New: Use CCD instead of ( now broken ) old legacy format
   * Fix: Add refresh tokens to launchd on Darwin package
