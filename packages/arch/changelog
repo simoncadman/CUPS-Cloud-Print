@@ -1,3 +1,15 @@
+2016-05-02 Simon Cadman <src@niftiestsoftware.com>
+
+        * 20160502 :
+	  New: Use CCD instead of ( now broken ) old legacy format
+          Fix: Add refresh tokens to launchd on Darwin package
+          Fix: Suggest installing texlive-lang-cjk in debian package
+          Fix: Delete /usr/share/cloudprint-cups/.cache on Gentoo ebuild uninstall
+	  Change: Upgrade oauth2client to 1.5.2
+          Change: Write temp files to disk on Darwin if ps2pdf not present
+
+ -- simon cadman <src@niftiestsoftware.com>  Mon, 02 May 2016 12:20:58 +0000
+
 2014-12-13 Simon Cadman <src@niftiestsoftware.com>
 
         * 20140814.2 :

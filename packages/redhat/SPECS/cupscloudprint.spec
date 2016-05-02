@@ -125,6 +125,14 @@ fi
 %doc %{_usr}/share/cloudprint-cups/README.md
 
 %changelog
+* Mon May 02 2016 Simon Cadman <src@niftiestsoftware.com> (20160502)
+- New: Use CCD instead of ( now broken ) old legacy format
+- Fix: Add refresh tokens to launchd on Darwin package
+- Fix: Suggest installing texlive-lang-cjk in debian package
+- Fix: Delete /usr/share/cloudprint-cups/.cache on Gentoo ebuild uninstall
+- Change: Upgrade oauth2client to 1.5.2
+- Change: Write temp files to disk on Darwin if ps2pdf not present
+
 * Sat Dec 13 2014 Simon Cadman <src@niftiestsoftware.com> (20140814.2-1)
 - Fix: Upgrade script error no longer prevents Mac OS X installation
 - Fix: Strip control chars when sanitising text
