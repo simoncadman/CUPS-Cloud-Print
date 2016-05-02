@@ -4,7 +4,7 @@ Priority: extra
 Maintainer: simon cadman <src@niftiestsoftware.com>
 Build-Depends: debhelper (>= 8.0.0), autotools-dev, libcups2-dev
 Standards-Version: 3.9.3
-Homepage: http://ccp.niftiestsoftware.com/
+Homepage: https://ccp.niftiestsoftware.com/
 Vcs-Git: git://github.com/simoncadman/CUPS-Cloud-Print.git
 Vcs-Browser: https://github.com/simoncadman/CUPS-Cloud-Print
 

@@ -12,7 +12,7 @@ INSTALLATION
 PACKAGE INSTALL ( Recommended )
 ================================
 
-The recommended way to install CUPS Cloud Print is using your package manager, please see http://ccp.niftiestsoftware.com/ for installation 
+The recommended way to install CUPS Cloud Print is using your package manager, please see https://ccp.niftiestsoftware.com/ for installation 
 instructions.
 
 SOURCE INSTALL

@@ -4,8 +4,8 @@ Release:        1
 Summary:        Print via Google Cloud print using CUPS
 
 License:        GPLv3+
-URL:            http://ccp.niftiestsoftware.com
-Source0:        http://ccp.niftiestsoftware.com/cupscloudprint-%{_version}.tar.bz2
+URL:            https://ccp.niftiestsoftware.com
+Source0:        https://ccp.niftiestsoftware.com/cupscloudprint-%{_version}.tar.bz2
 
 Group:          System Environment/Libraries
 BuildArch:      noarch
