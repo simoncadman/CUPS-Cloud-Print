@@ -101,6 +101,11 @@ fi
 %attr(644, root, lp) %{_usr}/share/cloudprint-cups/oauth2client/xsrfutil.py
 %attr(644, root, lp) %{_usr}/share/cloudprint-cups/oauth2client/locked_file.py
 %attr(644, root, lp) %{_usr}/share/cloudprint-cups/oauth2client/multistore_file.py
+%attr(644, root, lp) %{_usr}/share/cloudprint-cups/oauth2client/_helpers.py
+%attr(644, root, lp) %{_usr}/share/cloudprint-cups/oauth2client/_openssl_crypt.py
+%attr(644, root, lp) %{_usr}/share/cloudprint-cups/oauth2client/_pycrypto_crypt.py
+%attr(644, root, lp) %{_usr}/share/cloudprint-cups/oauth2client/devshell.py
+%attr(644, root, lp) %{_usr}/share/cloudprint-cups/oauth2client/flask_util.py
 %attr(644, root, lp) %{_usr}/share/cloudprint-cups/ccputils.py
 %attr(755, root, lp) %{_usr}/share/cloudprint-cups/backend.py
 %attr(755, root, lp) %{_usr}/share/cloudprint-cups/deleteaccount.py
