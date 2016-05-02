@@ -119,16 +119,7 @@ class Utils:
 
     @staticmethod
     def getPath():
-        shellpath = os.environ["PATH"]
-        # add dirs to path if exist
-        extrapaths = ['/opt/Ghostscript/bin', '/opt/ImageMagick/bin']
-        for extrapath in extrapaths:
-            if os.path.exists(extrapath) \
-                    and (os.pathsep + extrapath + os.pathsep) not in shellpath \
-                    and not shellpath.endswith(os.pathsep + extrapath) \
-                    and not shellpath.startswith(extrapath + os.pathsep):
-                shellpath = shellpath + os.pathsep + extrapath
-        return shellpath
+        return os.environ["PATH"]
 
     @staticmethod
     def which(program):
