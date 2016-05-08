@@ -8,6 +8,9 @@ cupsbackend = ${DESTDIR}@cupsserverpath@/backend/
 cupsmodel = ${DESTDIR}@cupsdatapath@/model/
 cupsgroup = @cupsgroup@
 UNAME_S := $(shell uname -s)
+ifeq ($(UNAME_S),Darwin)
+prefix = $(DESTDIR)@prefix@/local/
+endif
 
 all: backend.py
 
