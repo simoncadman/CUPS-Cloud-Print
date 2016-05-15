@@ -602,11 +602,11 @@ class Printer(object):
                                '-rotate', str(rotate), '-']
                     p = subprocess.Popen(command, stdout=subprocess.PIPE,
                                          stdin=subprocess.PIPE, stderr=subprocess.PIPE)
-                    newjobdata = p.communicate(jobdata)[0]
+                    newjobdata = p.communicate(jobdata)
                     if p.returncode == 0:
-                        jobdata = newjobdata
+                        jobdata = newjobdata[0]
                     else:
-                        logging.error("Failed to rotate")
+                        logging.error("Failed to rotate: %s" % newjobdata[1])
                         return False
                 except Exception as error_msg:
                     logging.error("Convert command errored when rotating: %s" % str(error_msg))
