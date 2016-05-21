@@ -80,7 +80,6 @@ if __name__ == '__main__':  # pragma: no cover
     addedPath = False
     for libpath in libpaths:
         if os.path.exists(libpath):
-            libpath = "/usr/share/cloudprint-cups"
             sys.path.insert(0, libpath)
             addedPath = True
             break
