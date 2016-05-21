@@ -1,6 +1,5 @@
 prefix = $(DESTDIR)@prefix@
 destdir = $(DESTDIR)
-destprefix = @prefix@
 srcdir = @srcdir@
 INSTALL = @INSTALL@
 cupsdriver = ${DESTDIR}@cupsserverpath@/driver/
@@ -9,30 +8,32 @@ cupsmodel = ${DESTDIR}@cupsdatapath@/model/
 cupsgroup = @cupsgroup@
 UNAME_S := $(shell uname -s)
 ifneq ($(UNAME_S),Darwin)
-prefix = $(DESTDIR)@prefix@/share/
+destprefix = ${prefix}/share/ 
+else
+destprefix = ${prefix}
 endif
 
 all: backend.py
 
 install: all
-	mkdir -p ${prefix}/cloudprint-cups/oauth2client
-	mkdir -p ${prefix}/cloudprint-cups/selinux
-	mkdir -p ${prefix}/cloudprint-cups/testing/testfiles
-	${INSTALL} ${srcdir}/.coveragerc ${prefix}/cloudprint-cups/
-	${INSTALL} ${srcdir}/*.py ${prefix}/cloudprint-cups/
-	${INSTALL} -m 644 ${srcdir}/ccputils.py ${prefix}/cloudprint-cups/
-	${INSTALL} -m 644 ${srcdir}/cloudprintrequestor.py ${prefix}/cloudprint-cups/
-	${INSTALL} -m 644 ${srcdir}/printermanager.py ${prefix}/cloudprint-cups/
-	${INSTALL} -m 644 ${srcdir}/printer.py ${prefix}/cloudprint-cups/
-	${INSTALL} -m 644 ${srcdir}/auth.py ${prefix}/cloudprint-cups/
-	${INSTALL} -m 644 ${srcdir}/.coveragerc ${prefix}/cloudprint-cups/
-	unlink ${prefix}/cloudprint-cups/pre-commit.py
-	${INSTALL} -m 755 ${srcdir}/testing/*.sh ${prefix}/cloudprint-cups/testing/
-	${INSTALL} -m 644 ${srcdir}/testing/*.py ${prefix}/cloudprint-cups/testing/
-	${INSTALL} -m 755 ${srcdir}/testing/listdrivefiles.py ${prefix}/cloudprint-cups/testing/
-	${INSTALL} -m 644 ${srcdir}/testing/testfiles/* ${prefix}/cloudprint-cups/testing/testfiles/
-	${INSTALL} -m 644 ${srcdir}/selinux/* ${prefix}/cloudprint-cups/selinux/
-	${INSTALL} -m 644 ${srcdir}/oauth2client/*.py ${prefix}/cloudprint-cups/oauth2client/
+	mkdir -p ${destprefix}/cloudprint-cups/oauth2client
+	mkdir -p ${destprefix}/cloudprint-cups/selinux
+	mkdir -p ${destprefix}/cloudprint-cups/testing/testfiles
+	${INSTALL} ${srcdir}/.coveragerc ${destprefix}/cloudprint-cups/
+	${INSTALL} ${srcdir}/*.py ${destprefix}/cloudprint-cups/
+	${INSTALL} -m 644 ${srcdir}/ccputils.py ${destprefix}/cloudprint-cups/
+	${INSTALL} -m 644 ${srcdir}/cloudprintrequestor.py ${destprefix}/cloudprint-cups/
+	${INSTALL} -m 644 ${srcdir}/printermanager.py ${destprefix}/cloudprint-cups/
+	${INSTALL} -m 644 ${srcdir}/printer.py ${destprefix}/cloudprint-cups/
+	${INSTALL} -m 644 ${srcdir}/auth.py ${destprefix}/cloudprint-cups/
+	${INSTALL} -m 644 ${srcdir}/.coveragerc ${destprefix}/cloudprint-cups/
+	unlink ${destprefix}/cloudprint-cups/pre-commit.py
+	${INSTALL} -m 755 ${srcdir}/testing/*.sh ${destprefix}/cloudprint-cups/testing/
+	${INSTALL} -m 644 ${srcdir}/testing/*.py ${destprefix}/cloudprint-cups/testing/
+	${INSTALL} -m 755 ${srcdir}/testing/listdrivefiles.py ${destprefix}/cloudprint-cups/testing/
+	${INSTALL} -m 644 ${srcdir}/testing/testfiles/* ${destprefix}/cloudprint-cups/testing/testfiles/
+	${INSTALL} -m 644 ${srcdir}/selinux/* ${destprefix}/cloudprint-cups/selinux/
+	${INSTALL} -m 644 ${srcdir}/oauth2client/*.py ${destprefix}/cloudprint-cups/oauth2client/
 ifeq ($(UNAME_S),Darwin)
 	mkdir -p ${destdir}/Library/LaunchDaemons/
 	${INSTALL} -m 644 ${srcdir}/launchd/* ${destdir}/Library/LaunchDaemons/
@@ -47,8 +48,8 @@ else
 	   ${INSTALL} -g `groups root | cut -d' ' -f1` -o root -m 755  ${srcdir}/backend.py ${cupsbackend}gcp
 	   ${INSTALL} -g `groups root | cut -d' ' -f1` -o root -m 755  ${srcdir}/dynamicppd.py ${cupsdriver}cupscloudprint
 endif
-	${INSTALL} -m 644 ${srcdir}/README.md ${prefix}/cloudprint-cups/README.md
-	${INSTALL} -m 644 ${srcdir}/COPYING ${prefix}/cloudprint-cups/COPYING
+	${INSTALL} -m 644 ${srcdir}/README.md ${destprefix}/cloudprint-cups/README.md
+	${INSTALL} -m 644 ${srcdir}/COPYING ${destprefix}/cloudprint-cups/COPYING
 ifneq ($(NOPERMS),1)
-	chown -R root:${cupsgroup} ${prefix}/cloudprint-cups/
+	chown -R root:${cupsgroup} ${destprefix}/cloudprint-cups/
 endif
