@@ -174,9 +174,9 @@ lp "$printfilepath" -d 'GCP-Save_to_Google_Drive' -t "$pdfjobname"
 echo "Submitted job $pdfjobname"
 
 success=0
-for i in {1..60}
+for i in {1..120}
 do
-   echo "Waiting for job to complete: $i of 60 tries"
+   echo "Waiting for job to complete: $i of 120 tries"
    jobcount="`lpstat -W not-completed | wc -l`"
    if [[ $jobcount -eq 0 ]]; then
         success=1
@@ -186,7 +186,7 @@ do
 done
 
 if [[ $success == 0 ]]; then
-    echo "PDF Job failed to submit in 60 seconds"
+    echo "PDF Job failed to submit in 120 seconds"
     lpstat -W all
     cat /var/log/cups/cloudprint_log
     cat /var/log/cups/error_log
@@ -210,9 +210,9 @@ lp "$printfilepath" -d 'GCP-Save_to_Google_Drive' -t "$psjobname"
 echo "Submitted job $psjobname"
 
 success=0
-for i in {1..60}
+for i in {1..120}
 do
-   echo "Waiting for job to complete: $i of 60 tries"
+   echo "Waiting for job to complete: $i of 120 tries"
    jobcount="`lpstat -W not-completed | wc -l`"
    if [[ $jobcount -eq 0 ]]; then
         success=1
@@ -222,7 +222,7 @@ do
 done
 
 if [[ $success == 0 ]]; then
-    echo "Postscript Job failed to submit in 60 seconds"
+    echo "Postscript Job failed to submit in 120 seconds"
     lpstat -W all
     cat /var/log/cups/cloudprint_log
     cat /var/log/cups/error_log
@@ -246,9 +246,9 @@ lp "$printfilepath" -d 'GCP-Save_to_Google_Drive' -t "$psreaderjobname"
 echo "Submitted job $psreaderjobname"
 
 success=0
-for i in {1..60}
+for i in {1..120}
 do
-   echo "Waiting for job to complete: $i of 60 tries"
+   echo "Waiting for job to complete: $i of 120 tries"
    jobcount="`lpstat -W not-completed | wc -l`"
    if [[ $jobcount -eq 0 ]]; then
         success=1
@@ -258,7 +258,7 @@ do
 done
 
 if [[ $success == 0 ]]; then
-    echo "Reader Postscript Job failed to submit in 60 seconds"
+    echo "Reader Postscript Job failed to submit in 120 seconds"
     lpstat -W all
     cat /var/log/cups/cloudprint_log
     cat /var/log/cups/error_log
@@ -278,9 +278,9 @@ fi
 
 # wait until files exist
 success=0
-for i in {1..60}
+for i in {1..120}
 do
-   echo "Waiting for files to exist: $i of 60 tries"
+   echo "Waiting for files to exist: $i of 120 tries"
    if [[ `./testing/listdrivefiles.py "$psreaderjobname"` != "" && `./testing/listdrivefiles.py "$psjobname"` != "" && `./testing/listdrivefiles.py "$pdfjobname"` != "" ]]; then
         break
    fi
