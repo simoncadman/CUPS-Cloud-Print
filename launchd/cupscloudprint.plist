@@ -5,7 +5,7 @@
 		<key>Label</key>
 		<string>com.niftiestsoftware.ccp</string>
 		<key>Program</key>
-		<string>/usr/share/cloudprint-cups/refreshtokens.py</string>
+		<string>/Library/cloudprint-cups/refreshtokens.py</string>
 		<key>RunAtLoad</key>
 		<true/>
 		<key>StartInterval</key>
