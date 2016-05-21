@@ -9,7 +9,7 @@ cupsmodel = ${DESTDIR}@cupsdatapath@/model/
 cupsgroup = @cupsgroup@
 UNAME_S := $(shell uname -s)
 ifneq ($(UNAME_S),Darwin)
-prefix = ${prefix}/share/
+prefix = $(DESTDIR)@prefix@/share/
 endif
 
 all: backend.py
