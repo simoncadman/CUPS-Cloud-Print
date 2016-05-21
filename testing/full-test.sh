@@ -160,8 +160,11 @@ fi
 # try pdf
 pdfjobname="PDF CCP Test $ccpversion at `date`"
 printfilepath="/usr/share/cloudprint-cups/testing/testfiles/Test Page.pdf"
-if [[ -e "/usr/local/share/cloudprint-cups/testing/testfiles/Test Page.pdf" ]]; then
+if [[ -f "/usr/local/share/cloudprint-cups/testing/testfiles/Test Page.pdf" ]]; then
     printfilepath="/usr/local/share/cloudprint-cups/testing/testfiles/Test Page.pdf"
+fi
+if [[ -f "/Library/cloudprint-cups/testing/testfiles/Test Page.pdf" ]]; then
+    printfilepath="/Library/cloudprint-cups/testing/testfiles/Test Page.pdf"
 fi
 
 echo "Printing: $printfilepath"
@@ -193,8 +196,11 @@ fi
 # try postscript file
 psjobname="Postscript CCP Test $ccpversion at `date`"
 printfilepath="/usr/share/cloudprint-cups/testing/testfiles/Test Page.ps"
-if [[ -e "/usr/local/share/cloudprint-cups/testing/testfiles/Test Page.ps" ]]; then
+if [[ -f "/usr/local/share/cloudprint-cups/testing/testfiles/Test Page.ps" ]]; then
     printfilepath="/usr/local/share/cloudprint-cups/testing/testfiles/Test Page.ps"
+fi
+if [[ -f "/Library/cloudprint-cups/testing/testfiles/Test Page.ps" ]]; then
+    printfilepath="/Library/cloudprint-cups/testing/testfiles/Test Page.ps"
 fi
 
 echo "Printing: $printfilepath"
@@ -226,8 +232,11 @@ fi
 # try postscript from adobe reader
 psreaderjobname="Reader Postscript CCP Test $ccpversion at `date`"
 printfilepath="/usr/share/cloudprint-cups/testing/testfiles/Test Page reader.ps"
-if [[ -e "/usr/local/share/cloudprint-cups/testing/testfiles/Test Page reader.ps" ]]; then
+if [[ -f "/usr/local/share/cloudprint-cups/testing/testfiles/Test Page reader.ps" ]]; then
     printfilepath="/usr/local/share/cloudprint-cups/testing/testfiles/Test Page reader.ps"
+fi
+if [[ -f "/Library/cloudprint-cups/testing/testfiles/Test Page reader.ps" ]]; then
+    printfilepath="/Library/cloudprint-cups/testing/testfiles/Test Page reader.ps"
 fi
 
 echo "Printing: $printfilepath"
