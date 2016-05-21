@@ -31,10 +31,22 @@ if __name__ == '__main__':  # pragma: no cover
     import logging
     import platform
 
-    libpath = "/usr/local/share/cloudprint-cups/"
-    if not os.path.exists(libpath):
-        libpath = "/usr/share/cloudprint-cups"
-    sys.path.insert(0, libpath)
+    libpaths = [
+                 "/Library/cloudprint-cups/",
+                 "/usr/local/share/cloudprint-cups/",
+                 "/usr/share/cloudprint-cups"
+               ]
+    addedPath = False
+    for libpath in libpaths:
+        if os.path.exists(libpath):
+            libpath = "/usr/share/cloudprint-cups"
+            sys.path.insert(0, libpath)
+            addedPath = True
+            break
+
+    if not addedPath:
+        sys.stderr.write("ERROR: Could not find any valid path for python files\n")
+        sys.exit(1)
 
     from auth import Auth
     from printermanager import PrinterManager
