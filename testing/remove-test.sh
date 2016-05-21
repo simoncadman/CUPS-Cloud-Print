@@ -3,6 +3,18 @@
 set -e
 returnval=0
 
+if [[ -d '/Library/cloudprint-cups/' ]]; then
+    echo "/Library/cloudprint-cups/ dir still exists: "
+    ls -alR /Library/cloudprint-cups/
+    returnval=1
+fi
+
+if [[ -d '/usr/local/share/cloudprint-cups/' ]]; then
+    echo "/usr/local/share/cloudprint-cups/ dir still exists: "
+    ls -alR /usr/local/share/cloudprint-cups/
+    returnval=1
+fi
+
 if [[ -d '/usr/share/cloudprint-cups/' ]]; then
     echo "/usr/share/cloudprint-cups/ dir still exists: "
     ls -alR /usr/share/cloudprint-cups/
