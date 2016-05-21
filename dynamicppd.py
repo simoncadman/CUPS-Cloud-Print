@@ -72,11 +72,11 @@ def showUsage():
 
 if __name__ == '__main__':  # pragma: no cover
 
-    libpaths = [ 
-                 "/Library/cloudprint-cups/",
-                 "/usr/local/share/cloudprint-cups/",
-                 "/usr/share/cloudprint-cups"
-               ]
+    libpaths = [
+        "/Library/cloudprint-cups/",
+        "/usr/local/share/cloudprint-cups/",
+        "/usr/share/cloudprint-cups"
+    ]
     addedPath = False
     for libpath in libpaths:
         if os.path.exists(libpath):
