@@ -168,6 +168,7 @@ class Printer(object):
 
     def __init__(self, fields, requestor, cupsHelper):
         self._fields = fields
+        self._fields['capabilities'] = {}
         self._requestor = requestor
         self._cupsHelper = cupsHelper
 
